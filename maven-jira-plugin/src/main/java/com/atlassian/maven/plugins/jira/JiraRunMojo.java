@@ -11,7 +11,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class JiraRunMojo extends RunMojo
 {
     @Override
-    protected String getProductId() throws MojoExecutionException
+    protected String getDefaultProductId() throws MojoExecutionException
     {
         return "jira";
     }

@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * Run the integration tests against the webapp
@@ -55,10 +56,25 @@ public class IntegrationTestMojo
             return;
         }
         MavenGoals goals = new MavenGoals(new MavenContext(project, session, pluginManager, getLog()));
-        ProductHandler product = createProductHandler(goals);
 
         final String pluginJar = targetDirectory.getAbsolutePath() + "/" + finalName + ".jar";
 
+        runTestsForProduct(getProductId(), goals, pluginJar);
+
+        for (String productId : ProductHandlerFactory.getIds())
+        {
+            if (containsTests(productId) && !productId.equals(getProductId()))
+            {
+                runTestsForProduct(productId, goals, pluginJar);
+            }
+        }
+
+    }
+
+    private void runTestsForProduct(String productId, MavenGoals goals, String pluginJar)
+            throws MojoExecutionException
+    {
+        ProductHandler product = ProductHandlerFactory.create(productId, project, goals);
         ProductContext ctx = createProductContext(product);
         int actualHttpPort;
         if (!noWebapp)
@@ -72,6 +88,32 @@ public class IntegrationTestMojo
         {
             product.stop(ctx);
         }
+    }
 
+    private boolean containsTests(String type)
+    {
+        return scanFile(new File(testClassesDirectory, "it"), type);
+    }
+
+    private boolean scanFile(File file, String type)
+    {
+        if (file.isDirectory())
+        {
+            if (file.getName().equals(type))
+            {
+                return true;
+            }
+            else
+            {
+                for (File kid : file.listFiles())
+                {
+                    if (scanFile(kid, type))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

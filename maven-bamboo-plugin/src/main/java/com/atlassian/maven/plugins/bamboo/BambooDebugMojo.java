@@ -11,7 +11,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class BambooDebugMojo extends DebugMojo
 {
     @Override
-    protected String getProductId() throws MojoExecutionException
+    protected String getDefaultProductId() throws MojoExecutionException
     {
         return "bamboo";
     }

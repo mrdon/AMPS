@@ -18,7 +18,7 @@ public class RefappIntegrationTestMojo
 {
 
     @Override
-    protected String getProductId() throws MojoExecutionException
+    protected String getDefaultProductId() throws MojoExecutionException
     {
         return "refapp";
     }

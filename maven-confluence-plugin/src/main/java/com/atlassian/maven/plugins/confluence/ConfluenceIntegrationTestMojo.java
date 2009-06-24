@@ -10,7 +10,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class ConfluenceIntegrationTestMojo extends IntegrationTestMojo
 {
     @Override
-    protected String getProductId() throws MojoExecutionException
+    protected String getDefaultProductId() throws MojoExecutionException
     {
         return "confluence";
     }

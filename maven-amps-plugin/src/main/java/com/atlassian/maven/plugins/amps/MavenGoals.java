@@ -27,6 +27,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * Executes specific maven goals
@@ -298,6 +299,17 @@ public class MavenGoals {
     }
 
     public void runTests(String productId, final String containerId, final String functionalTestPattern, final int httpPort, final String contexPath, final String pluginJar) throws MojoExecutionException {
+
+        // Automatically exclude tests for other products
+        List<Element> excludes = new ArrayList<Element>();
+        excludes.add(element(name("exclude"), "**/*$*"));
+        for (String type : ProductHandlerFactory.getIds())
+        {
+            if (!type.equals(productId))
+            {
+                excludes.add(element(name("exclude"), "**/" + type + "/**"));
+            }
+        }
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -309,7 +321,7 @@ public class MavenGoals {
                                 element(name("include"), functionalTestPattern)
                         ),
                         element(name("excludes"),
-                                element(name("exclude"), "**/*$*")
+                                excludes.toArray(new Element[excludes.size()])
                         ),
                         element(name("systemProperties"),
                                 element(name("property"),

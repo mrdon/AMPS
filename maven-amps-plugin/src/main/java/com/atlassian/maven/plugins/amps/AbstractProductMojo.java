@@ -1,11 +1,8 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
-import com.atlassian.maven.plugins.amps.product.ConfluenceProductHandler;
-import com.atlassian.maven.plugins.amps.product.JiraProductHandler;
-import com.atlassian.maven.plugins.amps.product.BambooProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -274,35 +271,6 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
 
     protected ProductHandler createProductHandler(MavenGoals goals) throws MojoExecutionException
     {
-        String id = getProductId();
-
-        if ("refapp".equals(id))
-        {
-            return new RefappProductHandler(project, goals);
-        }
-        else if ("confluence".equals(id))
-        {
-            return new ConfluenceProductHandler(project, goals);
-        }
-        else if ("jira".equals(id))
-        {
-            return new JiraProductHandler(project, goals);
-        }
-        else if ("bamboo".equals(id))
-        {
-            return new BambooProductHandler(project, goals);
-        }
-
-        throw new MojoExecutionException("Unknown product id:" + id);
-
-    }
-
-    protected String getProductId() throws MojoExecutionException
-    {
-        if (product == null)
-        {
-            throw new MojoExecutionException("The product must be specified");
-        }
-        return product;
+        return ProductHandlerFactory.create(getProductId(), project, goals);
     }
 }

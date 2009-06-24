@@ -11,7 +11,7 @@ import com.atlassian.maven.plugins.amps.pdk.UninstallMojo;
 public class RefappUninstallMojo extends UninstallMojo
 {
     @Override
-    protected String getProductId() throws MojoExecutionException
+    protected String getDefaultProductId() throws MojoExecutionException
     {
         return "refapp";
     }

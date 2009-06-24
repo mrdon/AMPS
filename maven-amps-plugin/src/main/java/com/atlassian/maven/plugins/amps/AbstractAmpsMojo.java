@@ -38,11 +38,20 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
 
     }
 
+    protected String getDefaultProductId() throws MojoExecutionException
+    {
+        return null;
+    }
+
     protected String getProductId() throws MojoExecutionException
     {
         if (product == null)
         {
-            throw new MojoExecutionException("The product must be specified");
+            product = getDefaultProductId();
+            if (product == null)
+            {
+                throw new MojoExecutionException("The product must be specified");
+            }
         }
         return product;
     }

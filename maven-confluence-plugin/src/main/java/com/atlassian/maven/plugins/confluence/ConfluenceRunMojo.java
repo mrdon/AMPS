@@ -11,7 +11,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class ConfluenceRunMojo extends RunMojo
 {
     @Override
-    protected String getProductId() throws MojoExecutionException
+    protected String getDefaultProductId() throws MojoExecutionException
     {
         return "confluence";
     }
