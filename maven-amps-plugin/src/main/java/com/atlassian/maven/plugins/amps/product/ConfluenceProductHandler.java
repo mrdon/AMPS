@@ -11,10 +11,12 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
+import java.util.Arrays;
 
-public class ConfluenceWebappProductHandler extends AbstractWebappProductHandler
+public class ConfluenceProductHandler extends AbstractWebappProductHandler
 {
-    public ConfluenceWebappProductHandler(MavenProject project, MavenGoals goals)
+    public ConfluenceProductHandler(MavenProject project, MavenGoals goals)
     {
         super(project, goals);
     }
@@ -27,6 +29,13 @@ public class ConfluenceWebappProductHandler extends AbstractWebappProductHandler
     public ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.confluence", "confluence-webapp", "RELEASE");
+    }
+
+    protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
+    {
+        return Arrays.asList(
+                new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-confluence-plugin", salVersion));
     }
 
     public ProductArtifact getTestResourcesArtifact()

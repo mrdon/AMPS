@@ -11,10 +11,12 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
+import java.util.Arrays;
 
-public class BambooWebappProductHandler extends AbstractWebappProductHandler
+public class BambooProductHandler extends AbstractWebappProductHandler
 {
-    public BambooWebappProductHandler(MavenProject project, MavenGoals goals)
+    public BambooProductHandler(MavenProject project, MavenGoals goals)
     {
         super(project, goals);
     }
@@ -27,6 +29,13 @@ public class BambooWebappProductHandler extends AbstractWebappProductHandler
     public ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.bamboo", "atlassian-bamboo-web-app", "RELEASE");
+    }
+
+    protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
+    {
+        return Arrays.asList(
+                new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-bamboo-plugin", salVersion));
     }
 
     public ProductArtifact getTestResourcesArtifact()

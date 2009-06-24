@@ -60,13 +60,13 @@ public class IntegrationTestMojo
         final String pluginJar = targetDirectory.getAbsolutePath() + "/" + finalName + ".jar";
 
         ProductContext ctx = createProductContext(product);
-        int actualHttpPort = 0;
+        int actualHttpPort;
         if (!noWebapp)
         {
-            product.start(ctx);
+            actualHttpPort = product.start(ctx);
 
         }
-        goals.runTests(getProductId(), containerId, functionalTestPattern, actualHttpPort, contextPath, pluginJar);
+        goals.runTests(getProductId(), containerId, functionalTestPattern, actualHttpPort, ctx.getContextPath(), pluginJar);
 
         if (!noWebapp)
         {

@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
+import java.util.Arrays;
 
 public class RefappProductHandler extends AbstractWebappProductHandler
 {
@@ -88,6 +90,24 @@ public class RefappProductHandler extends AbstractWebappProductHandler
     protected ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.refapp", "atlassian-refapp", VersionUtils.getVersion());
+    }
+
+    protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
+    {
+        return Arrays.asList(
+                new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-appproperties-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-component-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-executor-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-lifecycle-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-message-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-net-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-pluginsettings-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-project-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-search-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-transaction-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-upgrade-plugin", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-refimpl-user-plugin", salVersion));
     }
 
     protected ProductArtifact getTestResourcesArtifact()

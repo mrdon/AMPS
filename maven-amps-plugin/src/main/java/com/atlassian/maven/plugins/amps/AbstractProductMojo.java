@@ -3,9 +3,9 @@ package com.atlassian.maven.plugins.amps;
 import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
-import com.atlassian.maven.plugins.amps.product.ConfluenceWebappProductHandler;
-import com.atlassian.maven.plugins.amps.product.JiraWebappProductHandler;
-import com.atlassian.maven.plugins.amps.product.BambooWebappProductHandler;
+import com.atlassian.maven.plugins.amps.product.ConfluenceProductHandler;
+import com.atlassian.maven.plugins.amps.product.JiraProductHandler;
+import com.atlassian.maven.plugins.amps.product.BambooProductHandler;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -187,6 +187,27 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
     private String bundledArtifactsString;
 
     /**
+     * SAL version
+     *
+     * @parameter expression="${sal.version}
+     */
+    private String salVersion;
+
+    /**
+     * Atlassian Plugin Development Kit (PDK) version
+     *
+     * @parameter expression="${pdk.version}
+     */
+    private String pdkVersion;
+
+    /**
+     * Atlassian REST module version
+     *
+     * @parameter expression="${rest.version}
+     */
+    private String restVersion;
+
+    /**
      * Product id
      *
      * @parameter expression="${product}
@@ -207,6 +228,10 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
         ctx.setTestResourcesVersion(testResourcesVersion);
         ctx.setHttpPort(httpPort);
         ctx.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
+
+        ctx.setRestVersion(restVersion);
+        ctx.setSalVersion(salVersion);
+        ctx.setPdkVersion(pdkVersion);
 
         ctx.setHttpPort(httpPort == 0 ? handler.getDefaultHttpPort() : httpPort);
         ctx.setVersion(productVersion == null ? "RELEASE" : productVersion);
@@ -257,15 +282,15 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
         }
         else if ("confluence".equals(id))
         {
-            return new ConfluenceWebappProductHandler(project, goals);
+            return new ConfluenceProductHandler(project, goals);
         }
         else if ("jira".equals(id))
         {
-            return new JiraWebappProductHandler(project, goals);
+            return new JiraProductHandler(project, goals);
         }
         else if ("bamboo".equals(id))
         {
-            return new BambooWebappProductHandler(project, goals);
+            return new BambooProductHandler(project, goals);
         }
 
         throw new MojoExecutionException("Unknown product id:" + id);

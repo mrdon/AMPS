@@ -23,6 +23,11 @@ public class ProductContext
     private List<ProductArtifact> libArtifacts = new ArrayList<ProductArtifact>();
     private List<ProductArtifact> bundledArtifacts = new ArrayList<ProductArtifact>();
 
+    private String restVersion;
+    private String upmVersion;
+    private String salVersion;
+    private String pdkVersion;
+
     public String getContainerId()
     {
         return containerId;
@@ -143,4 +148,43 @@ public class ProductContext
         this.log4jProperties = log4jProperties;
     }
 
+    public String getRestVersion()
+    {
+        return restVersion;
+    }
+
+    public void setRestVersion(String restVersion)
+    {
+        this.restVersion = restVersion;
+    }
+
+    public String getUpmVersion()
+    {
+        return upmVersion;
+    }
+
+    public void setUpmVersion(String upmVersion)
+    {
+        this.upmVersion = upmVersion;
+    }
+
+    public String getSalVersion()
+    {
+        return salVersion;
+    }
+
+    public void setSalVersion(String salVersion)
+    {
+        this.salVersion = salVersion;
+    }
+
+    public String getPdkVersion()
+    {
+        return pdkVersion;
+    }
+
+    public void setPdkVersion(String pdkVersion)
+    {
+        this.pdkVersion = pdkVersion;
+    }
 }

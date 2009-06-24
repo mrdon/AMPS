@@ -16,9 +16,9 @@ import com.atlassian.maven.plugins.amps.ProductContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
-public class JiraWebappProductHandler extends AbstractWebappProductHandler
+public class JiraProductHandler extends AbstractWebappProductHandler
 {
-    public JiraWebappProductHandler(MavenProject project, MavenGoals goals)
+    public JiraProductHandler(MavenProject project, MavenGoals goals)
     {
         super(project, goals);
     }

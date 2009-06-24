@@ -58,6 +58,21 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         artifacts.addAll(getDefaultPlugins());
         artifacts.addAll(ctx.getPluginArtifacts());
 
+        if (ctx.getSalVersion() != null)
+        {
+            artifacts.addAll(getSalArtifacts(ctx.getSalVersion()));
+        }
+
+        if (ctx.getPdkVersion() != null)
+        {
+            artifacts.add(new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", ctx.getPdkVersion()));
+        }
+
+        if (ctx.getRestVersion() != null)
+        {
+            artifacts.add(new ProductArtifact("com.atlassian.plugins.rest", "atlassian-rest-module", ctx.getRestVersion()));
+        }
+
         return artifacts;
     }
 
@@ -262,5 +277,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
     protected abstract Map<String, String> getSystemProperties();
 
     protected abstract ProductArtifact getArtifact();
+
+    protected abstract Collection<ProductArtifact> getSalArtifacts(String salVersion);
 
 }
