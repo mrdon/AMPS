@@ -1,11 +1,10 @@
 package com.atlassian.maven.plugins.amps.pdk;
 
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 import com.atlassian.maven.plugins.amps.AbstractAmpsMojo;
-import com.atlassian.maven.plugins.amps.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
 
 /**
  *

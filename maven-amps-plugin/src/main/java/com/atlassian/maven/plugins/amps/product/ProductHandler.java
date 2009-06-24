@@ -1,4 +1,4 @@
-package com.atlassian.maven.plugins.amps;
+package com.atlassian.maven.plugins.amps.product;
 
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Collection;
 import java.util.List;
 import java.io.File;
+
+import com.atlassian.maven.plugins.amps.ProductContext;
 
 public interface ProductHandler
 {

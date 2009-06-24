@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
 
 /**
  * Run the integration tests against the webapp

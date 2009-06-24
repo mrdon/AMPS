@@ -1,13 +1,10 @@
 package com.atlassian.maven.plugins.amps;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.DataInputStream;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
 
 /**
  * Run the webapp

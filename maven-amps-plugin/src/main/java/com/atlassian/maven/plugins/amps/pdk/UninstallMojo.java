@@ -5,7 +5,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.MavenContext;
-import com.atlassian.maven.plugins.amps.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
 
 /**
  * @goal uninstall

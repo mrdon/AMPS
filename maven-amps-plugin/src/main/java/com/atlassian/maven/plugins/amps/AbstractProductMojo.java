@@ -1,7 +1,11 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.refapp.RefappProductHandler;
+import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.ConfluenceWebappProductHandler;
+import com.atlassian.maven.plugins.amps.product.JiraWebappProductHandler;
+import com.atlassian.maven.plugins.amps.product.BambooWebappProductHandler;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -9,7 +13,6 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.PluginManager;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -140,7 +143,7 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
     /**
      * The test resources version
      *
-     * @parameter expression="${testResourcesVersion}" default-value="LATEST"
+     * @parameter expression="${testResources.version}" default-value="LATEST"
      */
     protected String testResourcesVersion;
 
@@ -251,6 +254,18 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
         if ("refapp".equals(id))
         {
             return new RefappProductHandler(project, goals);
+        }
+        else if ("confluence".equals(id))
+        {
+            return new ConfluenceWebappProductHandler(project, goals);
+        }
+        else if ("jira".equals(id))
+        {
+            return new JiraWebappProductHandler(project, goals);
+        }
+        else if ("bamboo".equals(id))
+        {
+            return new BambooWebappProductHandler(project, goals);
         }
 
         throw new MojoExecutionException("Unknown product id:" + id);

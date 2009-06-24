@@ -1,45 +1,37 @@
-package com.atlassian.maven.plugins.amps.refapp;
+package com.atlassian.maven.plugins.amps.product;
 
-import com.atlassian.maven.plugins.amps.ProductHandler;
+import com.atlassian.maven.plugins.amps.ProductContext;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.ProductContext;
-import com.atlassian.maven.plugins.amps.util.VersionUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.model.Exclusion;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Collections;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Collection;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
 
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
-public class RefappProductHandler implements ProductHandler
+public abstract class AbstractWebappProductHandler implements ProductHandler
 {
-    private final MavenGoals goals;
-    private final MavenProject project;
+    protected final MavenGoals goals;
+    protected final MavenProject project;
 
-    public RefappProductHandler(MavenProject project, MavenGoals goals)
+    public AbstractWebappProductHandler(MavenProject project, MavenGoals goals)
     {
         this.project = project;
         this.goals = goals;
-    }
-
-    public String getId()
-    {
-        return "refapp";
     }
 
     public int start(ProductContext ctx) throws MojoExecutionException
@@ -60,48 +52,6 @@ public class RefappProductHandler implements ProductHandler
         goals.stopWebapp(getId(), ctx.getContainerId());
     }
 
-    public ProductArtifact getArtifact()
-    {
-        return new ProductArtifact("com.atlassian.refapp", "atlassian-refapp", VersionUtils.getVersion());
-    }
-
-    public ProductArtifact getTestResourcesArtifact()
-    {
-        return null;
-    }
-
-    public int getDefaultHttpPort()
-    {
-        return 5990;
-    }
-
-    public Map<String, String> getSystemProperties()
-    {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("refapp.home", getHomeDirectory(project).getPath());
-        map.put("osgi.cache", "${project.build.directory}/osgi-cache");
-        return map;
-    }
-
-    protected File getBaseDirectory()
-    {
-        File dir = new File(project.getBuild().getDirectory(), getId());
-        dir.mkdir();
-        return dir;
-    }
-
-
-    public File getHomeDirectory(final MavenProject project)
-    {
-        File homeDir = new File(new File(project.getBuild().getDirectory(), getId()), "refapp-home");
-        // Make sure it exists
-        if (!homeDir.exists())
-        {
-            homeDir.mkdirs();
-        }
-        return homeDir;
-    }
-
     private List<ProductArtifact> getPluginsArtifacts(ProductContext ctx)
     {
         final List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
@@ -111,13 +61,15 @@ public class RefappProductHandler implements ProductHandler
         return artifacts;
     }
 
-    protected File addArtifacts(final ProductContext ctx, File homeDir, final File webappWar) throws MojoExecutionException
+    private File addArtifacts(final ProductContext ctx, File homeDir, final File webappWar) throws MojoExecutionException
     {
         try
         {
             final String webappDir = new File(getBaseDirectory(), "webapp").getAbsolutePath();
             if (!new File(webappDir).exists())
+            {
                 unzip(webappWar, webappDir);
+            }
 
             final File pluginsDir = getPluginsDirectory(webappDir, homeDir);
             final File bundledPluginsDir = new File(getBaseDirectory(), "bundled-plugins");
@@ -125,7 +77,8 @@ public class RefappProductHandler implements ProductHandler
             bundledPluginsDir.mkdir();
             // add bundled plugins
             final File bundledPluginsZip = new File(webappDir, getBundledPluginPath());
-            if (bundledPluginsZip.exists()) {
+            if (bundledPluginsZip.exists())
+            {
                 unzip(bundledPluginsZip, bundledPluginsDir.getPath());
             }
 
@@ -159,7 +112,7 @@ public class RefappProductHandler implements ProductHandler
 
             if (bundledPluginsDir.list().length > 0)
             {
-                com.atlassian.core.util.FileUtils.createZipFile(bundledPluginsDir,bundledPluginsZip);
+                com.atlassian.core.util.FileUtils.createZipFile(bundledPluginsDir, bundledPluginsZip);
             }
 
             // add log4j.properties file if specified
@@ -180,7 +133,7 @@ public class RefappProductHandler implements ProductHandler
         }
     }
 
-    public void unzip(final File zipFile, final String destDir) throws IOException
+    private void unzip(final File zipFile, final String destDir) throws IOException
     {
         final ZipFile zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -209,7 +162,14 @@ public class RefappProductHandler implements ProductHandler
         }
     }
 
-    protected File extractAndProcessHomeDirectory(ProductContext ctx) throws MojoExecutionException
+    private File getBaseDirectory()
+    {
+        File dir = new File(project.getBuild().getDirectory(), getId());
+        dir.mkdir();
+        return dir;
+    }
+
+    private File extractAndProcessHomeDirectory(ProductContext ctx) throws MojoExecutionException
     {
         if (getTestResourcesArtifact() != null)
         {
@@ -234,19 +194,13 @@ public class RefappProductHandler implements ProductHandler
                 throw new MojoExecutionException("Unable to copy home directory", ex);
             }
             File homeDir = new File(outputDir, tmpDir.listFiles()[0].listFiles()[0].getName());
-            processHomeDirectory(project, homeDir);
+            processHomeDirectory(ctx, homeDir);
             return homeDir;
         }
         else
         {
-            return getHomeDirectory(project);
+            return getHomeDirectory();
         }
-    }
-
-
-    protected String getVersion(ProductContext ctx)
-    {
-        return (ctx.getVersion() == null ? getArtifact().getVersion() : ctx.getVersion());
     }
 
     private void addThisPluginToDirectory(final File pluginsDir) throws IOException
@@ -287,37 +241,26 @@ public class RefappProductHandler implements ProductHandler
         }
     }
 
-    public File getPluginsDirectory(final String webappDir, File homeDir)
-    {
-        return new File(webappDir, "WEB-INF/plugins");
-    }
+    protected abstract File getHomeDirectory();
 
-    public List<ProductArtifact> getExtraContainerDependencies()
-    {
-        return Collections.emptyList();
-    }
+    protected abstract void processHomeDirectory(ProductContext ctx, File homeDir) throws MojoExecutionException;
 
-    public String getBundledPluginPath()
-    {
-        return "WEB-INF/classes/atlassian-bundled-plugins.zip";
-    }
+    protected abstract ProductArtifact getTestResourcesArtifact();
 
-    public void processHomeDirectory(MavenProject project, File homeDir) throws MojoExecutionException
-    {
-    }
+    protected abstract Collection<ProductArtifact> getDefaultPlugins();
 
-    public List<ProductArtifact> getDefaultPlugins()
-    {
-        return Collections.emptyList();
-    }
+    protected abstract Collection<ProductArtifact> getDefaultBundledPlugins();
 
-    public List<ProductArtifact> getDefaultLibPlugins()
-    {
-        return Collections.emptyList();
-    }
+    protected abstract Collection<ProductArtifact> getDefaultLibPlugins();
 
-    public List<ProductArtifact> getDefaultBundledPlugins()
-    {
-        return Collections.emptyList();
-    }
+    protected abstract String getBundledPluginPath();
+
+    protected abstract File getPluginsDirectory(String webappDir, File homeDir);
+
+    protected abstract List<ProductArtifact> getExtraContainerDependencies();
+
+    protected abstract Map<String, String> getSystemProperties();
+
+    protected abstract ProductArtifact getArtifact();
+
 }

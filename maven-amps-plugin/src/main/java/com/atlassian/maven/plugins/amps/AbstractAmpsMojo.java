@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.refapp.RefappProductHandler;
+import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
