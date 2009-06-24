@@ -10,11 +10,10 @@
 	<artifactId>maven-jira-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Maven JIRA Plugin</name>
-	<url>http://studio.atlassian.com/browse/MRP</url>
 	<dependencies>
 		<dependency>
 			<groupId>com.atlassian.maven.plugins</groupId>
-			<artifactId>maven-refapp-plugin</artifactId>
+			<artifactId>maven-amps-plugin</artifactId>
 			<version>${project.version}</version>
             <type>maven-plugin</type>
 		</dependency>

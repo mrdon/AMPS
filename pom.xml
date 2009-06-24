@@ -9,6 +9,7 @@
     <artifactId>atlassian-amps-parent</artifactId>
     <version>3.0-SNAPSHOT</version>
     <name>Atlassian Maven Plugin Suite (parent pom)</name>
+    <url>http://studio.atlassian.com/browse/AMPS</url>
     <packaging>pom</packaging>
     <organization>
         <name>Atlassian</name>

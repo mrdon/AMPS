@@ -1,18 +1,18 @@
 package com.atlassian.maven.plugins.bamboo;
 
 import com.atlassian.maven.plugins.amps.DebugMojo;
-import com.atlassian.maven.plugins.amps.WebappHandler;
+import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * @extendsPlugin refapp
+ * @extendsPlugin amps
  * @goal debug
  * @execute phase="package"
  */
 public class BambooDebugMojo extends DebugMojo
 {
     @Override
-    protected WebappHandler getWebappHandler()
+    protected String getProductId() throws MojoExecutionException
     {
-        return new BambooWebappHandler();
+        return "bamboo";
     }
 }

@@ -1,17 +1,17 @@
 package com.atlassian.maven.plugins.jira;
 
 import com.atlassian.maven.plugins.amps.CopyBundledDependenciesMojo;
-import com.atlassian.maven.plugins.amps.WebappHandler;
+import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * @extendsPlugin refapp
+ * @extendsPlugin amps
  * @goal copy-bundled-dependencies
  */
 public class JiraCopyBundledDependenciesMojo extends CopyBundledDependenciesMojo
 {
     @Override
-    protected WebappHandler getWebappHandler()
+    protected String getProductId() throws MojoExecutionException
     {
-        return new JiraWebappHandler();
+        return "jira";
     }
 }

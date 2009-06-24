@@ -1,4 +1,4 @@
-package com.atlassian.maven.plugins.bamboo;
+package com.atlassian.maven.plugins.confluence;
 
 import com.atlassian.maven.plugins.amps.RunMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -8,11 +8,11 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @goal run
  * @execute phase="package"
  */
-public class BambooRunMojo extends RunMojo
+public class ConfluenceRunMojo extends RunMojo
 {
     @Override
     protected String getProductId() throws MojoExecutionException
     {
-        return "bamboo";
+        return "confluence";
     }
 }

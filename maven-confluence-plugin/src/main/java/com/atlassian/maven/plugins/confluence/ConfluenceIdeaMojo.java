@@ -1,4 +1,4 @@
-package com.atlassian.maven.plugins.bamboo;
+package com.atlassian.maven.plugins.confluence;
 
 import com.atlassian.maven.plugins.amps.cli.IdeaMojo;
 
@@ -6,7 +6,6 @@ import com.atlassian.maven.plugins.amps.cli.IdeaMojo;
  * @extendsPlugin amps
  * @goal idea
  */
-public class BambooIdeaMojo extends IdeaMojo
+public class ConfluenceIdeaMojo extends IdeaMojo
 {
-
 }

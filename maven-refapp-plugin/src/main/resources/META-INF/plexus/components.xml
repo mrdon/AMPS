@@ -2,7 +2,7 @@
     <components>
         <component>
             <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
-            <role-hint>refapp-plugin</role-hint>
+            <role-hint>atlassian-plugin</role-hint>
             <implementation>
                 org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
             </implementation>
@@ -40,10 +40,10 @@
         </component>
         <component>
             <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-            <role-hint>refapp-plugin</role-hint>
+            <role-hint>atlassian-plugin</role-hint>
             <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
             <configuration>
-                <type>refapp-plugin</type>
+                <type>atlassian-plugin</type>
                 <includesDependencies>true</includesDependencies>
                 <language>java</language>
                 <extension>jar</extension>

@@ -1,4 +1,4 @@
-package com.atlassian.maven.plugins.jira;
+package com.atlassian.maven.plugins.confluence;
 
 import com.atlassian.maven.plugins.amps.FilterPluginDescriptorMojo;
 
@@ -6,7 +6,6 @@ import com.atlassian.maven.plugins.amps.FilterPluginDescriptorMojo;
  * @extendsPlugin amps
  * @goal filter-plugin-descriptor
  */
-public class JiraFilterPluginDescriptorMojo extends FilterPluginDescriptorMojo
+public class ConfluenceFilterPluginDescriptorMojo extends FilterPluginDescriptorMojo
 {
-
 }

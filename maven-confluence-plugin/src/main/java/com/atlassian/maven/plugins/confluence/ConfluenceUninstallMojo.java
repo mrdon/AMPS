@@ -1,4 +1,4 @@
-package com.atlassian.maven.plugins.bamboo;
+package com.atlassian.maven.plugins.confluence;
 
 import com.atlassian.maven.plugins.amps.pdk.UninstallMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -7,11 +7,11 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @extendsPlugin amps
  * @goal uninstall
  */
-public class BambooUninstallMojo extends UninstallMojo
+public class ConfluenceUninstallMojo extends UninstallMojo
 {
     @Override
     protected String getProductId() throws MojoExecutionException
     {
-        return "bamboo";
+        return "confluence";
     }
 }

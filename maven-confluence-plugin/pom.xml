@@ -9,11 +9,10 @@
 	<artifactId>maven-confluence-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Maven Confluence Plugin</name>
-	<url>http://studio.atlassian.com/browse/MRP</url>
 	<dependencies>
 		<dependency>
 			<groupId>com.atlassian.maven.plugins</groupId>
-			<artifactId>maven-refapp-plugin</artifactId>
+			<artifactId>maven-amps-plugin</artifactId>
 			<version>${project.version}</version>
             <type>maven-plugin</type>
 		</dependency>

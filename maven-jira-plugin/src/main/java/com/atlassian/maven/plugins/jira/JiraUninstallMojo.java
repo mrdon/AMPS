@@ -1,17 +1,17 @@
 package com.atlassian.maven.plugins.jira;
 
 import com.atlassian.maven.plugins.amps.pdk.UninstallMojo;
-import com.atlassian.maven.plugins.amps.WebappHandler;
+import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * @extendsPlugin refapp
+ * @extendsPlugin amps
  * @goal uninstall
  */
 public class JiraUninstallMojo extends UninstallMojo
 {
     @Override
-    protected WebappHandler getWebappHandler()
+    protected String getProductId() throws MojoExecutionException
     {
-        return new JiraWebappHandler();
+        return "jira";
     }
 }
