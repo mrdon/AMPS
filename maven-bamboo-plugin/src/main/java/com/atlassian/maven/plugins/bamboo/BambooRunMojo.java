@@ -1,7 +1,7 @@
 package com.atlassian.maven.plugins.bamboo;
 
-import com.atlassian.maven.plugins.refapp.RunMojo;
-import com.atlassian.maven.plugins.refapp.WebappHandler;
+import com.atlassian.maven.plugins.amps.RunMojo;
+import com.atlassian.maven.plugins.amps.WebappHandler;
 
 /**
  * @extendsPlugin refapp

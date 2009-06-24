@@ -1,7 +1,7 @@
 package com.atlassian.maven.plugins.bamboo;
 
-import com.atlassian.maven.plugins.refapp.pdk.InstallMojo;
-import com.atlassian.maven.plugins.refapp.WebappHandler;
+import com.atlassian.maven.plugins.amps.pdk.InstallMojo;
+import com.atlassian.maven.plugins.amps.WebappHandler;
 
 /**
  * @extendsPlugin refapp

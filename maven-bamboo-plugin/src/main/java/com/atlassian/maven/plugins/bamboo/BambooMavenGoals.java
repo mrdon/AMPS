@@ -17,7 +17,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 
-import com.atlassian.maven.plugins.refapp.MavenContext;
+import com.atlassian.maven.plugins.amps.MavenContext;
 
 public class BambooMavenGoals
 {

@@ -10,10 +10,10 @@ import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
-import com.atlassian.maven.plugins.refapp.AbstractWebappMojo;
-import com.atlassian.maven.plugins.refapp.WebappArtifact;
-import com.atlassian.maven.plugins.refapp.WebappHandler;
-import com.atlassian.maven.plugins.refapp.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.AbstractWebappMojo;
+import com.atlassian.maven.plugins.amps.WebappArtifact;
+import com.atlassian.maven.plugins.amps.WebappHandler;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 public class BambooWebappHandler implements WebappHandler
 {

@@ -1,6 +1,6 @@
 package com.atlassian.maven.plugins.conf;
 
-import com.atlassian.maven.plugins.refapp.MavenContext;
+import com.atlassian.maven.plugins.amps.MavenContext;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;

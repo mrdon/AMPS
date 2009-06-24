@@ -1,7 +1,7 @@
 package com.atlassian.maven.plugins.jira;
 
-import com.atlassian.maven.plugins.refapp.pdk.UninstallMojo;
-import com.atlassian.maven.plugins.refapp.WebappHandler;
+import com.atlassian.maven.plugins.amps.pdk.UninstallMojo;
+import com.atlassian.maven.plugins.amps.WebappHandler;
 
 /**
  * @extendsPlugin refapp

@@ -1,7 +1,7 @@
 package com.atlassian.maven.plugins.conf;
 
-import com.atlassian.maven.plugins.refapp.UnitTestMojo;
-import com.atlassian.maven.plugins.refapp.WebappHandler;
+import com.atlassian.maven.plugins.amps.UnitTestMojo;
+import com.atlassian.maven.plugins.amps.WebappHandler;
 
 /**
  * @extendsPlugin refapp

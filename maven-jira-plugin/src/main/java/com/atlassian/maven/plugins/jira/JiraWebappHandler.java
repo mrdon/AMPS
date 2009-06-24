@@ -17,11 +17,11 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
 
-import com.atlassian.maven.plugins.refapp.AbstractWebappMojo;
-import com.atlassian.maven.plugins.refapp.MavenContext;
-import com.atlassian.maven.plugins.refapp.WebappArtifact;
-import com.atlassian.maven.plugins.refapp.WebappHandler;
-import com.atlassian.maven.plugins.refapp.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.AbstractWebappMojo;
+import com.atlassian.maven.plugins.amps.MavenContext;
+import com.atlassian.maven.plugins.amps.WebappArtifact;
+import com.atlassian.maven.plugins.amps.WebappHandler;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 public class JiraWebappHandler implements WebappHandler
 {

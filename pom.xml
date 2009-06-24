@@ -15,6 +15,7 @@
         <url>http://www.atlassian.com</url>
     </organization>
     <modules>
+        <module>maven-amps-plugin</module>
         <module>maven-refapp-plugin</module>
         <module>maven-confluence-plugin</module>
         <module>maven-bamboo-plugin</module>

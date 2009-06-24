@@ -1,7 +1,7 @@
 package com.atlassian.maven.plugins.conf;
 
-import com.atlassian.maven.plugins.refapp.cli.CliMojo;
-import com.atlassian.maven.plugins.refapp.WebappHandler;
+import com.atlassian.maven.plugins.amps.cli.CliMojo;
+import com.atlassian.maven.plugins.amps.WebappHandler;
 
 /**
  * @extendsPlugin refapp
