@@ -7,6 +7,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 import com.atlassian.maven.plugins.amps.CreateMojo;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * Creates a new plugin
@@ -20,6 +21,6 @@ public class RefappCreateMojo extends CreateMojo
     @Override
     protected String getDefaultProductId() throws MojoExecutionException
     {
-        return "refapp";
+        return ProductHandlerFactory.REFAPP;
     }
 }

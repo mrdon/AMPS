@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.confluence;
 
 import com.atlassian.maven.plugins.amps.UnitTestMojo;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
@@ -12,6 +13,6 @@ public class ConfluenceUnitTestMojo extends UnitTestMojo
     @Override
     protected String getDefaultProductId() throws MojoExecutionException
     {
-        return "confluence";
+        return ProductHandlerFactory.CONFLUENCE;
     }
 }

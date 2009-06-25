@@ -7,6 +7,7 @@ import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.execution.MavenSession;
 import com.atlassian.maven.plugins.amps.cli.CliMojo;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * @extendsPlugin amps
@@ -17,6 +18,6 @@ public class RefappCliMojo extends CliMojo
     @Override
     protected String getDefaultProductId() throws MojoExecutionException
     {
-        return "refapp";
+        return ProductHandlerFactory.REFAPP;
     }
 }

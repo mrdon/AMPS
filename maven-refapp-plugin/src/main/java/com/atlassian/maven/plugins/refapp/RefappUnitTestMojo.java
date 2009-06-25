@@ -7,6 +7,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 import com.atlassian.maven.plugins.amps.UnitTestMojo;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * @extendsPlugin amps
@@ -18,7 +19,7 @@ public class RefappUnitTestMojo extends UnitTestMojo
     @Override
     protected String getDefaultProductId() throws MojoExecutionException
     {
-        return "refapp";
+        return ProductHandlerFactory.REFAPP;
     }
 
 }

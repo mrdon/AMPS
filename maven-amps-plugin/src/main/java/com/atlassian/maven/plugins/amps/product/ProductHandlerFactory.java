@@ -11,21 +11,26 @@ import java.util.Collection;
 
 public class ProductHandlerFactory
 {
+    public static final String REFAPP = "refapp";
+    public static final String CONFLUENCE = "confluence";
+    public static final String JIRA = "jira";
+    public static final String BAMBOO = "bamboo";
+
     public static ProductHandler create(String id, MavenProject project, MavenGoals goals)
     {
-        if ("refapp".equals(id))
+        if (REFAPP.equals(id))
         {
             return new RefappProductHandler(project, goals);
         }
-        else if ("confluence".equals(id))
+        else if (CONFLUENCE.equals(id))
         {
             return new ConfluenceProductHandler(project, goals);
         }
-        else if ("jira".equals(id))
+        else if (JIRA.equals(id))
         {
             return new JiraProductHandler(project, goals);
         }
-        else if ("bamboo".equals(id))
+        else if (BAMBOO.equals(id))
         {
             return new BambooProductHandler(project, goals);
         }
@@ -35,6 +40,6 @@ public class ProductHandlerFactory
 
     public static Collection<String> getIds()
     {
-        return Arrays.asList("refapp", "confluence", "jira", "bamboo");
+        return Arrays.asList(REFAPP, CONFLUENCE, JIRA, BAMBOO);
     }
 }

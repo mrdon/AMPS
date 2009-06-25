@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import com.atlassian.maven.plugins.amps.RunMojo;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * Run the webapp
@@ -21,6 +22,6 @@ public class RefappRunMojo
     @Override
     protected String getDefaultProductId() throws MojoExecutionException
     {
-        return "refapp";
+        return ProductHandlerFactory.REFAPP;
     }
 }

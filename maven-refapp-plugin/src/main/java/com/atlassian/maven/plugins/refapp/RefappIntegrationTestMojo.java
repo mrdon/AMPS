@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import com.atlassian.maven.plugins.amps.IntegrationTestMojo;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * Run the integration tests against the webapp
@@ -20,6 +21,6 @@ public class RefappIntegrationTestMojo
     @Override
     protected String getDefaultProductId() throws MojoExecutionException
     {
-        return "refapp";
+        return ProductHandlerFactory.REFAPP;
     }
 }
