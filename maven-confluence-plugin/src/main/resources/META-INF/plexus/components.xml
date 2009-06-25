@@ -20,18 +20,20 @@
                                 com.atlassian.maven.plugins:maven-confluence-plugin:filter-plugin-descriptor
                             </process-resources>
                             <compile>org.apache.maven.plugins:maven-compiler-plugin:compile</compile>
+                            <process-classes>com.atlassian.maven.plugins:maven-confluence-plugin:generate-manifest</process-classes>
                             <process-test-resources>
                                 org.apache.maven.plugins:maven-resources-plugin:testResources
                             </process-test-resources>
                             <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
                             <test>com.atlassian.maven.plugins:maven-confluence-plugin:unit-test</test>
                             <package>
-                                org.apache.maven.plugins:maven-jar-plugin:jar
+                                com.atlassian.maven.plugins:maven-confluence-plugin:jar
                             </package>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-confluence-plugin:integration-test
                             </integration-test>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
+                            <verify>com.atlassian.maven.plugins:maven-confluence-plugin:validate-manifest</verify>
                             <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                         </phases>
                     </lifecycle>

@@ -5,6 +5,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,12 +32,19 @@ public class ValidateManifestMojo extends AbstractMojo
      */
     protected MavenProject project;
 
+    /**
+     * Whether to skip validation or not
+     *
+     * @parameter expression="${manifest.validation.skip}"
+     */
+    protected boolean skipManifestValidation = false;
+
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         File mfile = file(project.getBuild().getOutputDirectory(), "META-INF", "MANIFEST.MF");
 
         // Only valid if the manifest exists
-        if (mfile.exists())
+        if (mfile.exists() && !skipManifestValidation)
         {
             getLog().info("Manifest found, validating...");
             InputStream mfin = null;
@@ -51,11 +59,15 @@ public class ValidateManifestMojo extends AbstractMojo
             {
                 throw new MojoExecutionException("Unable to read manifest", e);
             }
+            finally
+            {
+                IOUtils.closeQuietly(mfin);
+            }
             getLog().info("Manifest validated");
         }
         else
         {
-            getLog().info("No manifest found, skipping validation");
+            getLog().info("No manifest found or skip flag specified, skipping validation");
         }
     }
 
