@@ -4,6 +4,10 @@ import java.io.File;
 
 public class FileUtils
 {
+    public static File file(String parent, String... kids)
+    {
+        return file(new File(parent), kids);
+    }
     public static File file(File parent, String... kids)
     {
         File cur = parent;

@@ -1,4 +1,4 @@
-package com.atlassian.maven.plugins.refapp.cli;
+package com.atlassian.maven.plugins.refapp;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;

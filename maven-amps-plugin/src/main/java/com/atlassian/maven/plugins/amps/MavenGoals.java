@@ -55,6 +55,7 @@ public class MavenGoals {
         put("cargo-maven2-plugin", "1.0-beta-2-db2");
         put("atlassian-pdk", "2.1.6");
         put("maven-archetype-plugin", "2.0-alpha-4");
+        put("maven-bundle-plugin", "2.0.0");
 
     }};
 
@@ -141,6 +142,7 @@ public class MavenGoals {
                 ),
                 goal("copy-resources"),
                 configuration(
+                        element(name("encoding"), "UTF-8"),
                         element(name("resources"),
                                 element(name("resource"),
                                         element(name("directory"), "src/main/resources"),
@@ -480,6 +482,52 @@ public class MavenGoals {
                 executionEnvironment(project, session, pluginManager)
         );
         return testResourcesZip;
+    }
+
+    public void generateManifest(Map<String,String> instructions) throws MojoExecutionException
+    {
+        List<Element> instlist = new ArrayList<Element>();
+        for (Map.Entry<String,String> entry : instructions.entrySet())
+        {
+            instlist.add(element(entry.getKey(), entry.getValue()));
+        }
+        executeMojo(
+                plugin(
+                        groupId("org.apache.felix"),
+                        artifactId("maven-bundle-plugin")
+                ),
+                goal("manifest"),
+                configuration(
+                        element(name("supportedProjectTypes"),
+                                element(name("supportedProjectType"), "jar"),
+                                element(name("supportedProjectType"), "bundle"),
+                                element(name("supportedProjectType"), "war"),
+                                element(name("supportedProjectType"), "atlassian-plugin")),
+                        element(name("instructions"), instlist.toArray(new Element[instlist.size()]))
+                ),
+                executionEnvironment(project, session, pluginManager)
+        );
+    }
+
+    public void jarWithOptionalManifest(boolean manifestExists) throws MojoExecutionException
+    {
+        Element[] archive = new Element[0];
+        if (manifestExists)
+        {
+            archive = new Element[]{element(name("manifestFile"), "${project.build.outputDirectory}/META-INF/MANIFEST.MF")};
+        }
+
+        executeMojo(
+                plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-jar-plugin")
+                ),
+                goal("jar"),
+                configuration(
+                        element(name("archive"), archive)
+                ),
+                executionEnvironment(project, session, pluginManager)
+        );
     }
 
     private static class Container

@@ -1,4 +1,4 @@
-package com.atlassian.maven.plugins.refapp.pdk;
+package com.atlassian.maven.plugins.refapp;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
