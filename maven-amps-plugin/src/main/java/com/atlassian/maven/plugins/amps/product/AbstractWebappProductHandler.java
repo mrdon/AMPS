@@ -224,7 +224,8 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
     {
         final File srcDir = new File(project.getBasedir(), "src/test/resources/"+homeDirName);
         final File outputDir = new File(getBaseDirectory(), homeDirName);
-        FileUtils.copyDirectory(srcDir, outputDir);
+        if (srcDir.exists() && outputDir.exists())
+        	FileUtils.copyDirectory(srcDir, outputDir);
     }
 
 
