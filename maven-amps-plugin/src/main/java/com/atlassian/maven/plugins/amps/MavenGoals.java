@@ -494,7 +494,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.felix"),
-                        artifactId("maven-bundle-plugin")
+                        artifactId("maven-bundle-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-bundle-plugin"))
                 ),
                 goal("manifest"),
                 configuration(
