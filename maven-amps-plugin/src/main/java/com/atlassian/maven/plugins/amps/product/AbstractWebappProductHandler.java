@@ -1,58 +1,58 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import com.atlassian.maven.plugins.amps.ProductContext;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.model.Exclusion;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Collection;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.ProductContext;
 
 public abstract class AbstractWebappProductHandler implements ProductHandler
 {
     protected final MavenGoals goals;
     protected final MavenProject project;
 
-    public AbstractWebappProductHandler(MavenProject project, MavenGoals goals)
+    public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals)
     {
         this.project = project;
         this.goals = goals;
     }
 
-    public int start(ProductContext ctx) throws MojoExecutionException
+    public int start(final ProductContext ctx) throws MojoExecutionException
     {
         // Copy the webapp war to target
         final File webappWar = goals.copyWebappWar(getId(), getBaseDirectory(),
                 new ProductArtifact(getArtifact().getGroupId(), getArtifact().getArtifactId(), ctx.getVersion()));
 
-        File homeDir = extractAndProcessHomeDirectory(ctx);
+        final File homeDir = extractAndProcessHomeDirectory(ctx);
 
         final File combinedWebappWar = addArtifacts(ctx, homeDir, webappWar);
 
         return goals.startWebapp(getId(), combinedWebappWar, getSystemProperties(), getExtraContainerDependencies(), ctx);
     }
 
-    public void stop(ProductContext ctx) throws MojoExecutionException
+    public void stop(final ProductContext ctx) throws MojoExecutionException
     {
         goals.stopWebapp(getId(), ctx.getContainerId());
     }
 
-    private List<ProductArtifact> getPluginsArtifacts(ProductContext ctx)
+    private List<ProductArtifact> getPluginsArtifacts(final ProductContext ctx)
     {
         final List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
         artifacts.addAll(getDefaultPlugins());
@@ -76,7 +76,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         return artifacts;
     }
 
-    private File addArtifacts(final ProductContext ctx, File homeDir, final File webappWar) throws MojoExecutionException
+    private File addArtifacts(final ProductContext ctx, final File homeDir, final File webappWar) throws MojoExecutionException
     {
         try
         {
@@ -179,12 +179,12 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
 
     private File getBaseDirectory()
     {
-        File dir = new File(project.getBuild().getDirectory(), getId());
+        final File dir = new File(project.getBuild().getDirectory(), getId());
         dir.mkdir();
         return dir;
     }
 
-    private File extractAndProcessHomeDirectory(ProductContext ctx) throws MojoExecutionException
+    private File extractAndProcessHomeDirectory(final ProductContext ctx) throws MojoExecutionException
     {
         if (getTestResourcesArtifact() != null)
         {
@@ -198,17 +198,19 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
             final File tmpDir = new File(getBaseDirectory(), "tmp-resources");
             tmpDir.mkdir();
 
+            File homeDir;
             try
             {
                 unzip(confHomeZip, tmpDir.getPath());
-                FileUtils.copyDirectory(tmpDir.listFiles()[0],
-                        outputDir);
+                FileUtils.copyDirectory(tmpDir.listFiles()[0], outputDir);
+                final String homeDirName = tmpDir.listFiles()[0].listFiles()[0].getName();
+                homeDir = new File(outputDir, homeDirName);
+                overrideAndPatchHomeDir(homeDirName);
             }
-            catch (IOException ex)
+            catch (final IOException ex)
             {
                 throw new MojoExecutionException("Unable to copy home directory", ex);
             }
-            File homeDir = new File(outputDir, tmpDir.listFiles()[0].listFiles()[0].getName());
             processHomeDirectory(ctx, homeDir);
             return homeDir;
         }
@@ -217,6 +219,15 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
             return getHomeDirectory();
         }
     }
+
+    private void overrideAndPatchHomeDir(final String homeDirName) throws IOException
+    {
+        final File srcDir = new File(project.getBasedir(), "src/test/resources/"+homeDirName);
+        final File outputDir = new File(getBaseDirectory(), homeDirName);
+        FileUtils.copyDirectory(srcDir, outputDir);
+    }
+
+
 
     private void addThisPluginToDirectory(final File pluginsDir) throws IOException
     {
@@ -231,8 +242,8 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
     }
 
     private void addArtifactsToDirectory(final MavenGoals goals, final List<ProductArtifact> artifacts,
-                                         final File pluginsDir) throws MojoExecutionException
-    {
+            final File pluginsDir) throws MojoExecutionException
+            {
         // first remove plugins from the webapp that we want to update
         if (pluginsDir.isDirectory() && pluginsDir.exists())
         {
@@ -254,7 +265,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         {
             goals.copyPlugins(pluginsDir, artifacts);
         }
-    }
+            }
 
     protected abstract File getHomeDirectory();
 
