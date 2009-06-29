@@ -3,6 +3,7 @@ package com.atlassian.maven.plugins.amps.osgi;
 import com.atlassian.maven.plugins.amps.AbstractAmpsMojo;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.MavenContext;
+import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.PluginManager;
@@ -11,6 +12,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
 
 import aQute.lib.osgi.Constants;
 
@@ -60,6 +62,17 @@ public class GenerateManifestMojo extends AbstractAmpsMojo {
             if (!instructions.containsKey(Constants.EXPORT_PACKAGE))
             {
                 instructions.put(Constants.EXPORT_PACKAGE, "");
+            }
+
+            File metainfLib = file(project.getBuild().getOutputDirectory(), "META-INF", "lib");
+            if (metainfLib.exists())
+            {
+                StringBuilder sb = new StringBuilder(".");
+                for (File lib : metainfLib.listFiles())
+                {
+                    sb.append(",").append("META-INF/lib/" + lib.getName());
+                }
+                instructions.put(Constants.BUNDLE_CLASSPATH, sb.toString());
             }
             goals.generateManifest(instructions);
         }

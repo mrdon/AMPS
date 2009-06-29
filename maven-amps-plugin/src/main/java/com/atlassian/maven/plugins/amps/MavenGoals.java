@@ -80,7 +80,10 @@ public class MavenGoals {
         configs.add(element(name("commands"),
                 element(name("pi"), "resources com.atlassian.maven.plugins:maven-"+productId+"-plugin:filter-plugin-descriptor "
                         + "compile com.atlassian.maven.plugins:maven-"+productId
-                        +"-plugin:copy-bundled-dependencies jar com.atlassian.maven.plugins:maven-"+productId+"-plugin:install"),
+                        +"-plugin:copy-bundled-dependencies com.atlassian.maven.plugins:maven-"+productId+"-plugin:generate-manifest "
+                        +"com.atlassian.maven.plugins:maven-"+productId+"-plugin:validate-manifest "
+                        + "com.atlassian.maven.plugins:maven-"+productId+"-plugin:jar "
+                        + "com.atlassian.maven.plugins:maven-"+productId+"-plugin:install"),
                 element(name("pu"), "com.atlassian.maven.plugins:maven-"+productId+"-plugin:uninstall")));
         if (port > 0)
         {
