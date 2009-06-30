@@ -57,6 +57,13 @@ public class MavenGoals {
         put("maven-archetype-plugin", "2.0-alpha-4");
         put("maven-bundle-plugin", "2.0.0");
 
+        // You can't actually override the version a plugin if defined in the project, so these don't actually do
+        // anything, since the super pom already defines versions.
+        put("maven-dependency-plugin", "2.0");
+        put("maven-resources-plugin", "2.3");
+        put("maven-jar-plugin", "2.2");
+        put("maven-surefire-plugin", "2.4.3");
+
     }};
 
     public MavenGoals(MavenContext ctx) {
@@ -123,7 +130,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
-                        artifactId("maven-dependency-plugin")
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
                 ),
                 goal("copy-dependencies"),
                 configuration(
@@ -141,7 +149,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
-                        artifactId("maven-resources-plugin")
+                        artifactId("maven-resources-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-resources-plugin"))
                 ),
                 goal("copy-resources"),
                 configuration(
@@ -164,7 +173,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
-                        artifactId("maven-surefire-plugin")
+                        artifactId("maven-surefire-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-surefire-plugin"))
                 ),
                 goal("test"),
                 configuration(
@@ -181,7 +191,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
-                        artifactId("maven-dependency-plugin")
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
                 ),
                 goal("copy"),
                 configuration(
@@ -212,7 +223,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
-                        artifactId("maven-dependency-plugin")
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
                 ),
                 goal("copy"),
                 configuration(
@@ -318,7 +330,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
-                        artifactId("maven-surefire-plugin")
+                        artifactId("maven-surefire-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-surefire-plugin"))
                 ),
                 goal("test"),
                 configuration(
@@ -469,7 +482,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
-                        artifactId("maven-dependency-plugin")
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
                 ),
                 goal("copy"),
                 configuration(
@@ -524,7 +538,8 @@ public class MavenGoals {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
-                        artifactId("maven-jar-plugin")
+                        artifactId("maven-jar-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-jar-plugin"))
                 ),
                 goal("jar"),
                 configuration(
