@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 import java.io.File;
 import java.util.List;
@@ -9,24 +10,106 @@ import java.util.Map;
 
 public class ProductContext
 {
-    private String version;
-    private String testResourcesVersion;
-    private String containerId;
-    private String server;
-    private int httpPort;
-    private String contextPath;
-    private String jvmArgs;
-    private File log4jProperties;
-    private ArtifactRetriever artifactRetriever;
+    /**
+     * Container to run in
+     *
+     * @parameter expression="${container}"
+     */
+    protected String containerId = "tomcat6x";
+    /**
+     * HTTP port for the servlet containers
+     *
+     * @parameter expression="${http.port}"
+     */
+    private int httpPort = 0;
 
+    /**
+     * Application context path
+     *
+     * @parameter expression="${context.path}"
+     */
+    protected String contextPath = "/";
+
+    /**
+     * Application server
+     *
+     * @parameter expression="${server}" default-value="localhost"
+     */
+    protected String server;
+
+    /**
+     * Webapp version
+     *
+     * @parameter expression="${version}"
+     */
+    protected String version = "RELEASE";
+
+    /**
+     * JVM arguments to pass to cargo
+     *
+     * @parameter expression="${jvmargs}"
+     */
+    protected String jvmArgs = null;
+
+    /**
+     * A log4j properties file
+     *
+     * @parameter
+     */
+    protected File log4jProperties;
+
+    /**
+     * The test resources version
+     *
+     * @parameter expression="${testResources.version}" default-value="LATEST"
+     */
+    protected String testResourcesVersion;
+
+    /**
+     * @parameter
+     */
     private List<ProductArtifact> pluginArtifacts = new ArrayList<ProductArtifact>();
+
+    /**
+     * @parameter
+     */
     private List<ProductArtifact> libArtifacts = new ArrayList<ProductArtifact>();
+
+    /**
+     * @parameter
+     */
     private List<ProductArtifact> bundledArtifacts = new ArrayList<ProductArtifact>();
 
-    private String restVersion;
-    private String upmVersion;
+    /**
+     * SAL version
+     *
+     * @parameter expression="${sal.version}
+     */
     private String salVersion;
+
+    /**
+     * Atlassian Plugin Development Kit (PDK) version
+     *
+     * @parameter expression="${pdk.version}
+     */
     private String pdkVersion;
+
+    /**
+     * Atlassian REST module version
+     *
+     * @parameter expression="${rest.version}
+     */
+    private String restVersion;
+
+    /**
+     * Product id
+     *
+     * @parameter expression="${product}
+     */
+    private String product;
+
+    private ArtifactRetriever artifactRetriever;
+
 
     public String getContainerId()
     {
@@ -158,16 +241,6 @@ public class ProductContext
         this.restVersion = restVersion;
     }
 
-    public String getUpmVersion()
-    {
-        return upmVersion;
-    }
-
-    public void setUpmVersion(String upmVersion)
-    {
-        this.upmVersion = upmVersion;
-    }
-
     public String getSalVersion()
     {
         return salVersion;
@@ -186,5 +259,15 @@ public class ProductContext
     public void setPdkVersion(String pdkVersion)
     {
         this.pdkVersion = pdkVersion;
+    }
+
+    public String getProduct()
+    {
+        return product;
+    }
+
+    public void setProduct(String product)
+    {
+        this.product = product;
     }
 }

@@ -20,6 +20,7 @@ import java.util.List;
  */
 public abstract class AbstractProductMojo extends AbstractAmpsMojo
 {
+    // ------ start inline product context
     /**
      * Container to run in
      *
@@ -55,22 +56,6 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
     protected String productVersion;
 
     /**
-     * The build directory
-     *
-     * @parameter expression="${project.build.directory}"
-     * @required
-     */
-    protected File targetDirectory;
-
-    /**
-     * The jar name
-     *
-     * @parameter expression="${project.build.finalName}"
-     * @required
-     */
-    protected String finalName;
-
-    /**
      * JVM arguments to pass to cargo
      *
      * @parameter expression="${jvmargs}"
@@ -83,59 +68,6 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
      * @parameter
      */
     protected File log4jProperties;
-
-    /**
-     * The Maven Session Object
-     *
-     * @parameter expression="${session}"
-     * @required
-     * @readonly
-     */
-    protected MavenSession session;
-    /**
-     * The Maven PluginManager Object
-     *
-     * @component
-     * @required
-     */
-    protected PluginManager pluginManager;
-
-        /**
-     * The artifact resolver is used to dynamically resolve JARs that have to be in the embedded
-     * container's classpaths. Another solution would have been to statitically define them a
-     * dependencies in the plugin's POM. Resolving them in a dynamic manner is much better as only
-     * the required JARs for the defined embedded container are downloaded.
-     *
-     * @component
-     */
-    private ArtifactResolver artifactResolver;
-
-    /**
-     * The local Maven repository. This is used by the artifact resolver to download resolved
-     * JARs and put them in the local repository so that they won't have to be fetched again next
-     * time the plugin is executed.
-     *
-     * @parameter expression="${localRepository}"
-     */
-    private ArtifactRepository localRepository;
-
-    /**
-     * The remote Maven repositories used by the artifact resolver to look for JARs.
-     *
-     * @parameter expression="${project.remoteArtifactRepositories}"
-     */
-    private List repositories;
-
-    /**
-     * The artifact factory is used to create valid Maven
-     * {@link org.apache.maven.artifact.Artifact} objects. This is used to pass Maven artifacts to
-     * the artifact resolver so that it can download the required JARs to put in the embedded
-     * container's classpaths.
-     *
-     * @component
-     */
-    private ArtifactFactory artifactFactory;
-
 
     /**
      * The test resources version
@@ -158,30 +90,6 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
      * @parameter
      */
     private List<ProductArtifact> bundledArtifacts = new ArrayList<ProductArtifact>();
-
-    /**
-     * Comma-delimited list of plugin artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be
-     * ommitted, defaulting to LATEST
-     *
-     * @parameter expression="${plugins}
-     */
-    private String pluginArtifactsString;
-
-    /**
-     * Comma-delimited list of lib artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be
-     * ommitted, defaulting to LATEST
-     *
-     * @parameter expression="${lib.plugins}
-     */
-    private String libArtifactsString;
-
-    /**
-     * Comma-delimited list of bundled plugin artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be
-     * ommitted, defaulting to LATEST
-     *
-     * @parameter expression="${bundled.plugins}
-     */
-    private String bundledArtifactsString;
 
     /**
      * SAL version
@@ -211,9 +119,113 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
      */
     private String product;
 
-    protected ProductContext createProductContext(ProductHandler handler)
+    // ---------------- end product context
+
+
+    /**
+     * Comma-delimited list of plugin artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be
+     * ommitted, defaulting to LATEST
+     *
+     * @parameter expression="${plugins}
+     */
+    private String pluginArtifactsString;
+
+    /**
+     * Comma-delimited list of lib artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be
+     * ommitted, defaulting to LATEST
+     *
+     * @parameter expression="${lib.plugins}
+     */
+    private String libArtifactsString;
+
+    /**
+     * Comma-delimited list of bundled plugin artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be
+     * ommitted, defaulting to LATEST
+     *
+     * @parameter expression="${bundled.plugins}
+     */
+    private String bundledArtifactsString;
+
+    /**
+     * The build directory
+     *
+     * @parameter expression="${project.build.directory}"
+     * @required
+     */
+    protected File targetDirectory;
+
+    /**
+     * The jar name
+     *
+     * @parameter expression="${project.build.finalName}"
+     * @required
+     */
+    protected String finalName;
+    /**
+     * The Maven Session Object
+     *
+     * @parameter expression="${session}"
+     * @required
+     * @readonly
+     */
+    protected MavenSession session;
+
+    /**
+     * The Maven PluginManager Object
+     *
+     * @component
+     * @required
+     */
+    protected PluginManager pluginManager;
+
+    /**
+     * The artifact resolver is used to dynamically resolve JARs that have to be in the embedded
+     * container's classpaths. Another solution would have been to statitically define them a
+     * dependencies in the plugin's POM. Resolving them in a dynamic manner is much better as only
+     * the required JARs for the defined embedded container are downloaded.
+     *
+     * @component
+     */
+    private ArtifactResolver artifactResolver;
+
+    /**
+     * The local Maven repository. This is used by the artifact resolver to download resolved
+     * JARs and put them in the local repository so that they won't have to be fetched again next
+     * time the plugin is executed.
+     *
+     * @parameter expression="${localRepository}"
+     */
+    private ArtifactRepository localRepository;
+
+    /**
+     * The remote Maven repositories used by the artifact resolver to look for JARs.
+     *
+     * @parameter expression="${project.remoteArtifactRepositories}"
+     */
+    private List repositories;
+
+
+    /**
+     * The artifact factory is used to create valid Maven
+     * {@link org.apache.maven.artifact.Artifact} objects. This is used to pass Maven artifacts to
+     * the artifact resolver so that it can download the required JARs to put in the embedded
+     * container's classpaths.
+     *
+     * @component
+     */
+    private ArtifactFactory artifactFactory;
+
+    /**
+     * A list of product-specific configurations
+     *
+     * @parameter
+     */
+    private List<ProductContext> products = new ArrayList<ProductContext>();
+
+    private ProductContext createDefaultProductContext() throws MojoExecutionException
     {
         ProductContext ctx = new ProductContext();
+        ctx.setProduct(getProductId());
         ctx.setContainerId(containerId);
         ctx.setServer(server);
         ctx.setContextPath(contextPath);
@@ -230,9 +242,9 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
         ctx.setSalVersion(salVersion);
         ctx.setPdkVersion(pdkVersion);
 
-        ctx.setHttpPort(httpPort == 0 ? handler.getDefaultHttpPort() : httpPort);
-        ctx.setVersion(productVersion == null ? "RELEASE" : productVersion);
-        ctx.setContextPath(contextPath == null ? "/" + handler.getId() : "/");
+        ctx.setHttpPort(httpPort);
+        ctx.setVersion(productVersion);
+        ctx.setContextPath(contextPath);
         return ctx;
     }
 
@@ -265,6 +277,24 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
         stringToArtifactList(bundledArtifactsString, bundledArtifacts);
 
         doExecute();
+    }
+
+    protected List<ProductContext> getProductContexts(MavenGoals goals) throws MojoExecutionException
+    {
+        List<ProductContext> list = new ArrayList<ProductContext>(products);
+        if (getProductId() != null)
+        {
+            list.add(0, createDefaultProductContext());
+        }
+
+        for (ProductContext ctx : list)
+        {
+            ProductHandler handler = ProductHandlerFactory.create(ctx.getProduct(), project, goals);
+            ctx.setHttpPort(ctx.getHttpPort() == 0 ? handler.getDefaultHttpPort() : ctx.getHttpPort());
+            ctx.setVersion(ctx.getVersion() == null ? "RELEASE" : ctx.getVersion());
+            ctx.setContextPath(ctx.getContextPath() == null ? "/" + handler.getId() : "/");
+        }
+        return list;
     }
 
     protected abstract void doExecute() throws MojoExecutionException, MojoFailureException;
