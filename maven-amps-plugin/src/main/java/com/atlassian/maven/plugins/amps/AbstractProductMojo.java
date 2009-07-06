@@ -220,12 +220,12 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
      *
      * @parameter
      */
-    private List<ProductContext> products = new ArrayList<ProductContext>();
+    private List<Product> products = new ArrayList<Product>();
 
-    private ProductContext createDefaultProductContext() throws MojoExecutionException
+    private Product createDefaultProductContext() throws MojoExecutionException
     {
-        ProductContext ctx = new ProductContext();
-        ctx.setProduct(getProductId());
+        Product ctx = new Product();
+        ctx.setId(getProductId());
         ctx.setContainerId(containerId);
         ctx.setServer(server);
         ctx.setContextPath(contextPath);
@@ -279,17 +279,17 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
         doExecute();
     }
 
-    protected List<ProductContext> getProductContexts(MavenGoals goals) throws MojoExecutionException
+    protected List<Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
     {
-        List<ProductContext> list = new ArrayList<ProductContext>(products);
+        List<Product> list = new ArrayList<Product>(products);
         if (getProductId() != null)
         {
             list.add(0, createDefaultProductContext());
         }
 
-        for (ProductContext ctx : list)
+        for (Product ctx : list)
         {
-            ProductHandler handler = ProductHandlerFactory.create(ctx.getProduct(), project, goals);
+            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), project, goals);
             ctx.setHttpPort(ctx.getHttpPort() == 0 ? handler.getDefaultHttpPort() : ctx.getHttpPort());
             ctx.setVersion(ctx.getVersion() == null ? "RELEASE" : ctx.getVersion());
             ctx.setContextPath(ctx.getContextPath() == null ? "/" + handler.getId() : "/");

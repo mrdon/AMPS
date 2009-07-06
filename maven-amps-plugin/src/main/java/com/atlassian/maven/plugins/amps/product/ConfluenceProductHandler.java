@@ -2,7 +2,7 @@ package com.atlassian.maven.plugins.amps.product;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.ProductContext;
+import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -74,7 +74,7 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         return new File(new File(project.getBuild().getDirectory(), getId()), "confluence-home");
     }
 
-    public void processHomeDirectory(ProductContext ctx, File homeDir) throws MojoExecutionException
+    public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
         ConfigFileUtils.replace(new File(homeDir, "confluence.cfg.xml"), "@project-dir@", homeDir.getParent());
 

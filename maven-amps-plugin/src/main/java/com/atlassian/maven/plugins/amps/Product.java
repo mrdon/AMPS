@@ -1,14 +1,12 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 
-public class ProductContext
+public class Product
 {
     /**
      * Container to run in
@@ -39,74 +37,56 @@ public class ProductContext
 
     /**
      * Webapp version
-     *
-     * @parameter expression="${version}"
      */
     protected String version = "RELEASE";
 
     /**
      * JVM arguments to pass to cargo
-     *
-     * @parameter expression="${jvmargs}"
      */
     protected String jvmArgs = null;
 
     /**
      * A log4j properties file
-     *
-     * @parameter
      */
     protected File log4jProperties;
 
     /**
      * The test resources version
-     *
-     * @parameter expression="${testResources.version}" default-value="LATEST"
      */
-    protected String testResourcesVersion;
+    protected String testResourcesVersion = "LATEST";
 
     /**
-     * @parameter
      */
     private List<ProductArtifact> pluginArtifacts = new ArrayList<ProductArtifact>();
 
     /**
-     * @parameter
      */
     private List<ProductArtifact> libArtifacts = new ArrayList<ProductArtifact>();
 
     /**
-     * @parameter
      */
     private List<ProductArtifact> bundledArtifacts = new ArrayList<ProductArtifact>();
 
     /**
      * SAL version
-     *
-     * @parameter expression="${sal.version}
      */
     private String salVersion;
 
     /**
      * Atlassian Plugin Development Kit (PDK) version
-     *
-     * @parameter expression="${pdk.version}
      */
     private String pdkVersion;
 
     /**
      * Atlassian REST module version
-     *
-     * @parameter expression="${rest.version}
      */
     private String restVersion;
 
     /**
      * Product id
      *
-     * @parameter expression="${product}
      */
-    private String product;
+    private String id;
 
     private ArtifactRetriever artifactRetriever;
 
@@ -261,13 +241,13 @@ public class ProductContext
         this.pdkVersion = pdkVersion;
     }
 
-    public String getProduct()
+    public String getId()
     {
-        return product;
+        return id;
     }
 
-    public void setProduct(String product)
+    public void setId(String id)
     {
-        this.product = product;
+        this.id = id;
     }
 }

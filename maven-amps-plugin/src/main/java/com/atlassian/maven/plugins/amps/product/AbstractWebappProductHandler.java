@@ -21,7 +21,7 @@ import org.apache.maven.project.MavenProject;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.ProductContext;
+import com.atlassian.maven.plugins.amps.Product;
 
 public abstract class AbstractWebappProductHandler implements ProductHandler
 {
@@ -34,7 +34,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         this.goals = goals;
     }
 
-    public int start(final ProductContext ctx) throws MojoExecutionException
+    public int start(final Product ctx) throws MojoExecutionException
     {
         // Copy the webapp war to target
         final File webappWar = goals.copyWebappWar(getId(), getBaseDirectory(),
@@ -47,12 +47,12 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         return goals.startWebapp(getId(), combinedWebappWar, getSystemProperties(), getExtraContainerDependencies(), ctx);
     }
 
-    public void stop(final ProductContext ctx) throws MojoExecutionException
+    public void stop(final Product ctx) throws MojoExecutionException
     {
         goals.stopWebapp(getId(), ctx.getContainerId());
     }
 
-    private List<ProductArtifact> getPluginsArtifacts(final ProductContext ctx)
+    private List<ProductArtifact> getPluginsArtifacts(final Product ctx)
     {
         final List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
         artifacts.addAll(getDefaultPlugins());
@@ -76,7 +76,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         return artifacts;
     }
 
-    private File addArtifacts(final ProductContext ctx, final File homeDir, final File webappWar) throws MojoExecutionException
+    private File addArtifacts(final Product ctx, final File homeDir, final File webappWar) throws MojoExecutionException
     {
         try
         {
@@ -184,7 +184,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         return dir;
     }
 
-    private File extractAndProcessHomeDirectory(final ProductContext ctx) throws MojoExecutionException
+    private File extractAndProcessHomeDirectory(final Product ctx) throws MojoExecutionException
     {
         if (getTestResourcesArtifact() != null)
         {
@@ -270,7 +270,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
 
     protected abstract File getHomeDirectory();
 
-    protected abstract void processHomeDirectory(ProductContext ctx, File homeDir) throws MojoExecutionException;
+    protected abstract void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException;
 
     protected abstract ProductArtifact getTestResourcesArtifact();
 

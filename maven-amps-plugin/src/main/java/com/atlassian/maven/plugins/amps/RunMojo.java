@@ -21,7 +21,7 @@ public class RunMojo
         final MavenGoals goals = new MavenGoals(new MavenContext(project, session, pluginManager, getLog()));
 
         ProductHandler product = createProductHandler(goals);
-        ProductContext ctx = getProductContexts(goals).get(0);
+        Product ctx = getProductContexts(goals).get(0);
 
         int actualHttpPort = product.start(ctx);
 

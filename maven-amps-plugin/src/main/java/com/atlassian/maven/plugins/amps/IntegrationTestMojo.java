@@ -75,7 +75,7 @@ public class IntegrationTestMojo
             throws MojoExecutionException
     {
         ProductHandler product = ProductHandlerFactory.create(productId, project, goals);
-        ProductContext ctx =  getProductContexts(goals).get(0);
+        Product ctx =  getProductContexts(goals).get(0);
         int actualHttpPort;
         if (!noWebapp)
         {

@@ -2,7 +2,7 @@ package com.atlassian.maven.plugins.amps.product;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.ProductContext;
+import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.product.AbstractWebappProductHandler;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -48,7 +48,7 @@ public class RefappProductHandler extends AbstractWebappProductHandler
         return "WEB-INF/classes/atlassian-bundled-plugins.zip";
     }
 
-    protected void processHomeDirectory(ProductContext ctx, File homeDir) throws MojoExecutionException
+    protected void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
     }
 

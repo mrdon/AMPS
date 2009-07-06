@@ -1,14 +1,8 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.plugin.MojoExecutionException;
 
-import java.util.Map;
-import java.util.Collection;
-import java.util.List;
-import java.io.File;
-
-import com.atlassian.maven.plugins.amps.ProductContext;
+import com.atlassian.maven.plugins.amps.Product;
 
 public interface ProductHandler
 {
@@ -17,9 +11,9 @@ public interface ProductHandler
      */
     String getId();
 
-    int start(ProductContext ctx) throws MojoExecutionException;
+    int start(Product ctx) throws MojoExecutionException;
 
-    void stop(ProductContext ctx) throws MojoExecutionException;
+    void stop(Product ctx) throws MojoExecutionException;
 
     int getDefaultHttpPort();
 

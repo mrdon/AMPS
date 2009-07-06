@@ -13,7 +13,7 @@ import org.apache.maven.project.MavenProject;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.ProductContext;
+import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 public class JiraProductHandler extends AbstractWebappProductHandler
@@ -115,7 +115,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public void processHomeDirectory(final ProductContext ctx, final File homeDir) throws MojoExecutionException
+    public void processHomeDirectory(final Product ctx, final File homeDir) throws MojoExecutionException
     {
         ConfigFileUtils.replace(new File(homeDir, "database.script"), "@project-dir@", homeDir.getParent());
     }

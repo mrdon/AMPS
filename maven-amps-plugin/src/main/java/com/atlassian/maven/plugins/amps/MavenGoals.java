@@ -236,7 +236,7 @@ public class MavenGoals {
     }
 
     public int startWebapp(String productId, File war, Map<String,String> systemProperties, List<ProductArtifact> extraContainerDependencies,
-                           ProductContext webappContext) throws MojoExecutionException {
+                           Product webappContext) throws MojoExecutionException {
         final int rmiPort = pickFreePort(0);
         final int actualHttpPort = pickFreePort(webappContext.getHttpPort());
         final Container container = findContainer(webappContext.getContainerId());
