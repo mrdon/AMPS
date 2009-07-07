@@ -20,8 +20,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
 
 public abstract class AbstractWebappProductHandler implements ProductHandler
 {
@@ -86,7 +86,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
                 unzip(webappWar, webappDir);
             }
 
-            final File pluginsDir = getPluginsDirectory(webappDir, homeDir);
+            File pluginsDir = getPluginsDirectory(webappDir, homeDir);
             final File bundledPluginsDir = new File(getBaseDirectory(), "bundled-plugins");
 
             bundledPluginsDir.mkdir();
@@ -97,23 +97,22 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
                 unzip(bundledPluginsZip, bundledPluginsDir.getPath());
             }
 
-            if (pluginsDir != null)
+            if (!isPlugins2Plugin())
             {
-                // add this plugin itself
-                addThisPluginToDirectory(pluginsDir);
-                // add plugins2 plugins
-                addArtifactsToDirectory(goals, getPluginsArtifacts(ctx), pluginsDir);
+                pluginsDir = new File(webappDir, "WEB-INF/lib");
             }
-            else
+
+            if (pluginsDir==null)
             {
-                // add this plugin itself
-                addThisPluginToDirectory(bundledPluginsDir);
-                // add plugins2 plugins
-                addArtifactsToDirectory(goals, getPluginsArtifacts(ctx), bundledPluginsDir);
+                pluginsDir = bundledPluginsDir;
             }
+
+            // add this plugin itself
+            addThisPluginToDirectory(pluginsDir);
+            // add plugins2 plugins
+            addArtifactsToDirectory(goals, getPluginsArtifacts(ctx), pluginsDir);
 
             // add plugins1 plugins
-
             List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
             artifacts.addAll(getDefaultLibPlugins());
             artifacts.addAll(ctx.getLibArtifacts());
@@ -225,16 +224,21 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         final File srcDir = new File(project.getBasedir(), "src/test/resources/"+homeDirName);
         final File outputDir = new File(getBaseDirectory(), homeDirName);
         if (srcDir.exists() && outputDir.exists())
-        	FileUtils.copyDirectory(srcDir, outputDir);
+            FileUtils.copyDirectory(srcDir, outputDir);
     }
 
-
+    private boolean isPlugins2Plugin() throws IOException
+    {
+        final File atlassianPluginXml = new File(project.getBasedir(), "src/main/resources/atlassian-plugin.xml");
+        return FileUtils.readFileToString(atlassianPluginXml).contains("pluginsVersion=\"2\"");
+    }
 
     private void addThisPluginToDirectory(final File pluginsDir) throws IOException
     {
-        // add the plugin jar to the directory
         final File thisPlugin = getPluginFile();
+        // add the plugin jar to the directory
         FileUtils.copyFile(thisPlugin, new File(pluginsDir, thisPlugin.getName()));
+
     }
 
     private File getPluginFile()
@@ -242,9 +246,8 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         return new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".jar");
     }
 
-    private void addArtifactsToDirectory(final MavenGoals goals, final List<ProductArtifact> artifacts,
-            final File pluginsDir) throws MojoExecutionException
-            {
+    private void addArtifactsToDirectory(final MavenGoals goals, final List<ProductArtifact> artifacts, final File pluginsDir) throws MojoExecutionException
+    {
         // first remove plugins from the webapp that we want to update
         if (pluginsDir.isDirectory() && pluginsDir.exists())
         {
@@ -253,8 +256,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
                 final File file = (File) iterateFiles.next();
                 for (final ProductArtifact webappArtifact : artifacts)
                 {
-                    if (!file.isDirectory() && file.getName()
-                            .contains(webappArtifact.getArtifactId()))
+                    if (!file.isDirectory() && file.getName().contains(webappArtifact.getArtifactId()))
                     {
                         file.delete();
                     }
@@ -266,7 +268,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         {
             goals.copyPlugins(pluginsDir, artifacts);
         }
-            }
+    }
 
     protected abstract File getHomeDirectory();
 
