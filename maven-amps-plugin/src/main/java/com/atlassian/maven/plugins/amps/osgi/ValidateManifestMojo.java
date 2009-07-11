@@ -4,18 +4,12 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.util.Map;
+import java.io.*;
 import java.util.jar.Manifest;
 
 import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
-import aQute.libg.header.OSGiHeader;
 import aQute.lib.osgi.Constants;
 
 /**
@@ -53,7 +47,8 @@ public class ValidateManifestMojo extends AbstractMojo
                 mfin = new FileInputStream(mfile);
                 Manifest mf = new Manifest(mfin);
 
-                validateAllImportsContainRanges(mf.getMainAttributes().getValue(Constants.IMPORT_PACKAGE));
+                PackageImportRangeValidator validator = new PackageImportRangeValidator(project);
+                validator.validate(mf.getMainAttributes().getValue(Constants.IMPORT_PACKAGE));
             }
             catch (IOException e)
             {
@@ -68,32 +63,6 @@ public class ValidateManifestMojo extends AbstractMojo
         else
         {
             getLog().info("No manifest found or skip flag specified, skipping validation");
-        }
-    }
-
-    void validateAllImportsContainRanges(String imports) throws MojoFailureException
-    {
-        if (imports != null)
-        {
-            Map<String,Map<String,String>> pkgImports = OSGiHeader.parseHeader(imports);
-            for (Map.Entry<String,Map<String,String>> pkgImport : pkgImports.entrySet())
-            {
-                String pkg = pkgImport.getKey();
-                if (pkgImport.getValue() != null && pkgImport.getValue().size() > 0)
-                {
-                    Map<String,String> props = pkgImport.getValue();
-                    String version = props.get("version");
-                    if (version == null || !version.contains(","))
-                    {
-                        throw new MojoFailureException("The version for the import of package '" + pkg + "' must be an explicit range, " +
-                                "was '" + version + "'");
-                    }
-                }
-                else
-                {
-                    throw new MojoFailureException("The import for package '" + pkg + "' must specify a version range.");
-                }
-            }
         }
     }
 }
