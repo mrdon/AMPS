@@ -37,32 +37,39 @@ public class ValidateManifestMojo extends AbstractMojo
     {
         File mfile = file(project.getBuild().getOutputDirectory(), "META-INF", "MANIFEST.MF");
 
-        // Only valid if the manifest exists
-        if (mfile.exists() && !skipManifestValidation)
+        if (!skipManifestValidation)
         {
-            getLog().info("Manifest found, validating...");
-            InputStream mfin = null;
-            try
+            // Only valid if the manifest exists
+            if (mfile.exists())
             {
-                mfin = new FileInputStream(mfile);
-                Manifest mf = new Manifest(mfin);
+                getLog().info("Manifest found, validating...");
+                InputStream mfin = null;
+                try
+                {
+                    mfin = new FileInputStream(mfile);
+                    Manifest mf = new Manifest(mfin);
 
-                PackageImportRangeValidator validator = new PackageImportRangeValidator(project);
-                validator.validate(mf.getMainAttributes().getValue(Constants.IMPORT_PACKAGE));
+                    PackageImportVersionValidator validator = new PackageImportVersionValidator(project);
+                    validator.validate(mf.getMainAttributes().getValue(Constants.IMPORT_PACKAGE));
+                }
+                catch (IOException e)
+                {
+                    throw new MojoExecutionException("Unable to read manifest", e);
+                }
+                finally
+                {
+                    IOUtils.closeQuietly(mfin);
+                }
+                getLog().info("Manifest validated");
             }
-            catch (IOException e)
+            else
             {
-                throw new MojoExecutionException("Unable to read manifest", e);
+                throw new MojoFailureException("No manifest found to validate.");
             }
-            finally
-            {
-                IOUtils.closeQuietly(mfin);
-            }
-            getLog().info("Manifest validated");
         }
         else
         {
-            getLog().info("No manifest found or skip flag specified, skipping validation");
+            getLog().info("Manifest valiation skip flag specified, skipping validation");
         }
     }
 }

@@ -15,16 +15,16 @@ import java.io.IOException;
 import aQute.libg.header.OSGiHeader;
 
 /**
- * Validates the package imports in a manifest contain ranges
+ * Validates the package imports in a manifest contain proper versions
  *
  * @since 3.0
  */
-public class PackageImportRangeValidator
+public class PackageImportVersionValidator
 {
     private final MavenProject project;
     private final Map<String,Set<String>> jarPackageCache = new HashMap<String,Set<String>>();
 
-    public PackageImportRangeValidator(MavenProject project)
+    public PackageImportVersionValidator(MavenProject project)
     {
         this.project = project;
     }
@@ -49,7 +49,7 @@ public class PackageImportRangeValidator
                 {
                     Map<String,String> props = pkgImport.getValue();
                     String version = props.get("version");
-                    if (version == null || !version.contains(","))
+                    if (version == null || version.length() == 0)
                     {
                         unknownPackages.put(pkg, guessVersion( pkg));
                     }
@@ -62,7 +62,7 @@ public class PackageImportRangeValidator
 
             if (!unknownPackages.isEmpty())
             {
-                StringBuilder sb = new StringBuilder("Manifest must contain version ranges for all imports.  Suggested changes:\n");
+                StringBuilder sb = new StringBuilder("Manifest must contain versions for all imports.  Suggested changes:\n");
                 for (Map.Entry<String,String> entry : compressPackages(unknownPackages).entrySet())
                 {
                     sb.append(entry.getKey()).append(";version=\"").append(entry.getValue()).append("\",\n");
@@ -207,10 +207,10 @@ public class PackageImportRangeValidator
 
                 if (contents.contains(pkg.replace('.','/') + "/"))
                 {
-                    return "[" + artifact.getVersion() + ",)";
+                    return artifact.getVersion();
                 }
             }
         }
-        return "[0.0.0,)";
+        return "0.0.0";
     }
 }

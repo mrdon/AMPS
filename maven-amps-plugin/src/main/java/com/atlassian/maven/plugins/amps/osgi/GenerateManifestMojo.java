@@ -55,7 +55,7 @@ public class GenerateManifestMojo extends AbstractAmpsMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         MavenGoals goals = new MavenGoals(new MavenContext(project, session, pluginManager, getLog()));
-        if (!instructions.isEmpty() || isAtlassianPlugin())
+        if (!instructions.isEmpty() || OsgiHelper.isAtlassianPlugin(project))
         {
             getLog().info("Generating a manifest for this plugin");
 
@@ -76,11 +76,9 @@ public class GenerateManifestMojo extends AbstractAmpsMojo {
             }
             goals.generateManifest(instructions);
         }
+        else
+        {
+            getLog().info("No manifest instructions found, skipping manifest generation");
+        }
     }
-
-    private boolean isAtlassianPlugin()
-    {
-        return project.getGroupId().startsWith("com.atlassian");
-    }
-
 }

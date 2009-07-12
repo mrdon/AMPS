@@ -17,7 +17,7 @@ public class TestPackageImportRangeValidator extends TestCase
     public void testValidateAllImportsContainRanges() throws MojoFailureException
     {
         MavenProject project = mock(MavenProject.class);
-        PackageImportRangeValidator validator = new PackageImportRangeValidator(project);
+        PackageImportVersionValidator validator = new PackageImportVersionValidator(project);
 
         validator.validate("foo.bar;version=\"[1.0,2.0)\"");
 
@@ -63,7 +63,7 @@ public class TestPackageImportRangeValidator extends TestCase
 
     public void testCompressImports()
     {
-        Map<String,String> imports = PackageImportRangeValidator.compressPackages(new HashMap<String,String>()
+        Map<String,String> imports = PackageImportVersionValidator.compressPackages(new HashMap<String,String>()
         {{
             put("foo.bar", "1.0");
             put("foo", "1.0");
@@ -79,7 +79,7 @@ public class TestPackageImportRangeValidator extends TestCase
 
     public void testCompressImportsNotIncludeOutcast()
     {
-        Map<String,String> imports = PackageImportRangeValidator.compressPackages(new HashMap<String,String>()
+        Map<String,String> imports = PackageImportVersionValidator.compressPackages(new HashMap<String,String>()
         {{
             put("foo.bar", "1.0");
             put("foo", "1.0");
@@ -96,7 +96,7 @@ public class TestPackageImportRangeValidator extends TestCase
 
     public void testCompressImportsNotAlwaysFullPackage()
     {
-        Map<String,String> imports = PackageImportRangeValidator.compressPackages(new HashMap<String,String>()
+        Map<String,String> imports = PackageImportVersionValidator.compressPackages(new HashMap<String,String>()
         {{
             put("foo.bar", "1.0");
             put("foo.bar.baz", "1.0");
