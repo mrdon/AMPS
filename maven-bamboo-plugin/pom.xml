@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.atlassian.amps</groupId>
         <artifactId>atlassian-amps-parent</artifactId>
-        <version>3.0-m2</version>
+        <version>3.0-SNAPSHOT</version>
     </parent>
     <groupId>com.atlassian.maven.plugins</groupId>
     <artifactId>maven-bamboo-plugin</artifactId>
