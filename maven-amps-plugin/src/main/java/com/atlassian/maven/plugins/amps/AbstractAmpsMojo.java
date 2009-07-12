@@ -2,6 +2,7 @@ package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -27,15 +28,7 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
 
     protected ProductHandler createProductHandler(MavenGoals goals) throws MojoExecutionException
     {
-        String id = getProductId();
-
-        if ("refapp".equals(id))
-        {
-            return new RefappProductHandler(project, goals);
-        }
-
-        throw new MojoExecutionException("Unknown product id:" + id);
-
+        return ProductHandlerFactory.create(getProductId(), project, goals);
     }
 
     protected String getDefaultProductId() throws MojoExecutionException

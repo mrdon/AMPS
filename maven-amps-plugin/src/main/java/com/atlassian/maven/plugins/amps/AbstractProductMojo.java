@@ -298,9 +298,4 @@ public abstract class AbstractProductMojo extends AbstractAmpsMojo
     }
 
     protected abstract void doExecute() throws MojoExecutionException, MojoFailureException;
-
-    protected ProductHandler createProductHandler(MavenGoals goals) throws MojoExecutionException
-    {
-        return ProductHandlerFactory.create(getProductId(), project, goals);
-    }
 }
