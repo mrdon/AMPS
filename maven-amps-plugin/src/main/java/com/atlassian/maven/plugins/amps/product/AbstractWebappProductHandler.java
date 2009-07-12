@@ -230,7 +230,8 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
     private boolean isPlugins2Plugin() throws IOException
     {
         final File atlassianPluginXml = new File(project.getBasedir(), "src/main/resources/atlassian-plugin.xml");
-        return FileUtils.readFileToString(atlassianPluginXml).contains("pluginsVersion=\"2\"");
+        String text = FileUtils.readFileToString(atlassianPluginXml);
+        return text.contains("pluginsVersion=\"2\"") || text.contains("plugins-version=\"2\"");
     }
 
     private void addThisPluginToDirectory(final File pluginsDir) throws IOException
