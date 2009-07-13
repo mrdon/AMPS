@@ -23,10 +23,7 @@
 
     <modules>
         <module>maven-amps-plugin</module>
-        <module>maven-refapp-plugin</module>
-        <module>maven-confluence-plugin</module>
-        <module>maven-bamboo-plugin</module>
-        <module>maven-jira-plugin</module>
+        <module>amps-product-plugins</module>
     </modules>
 
     <dependencies>

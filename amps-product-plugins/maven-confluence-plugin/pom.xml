@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.atlassian.amps</groupId>
-        <artifactId>atlassian-amps-parent</artifactId>
+        <artifactId>atlassian-amps-product-plugins</artifactId>
         <version>3.0-SNAPSHOT</version>
     </parent>
 
@@ -13,29 +13,12 @@
 
     <name>Maven Confluence Plugin</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.atlassian.maven.plugins</groupId>
-            <artifactId>maven-amps-plugin</artifactId>
-            <version>${project.version}</version>
-            <type>maven-plugin</type>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.ops4j</groupId>
                 <artifactId>maven-inherit-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>inherit</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
-    </build>
+    </build>    
 </project>
