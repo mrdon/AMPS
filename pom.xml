@@ -21,6 +21,16 @@
         <url>https://studio.atlassian.com/source/browse/AMPS/trunk</url>
     </scm>
 
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://studio.atlassian.com/browse/AMPS</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Bamboo</system>
+        <url>https://bamboo.developer.atlassian.com/browse/AMPS</url>
+    </ciManagement>
+
     <modules>
         <module>maven-amps-plugin</module>
         <module>amps-product-plugins</module>
