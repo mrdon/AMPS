@@ -81,16 +81,23 @@ public class PackageImportVersionValidator
     static Map<String,String> compressPackages(Map<String, String> unknownPackages)
     {
         Map<String,String> pkgs = new HashMap<String,String>();
-        Set<String> unmatchedPackages = new HashSet<String>(unknownPackages.keySet());
-        for (String pkg : unknownPackages.keySet())
+        Set<String> unmatchedPackages = new TreeSet<String>(unknownPackages.keySet());
+
+        // Iterate through all packages to compress
+        for (String pkg : new TreeSet<String>(unknownPackages.keySet()))
         {
+            // only process unmatched packages
             if (!unmatchedPackages.contains(pkg))
             {
                 continue;
             }
             String version = unknownPackages.get(pkg);
-            Set<String> others = new HashSet<String>(unmatchedPackages);
+
+            // Create set of all other unmatched patches
+            Set<String> others = new TreeSet<String>(unmatchedPackages);
             others.remove(pkg);
+
+            // Iterate through characters in packages, looking for packages with matching versions and characters
             for (int curpos = 0; curpos<pkg.length(); curpos++)
             {
                 char curchar = pkg.charAt(curpos);
@@ -99,28 +106,38 @@ public class PackageImportVersionValidator
                 {
                     String other = i.next();
 
+                    // Remove other package if the character at the same index is different
                     if (otherMatchesNextChar(curpos, curchar, other))
                     {
                         i.remove();
                     }
+
+                    // Stop looking if the package has a different version (i.e. a wildcard isn't possible)
                     else if (!unknownPackages.get(other).equals(version))
                     {
                         sameVersion = false;
                         break;
                     }
                 }
+
+                // If we are at the end of the original package or all packages are the same
                 if (curpos == pkg.length() -1 || sameVersion)
                 {
+                    // one or more other packages have the same version, create wildcard pattern
                     if (others.size() > 0 && sameVersion)
                     {
                         StringBuilder pattern = greedlyBuildPattern(pkg, others, curpos);
                         pkgs.put(pattern + "*", version);
                     }
+
+                    // No wildcard possible
                     else
                     {
                         pkgs.put(pkg, version);
                     }
                     unmatchedPackages.remove(pkg);
+
+                    // Remove all wildcard-matched packages
                     if (sameVersion)
                     {
                         unmatchedPackages.removeAll(others);
