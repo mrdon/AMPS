@@ -10,9 +10,4 @@ import org.apache.maven.plugin.MojoExecutionException;
  */
 public class JiraCopyBundledDependenciesMojo extends CopyBundledDependenciesMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.JIRA;
-    }
 }

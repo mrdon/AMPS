@@ -4,29 +4,26 @@ import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+import org.apache.maven.project.MavenProject;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * Run the integration tests against the webapp
- *
  * @requiresDependencyResolution integration-test
  * @goal integration-test
  */
-public class IntegrationTestMojo
-        extends AbstractProductMojo
+public class IntegrationTestMojo extends AbstractProductHandlerMojo
 {
 
     /**
      * Pattern for to use to find integration tests
-     *
      * @parameter expression="${functionalTestPattern}"
      */
     private final String functionalTestPattern = "it/**";
 
     /**
      * The directory containing generated test classes of the project being tested.
-     *
      * @parameter expression="${project.build.testOutputDirectory}"
      * @required
      */
@@ -34,7 +31,6 @@ public class IntegrationTestMojo
 
     /**
      * Whether the reference application will not be started or not
-     *
      * @parameter expression="${noWebapp}"
      */
     private final boolean noWebapp = false;
@@ -46,6 +42,7 @@ public class IntegrationTestMojo
 
     protected void doExecute() throws MojoExecutionException
     {
+        final MavenProject project = getMavenContext().getProject();
 
         // workaround for MNG-1682/MNG-2426: force maven to install artifact using the "jar" handler
         project.getArtifact().setArtifactHandler(artifactHandlerManager.getArtifactHandler("jar"));
@@ -55,8 +52,8 @@ public class IntegrationTestMojo
             getLog().info("No integration tests found");
             return;
         }
-        MavenGoals goals = new MavenGoals(new MavenContext(project, session, pluginManager, getLog()));
 
+        final MavenGoals goals = getMavenGoals();
         final String pluginJar = targetDirectory.getAbsolutePath() + "/" + finalName + ".jar";
 
         runTestsForProduct(getProductId(), goals, pluginJar);
@@ -71,11 +68,10 @@ public class IntegrationTestMojo
 
     }
 
-    private void runTestsForProduct(String productId, MavenGoals goals, String pluginJar)
-            throws MojoExecutionException
+    private void runTestsForProduct(String productId, MavenGoals goals, String pluginJar) throws MojoExecutionException
     {
-        ProductHandler product = ProductHandlerFactory.create(productId, project, goals);
-        Product ctx =  getProductContexts(goals).get(0);
+        ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals);
+        Product ctx = getProductContexts(goals).get(0);
         int actualHttpPort;
         if (!noWebapp)
         {

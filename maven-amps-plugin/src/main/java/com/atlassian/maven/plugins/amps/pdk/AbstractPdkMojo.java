@@ -1,39 +1,13 @@
 package com.atlassian.maven.plugins.amps.pdk;
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.PluginManager;
-import org.apache.maven.project.MavenProject;
-import com.atlassian.maven.plugins.amps.AbstractAmpsMojo;
+import com.atlassian.maven.plugins.amps.AbstractProductHandlerAwareMojo;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 
 /**
  *
  */
-public abstract class AbstractPdkMojo extends AbstractAmpsMojo
+public abstract class AbstractPdkMojo extends AbstractProductHandlerAwareMojo
 {
-    /**
-     * The Maven Project Object
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
-     */
-    protected MavenProject project;
-    /**
-     * The Maven Session Object
-     *
-     * @parameter expression="${session}"
-     * @required
-     * @readonly
-     */
-    protected MavenSession session;
-    /**
-     * The Maven PluginManager Object
-     *
-     * @component
-     * @required
-     */
-    protected PluginManager pluginManager;
     /**
      * @parameter expression="${atlassian.plugin.key}"
      */
@@ -49,32 +23,29 @@ public abstract class AbstractPdkMojo extends AbstractAmpsMojo
 
     /**
      * HTTP port for the servlet containers
-     *
      * @parameter expression="${http.port}"
      */
     private int httpPort;
 
     /**
      * Application context path
-     *
      * @parameter expression="${context.path}"
      */
     protected String contextPath;
 
     /**
      * Application server
-     *
      * @parameter expression="${server}" default-value="localhost"
      */
     protected String server;
 
-    protected void ensurePluginKeyExists() {
+    protected void ensurePluginKeyExists()
+    {
         if (pluginKey == null)
         {
             pluginKey = groupId + "." + artifactId;
         }
     }
-    
 
     protected int getHttpPort(ProductHandler handler)
     {

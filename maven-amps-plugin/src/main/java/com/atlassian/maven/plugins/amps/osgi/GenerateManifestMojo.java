@@ -1,60 +1,30 @@
 package com.atlassian.maven.plugins.amps.osgi;
 
+import aQute.lib.osgi.Constants;
 import com.atlassian.maven.plugins.amps.AbstractAmpsMojo;
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.MavenContext;
-import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.PluginManager;
+import static com.atlassian.maven.plugins.amps.util.FileUtils.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.File;
-
-import aQute.lib.osgi.Constants;
 
 /**
  * @goal generate-manifest
  */
-public class GenerateManifestMojo extends AbstractAmpsMojo {
-
+public class GenerateManifestMojo extends AbstractAmpsMojo
+{
     /**
-     * The Maven Project Object
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
+     * The BND instructions for the bundle.
+     * @parameter
      */
-    protected MavenProject project;
-    /**
-     * The Maven Session Object
-     *
-     * @parameter expression="${session}"
-     * @required
-     * @readonly
-     */
-    protected MavenSession session;
-    /**
-     * The Maven PluginManager Object
-     *
-     * @component
-     * @required
-     */
-    protected PluginManager pluginManager;
+    private Map instructions = new HashMap();
 
-    /**
-    * The BND instructions for the bundle.
-    *
-    * @parameter
-    */
-   private Map instructions = new HashMap();
-
-
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        MavenGoals goals = new MavenGoals(new MavenContext(project, session, pluginManager, getLog()));
+    public void execute() throws MojoExecutionException, MojoFailureException
+    {
+        final MavenProject project = getMavenContext().getProject();
         if (!instructions.isEmpty() || OsgiHelper.isAtlassianPlugin(project))
         {
             getLog().info("Generating a manifest for this plugin");
@@ -74,7 +44,7 @@ public class GenerateManifestMojo extends AbstractAmpsMojo {
                 }
                 instructions.put(Constants.BUNDLE_CLASSPATH, sb.toString());
             }
-            goals.generateManifest(instructions);
+            getMavenGoals().generateManifest(instructions);
         }
         else
         {

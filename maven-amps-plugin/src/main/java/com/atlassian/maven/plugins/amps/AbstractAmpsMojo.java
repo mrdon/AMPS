@@ -5,47 +5,52 @@ import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.execution.MavenSession;
 
 public abstract class AbstractAmpsMojo extends AbstractMojo
 {
     /**
-     * Product id
-     *
-     * @parameter expression="${product}
-     */
-    private String product;
-
-    /**
      * The Maven Project Object
-     *
      * @parameter expression="${project}"
      * @required
      * @readonly
      */
-    protected MavenProject project;
+    private MavenProject project;
 
+    /**
+     * The Maven Session Object
+     * @parameter expression="${session}"
+     * @required
+     * @readonly
+     */
+    private MavenSession session;
+    /**
+     * The Maven PluginManager Object
+     * @component
+     * @required
+     */
+    private PluginManager pluginManager;
 
-    protected ProductHandler createProductHandler(MavenGoals goals) throws MojoExecutionException
+    private MavenContext mavenContext;
+    private MavenGoals mavenGoals;
+
+    protected MavenContext getMavenContext()
     {
-        return ProductHandlerFactory.create(getProductId(), project, goals);
-    }
-
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return null;
-    }
-
-    protected String getProductId() throws MojoExecutionException
-    {
-        if (product == null)
+        if (mavenContext == null)
         {
-            product = getDefaultProductId();
-            if (product == null)
-            {
-                throw new MojoExecutionException("The product must be specified");
-            }
+            mavenContext = new MavenContext(project, session, pluginManager, getLog());
         }
-        return product;
+        return mavenContext;
+    }
+
+    protected MavenGoals getMavenGoals()
+    {
+        if (mavenGoals == null)
+        {
+            mavenGoals = new MavenGoals(getMavenContext());
+        }
+        return mavenGoals;
     }
 }

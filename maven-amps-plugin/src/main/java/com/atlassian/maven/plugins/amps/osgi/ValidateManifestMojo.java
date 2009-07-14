@@ -1,41 +1,32 @@
 package com.atlassian.maven.plugins.amps.osgi;
 
-import org.apache.maven.plugin.AbstractMojo;
+import aQute.lib.osgi.Constants;
+import com.atlassian.maven.plugins.amps.AbstractAmpsMojo;
+import static com.atlassian.maven.plugins.amps.util.FileUtils.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
-import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.jar.Manifest;
-
-import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
-import aQute.lib.osgi.Constants;
 
 /**
  * @goal validate-manifest
  */
-public class ValidateManifestMojo extends AbstractMojo
+public class ValidateManifestMojo extends AbstractAmpsMojo
 {
     /**
-     * The Maven Project Object
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
-     */
-    protected MavenProject project;
-
-    /**
      * Whether to skip validation or not
-     *
      * @parameter expression="${manifest.validation.skip}"
      */
     protected boolean skipManifestValidation = false;
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        File mfile = file(project.getBuild().getOutputDirectory(), "META-INF", "MANIFEST.MF");
+        File mfile = file(getMavenContext().getProject().getBuild().getOutputDirectory(), "META-INF", "MANIFEST.MF");
 
         if (!skipManifestValidation)
         {
@@ -49,7 +40,7 @@ public class ValidateManifestMojo extends AbstractMojo
                     mfin = new FileInputStream(mfile);
                     Manifest mf = new Manifest(mfin);
 
-                    PackageImportVersionValidator validator = new PackageImportVersionValidator(project);
+                    PackageImportVersionValidator validator = new PackageImportVersionValidator(getMavenContext().getProject());
                     validator.validate(mf.getMainAttributes().getValue(Constants.IMPORT_PACKAGE));
                 }
                 catch (IOException e)
@@ -69,7 +60,7 @@ public class ValidateManifestMojo extends AbstractMojo
         }
         else
         {
-            getLog().info("Manifest valiation skip flag specified, skipping validation");
+            getLog().info("Manifest validation skip flag specified, skipping validation");
         }
     }
 }
