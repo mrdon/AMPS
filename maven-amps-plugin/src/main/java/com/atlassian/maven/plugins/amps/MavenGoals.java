@@ -118,6 +118,7 @@ public class MavenGoals {
                 ),
                 goal("generate"),
                 configuration(
+                        element(name("archetypeRepository"), "http://maven.atlassian.com/public"),
                         element(name("archetypeGroupId"), "com.atlassian.maven.archetypes"),
                         element(name("archetypeArtifactId"), productId + "-plugin-archetype"),
                         element(name("archetypeVersion"), VersionUtils.getVersion())

@@ -1,0 +1,14 @@
+<atlassian-plugin key="\${groupId}.\${artifactId}" name="\${artifactId}">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <!-- TODO: Add vendor details -->
+        <!--
+        <vendor name="Example Company" url="http://www.example.com"/>
+        -->
+    </plugin-info>
+
+    <servlet name="${artifactId}" class="${groupId}.ExampleServlet" key="test">
+        <url-pattern>/test</url-pattern>
+    </servlet>
+</atlassian-plugin>
