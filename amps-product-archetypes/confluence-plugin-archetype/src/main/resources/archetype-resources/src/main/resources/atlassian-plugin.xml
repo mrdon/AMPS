@@ -1,0 +1,15 @@
+<atlassian-plugin key="\${groupId}.\${artifactId}" name="\${artifactId}">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <!-- TODO: Add vendor details -->
+        <!--
+        <vendor name="Example Company" url="http://www.example.com"/>
+        -->
+    </plugin-info>
+
+    <macro name="${artifactId}" class="${groupId}.ExampleMacro" key="my-macro">
+    <!-- TODO: Add macro description -->
+    <!-- <description></description> -->
+    </macro>
+</atlassian-plugin>

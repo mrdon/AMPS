@@ -16,7 +16,7 @@ public class VersionUtils
         {
             in = VersionUtils.class.getClassLoader()
                     .getResourceAsStream(
-                            "META-INF/maven/com.atlassian.maven.plugins/maven-refapp-plugin/pom.properties");
+                            "META-INF/maven/com.atlassian.maven.plugins/maven-amps-plugin/pom.properties");
             if (in != null)
             {
                 props.load(in);

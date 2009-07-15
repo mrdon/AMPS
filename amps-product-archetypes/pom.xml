@@ -14,6 +14,7 @@
 
     <modules>
         <module>refapp-plugin-archetype</module>
+        <module>confluence-plugin-archetype</module>
     </modules>
 
     <dependencies>

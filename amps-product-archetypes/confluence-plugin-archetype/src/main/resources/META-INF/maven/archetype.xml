@@ -1,0 +1,17 @@
+<archetype>
+    <id>confluence-plugin-archetype</id>
+    <sources>
+        <source>src/main/java/ExampleMacro.java</source>
+    </sources>
+    <testSources>
+        <source>src/test/java/TestExampleMacro.java</source>
+    </testSources>
+
+    <resources>
+        <resource filtered="true">src/main/resources/atlassian-plugin.xml</resource>
+        <resource filtered="false">src/test/java/it/IntegrationTestMyPlugin.java</resource>
+        <resource filtered="false">src/test/resources/webtester.properties</resource>
+        <resource filtered="false">README.txt</resource>
+        <resource filtered="false">LICENSE.TXT</resource>
+    </resources>
+</archetype>
