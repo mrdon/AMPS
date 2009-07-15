@@ -28,39 +28,32 @@ public class ValidateManifestMojo extends AbstractAmpsMojo
     {
         File mfile = file(getMavenContext().getProject().getBuild().getOutputDirectory(), "META-INF", "MANIFEST.MF");
 
-        if (!skipManifestValidation)
+        // Only valid if the manifest exists
+        if (!skipManifestValidation && mfile.exists())
         {
-            // Only valid if the manifest exists
-            if (mfile.exists())
+            getLog().info("Manifest found, validating...");
+            InputStream mfin = null;
+            try
             {
-                getLog().info("Manifest found, validating...");
-                InputStream mfin = null;
-                try
-                {
-                    mfin = new FileInputStream(mfile);
-                    Manifest mf = new Manifest(mfin);
+                mfin = new FileInputStream(mfile);
+                Manifest mf = new Manifest(mfin);
 
-                    PackageImportVersionValidator validator = new PackageImportVersionValidator(getMavenContext().getProject());
-                    validator.validate(mf.getMainAttributes().getValue(Constants.IMPORT_PACKAGE));
-                }
-                catch (IOException e)
-                {
-                    throw new MojoExecutionException("Unable to read manifest", e);
-                }
-                finally
-                {
-                    IOUtils.closeQuietly(mfin);
-                }
-                getLog().info("Manifest validated");
+                PackageImportVersionValidator validator = new PackageImportVersionValidator(getMavenContext().getProject());
+                validator.validate(mf.getMainAttributes().getValue(Constants.IMPORT_PACKAGE));
             }
-            else
+            catch (IOException e)
             {
-                throw new MojoFailureException("No manifest found to validate.");
+                throw new MojoExecutionException("Unable to read manifest", e);
             }
+            finally
+            {
+                IOUtils.closeQuietly(mfin);
+            }
+            getLog().info("Manifest validated");
         }
         else
         {
-            getLog().info("Manifest validation skip flag specified, skipping validation");
+            getLog().info("No manifest found or validation skip flag specified, skipping validation");
         }
     }
 }
