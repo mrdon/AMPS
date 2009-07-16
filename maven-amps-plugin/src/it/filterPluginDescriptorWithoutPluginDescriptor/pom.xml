@@ -1,0 +1,18 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.atlassian.amps.it</groupId>
+    <artifactId>maven-amps-plugin-filter-plugin-descriptor-with-plugin-descriptor</artifactId>
+    <version>testing</version>
+    <name>TestFilterPluginDescriptor</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-amps-plugin</artifactId>
+                <version>testing</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
