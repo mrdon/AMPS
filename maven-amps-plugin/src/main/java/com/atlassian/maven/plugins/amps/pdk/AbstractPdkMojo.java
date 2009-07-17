@@ -47,13 +47,13 @@ public abstract class AbstractPdkMojo extends AbstractProductHandlerAwareMojo
         }
     }
 
-    protected int getHttpPort(ProductHandler handler)
+    protected int getHttpPort(final ProductHandler handler)
     {
         return httpPort == 0 ? handler.getDefaultHttpPort() : httpPort;
     }
 
-    protected String getContextPath(ProductHandler handler)
+    protected String getContextPath(final ProductHandler handler)
     {
-        return contextPath == null ? "/" + handler.getId() : "/";
+        return contextPath == null ? "/" + handler.getId() : contextPath;
     }
 }
