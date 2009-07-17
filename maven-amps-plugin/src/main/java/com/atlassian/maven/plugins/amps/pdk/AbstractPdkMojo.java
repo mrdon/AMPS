@@ -34,6 +34,18 @@ public abstract class AbstractPdkMojo extends AbstractProductHandlerAwareMojo
     protected String contextPath;
 
     /**
+     * Username of user that will install the plugin
+     * @parameter expression="${username}" default-value="admin"
+     */
+    protected String username;
+
+    /**
+     * Password of user that will install the plugin
+     * @parameter expression="${password}" default-value="admin"
+     */
+    protected String password;
+
+    /**
      * Application server
      * @parameter expression="${server}" default-value="localhost"
      */

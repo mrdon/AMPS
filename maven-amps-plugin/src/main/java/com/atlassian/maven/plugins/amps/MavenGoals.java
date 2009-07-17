@@ -26,8 +26,9 @@ import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
-import com.atlassian.maven.plugins.amps.util.VersionUtils;
+
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import com.atlassian.maven.plugins.amps.util.VersionUtils;
 
 /**
  * Executes specific maven goals
@@ -66,10 +67,10 @@ public class MavenGoals {
 
     }};
 
-    public MavenGoals(MavenContext ctx) {
+    public MavenGoals(final MavenContext ctx) {
         this(ctx, Collections.<String, String>emptyMap());
     }
-    public MavenGoals(MavenContext ctx, final Map<String,String> pluginToVersionMap) {
+    public MavenGoals(final MavenContext ctx, final Map<String,String> pluginToVersionMap) {
         this.project = ctx.getProject();
         this.session = ctx.getSession();
         this.pluginManager = ctx.getPluginManager();
@@ -91,7 +92,7 @@ public class MavenGoals {
                         +"com.atlassian.maven.plugins:maven-"+productId+"-plugin:validate-manifest "
                         + "com.atlassian.maven.plugins:maven-"+productId+"-plugin:jar "
                         + "com.atlassian.maven.plugins:maven-"+productId+"-plugin:install"),
-                element(name("pu"), "com.atlassian.maven.plugins:maven-"+productId+"-plugin:uninstall")));
+                        element(name("pu"), "com.atlassian.maven.plugins:maven-"+productId+"-plugin:uninstall")));
         if (port > 0)
         {
             configs.add(element(name("port"), String.valueOf(port)));
@@ -108,7 +109,7 @@ public class MavenGoals {
         );
     }
 
-    public void createPlugin(String productId) throws MojoExecutionException {
+    public void createPlugin(final String productId) throws MojoExecutionException {
 
         executeMojo(
                 plugin(
@@ -187,7 +188,7 @@ public class MavenGoals {
         );
     }
 
-    public File copyWebappWar(String productId, final File targetDirectory, ProductArtifact artifact) throws MojoExecutionException {
+    public File copyWebappWar(final String productId, final File targetDirectory, final ProductArtifact artifact) throws MojoExecutionException {
         final File webappWarFile = new File(targetDirectory, productId+"-original.war");
         executeMojo(
                 plugin(
@@ -236,17 +237,17 @@ public class MavenGoals {
         );
     }
 
-    public int startWebapp(String productId, File war, Map<String,String> systemProperties, List<ProductArtifact> extraContainerDependencies,
-                           Product webappContext) throws MojoExecutionException {
+    public int startWebapp(final String productId, final File war, final Map<String,String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
+            final Product webappContext) throws MojoExecutionException {
         final int rmiPort = pickFreePort(0);
         final int actualHttpPort = pickFreePort(webappContext.getHttpPort());
         final Container container = findContainer(webappContext.getContainerId());
-        List<Element> sysProps = new ArrayList<Element>();
+        final List<Element> sysProps = new ArrayList<Element>();
         if (webappContext.getJvmArgs() == null)
         {
             webappContext.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
         }
-        for (Map.Entry<String,String> entry : systemProperties.entrySet())
+        for (final Map.Entry<String,String> entry : systemProperties.entrySet())
         {
             webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=" + entry.getValue());
             sysProps.add(element(name(entry.getKey()), entry.getValue()));
@@ -257,17 +258,17 @@ public class MavenGoals {
         final String baseUrl = getBaseUrl(webappContext.getServer(), actualHttpPort, webappContext.getContextPath());
         sysProps.add(element(name("baseurl"), baseUrl));
 
-        List<Element> deps = new ArrayList<Element>();
-        for (ProductArtifact dep : extraContainerDependencies)
+        final List<Element> deps = new ArrayList<Element>();
+        for (final ProductArtifact dep : extraContainerDependencies)
 
         {
             deps.add(element(name("dependency"),
-                        element(name("location"), webappContext.getArtifactRetriever().resolve(dep))
-                    ));
+                    element(name("location"), webappContext.getArtifactRetriever().resolve(dep))
+            ));
         }
 
-        List<Element> props = new ArrayList<Element>();
-        for (Map.Entry<String,String> entry : systemProperties.entrySet())
+        final List<Element> props = new ArrayList<Element>();
+        for (final Map.Entry<String,String> entry : systemProperties.entrySet())
         {
             props.add(element(name(entry.getKey()), entry.getValue()));
         }
@@ -316,12 +317,12 @@ public class MavenGoals {
         return "http://"+server+":"+actualHttpPort+contextPath;
     }
 
-    public void runTests(String productId, final String containerId, final String functionalTestPattern, final int httpPort, final String contexPath, final String pluginJar) throws MojoExecutionException {
+    public void runTests(final String productId, final String containerId, final String functionalTestPattern, final int httpPort, final String contexPath, final String pluginJar) throws MojoExecutionException {
 
         // Automatically exclude tests for other products
-        List<Element> excludes = new ArrayList<Element>();
+        final List<Element> excludes = new ArrayList<Element>();
         excludes.add(element(name("exclude"), "**/*$*"));
-        for (String type : ProductHandlerFactory.getIds())
+        for (final String type : ProductHandlerFactory.getIds())
         {
             if (!type.equals(productId))
             {
@@ -404,7 +405,7 @@ public class MavenGoals {
         }
     }
 
-    public void stopWebapp(String productId, final String containerId) throws MojoExecutionException {
+    public void stopWebapp(final String productId, final String containerId) throws MojoExecutionException {
         final Container container = findContainer(containerId);
         executeMojo(
                 plugin(
@@ -426,7 +427,7 @@ public class MavenGoals {
         );
     }
 
-    public void installPlugin(final String pluginKey, final String server, final int port, final String contextPath) throws MojoExecutionException {
+    public void installPlugin(final String pluginKey, final String server, final int port, final String contextPath, final String username, final String password) throws MojoExecutionException {
         final String baseUrl = getBaseUrl(server, port, contextPath);
         executeMojo(
                 plugin(
@@ -436,8 +437,8 @@ public class MavenGoals {
                 ),
                 goal("install"),
                 configuration(
-                        element(name("username"), "admin"),
-                        element(name("password"), "admin"),
+                        element(name("username"), username),
+                        element(name("password"), password),
                         element(name("serverUrl"), baseUrl),
                         element(name("pluginKey"), pluginKey)
                 ),
@@ -445,7 +446,7 @@ public class MavenGoals {
         );
     }
 
-    public void uninstallPlugin(final String pluginKey, String server, final int port, final String contextPath) throws MojoExecutionException {
+    public void uninstallPlugin(final String pluginKey, final String server, final int port, final String contextPath) throws MojoExecutionException {
         final String baseUrl = getBaseUrl(server, port, contextPath);
         executeMojo(
                 plugin(
@@ -477,7 +478,7 @@ public class MavenGoals {
         );
     }
 
-    public File copyHome(File targetDirectory, ProductArtifact artifact) throws MojoExecutionException
+    public File copyHome(final File targetDirectory, final ProductArtifact artifact) throws MojoExecutionException
     {
         final File testResourcesZip = new File(targetDirectory, "test-resources.zip");
         executeMojo(
@@ -502,10 +503,10 @@ public class MavenGoals {
         return testResourcesZip;
     }
 
-    public void generateManifest(Map<String,String> instructions) throws MojoExecutionException
+    public void generateManifest(final Map<String,String> instructions) throws MojoExecutionException
     {
-        List<Element> instlist = new ArrayList<Element>();
-        for (Map.Entry<String,String> entry : instructions.entrySet())
+        final List<Element> instlist = new ArrayList<Element>();
+        for (final Map.Entry<String,String> entry : instructions.entrySet())
         {
             instlist.add(element(entry.getKey(), entry.getValue()));
         }
@@ -522,13 +523,13 @@ public class MavenGoals {
                                 element(name("supportedProjectType"), "bundle"),
                                 element(name("supportedProjectType"), "war"),
                                 element(name("supportedProjectType"), "atlassian-plugin")),
-                        element(name("instructions"), instlist.toArray(new Element[instlist.size()]))
+                                element(name("instructions"), instlist.toArray(new Element[instlist.size()]))
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
     }
 
-    public void jarWithOptionalManifest(boolean manifestExists) throws MojoExecutionException
+    public void jarWithOptionalManifest(final boolean manifestExists) throws MojoExecutionException
     {
         Element[] archive = new Element[0];
         if (manifestExists)
