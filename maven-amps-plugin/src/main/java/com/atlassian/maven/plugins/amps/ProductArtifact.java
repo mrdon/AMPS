@@ -5,24 +5,7 @@ package com.atlassian.maven.plugins.amps;
  */
 public class ProductArtifact
 {
-
-    /**
-     * @parameter
-     * @required
-     */
-    private String groupId;
-
-    /**
-     * @parameter
-     * @required
-     */
-    private String artifactId;
-
-    /**
-     * @parameter
-     * @required
-     */
-    private String version;
+    private String groupId, artifactId, version;
 
     public ProductArtifact() {
     }

@@ -1,17 +1,20 @@
 package com.atlassian.maven.plugins.amps;
 
-import java.io.IOException;
-
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import org.jfrog.maven.annomojo.annotations.MojoExecute;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
+
+import java.io.IOException;
 
 /**
  * Run the webapp
- * @requiresDependencyResolution runtime
- * @goal run
- * @execute phase="package"
  */
+@MojoGoal("run")
+@MojoExecute(phase = "package")
+@MojoRequiresDependencyResolution
 public class RunMojo extends AbstractProductHandlerMojo
 {
     protected void doExecute() throws MojoExecutionException, MojoFailureException

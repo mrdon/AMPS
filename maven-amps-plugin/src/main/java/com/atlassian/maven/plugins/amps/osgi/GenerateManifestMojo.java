@@ -6,20 +6,20 @@ import static com.atlassian.maven.plugins.amps.util.FileUtils.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @goal generate-manifest
- */
+@MojoGoal("generate-manifest")
 public class GenerateManifestMojo extends AbstractAmpsMojo
 {
     /**
      * The BND instructions for the bundle.
-     * @parameter
      */
+    @MojoParameter
     private Map instructions = new HashMap();
 
     public void execute() throws MojoExecutionException, MojoFailureException

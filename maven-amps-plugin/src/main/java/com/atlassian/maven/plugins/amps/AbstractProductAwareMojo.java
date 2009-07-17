@@ -1,13 +1,14 @@
 package com.atlassian.maven.plugins.amps;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
 {
     /**
      * Product id
-     * @parameter expression="${product}
      */
+    @MojoParameter(expression = "${product}")
     private String product;
 
     protected String getDefaultProductId() throws MojoExecutionException

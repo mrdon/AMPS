@@ -1,14 +1,9 @@
 package com.atlassian.maven.plugins.refapp;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import com.atlassian.maven.plugins.amps.pdk.UninstallMojo;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import org.apache.maven.plugin.MojoExecutionException;
 
-/**
- * @extendsPlugin amps
- * @goal uninstall
- */
 public class RefappUninstallMojo extends UninstallMojo
 {
     @Override

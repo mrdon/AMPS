@@ -1,43 +1,43 @@
 package com.atlassian.maven.plugins.amps;
 
-import java.io.File;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
-import org.apache.maven.project.MavenProject;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
+import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
+import org.jfrog.maven.annomojo.annotations.MojoComponent;
+
+import java.io.File;
 
 /**
  * Run the integration tests against the webapp
- * @requiresDependencyResolution integration-test
- * @goal integration-test
  */
+@MojoGoal("integration-test")
+@MojoRequiresDependencyResolution("test")
 public class IntegrationTestMojo extends AbstractProductHandlerMojo
 {
-
     /**
      * Pattern for to use to find integration tests
-     * @parameter expression="${functionalTestPattern}"
      */
+    @MojoParameter(expression = "${functionalTestPattern}")
     private final String functionalTestPattern = "it/**";
 
     /**
      * The directory containing generated test classes of the project being tested.
-     * @parameter expression="${project.build.testOutputDirectory}"
-     * @required
      */
+    @MojoParameter(expression = "${project.build.testOutputDirectory}", required = true)
     private File testClassesDirectory;
 
     /**
      * Whether the reference application will not be started or not
-     * @parameter expression="${noWebapp}"
      */
+    @MojoParameter(expression = "${noWebapp}", defaultValue = "false")
     private final boolean noWebapp = false;
 
-    /**
-     * @component
-     */
+    @MojoComponent
     private ArtifactHandlerManager artifactHandlerManager;
 
     protected void doExecute() throws MojoExecutionException
@@ -65,7 +65,6 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 runTestsForProduct(productId, goals, pluginJar);
             }
         }
-
     }
 
     private void runTestsForProduct(String productId, MavenGoals goals, String pluginJar) throws MojoExecutionException

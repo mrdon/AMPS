@@ -2,6 +2,7 @@ package com.atlassian.maven.plugins.amps.pdk;
 
 import com.atlassian.maven.plugins.amps.AbstractProductHandlerAwareMojo;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 /**
  *
@@ -9,46 +10,51 @@ import com.atlassian.maven.plugins.amps.product.ProductHandler;
 public abstract class AbstractPdkMojo extends AbstractProductHandlerAwareMojo
 {
     /**
-     * @parameter expression="${atlassian.plugin.key}"
+     *
      */
+    @MojoParameter(expression = "${atlassian.plugin.key}")
     protected String pluginKey;
+
     /**
-     * @parameter expression="${project.groupId}"
+     *
      */
+    @MojoParameter(expression = "${project.groupId}")
     protected String groupId;
+
     /**
-     * @parameter expression="${project.artifactId}"
+     *
      */
+    @MojoParameter(expression = "${project.artifactId}")
     protected String artifactId;
 
     /**
      * HTTP port for the servlet containers
-     * @parameter expression="${http.port}"
      */
+    @MojoParameter(expression = "${http.port}")
     private int httpPort;
 
     /**
      * Application context path
-     * @parameter expression="${context.path}"
      */
+    @MojoParameter(expression = "${context.path}")
     protected String contextPath;
 
     /**
      * Username of user that will install the plugin
-     * @parameter expression="${username}" default-value="admin"
      */
+    @MojoParameter(expression = "${username}", defaultValue = "admin")
     protected String username;
 
     /**
      * Password of user that will install the plugin
-     * @parameter expression="${password}" default-value="admin"
      */
+    @MojoParameter(expression = "${password}", defaultValue = "admin")
     protected String password;
 
     /**
      * Application server
-     * @parameter expression="${server}" default-value="localhost"
      */
+    @MojoParameter(expression = "${server}", defaultValue = "localhost")
     protected String server;
 
     protected void ensurePluginKeyExists()

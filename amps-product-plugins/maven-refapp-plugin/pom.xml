@@ -12,13 +12,4 @@
     <packaging>maven-plugin</packaging>
 
     <name>Maven Refapp Plugin</name>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.ops4j</groupId>
-                <artifactId>maven-inherit-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

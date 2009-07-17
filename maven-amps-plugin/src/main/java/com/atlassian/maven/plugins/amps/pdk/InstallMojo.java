@@ -1,13 +1,11 @@
 package com.atlassian.maven.plugins.amps.pdk;
 
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
-import com.atlassian.maven.plugins.amps.product.ProductHandler;
-
-/**
- * @goal install
- */
+@MojoGoal("install")
 public class InstallMojo extends AbstractPdkMojo
 {
     public void execute() throws MojoExecutionException, MojoFailureException

@@ -1,39 +1,40 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
-import com.atlassian.maven.plugins.amps.product.ProductHandler;
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.execution.MavenSession;
+import org.jfrog.maven.annomojo.annotations.MojoComponent;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 public abstract class AbstractAmpsMojo extends AbstractMojo
 {
     /**
      * The Maven Project Object
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
      */
+    @MojoParameter(expression = "${project}", required = true, readonly = true)
     private MavenProject project;
 
     /**
      * The Maven Session Object
-     * @parameter expression="${session}"
-     * @required
-     * @readonly
      */
+    @MojoParameter(expression = "${session}", required = true, readonly = true)
     private MavenSession session;
+
     /**
      * The Maven PluginManager Object
-     * @component
-     * @required
      */
+    @MojoComponent
     private PluginManager pluginManager;
 
+    /**
+     * the maven context
+     */
     private MavenContext mavenContext;
+
+    /**
+     * the maven goals
+     */
     private MavenGoals mavenGoals;
 
     protected MavenContext getMavenContext()

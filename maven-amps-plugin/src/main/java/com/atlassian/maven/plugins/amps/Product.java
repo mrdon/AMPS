@@ -10,28 +10,20 @@ public class Product
 {
     /**
      * Container to run in
-     *
-     * @parameter expression="${container}"
      */
     protected String containerId = "tomcat6x";
     /**
      * HTTP port for the servlet containers
-     *
-     * @parameter expression="${http.port}"
      */
     private int httpPort = 0;
 
     /**
      * Application context path
-     *
-     * @parameter expression="${context.path}"
      */
     protected String contextPath = "/";
 
     /**
      * Application server
-     *
-     * @parameter expression="${server}" default-value="localhost"
      */
     protected String server;
 

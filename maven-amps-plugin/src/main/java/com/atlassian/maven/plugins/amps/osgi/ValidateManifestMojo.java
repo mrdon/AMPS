@@ -6,6 +6,8 @@ import static com.atlassian.maven.plugins.amps.util.FileUtils.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,15 +15,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.Manifest;
 
-/**
- * @goal validate-manifest
- */
+@MojoGoal("validate-manifest")
 public class ValidateManifestMojo extends AbstractAmpsMojo
 {
     /**
      * Whether to skip validation or not
-     * @parameter expression="${manifest.validation.skip}"
      */
+    @MojoParameter(expression = "${manifest.validation.skip}")
     protected boolean skipManifestValidation = false;
 
     public void execute() throws MojoExecutionException, MojoFailureException

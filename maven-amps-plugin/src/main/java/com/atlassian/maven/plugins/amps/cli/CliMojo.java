@@ -3,16 +3,14 @@ package com.atlassian.maven.plugins.amps.cli;
 import com.atlassian.maven.plugins.amps.AbstractProductAwareMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
-/**
- * @goal cli
- */
+@MojoGoal("cli")
 public class CliMojo extends AbstractProductAwareMojo
 {
-    /**
-     * @parameter expression="${cli.port}"
-     */
-    private int port = 4330;
+    @MojoParameter(expression = "${cli.port}", defaultValue = "4330")
+    private int port;
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
