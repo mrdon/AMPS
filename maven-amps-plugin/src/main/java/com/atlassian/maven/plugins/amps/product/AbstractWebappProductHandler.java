@@ -97,7 +97,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
                 unzip(bundledPluginsZip, bundledPluginsDir.getPath());
             }
 
-            if (!isPlugins2Plugin())
+            if (isStaticPlugin())
             {
                 pluginsDir = new File(webappDir, "WEB-INF/lib");
             }
@@ -227,11 +227,19 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
             FileUtils.copyDirectory(srcDir, outputDir);
     }
 
-    private boolean isPlugins2Plugin() throws IOException
+    private boolean isStaticPlugin() throws IOException
     {
         final File atlassianPluginXml = new File(project.getBasedir(), "src/main/resources/atlassian-plugin.xml");
-        String text = FileUtils.readFileToString(atlassianPluginXml);
-        return text.contains("pluginsVersion=\"2\"") || text.contains("plugins-version=\"2\"");
+        if (atlassianPluginXml.exists())
+        {
+            String text = FileUtils.readFileToString(atlassianPluginXml);
+            return !text.contains("pluginsVersion=\"2\"") && !text.contains("plugins-version=\"2\"");
+        }
+        else
+        {
+            // probably an osgi bundle
+            return false;
+        }
     }
 
     private void addThisPluginToDirectory(final File pluginsDir) throws IOException
