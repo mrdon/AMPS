@@ -13,13 +13,13 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
      * The Maven Project Object
      */
     @MojoParameter(expression = "${project}", required = true, readonly = true)
-    private MavenProject project;
+    protected MavenProject project;
 
     /**
      * The Maven Session Object
      */
     @MojoParameter(expression = "${session}", required = true, readonly = true)
-    private MavenSession session;
+    protected MavenSession session;
 
     /**
      * The Maven PluginManager Object

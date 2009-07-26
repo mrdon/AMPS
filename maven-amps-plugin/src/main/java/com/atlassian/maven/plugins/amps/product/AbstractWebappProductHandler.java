@@ -245,6 +245,17 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
     private void addThisPluginToDirectory(final File pluginsDir) throws IOException
     {
         final File thisPlugin = getPluginFile();
+
+        // remove any existing version
+        for (final Iterator<?> iterateFiles = FileUtils.iterateFiles(pluginsDir, null, false); iterateFiles.hasNext();)
+        {
+            final File file = (File) iterateFiles.next();
+            if (file.getName().contains(project.getArtifactId()))
+            {
+                file.delete();
+            }
+        }
+
         // add the plugin jar to the directory
         FileUtils.copyFile(thisPlugin, new File(pluginsDir, thisPlugin.getName()));
 

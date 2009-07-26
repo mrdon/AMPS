@@ -28,7 +28,8 @@
                             <test>com.atlassian.maven.plugins:maven-confluence-plugin:unit-test</test>
                             <package>
                                 com.atlassian.maven.plugins:maven-confluence-plugin:validate-manifest,
-                                com.atlassian.maven.plugins:maven-confluence-plugin:jar
+                                com.atlassian.maven.plugins:maven-confluence-plugin:jar,
+                                com.atlassian.maven.plugins:maven-confluence-plugin:generate-obr-artifact
                             </package>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-confluence-plugin:integration-test

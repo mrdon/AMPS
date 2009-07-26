@@ -551,6 +551,28 @@ public class MavenGoals {
         );
     }
 
+    public void generateObrXml(File dep, File obrXml) throws MojoExecutionException
+    {
+        executeMojo(
+                plugin(
+                        groupId("org.apache.felix"),
+                        artifactId("maven-bundle-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-bundle-plugin"))
+                ),
+                goal("install-file"),
+                configuration(
+                            element(name("obrRepository"), obrXml.getPath()),
+                            element(name("groupId"), "doesntmatter"),
+                            element(name("artifactId"), "doesntmatter"),
+                            element(name("version"), "doesntmatter"),
+                            element(name("packaging"), "jar"),
+                            element(name("file"), dep.getPath())
+
+                ),
+                executionEnvironment(project, session, pluginManager)
+        );
+    }
+
     private static class Container
     {
         private final String id;

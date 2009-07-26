@@ -28,7 +28,8 @@
                             <test>com.atlassian.maven.plugins:maven-jira-plugin:unit-test</test>
                             <package>
                                 com.atlassian.maven.plugins:maven-jira-plugin:validate-manifest,
-                                com.atlassian.maven.plugins:maven-jira-plugin:jar
+                                com.atlassian.maven.plugins:maven-jira-plugin:jar,
+                                com.atlassian.maven.plugins:maven-jira-plugin:generate-obr-artifact
                             </package>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-jira-plugin:integration-test
