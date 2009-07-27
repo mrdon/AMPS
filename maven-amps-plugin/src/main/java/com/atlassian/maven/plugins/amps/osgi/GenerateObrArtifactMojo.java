@@ -91,7 +91,6 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     @MojoParameter(expression="${reactorProjects}", readonly = true)
     protected List reactorProjects;
 
-    @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         try
