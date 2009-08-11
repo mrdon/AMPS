@@ -3,7 +3,6 @@ package com.atlassian.maven.plugins.amps.product;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.product.AbstractWebappProductHandler;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -35,7 +34,7 @@ public class RefappProductHandler extends AbstractWebappProductHandler
 
     protected File getPluginsDirectory(final String webappDir, File homeDir)
     {
-        return new File(webappDir, "WEB-INF/plugins");
+        return null;
     }
 
     protected List<ProductArtifact> getExtraContainerDependencies()

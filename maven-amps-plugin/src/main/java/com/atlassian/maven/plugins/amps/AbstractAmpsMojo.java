@@ -7,6 +7,8 @@ import org.apache.maven.project.MavenProject;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
+import java.util.List;
+
 public abstract class AbstractAmpsMojo extends AbstractMojo
 {
     /**
@@ -14,6 +16,12 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
      */
     @MojoParameter(expression = "${project}", required = true, readonly = true)
     protected MavenProject project;
+
+    /**
+     * The list of modules being built, the reactor
+     */
+    @MojoParameter(expression = "${reactorProjects}", required = true, readonly = true)
+    protected List<MavenProject> reactor;
 
     /**
      * The Maven Session Object
@@ -41,7 +49,7 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
     {
         if (mavenContext == null)
         {
-            mavenContext = new MavenContext(project, session, pluginManager, getLog());
+            mavenContext = new MavenContext(project, reactor, session, pluginManager, getLog());
         }
         return mavenContext;
     }

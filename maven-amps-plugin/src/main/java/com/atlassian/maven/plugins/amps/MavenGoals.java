@@ -29,12 +29,14 @@ import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
+import com.atlassian.core.util.FileUtils;
 
 /**
  * Executes specific maven goals
  */
 public class MavenGoals {
     private final MavenProject project;
+    private final List<MavenProject> reactor;
     private final MavenSession session;
     private final PluginManager pluginManager;
     private final Log log;
@@ -72,6 +74,7 @@ public class MavenGoals {
     }
     public MavenGoals(final MavenContext ctx, final Map<String,String> pluginToVersionMap) {
         this.project = ctx.getProject();
+        this.reactor = ctx.getReactor();
         this.session = ctx.getSession();
         this.pluginManager = ctx.getPluginManager();
         this.log = ctx.getLog();
@@ -212,29 +215,72 @@ public class MavenGoals {
         return webappWarFile;
     }
 
-    public void copyPlugins(final File pluginsDir, final List<ProductArtifact> pluginArtifacts) throws MojoExecutionException {
-        final Element[] items = new Element[pluginArtifacts.size()];
-        for (int x=0; x<pluginArtifacts.size(); x++)
+    /**
+     * Copies {@code artifacts} to the {@code outputDirectory}. Artifacts are looked up in order:
+     * <ol>
+     * <li>in the maven reactor</li>
+     * <li>in the maven repositories</li>
+     * </ol>
+     * This can't be used in a goal that happens before the <em>package</em> phase as artifacts in the reactor will be not be packaged
+     * (and therefore 'copiable') until this phase.
+     *
+     * @param outputDirectory the directory to copy artifacts to
+     * @param artifacts the list of artifact to copy to the given directory
+     * @throw MojoExecutionException any error that happens when copying those artifacts
+     */
+    public void copyPlugins(final File outputDirectory, final List<ProductArtifact> artifacts) throws MojoExecutionException
+    {
+        for (ProductArtifact artifact : artifacts)
         {
-            final ProductArtifact artifact = pluginArtifacts.get(x);
-            items[x] = element(name("artifactItem"),
-                    element(name("groupId"), artifact.getGroupId()),
-                    element(name("artifactId"), artifact.getArtifactId()),
-                    element(name("version"), artifact.getVersion()));
+            final MavenProject artifactReactorProject = getReactorProjectForArtifact(artifact);
+            if (artifactReactorProject != null)
+            {
+                try
+                {
+                    log.debug(artifact + " will be copied from reactor project " + artifactReactorProject);
+                    final File artifactFile = artifactReactorProject.getArtifact().getFile();
+                    log.debug("Copying " + artifactFile + " to " + outputDirectory);
+                    FileUtils.copyFile(artifactFile, new File(outputDirectory, artifactFile.getName()));
+                }
+                catch (IOException e)
+                {
+                    throw new MojoExecutionException("Could not copy " + artifact + " to " + outputDirectory, e);
+                }
+            }
+            else
+            {
+                executeMojo(
+                        plugin(
+                                groupId("org.apache.maven.plugins"),
+                                artifactId("maven-dependency-plugin"),
+                                version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+                        ),
+                        goal("copy"),
+                        configuration(
+                                element(name("artifactItems"),
+                                        element(name("artifactItem"),
+                                                element(name("groupId"), artifact.getGroupId()),
+                                                element(name("artifactId"), artifact.getArtifactId()),
+                                                element(name("version"), artifact.getVersion()))),
+                                element(name("outputDirectory"), outputDirectory.getPath())
+                        ),
+                        executionEnvironment(project, session, pluginManager));
+            }
         }
-        executeMojo(
-                plugin(
-                        groupId("org.apache.maven.plugins"),
-                        artifactId("maven-dependency-plugin"),
-                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
-                ),
-                goal("copy"),
-                configuration(
-                        element(name("artifactItems"), items),
-                        element(name("outputDirectory"), pluginsDir.getPath())
-                ),
-                executionEnvironment(project, session, pluginManager)
-        );
+    }
+
+    private MavenProject getReactorProjectForArtifact(ProductArtifact artifact)
+    {
+        for (final MavenProject project : reactor)
+        {
+            if (project.getGroupId().equals(artifact.getGroupId())
+                    && project.getArtifactId().equals(artifact.getArtifactId())
+                    && project.getVersion().equals(artifact.getVersion()))
+            {
+                return project;
+            }
+        }
+        return null;
     }
 
     public int startWebapp(final String productId, final File war, final Map<String,String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
