@@ -32,6 +32,7 @@
 
     <modules>
         <module>maven-amps-plugin</module>
+        <module>maven-amps-assembly</module>
         <module>amps-product-plugins</module>
         <module>amps-product-archetypes</module>
     </modules>
