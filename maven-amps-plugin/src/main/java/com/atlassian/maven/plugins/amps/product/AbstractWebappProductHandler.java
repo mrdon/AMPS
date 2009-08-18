@@ -107,6 +107,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
                 pluginsDir = bundledPluginsDir;
             }
 
+            pluginsDir.mkdirs();
             // add this plugin itself
             addThisPluginToDirectory(pluginsDir);
             // add plugins2 plugins
