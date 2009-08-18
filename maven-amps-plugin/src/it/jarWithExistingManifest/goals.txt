@@ -1,1 +1,1 @@
-process-resources amps:jar
+process-resources ${shitty.product}:jar

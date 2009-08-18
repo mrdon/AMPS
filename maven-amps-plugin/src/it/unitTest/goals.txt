@@ -1,1 +1,1 @@
-test-compile amps:unit-test
+test-compile ${shitty.product}:unit-test

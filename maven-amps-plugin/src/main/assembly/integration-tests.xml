@@ -1,0 +1,13 @@
+<assembly>
+    <id>integration-tests</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>src/it</directory>
+            <outputDirectory></outputDirectory> <!-- don't copy in src/it to the final archive, start at the lower level -->
+        </fileSet>
+    </fileSets>
+</assembly>

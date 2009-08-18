@@ -1,1 +1,1 @@
-amps:filter-plugin-descriptor
+${shitty.product}:filter-plugin-descriptor

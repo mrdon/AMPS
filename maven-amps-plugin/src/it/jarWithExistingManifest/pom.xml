@@ -11,7 +11,7 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-amps-plugin</artifactId>
+                <artifactId>maven-${shitty.product}-plugin</artifactId>
                 <version>testing</version>
             </plugin>
         </plugins>
