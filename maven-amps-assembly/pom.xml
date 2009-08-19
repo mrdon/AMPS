@@ -34,7 +34,7 @@
                 <executions>
                     <execution>
                         <id>unpack</id>
-                        <phase>package</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
@@ -47,6 +47,24 @@
                                     <type>tar.gz</type>
                                     <classifier>bin</classifier>
                                     <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-colorizer</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.twdata.maven</groupId>
+                                    <artifactId>console-colorizer</artifactId>
+                                    <!-- If you change this, ensure you change the mvn diff -->
+                                    <version>0.2</version>
+                                    <outputDirectory>${project.build.directory}/apache-maven-${maven.version}/lib</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -67,6 +85,26 @@
                             <descriptors>
                                 <descriptor>src/main/assembly/standalone.xml</descriptor>
                             </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <id>patch-maven</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo>Patching Maven 2 script</echo>
+                                <patch patchfile="src/main/resources/patches/mvn.diff"
+                                       originalfile="${project.build.directory}/apache-maven-${maven.version}/bin/mvn" />
+                            </tasks>
                         </configuration>
                     </execution>
                 </executions>

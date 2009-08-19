@@ -53,7 +53,7 @@
             <filtered>true</filtered>
         </fileSet>
 
-        <!-- Help fiels -->
+        <!-- Help files -->
         <fileSet>
             <directory>src/main/resources/help</directory>
             <outputDirectory>help</outputDirectory>
