@@ -10,6 +10,7 @@
     <version>${version}</version>
 
     <name>${artifactId}</name>
+    <description>This is the ${groupId}:${artifactId} plugin for Atlassian JIRA.</description>
     <packaging>atlassian-plugin</packaging>
 
     <dependencies>

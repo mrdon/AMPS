@@ -2,9 +2,7 @@
     <plugin-info>
         <description>${project.description}</description>
         <version>${project.version}</version>
-        <!-- TODO: Add vendor details -->
-        <!--
-        <vendor name="Example Company" url="http://www.example.com"/>
-        -->
+        <!-- Add the <organization> stanza to pom.xml, and then uncomment this. -->
+        <!--<vendor name="${project.organization.name}" url="${project.organization.url}"/>-->
     </plugin-info>
 </atlassian-plugin>
