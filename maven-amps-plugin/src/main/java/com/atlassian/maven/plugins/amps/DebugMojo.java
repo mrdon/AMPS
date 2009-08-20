@@ -2,29 +2,29 @@ package com.atlassian.maven.plugins.amps;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
-import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoExecute;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
+import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
 /**
  * Debug the webapp
  */
-@MojoGoal("debug")
-@MojoExecute(phase = "package")
+@MojoGoal ("debug")
+@MojoExecute (phase = "package")
 @MojoRequiresDependencyResolution
 public class DebugMojo extends RunMojo
 {
     /**
      * port for debugging
      */
-    @MojoParameter(expression = "${jvm.debug.port}", defaultValue = "5005")
+    @MojoParameter (expression = "${jvm.debug.port}", defaultValue = "5005")
     protected int jvmDebugPort;
 
     /**
      * Suspend when debugging
      */
-    @MojoParameter(expression = "${jvm.debug.suspend}")
+    @MojoParameter (expression = "${jvm.debug.suspend}")
     protected boolean jvmDebugSuspend = false;
 
 
@@ -36,6 +36,12 @@ public class DebugMojo extends RunMojo
             jvmArgs = "-Xmx512m -XX:MaxPermSize=160m";
         }
         jvmArgs += " -Xdebug -Xrunjdwp:transport=dt_socket,address=" + String.valueOf(jvmDebugPort) + ",suspend=" + (jvmDebugSuspend ? "y" : "n") + ",server=y ";
+
+        if (writePropertiesToFile)
+        {
+            properties.put("debug.port", String.valueOf(jvmDebugPort));
+        }
+
         super.doExecute();
     }
 }

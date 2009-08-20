@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Properties;
+import java.util.HashMap;
 
 /**
  * Run the webapp
@@ -31,7 +33,12 @@ public class RunMojo extends AbstractProductHandlerMojo
      * Whether or not to write properties used by the plugin to amps.properties.
      */
     @MojoParameter (expression = "${amps.properties}", required = true, defaultValue = "false")
-    private boolean writePropertiesToFile;
+    protected boolean writePropertiesToFile;
+
+    /**
+     * The properties actually used by the mojo when running
+     */
+    protected final Map<String, String> properties = new HashMap<String, String>();
 
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
@@ -43,8 +50,13 @@ public class RunMojo extends AbstractProductHandlerMojo
 
         getLog().info(product.getId() + " started successfully and available at http://localhost:" + actualHttpPort + ctx.getContextPath());
 
-        writePropertiesFile(ctx, actualHttpPort);
-
+        if (writePropertiesToFile)
+        {
+            properties.put("http.port", String.valueOf(actualHttpPort));
+            properties.put("context.path", ctx.getContextPath());
+            writePropertiesFile();
+        }
+        
         if (wait)
         {
             getLog().info("Type CTRL-C to exit");
@@ -61,29 +73,29 @@ public class RunMojo extends AbstractProductHandlerMojo
         }
     }
 
-    private void writePropertiesFile(final Product ctx, final int actualHttpPort) throws MojoExecutionException
+    private void writePropertiesFile() throws MojoExecutionException
     {
-        if (writePropertiesToFile)
-        {
-            final Properties properties = new Properties();
-            properties.setProperty("http.port", String.valueOf(actualHttpPort));
-            properties.setProperty("context.path", ctx.getContextPath());
+        final Properties props = new Properties();
 
-            final File ampsProperties = new File(project.getBuild().getDirectory(), "amps.properties");
-            OutputStream out = null;
-            try
-            {
-                out = new FileOutputStream(ampsProperties);
-                properties.store(out, "");
-            }
-            catch (IOException e)
-            {
-                throw new MojoExecutionException("Error writing " + ampsProperties.getAbsolutePath(), e);
-            }
-            finally
-            {
-                IOUtils.closeQuietly(out);
-            }
+        for (Map.Entry<String, String> entry : properties.entrySet())
+        {
+            props.setProperty(entry.getKey(), entry.getValue());
+        }
+
+        final File ampsProperties = new File(project.getBuild().getDirectory(), "amps.properties");
+        OutputStream out = null;
+        try
+        {
+            out = new FileOutputStream(ampsProperties);
+            props.store(out, "");
+        }
+        catch (IOException e)
+        {
+            throw new MojoExecutionException("Error writing " + ampsProperties.getAbsolutePath(), e);
+        }
+        finally
+        {
+            IOUtils.closeQuietly(out);
         }
     }
 }
