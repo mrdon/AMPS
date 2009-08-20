@@ -65,7 +65,7 @@
                             <artifactId>maven-resources-plugin</artifactId>
                             <executions>
                                 <execution>
-                                    <id>copy-integration-tests</id>
+                                    <id>copy-integration-tests-with-filtering</id>
                                     <phase>pre-integration-test</phase>
                                     <goals>
                                         <goal>copy-resources</goal>
@@ -81,6 +81,18 @@
                                                     <include>**/goals.txt</include>
                                                 </includes>
                                             </resource>
+                                        </resources>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>copy-integration-tests-without-filtering</id>
+                                    <phase>pre-integration-test</phase>
+                                    <goals>
+                                        <goal>copy-resources</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>${project.build.directory}/it</outputDirectory>
+                                        <resources>
                                             <resource>
                                                 <directory>${project.build.directory}/it-unfiltered</directory>
                                                 <filtering>false</filtering>

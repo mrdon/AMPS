@@ -2,6 +2,7 @@ package com.atlassian.maven.plugins.amps;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
 {
@@ -16,14 +17,14 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
         return null;
     }
 
-    protected String getProductId() throws MojoExecutionException
+    protected final String getProductId() throws MojoExecutionException
     {
         if (product == null)
         {
             product = getDefaultProductId();
             if (product == null)
             {
-                throw new MojoExecutionException("The product must be specified");
+                return ProductHandlerFactory.REFAPP;
             }
         }
         return product;
