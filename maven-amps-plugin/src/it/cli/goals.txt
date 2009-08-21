@@ -1,0 +1,1 @@
+${shitty.product}:run org.codehaus.groovy.maven:gmaven-plugin::execute ${shitty.product}:cli org.codehaus.groovy.maven:gmaven-plugin::execute

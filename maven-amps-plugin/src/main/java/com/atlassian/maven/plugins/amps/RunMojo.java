@@ -29,6 +29,10 @@ public class RunMojo extends AbstractProductHandlerMojo
 
     @MojoParameter (expression = "${wait}", defaultValue = "true")
     private boolean wait;
+
+    @MojoParameter (expression = "${install.plugin}", defaultValue = "true")
+    private boolean installPlugin;
+
     /**
      * Whether or not to write properties used by the plugin to amps.properties.
      */
@@ -45,6 +49,8 @@ public class RunMojo extends AbstractProductHandlerMojo
         final MavenGoals goals = getMavenGoals();
         ProductHandler product = createProductHandler();
         Product ctx = getProductContexts(goals).get(0);
+
+        ctx.setInstallPlugin(installPlugin);
 
         int actualHttpPort = product.start(ctx);
 

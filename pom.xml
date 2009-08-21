@@ -37,6 +37,16 @@
         <module>amps-product-archetypes</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>2.2.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.jfrog.maven.annomojo</groupId>
@@ -68,7 +78,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>shitty-maven-plugin</artifactId>
-                    <version>1.0-alpha-3-atlassian-4</version>
+                    <version>1.0-alpha-3-atlassian-5-SNAPSHOT</version>
                     <executions>
                         <execution>
                             <goals>
@@ -80,6 +90,7 @@
                     </executions>
                     <configuration>
                         <itDirectory>${project.build.directory}/it</itDirectory>
+                        <!--<jvmArgs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</jvmArgs>-->
                     </configuration>
                 </plugin>
             </plugins>

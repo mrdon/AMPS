@@ -67,6 +67,24 @@ public class TestAbstractProductAwareMojo extends TestCase
         assertEquals("confluence", mojo.getProductId());
     }
 
+
+    public void testGetProductIdAndVersionFromProjectInformation() throws MojoExecutionException, NoSuchFieldException, IllegalAccessException
+    {
+        SomeMojo mojo = new SomeMojo(null);
+        MavenProject proj = new MavenProject();
+        Build build = new Build();
+        proj.setBuild(build);
+        Plugin plugin = new Plugin();
+        build.addPlugin(plugin);
+        plugin.setGroupId("com.atlassian.maven.plugins");
+        plugin.setArtifactId("maven-confluence-plugin");
+        plugin.setVersion("1.0");
+        setPrivateField(mojo, "project", proj);
+        assertEquals("confluence", mojo.getProductId());
+        assertEquals("1.0", mojo.getPluginInformation().getVersion());
+        assertEquals("confluence", mojo.getPluginInformation().getId());
+    }
+
     public static class SomeMojo extends AbstractProductAwareMojo
     {
         private final String defaultProductId;

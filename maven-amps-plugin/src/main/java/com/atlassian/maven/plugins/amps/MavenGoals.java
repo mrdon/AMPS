@@ -1,5 +1,14 @@
 package com.atlassian.maven.plugins.amps;
 
+import com.atlassian.core.util.FileUtils;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import com.atlassian.maven.plugins.amps.util.VersionUtils;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.PluginManager;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
+import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
@@ -20,21 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.PluginManager;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
-import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
-
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
-import com.atlassian.maven.plugins.amps.util.VersionUtils;
-import com.atlassian.core.util.FileUtils;
-
 /**
  * Executes specific maven goals
  */
-public class MavenGoals {
+public class MavenGoals
+{
     private final MavenProject project;
     private final List<MavenProject> reactor;
     private final MavenSession session;
@@ -44,58 +43,67 @@ public class MavenGoals {
 
     private final Map<String, Container> idToContainerMap = new HashMap<String, Container>()
     {{
-        put("tomcat5x", new Container("tomcat5x", "https://m2proxy.atlassian.com/repository/public/org/apache/tomcat/apache-tomcat/5.5.25/apache-tomcat-5.5.25.zip"));
-        put("tomcat6x", new Container("tomcat6x", "http://apache.mirror.aussiehq.net.au/tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip"));
-        put("resin3x", new Container("resin3x", "http://www.caucho.com/download/resin-3.0.26.zip"));
-        put("jboss42x", new Container("jboss42x", "http://internode.dl.sourceforge.net/sourceforge/jboss/jboss-4.2.3.GA.zip"));
-        put("jetty6x", new Container("jetty6x"));
+            put("tomcat5x", new Container("tomcat5x", "https://m2proxy.atlassian.com/repository/public/org/apache/tomcat/apache-tomcat/5.5.25/apache-tomcat-5.5.25.zip"));
+            put("tomcat6x", new Container("tomcat6x", "http://apache.mirror.aussiehq.net.au/tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip"));
+            put("resin3x", new Container("resin3x", "http://www.caucho.com/download/resin-3.0.26.zip"));
+            put("jboss42x", new Container("jboss42x", "http://internode.dl.sourceforge.net/sourceforge/jboss/jboss-4.2.3.GA.zip"));
+            put("jetty6x", new Container("jetty6x"));
 
-    }};
+        }};
 
-    private final Map<String,String> defaultArtifactIdToVersionMap = new HashMap<String,String>()
+    private final Map<String, String> defaultArtifactIdToVersionMap = new HashMap<String, String>()
     {{
-        put("maven-cli-plugin", "0.6.2");
-        put("cargo-maven2-plugin", "1.0-beta-2-db2");
-        put("atlassian-pdk", "2.1.6");
-        put("maven-archetype-plugin", "2.0-alpha-4");
-        put("maven-bundle-plugin", "2.0.0");
+            put("maven-cli-plugin", "0.6.10-SNAPSHOT");
+            put("cargo-maven2-plugin", "1.0-beta-2-db2");
+            put("atlassian-pdk", "2.1.6");
+            put("maven-archetype-plugin", "2.0-alpha-4");
+            put("maven-bundle-plugin", "2.0.0");
 
-        // You can't actually override the version a plugin if defined in the project, so these don't actually do
-        // anything, since the super pom already defines versions.
-        put("maven-dependency-plugin", "2.0");
-        put("maven-resources-plugin", "2.3");
-        put("maven-jar-plugin", "2.2");
-        put("maven-surefire-plugin", "2.4.3");
+            // You can't actually override the version a plugin if defined in the project, so these don't actually do
+            // anything, since the super pom already defines versions.
+            put("maven-dependency-plugin", "2.0");
+            put("maven-resources-plugin", "2.3");
+            put("maven-jar-plugin", "2.2");
+            put("maven-surefire-plugin", "2.4.3");
 
-    }};
+        }};
 
-    public MavenGoals(final MavenContext ctx) {
+    public MavenGoals(final MavenContext ctx)
+    {
         this(ctx, Collections.<String, String>emptyMap());
     }
-    public MavenGoals(final MavenContext ctx, final Map<String,String> pluginToVersionMap) {
+
+    public MavenGoals(final MavenContext ctx, final Map<String, String> pluginToVersionMap)
+    {
         this.project = ctx.getProject();
         this.reactor = ctx.getReactor();
         this.session = ctx.getSession();
         this.pluginManager = ctx.getPluginManager();
         this.log = ctx.getLog();
 
-        final Map<String,String> map = new HashMap<String, String>(defaultArtifactIdToVersionMap);
+        final Map<String, String> map = new HashMap<String, String>(defaultArtifactIdToVersionMap);
         map.putAll(pluginToVersionMap);
         this.pluginArtifactIdToVersionMap = Collections.unmodifiableMap(map);
 
     }
 
-    public void startCli(final String productId, final int port) throws MojoExecutionException {
+    public void startCli(final PluginInformation pluginInformation, final int port) throws MojoExecutionException
+    {
+        final String pluginId = pluginInformation.getId();
 
         final List<Element> configs = new ArrayList<Element>();
         configs.add(element(name("commands"),
-                element(name("pi"), "resources com.atlassian.maven.plugins:maven-"+productId+"-plugin:filter-plugin-descriptor "
-                        + "compile com.atlassian.maven.plugins:maven-"+productId
-                        +"-plugin:copy-bundled-dependencies com.atlassian.maven.plugins:maven-"+productId+"-plugin:generate-manifest "
-                        +"com.atlassian.maven.plugins:maven-"+productId+"-plugin:validate-manifest "
-                        + "com.atlassian.maven.plugins:maven-"+productId+"-plugin:jar "
-                        + "com.atlassian.maven.plugins:maven-"+productId+"-plugin:install"),
-                        element(name("pu"), "com.atlassian.maven.plugins:maven-"+productId+"-plugin:uninstall")));
+                element(name("pi"), new StringBuilder()
+                        .append("resources").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:filter-plugin-descriptor").append(" ")
+                        .append("compile").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:copy-bundled-dependencies").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:generate-manifest").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:validate-manifest").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:jar").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:install").toString()),
+                element(name("pu"), new StringBuilder()
+                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:uninstall").toString())));
         if (port > 0)
         {
             configs.add(element(name("port"), String.valueOf(port)));
@@ -112,7 +120,8 @@ public class MavenGoals {
         );
     }
 
-    public void createPlugin(final String productId) throws MojoExecutionException {
+    public void createPlugin(final String productId) throws MojoExecutionException
+    {
 
         executeMojo(
                 plugin(
@@ -131,7 +140,8 @@ public class MavenGoals {
         );
     }
 
-    public void copyBundledDependencies() throws MojoExecutionException {
+    public void copyBundledDependencies() throws MojoExecutionException
+    {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -150,7 +160,8 @@ public class MavenGoals {
         );
     }
 
-    public void filterPluginDescriptor() throws MojoExecutionException {
+    public void filterPluginDescriptor() throws MojoExecutionException
+    {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -174,7 +185,8 @@ public class MavenGoals {
         );
     }
 
-    public void runUnitTests() throws MojoExecutionException {
+    public void runUnitTests() throws MojoExecutionException
+    {
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -191,8 +203,10 @@ public class MavenGoals {
         );
     }
 
-    public File copyWebappWar(final String productId, final File targetDirectory, final ProductArtifact artifact) throws MojoExecutionException {
-        final File webappWarFile = new File(targetDirectory, productId+"-original.war");
+    public File copyWebappWar(final String productId, final File targetDirectory, final ProductArtifact artifact)
+            throws MojoExecutionException
+    {
+        final File webappWarFile = new File(targetDirectory, productId + "-original.war");
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -208,7 +222,7 @@ public class MavenGoals {
                                         element(name("type"), "war"),
                                         element(name("version"), artifact.getVersion()),
                                         element(name("destFileName"), webappWarFile.getName()))),
-                                        element(name("outputDirectory"), targetDirectory.getPath())
+                        element(name("outputDirectory"), targetDirectory.getPath())
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
@@ -216,19 +230,16 @@ public class MavenGoals {
     }
 
     /**
-     * Copies {@code artifacts} to the {@code outputDirectory}. Artifacts are looked up in order:
-     * <ol>
-     * <li>in the maven reactor</li>
-     * <li>in the maven repositories</li>
-     * </ol>
-     * This can't be used in a goal that happens before the <em>package</em> phase as artifacts in the reactor will be not be packaged
-     * (and therefore 'copiable') until this phase.
+     * Copies {@code artifacts} to the {@code outputDirectory}. Artifacts are looked up in order: <ol> <li>in the maven
+     * reactor</li> <li>in the maven repositories</li> </ol> This can't be used in a goal that happens before the
+     * <em>package</em> phase as artifacts in the reactor will be not be packaged (and therefore 'copiable') until this
+     * phase.
      *
      * @param outputDirectory the directory to copy artifacts to
      * @param artifacts the list of artifact to copy to the given directory
-     * @throw MojoExecutionException any error that happens when copying those artifacts
      */
-    public void copyPlugins(final File outputDirectory, final List<ProductArtifact> artifacts) throws MojoExecutionException
+    public void copyPlugins(final File outputDirectory, final List<ProductArtifact> artifacts)
+            throws MojoExecutionException
     {
         for (ProductArtifact artifact : artifacts)
         {
@@ -283,8 +294,9 @@ public class MavenGoals {
         return null;
     }
 
-    public int startWebapp(final String productId, final File war, final Map<String,String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
-            final Product webappContext) throws MojoExecutionException {
+    public int startWebapp(final String productId, final File war, final Map<String, String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
+            final Product webappContext) throws MojoExecutionException
+    {
         final int rmiPort = pickFreePort(0);
         final int actualHttpPort = pickFreePort(webappContext.getHttpPort());
         final Container container = findContainer(webappContext.getContainerId());
@@ -293,12 +305,12 @@ public class MavenGoals {
         {
             webappContext.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
         }
-        for (final Map.Entry<String,String> entry : systemProperties.entrySet())
+        for (final Map.Entry<String, String> entry : systemProperties.entrySet())
         {
             webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=" + entry.getValue());
             sysProps.add(element(name(entry.getKey()), entry.getValue()));
         }
-        log.info("Starting "+productId+" on the " + container.getId() + " container on ports "
+        log.info("Starting " + productId + " on the " + container.getId() + " container on ports "
                 + actualHttpPort + " (http) and " + rmiPort + " (rmi)");
 
         final String baseUrl = getBaseUrl(webappContext.getServer(), actualHttpPort, webappContext.getContextPath());
@@ -314,7 +326,7 @@ public class MavenGoals {
         }
 
         final List<Element> props = new ArrayList<Element>();
-        for (final Map.Entry<String,String> entry : systemProperties.entrySet())
+        for (final Map.Entry<String, String> entry : systemProperties.entrySet())
         {
             props.add(element(name(entry.getKey()), entry.getValue()));
         }
@@ -360,10 +372,12 @@ public class MavenGoals {
 
     private String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
     {
-        return "http://"+server+":"+actualHttpPort+contextPath;
+        return "http://" + server + ":" + actualHttpPort + contextPath;
     }
 
-    public void runTests(final String productId, final String containerId, final String functionalTestPattern, final int httpPort, final String contexPath, final String pluginJar) throws MojoExecutionException {
+    public void runTests(final String productId, final String containerId, final String functionalTestPattern, final int httpPort, final String contexPath, final String pluginJar)
+            throws MojoExecutionException
+    {
 
         // Automatically exclude tests for other products
         final List<Element> excludes = new ArrayList<Element>();
@@ -451,7 +465,8 @@ public class MavenGoals {
         }
     }
 
-    public void stopWebapp(final String productId, final String containerId) throws MojoExecutionException {
+    public void stopWebapp(final String productId, final String containerId) throws MojoExecutionException
+    {
         final Container container = findContainer(containerId);
         executeMojo(
                 plugin(
@@ -473,7 +488,9 @@ public class MavenGoals {
         );
     }
 
-    public void installPlugin(final String pluginKey, final String server, final int port, final String contextPath, final String username, final String password) throws MojoExecutionException {
+    public void installPlugin(final String pluginKey, final String server, final int port, final String contextPath, final String username, final String password)
+            throws MojoExecutionException
+    {
         final String baseUrl = getBaseUrl(server, port, contextPath);
         executeMojo(
                 plugin(
@@ -492,7 +509,9 @@ public class MavenGoals {
         );
     }
 
-    public void uninstallPlugin(final String pluginKey, final String server, final int port, final String contextPath) throws MojoExecutionException {
+    public void uninstallPlugin(final String pluginKey, final String server, final int port, final String contextPath)
+            throws MojoExecutionException
+    {
         final String baseUrl = getBaseUrl(server, port, contextPath);
         executeMojo(
                 plugin(
@@ -511,7 +530,8 @@ public class MavenGoals {
         );
     }
 
-    public void installIdeaPlugin() throws MojoExecutionException {
+    public void installIdeaPlugin() throws MojoExecutionException
+    {
         executeMojo(
                 plugin(
                         groupId("org.twdata.maven"),
@@ -542,17 +562,17 @@ public class MavenGoals {
                                         element(name("type"), "zip"),
                                         element(name("version"), artifact.getVersion()),
                                         element(name("destFileName"), testResourcesZip.getName()))),
-                                        element(name("outputDirectory"), testResourcesZip.getParent())
+                        element(name("outputDirectory"), testResourcesZip.getParent())
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
         return testResourcesZip;
     }
 
-    public void generateManifest(final Map<String,String> instructions) throws MojoExecutionException
+    public void generateManifest(final Map<String, String> instructions) throws MojoExecutionException
     {
         final List<Element> instlist = new ArrayList<Element>();
-        for (final Map.Entry<String,String> entry : instructions.entrySet())
+        for (final Map.Entry<String, String> entry : instructions.entrySet())
         {
             instlist.add(element(entry.getKey(), entry.getValue()));
         }
@@ -569,7 +589,7 @@ public class MavenGoals {
                                 element(name("supportedProjectType"), "bundle"),
                                 element(name("supportedProjectType"), "war"),
                                 element(name("supportedProjectType"), "atlassian-plugin")),
-                                element(name("instructions"), instlist.toArray(new Element[instlist.size()]))
+                        element(name("instructions"), instlist.toArray(new Element[instlist.size()]))
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
@@ -580,7 +600,7 @@ public class MavenGoals {
         Element[] archive = new Element[0];
         if (manifestExists)
         {
-            archive = new Element[]{element(name("manifestFile"), "${project.build.outputDirectory}/META-INF/MANIFEST.MF")};
+            archive = new Element[] { element(name("manifestFile"), "${project.build.outputDirectory}/META-INF/MANIFEST.MF") };
         }
 
         executeMojo(
@@ -607,12 +627,12 @@ public class MavenGoals {
                 ),
                 goal("install-file"),
                 configuration(
-                            element(name("obrRepository"), obrXml.getPath()),
-                            element(name("groupId"), "doesntmatter"),
-                            element(name("artifactId"), "doesntmatter"),
-                            element(name("version"), "doesntmatter"),
-                            element(name("packaging"), "jar"),
-                            element(name("file"), dep.getPath())
+                        element(name("obrRepository"), obrXml.getPath()),
+                        element(name("groupId"), "doesntmatter"),
+                        element(name("artifactId"), "doesntmatter"),
+                        element(name("version"), "doesntmatter"),
+                        element(name("packaging"), "jar"),
+                        element(name("file"), dep.getPath())
 
                 ),
                 executionEnvironment(project, session, pluginManager)

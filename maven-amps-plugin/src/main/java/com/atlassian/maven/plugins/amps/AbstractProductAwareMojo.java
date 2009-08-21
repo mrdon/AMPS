@@ -1,15 +1,8 @@
 package com.atlassian.maven.plugins.amps;
 
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.model.Plugin;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
-import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
 
 public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
 {
@@ -29,25 +22,11 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
         if (product == null)
         {
             product = getDefaultProductId();
-            if (product == null && project != null)
+            if (product == null && ProductHandlerFactory.getIds().contains(getPluginInformation().getId()))
             {
-                for (Plugin plugin : (List<Plugin>)project.getBuild().getPlugins())
-                {
-                    if ("com.atlassian.maven.plugins".equals(plugin.getGroupId()))
-                    {
-                        for (String productKey : ProductHandlerFactory.getIds())
-                        {
-                            if (("maven-"+productKey+"-plugin").equals(plugin.getArtifactId()))
-                            {
-                                product = productKey;
-                                break;
-                            }
-                        }
-
-                    }
-                }
+                product = getPluginInformation().getId();
             }
-            if (product == null)
+            else if (product == null)
             {
                 product = ProductHandlerFactory.REFAPP;
             }

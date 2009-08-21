@@ -84,7 +84,7 @@ public class BambooProductHandler extends AbstractWebappProductHandler
 
     public List<ProductArtifact> getDefaultPlugins()
     {
-        return Collections.emptyList();
+        return Collections.singletonList(new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", "0.4"));
     }
 
     public List<ProductArtifact> getDefaultLibPlugins()

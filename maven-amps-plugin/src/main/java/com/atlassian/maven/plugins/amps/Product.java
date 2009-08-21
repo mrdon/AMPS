@@ -82,6 +82,11 @@ public class Product
 
     private ArtifactRetriever artifactRetriever;
 
+    /**
+     * Flag to indicate whether or not to install the plugin
+     */
+    private boolean installPlugin;
+
 
     public String getContainerId()
     {
@@ -241,5 +246,15 @@ public class Product
     public void setId(String id)
     {
         this.id = id;
+    }
+
+    public boolean isInstallPlugin()
+    {
+        return installPlugin;
+    }
+
+    public void setInstallPlugin(final boolean installPlugin)
+    {
+        this.installPlugin = installPlugin;
     }
 }

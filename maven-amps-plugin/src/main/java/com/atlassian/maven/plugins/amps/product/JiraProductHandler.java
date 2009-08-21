@@ -1,5 +1,12 @@
 package com.atlassian.maven.plugins.amps.product;
 
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -7,14 +14,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 public class JiraProductHandler extends AbstractWebappProductHandler
 {
@@ -123,7 +122,8 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     @Override
     public List<ProductArtifact> getDefaultPlugins()
     {
-        return Collections.singletonList(new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", "0.2"));
+        return Arrays.asList(new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", "0.4"),
+                new ProductArtifact("commons-fileupload", "commons-fileupload", "1.2.1"));
     }
 
     @Override

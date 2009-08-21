@@ -10,10 +10,10 @@ import org.jfrog.maven.annomojo.annotations.MojoParameter;
 public class CliMojo extends AbstractProductAwareMojo
 {
     @MojoParameter(expression = "${cli.port}", defaultValue = "4330")
-    private int port;
+    private int cliPort;
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        getMavenGoals().startCli(getProductId(), port);
+        getMavenGoals().startCli(getPluginInformation(), cliPort);
     }
 }
