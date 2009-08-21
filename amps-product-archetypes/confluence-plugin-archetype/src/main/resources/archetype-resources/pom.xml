@@ -1,3 +1,4 @@
+#set( $dollar = '$' )
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -23,7 +24,7 @@
         <dependency>
             <groupId>com.atlassian.confluence</groupId>
             <artifactId>confluence</artifactId>
-            <version>\${confluence.version}</version>
+            <version>\${dollar}{confluence.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -42,7 +43,7 @@
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <productVersion>\${confluence.version}</productVersion>
+                    <productVersion>\${dollar}{confluence.version}</productVersion>
                 </configuration>
             </plugin>
             <plugin>

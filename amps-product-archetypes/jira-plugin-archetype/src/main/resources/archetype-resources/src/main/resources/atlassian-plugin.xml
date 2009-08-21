@@ -1,7 +1,8 @@
+#set( $dollar = '$' )
 <atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" pluginsVersion="2">
     <plugin-info>
-        <description>${project.description}</description>
-        <version>${project.version}</version>
+        <description>${dollar}{project.description}</description>
+        <version>${dollar}{project.version}</version>
         <!-- Add the <organization> stanza to pom.xml, and then uncomment this. -->
         <!--<vendor name="${project.organization.name}" url="${project.organization.url}"/>-->
     </plugin-info>
