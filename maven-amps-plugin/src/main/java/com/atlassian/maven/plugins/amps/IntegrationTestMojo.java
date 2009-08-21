@@ -41,6 +41,9 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     private ArtifactHandlerManager artifactHandlerManager;
 
     @MojoParameter(expression="${maven.test.skip}", defaultValue = "false")
+    private boolean testsSkip = false;
+
+    @MojoParameter(expression="${skipTests}", defaultValue = "false")
     private boolean skipTests = false;
 
     protected void doExecute() throws MojoExecutionException
@@ -56,7 +59,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             return;
         }
 
-        if (skipTests)
+        if (skipTests || testsSkip)
         {
             getLog().info("Integration tests skipped");
             return;
