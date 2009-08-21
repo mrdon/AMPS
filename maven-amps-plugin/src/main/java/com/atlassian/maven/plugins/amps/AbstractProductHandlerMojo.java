@@ -248,7 +248,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext().getProject(), goals);
             ctx.setHttpPort(ctx.getHttpPort() == 0 ? handler.getDefaultHttpPort() : ctx.getHttpPort());
             ctx.setVersion(ctx.getVersion() == null ? "RELEASE" : ctx.getVersion());
-            ctx.setContextPath(ctx.getContextPath() == null ? "/" + handler.getId() : "/");
+            ctx.setContextPath(ctx.getContextPath() == null ? "/" + handler.getId() : ctx.getContextPath());
         }
         return list;
     }
