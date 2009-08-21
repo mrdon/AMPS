@@ -1,5 +1,0 @@
-#set( $mvnCommand = "deploy" )
-
-#set( $goalhelp = "Deploys your artefacts to a remote repository (runs mvn $mvnCommand)." )
-
-#set( $opts = [] )

@@ -14,15 +14,15 @@ if [ $# -ge 1 ]; then
             echo "Usage: amps-${mojo} [options]"
             echo
             echo "${goalhelp}"
+            echo
             #if ($opts.size() > 0)
-                echo
                 echo "The following options are available:"
                 #foreach($o in $opts)
-                    echo -n "--$o.name"
                     #if ($o.short)
-                        echo -n ", -$o.short"
+                        echo "-$o.short [value], --$o.name [value]"
+                    #else
+                        echo "--$o.name [value]"
                     #end
-                    echo
                     echo "    $o.description"
                     echo
                 #end

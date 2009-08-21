@@ -63,12 +63,12 @@
 },{
   'name' : 'libplugins',
   'maven' : 'lib.plugins',
-  'description' : 'Library plugins of the form groupId:artifactId::version',
+  'description' : 'Library plugins of the form groupId:artifactId::version.',
   'example' : 'groupId:artifactId:verion'
 },{
   'name' : 'bundledplugins',
   'maven' : 'bundled.plugins',
-  'description' : 'Bundled plugins of the form groupId:artifactId::version',
+  'description' : 'Bundled plugins of the form groupId:artifactId::version.',
   'example' : 'groupId:artifactId:version'
 },{
   'name' : 'product',
@@ -77,12 +77,12 @@
   'example' : 'jira'
 },{
   'name' : 'jvmDebugPort',
-  'maven' : 'jvmDebugPort',
+  'maven' : 'jvm.debug.port',
   'description' : 'Port open to accept connections for remote debugging (default is 5005).',
   'example' : '5005'
 },{
   'name' : 'jvmDebugSuspend',
-  'maven' : 'jvmDebugSuspend',
+  'maven' : 'jvm.debug.suspend',
   'description' : 'Suspend JVM until debugger connects (default is false).',
   'example' : 'true'
 }] )

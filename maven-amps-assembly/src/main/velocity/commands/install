@@ -1,5 +1,0 @@
-#set( $mvnCommand = "install" )
-
-#set( $goalhelp = "Installs your plugin artefacts into your local repository (runs mvn $mvnCommand)." )
-
-#set( $opts = [] )

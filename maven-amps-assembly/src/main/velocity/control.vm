@@ -7,7 +7,7 @@
   #if( $cmd.isFile() )
     #set( $mojo = $cmd.name )
     $generator.parse( "amps-command-sh.vm", "amps-${mojo}", "mojo", $mojo )
-    ##$generator.parse( "amps-command-bat.vm", "amps-${mojo}.bat", "mojo", $mojo )
+    $generator.parse( "amps-command-bat.vm", "amps-${mojo}.bat", "mojo", $mojo )
   #end
 #end
 ##-----------------------------------------------------------------------------

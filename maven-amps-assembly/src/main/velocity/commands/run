@@ -63,12 +63,12 @@
 },{
   'name' : 'libplugins',
   'maven' : 'lib.plugins',
-  'description' : 'Library plugins of the form groupId:artifactId::version',
+  'description' : 'Library plugins of the form groupId:artifactId::version.',
   'example' : 'groupId:artifactId:verion'
 },{
   'name' : 'bundledplugins',
   'maven' : 'bundled.plugins',
-  'description' : 'Bundled plugins of the form groupId:artifactId::version',
+  'description' : 'Bundled plugins of the form groupId:artifactId::version.',
   'example' : 'groupId:artifactId:version'
 },{
   'name' : 'product',
