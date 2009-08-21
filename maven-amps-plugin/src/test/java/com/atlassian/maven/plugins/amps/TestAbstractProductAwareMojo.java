@@ -82,7 +82,6 @@ public class TestAbstractProductAwareMojo extends TestCase
             return defaultProductId;
         }
 
-        @Override
         public void execute() throws MojoExecutionException, MojoFailureException
         {
         }
