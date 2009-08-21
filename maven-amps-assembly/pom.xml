@@ -150,9 +150,11 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <echo>Patching Maven 2 script</echo>
+                                <echo>Patching Maven 2 scripts</echo>
                                 <patch patchfile="src/main/resources/patches/mvn.diff"
                                        originalfile="${project.build.directory}/apache-maven-${maven.version}/bin/mvn"/>
+                                <patch patchfile="src/main/resources/patches/settings.xml.diff"
+                                       originalfile="${project.build.directory}/apache-maven-${maven.version}/conf/settings.xml"/>
                             </tasks>
                         </configuration>
                     </execution>
@@ -162,7 +164,7 @@
         </plugins>
     </build>
     <properties>
-        <maven.version>2.1.0</maven.version>
+        <maven.version>2.2.1</maven.version>
         <script.output.directory>target/bin</script.output.directory>
     </properties>
 </project>
