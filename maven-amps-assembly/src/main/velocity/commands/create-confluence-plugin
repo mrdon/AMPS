@@ -1,0 +1,5 @@
+#set( $mvnCommand = "confluence:create" )
+
+#set( $goalhelp = "Creates a Confluence plugin." )
+
+#set( $opts = [] )

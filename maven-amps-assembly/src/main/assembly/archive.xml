@@ -1,5 +1,5 @@
 <assembly>
-    <id></id>
+    <id>archive</id>
     <formats>
         <format>zip</format>
         <format>tar.gz</format>
@@ -44,7 +44,7 @@
 
         <!-- Our script files-->
         <fileSet>
-            <directory>src/main/resources/bin</directory>
+            <directory>target/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>**/*</include>
@@ -53,15 +53,6 @@
             <filtered>true</filtered>
         </fileSet>
 
-        <!-- Help files -->
-        <fileSet>
-            <directory>src/main/resources/help</directory>
-            <outputDirectory>help</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-            <filtered>true</filtered>
-        </fileSet>
     </fileSets>
 
 

@@ -1,0 +1,5 @@
+#set( $mvnCommand = "bamboo:create" )
+
+#set( $goalhelp = "Creates a Bamboo plugin." )
+
+#set( $opts = [] )

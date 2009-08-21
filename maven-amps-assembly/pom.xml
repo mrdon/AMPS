@@ -27,7 +27,55 @@
 
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>filter-scripts</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-scripts</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <taskdef name="texen" classname="org.apache.texen.ant.TexenTask"/>
+                                <texen templatePath="src/main/velocity" controlTemplate="control.vm"
+                                       contextProperties="${project.build.outputDirectory}/script.properties"
+                                       outputDirectory="${script.output.directory}" outputFile="../texen.log"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.texen</groupId>
+                        <artifactId>texen</artifactId>
+                        <version>1.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -64,7 +112,8 @@
                                     <artifactId>console-colorizer</artifactId>
                                     <!-- If you change this, ensure you change the mvn diff -->
                                     <version>0.2</version>
-                                    <outputDirectory>${project.build.directory}/apache-maven-${maven.version}/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/apache-maven-${maven.version}/lib
+                                    </outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -76,14 +125,14 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>standalone</id>
+                        <id>archive</id>
                         <phase>package</phase>
                         <goals>
                             <goal>attached</goal>
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/main/assembly/standalone.xml</descriptor>
+                                <descriptor>src/main/assembly/archive.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
@@ -103,7 +152,7 @@
                             <tasks>
                                 <echo>Patching Maven 2 script</echo>
                                 <patch patchfile="src/main/resources/patches/mvn.diff"
-                                       originalfile="${project.build.directory}/apache-maven-${maven.version}/bin/mvn" />
+                                       originalfile="${project.build.directory}/apache-maven-${maven.version}/bin/mvn"/>
                             </tasks>
                         </configuration>
                     </execution>
@@ -114,5 +163,6 @@
     </build>
     <properties>
         <maven.version>2.1.0</maven.version>
+        <script.output.directory>target/bin</script.output.directory>
     </properties>
 </project>

@@ -1,0 +1,11 @@
+#set( $mvnCommand = "amps:cli" )
+
+#set( $goalhelp = "Enables a command line interface to the PDK system." )
+
+#set( $opts = [{
+  'name' : 'port',
+  'short' : 'p',
+  'maven' : 'cli.port',
+  'description' : 'The port the CLI will listen to for commands (default is 4330).',
+  'example' : '4330'
+}] )

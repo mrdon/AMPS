@@ -1,0 +1,96 @@
+##-----------------------------------------------------------------------------
+#parse( "commands/${mojo}" )
+##-----------------------------------------------------------------------------
+#!/bin/sh
+
+##########################
+# Check for Help command #
+##########################
+
+if [ $# -ge 1 ]; then
+    case "$1" in
+        "-?" | "--help" | "-help" | "help" )
+            echo
+            echo "Usage: amps-${mojo} [options]"
+            echo
+            echo "${goalhelp}"
+            #if ($opts.size() > 0)
+                echo
+                echo "The following options are available:"
+                #foreach($o in $opts)
+                    echo -n "--$o.name"
+                    #if ($o.short)
+                        echo -n ", -$o.short"
+                    #end
+                    echo
+                    echo "    $o.description"
+                    echo
+                #end
+            #end
+            exit;;
+    esac
+fi
+
+########################################
+# Determine the location of the script #
+########################################
+
+# resolve symbolic links
+PRG="${dollar}{0}"
+
+while [ -h "${dollar}{PRG}" ] ; do
+  ls=`ls -ld "${dollar}{PRG}"`
+  link=`expr "${dollar}{ls}" : '.*-> \(.*\)${dollar}'`
+  if expr "${dollar}{link}" : '/.*' > /dev/null; then
+    PRG="${dollar}{link}"
+  else
+    PRG=`dirname "${dollar}{PRG}"`/"${dollar}{link}"
+  fi
+done
+
+PRGDIR=`dirname "${dollar}{PRG}"`
+
+##############################################
+# Identify Maven location relative to script #
+##############################################
+
+AMPS_HOME="${dollar}{PRGDIR}"/..
+M2_HOME="${dollar}{AMPS_HOME}"/apache-maven
+MAVEN_EXECUTABLE="${dollar}{M2_HOME}"/bin/mvn
+
+
+# Check that target executable exists
+if [ ! -x "${dollar}{MAVEN_EXECUTABLE}" ]; then
+  echo "Cannot find ${dollar}{MAVEN_EXECUTABLE}"
+  echo "This file is needed to run this program"
+  exit 1
+fi
+
+##############################################
+# Transform Parameters into Maven Parameters #
+##############################################
+
+MVN_PARAMS=""
+
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        #foreach($o in $opts)
+            #if ($o.short) "-$o.short" | #end "--$o.name")
+                ##echo "$o.name: ${dollar}{2}";
+                MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven=${dollar}{2}"
+                shift 2;;
+        #end
+        *)
+            ##echo "Not matched: ${dollar}{1}.";
+            MVN_PARAMS="${dollar}{MVN_PARAMS} ${dollar}{1}"
+            shift 1;; ## Only shift one, continue with next command
+    esac
+done
+
+#################
+# Execute Maven #
+#################
+
+echo "Executing: ${dollar}{MAVEN_EXECUTABLE} $mvnCommand ${dollar}{MVN_PARAMS}"
+${dollar}{MAVEN_EXECUTABLE} $mvnCommand ${dollar}{MVN_PARAMS}

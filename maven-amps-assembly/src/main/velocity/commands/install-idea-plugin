@@ -1,0 +1,5 @@
+#set( $mvnCommand = "amps:idea" )
+
+#set( $goalhelp = "Configures IntellijIdea for AMPS CLI integration." )
+
+#set( $opts = [] )

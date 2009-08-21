@@ -1,0 +1,5 @@
+#set( $mvnCommand = "refapp:create" )
+
+#set( $goalhelp = "Creates a Ref App plugin." )
+
+#set( $opts = [] )

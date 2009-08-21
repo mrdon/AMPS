@@ -1,0 +1,5 @@
+#set( $mvnCommand = "jira:create" )
+
+#set( $goalhelp = "Creates a JIRA plugin." )
+
+#set( $opts = [] )
