@@ -5,11 +5,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>${groupId}</groupId>
-    <artifactId>${artifactId}</artifactId>
-    <version>${version}</version>
+    <groupId>\${groupId}</groupId>
+    <artifactId>\${artifactId}</artifactId>
+    <version>\${version}</version>
 
-    <name>${artifactId}</name>
+    <name>\${artifactId}</name>
+    <description>This is the \${groupId}:\${artifactId} plugin for Atlassian Refapp.</description>
     <packaging>atlassian-plugin</packaging>
 
     <dependencies>
@@ -33,7 +34,7 @@
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-refapp-plugin</artifactId>
-                <version>3.0-SNAPSHOT</version>
+                <version>${project.version}</version>
                 <extensions>true</extensions> 
             </plugin>
             <plugin>
