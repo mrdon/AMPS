@@ -1,5 +1,5 @@
 #set( $mvnCommand = "test" )
 
-#set( $goalhelp = "Runs the unit tests for plugin (runs mvn $mvnCommand)." )
+#set( $goalhelp = "Runs the unit tests for the plugin (runs mvn $mvnCommand)." )
 
 #set( $opts = [] )

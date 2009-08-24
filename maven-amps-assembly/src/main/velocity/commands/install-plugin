@@ -3,11 +3,21 @@
 #set( $goalhelp = "Installs the plugin into a running application." )
 
 #set( $opts = [{
-  'name' : 'port',
+  'name' : 'http-port',
   'short' : 'p',
   'maven' : 'http.port',
-  'description' : 'HTTP connector port for the application server.',
+  'description' : 'HTTP port for the servlet container.',
   'example' : '8080'
+},{
+  'name' : 'context-path',
+  'maven' : 'context.path',
+  'description' : 'Application context path (include the leading forward slash).',
+  'example' : '/myapp'
+},{
+  'name' : 'server',
+  'maven' : 'server',
+  'description' : 'Host name of the application server (default is localhost).',
+  'example' : 'localhost'
 },{
   'name' : 'username',
   'maven' : 'username',
@@ -19,18 +29,8 @@
   'description' : 'Password of administrator to access the plugin system (default is admin).',
   'example' : 'admin'
 },{
-  'name' : 'pluginKey',
+  'name' : 'plugin-key',
   'maven' : 'atlassian.plugin.key',
-  'description' : 'The unique key identifying the plugin.',
+  'description' : 'Unique key identifying the plugin.',
   'example' : 'projectGroupId.projectArtifactId'
-},{
-  'name' : 'context',
-  'maven' : 'context.path',
-  'description' : 'The context path for the application.',
-  'example' : '/myapp'
-},{
-  'name' : 'server',
-  'maven' : 'server',
-  'description' : 'The host name of the application server (default is localhost).',
-  'example' : 'localhost'
 }] )

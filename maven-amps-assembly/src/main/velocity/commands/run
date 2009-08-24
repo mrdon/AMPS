@@ -3,33 +3,33 @@
 #set( $goalhelp = "Runs the product with your plugin installed." )
 
 #set( $opts = [{
-  'name' : 'port',
-  'short' : 'p',
-  'maven' : 'http.port',
-  'description' : 'HTTP connector port for the application server.',
-  'example' : '8080'
+  'name' : 'version',
+  'short' : 'v',
+  'maven' : 'product.version',
+  'description' : 'Version of the product to run (default is RELEASE).',
+  'example' : '1.0'
 },{
   'name' : 'container',
   'short' : 'c',
   'maven' : 'container',
-  'description' : 'The application server (default is tomcat6x).',
+  'description' : 'Container to run in (default is tomcat6x).',
   'example' : 'tomcat6x'
 },{
-  'name' : 'context',
+  'name' : 'http-port',
+  'short' : 'p',
+  'maven' : 'http.port',
+  'description' : 'HTTP port for the servlet container.',
+  'example' : '8080'
+},{
+  'name' : 'context-path',
   'maven' : 'context.path',
-  'description' : 'The context path for the application.',
+  'description' : 'Application context path (include the leading forward slash).',
   'example' : '/myapp'
 },{
   'name' : 'server',
   'maven' : 'server',
-  'description' : 'The host name of the application server (default is localhost).',
+  'description' : 'Host name of the application server (default is localhost).',
   'example' : 'localhost'
-},{
-  'name' : 'version',
-  'short' : 'v',
-  'maven' : 'product.version',
-  'description' : 'The product version to run (default is RELEASE).',
-  'example' : '1.0'
 },{
   'name' : 'jvmargs',
   'maven' : 'jvmargs',
@@ -38,37 +38,37 @@
 },{
   'name' : 'log4j',
   'maven' : 'log4jproperties',
-  'description' : 'Log4j configuration file.',
+  'description' : 'Log4j properties file.',
   'example' : 'test/log4j.properties'
 },{
-  'name' : 'testversion',
+  'name' : 'test-version',
   'maven' : 'testResources.version',
   'description' : 'Version to use for test resources (default is LATEST).',
   'example' : 'LATEST'
 },{
-  'name' : 'salversion',
+  'name' : 'sal-version',
   'maven' : 'sal.version',
   'description' : 'Version of SAL to use.',
   'example' : '2.0.11'
 },{
-  'name' : 'restversion',
+  'name' : 'rest-version',
   'maven' : 'rest.version',
-  'description' : 'Version of REST to use.',
+  'description' : 'Version of the Atlassian REST module to use.',
   'example' : '1.0'
 },{
   'name' : 'plugins',
   'maven' : 'plugins',
-  'description' : 'Plugins of the form groupId:artifactId::version.',
+  'description' : 'Comma-delimited list of plugin artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be ommitted, defaulting to LATEST.',
   'example' : 'groupId:artifactId::version'
 },{
-  'name' : 'libplugins',
+  'name' : 'lib-plugins',
   'maven' : 'lib.plugins',
-  'description' : 'Library plugins of the form groupId:artifactId::version.',
+  'description' : 'Comma-delimited list of lib artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be ommitted, defaulting to LATEST.',
   'example' : 'groupId:artifactId:verion'
 },{
-  'name' : 'bundledplugins',
+  'name' : 'bundled-plugins',
   'maven' : 'bundled.plugins',
-  'description' : 'Bundled plugins of the form groupId:artifactId::version.',
+  'description' : 'Comma-delimited list of bundled plugin artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be ommitted, defaulting to LATEST.',
   'example' : 'groupId:artifactId:version'
 },{
   'name' : 'product',
