@@ -3,13 +3,6 @@
 ##-----------------------------------------------------------------------------
 #!/bin/sh
 
-
-for each command
-  echo goalhelp
-  if (verbose)
-    echo params
-endfor
-
 ##########################
 # Check for Help command #
 ##########################
