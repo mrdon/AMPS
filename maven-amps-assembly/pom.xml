@@ -122,7 +122,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>archive</id>
+                        <id>bin</id>
                         <phase>package</phase>
                         <goals>
                             <goal>attached</goal>
