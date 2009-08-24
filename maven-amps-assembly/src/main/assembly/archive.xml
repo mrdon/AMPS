@@ -42,14 +42,27 @@
             </includes>
         </fileSet>
 
-        <!-- Our script files-->
+        <!-- SH files are chmod +x to be executable on unix environments -->
         <fileSet>
             <directory>target/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
+            <excludes>
+                <exclude>**/*.bat</exclude>
+            </excludes>
             <fileMode>0744</fileMode>
+            <filtered>true</filtered>
+        </fileSet>
+
+        <!-- BAT files are not chmod +x to prevent autocomplete expansion on shell -->
+        <fileSet>
+            <directory>target/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>**/*.bat</include>
+            </includes>
             <filtered>true</filtered>
         </fileSet>
 
