@@ -9,7 +9,7 @@
 
 if [ $# -ge 1 ]; then
     case "$1" in
-        "-?" | "--help" | "-help" | "help" )
+        "-?" | "-h" | "--help" | "-help" | "help" )
             echo
             echo "Usage: amps-${mojo} [options]"
             echo

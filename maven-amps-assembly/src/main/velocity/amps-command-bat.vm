@@ -11,6 +11,7 @@ rem Check for help command
 rem ---------------------------------------------------------------
 
 if /I "%1"=="help" goto showhelp
+if /I "%1"=="-?" goto showhelp
 if /I "%1"=="-h" goto showhelp
 if /I "%1"=="-help" goto showhelp
 if /I "%1"=="--help" goto showhelp
