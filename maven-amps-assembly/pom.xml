@@ -6,11 +6,11 @@
         <version>3.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.atlassian.maven.plugins</groupId>
+    <groupId>com.atlassian.amps</groupId>
     <artifactId>maven-amps-assembly</artifactId>
     <packaging>pom</packaging>
 
-    <name>Maven AMPS Assembly Plugin</name>
+    <name>Maven AMPS Assembly</name>
 
     <dependencies>
 
