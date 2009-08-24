@@ -3,11 +3,22 @@
 ##-----------------------------------------------------------------------------
 #set( $commands = $files.file( "${basedir}/src/main/velocity/commands" ).listFiles() )
 ##-----------------------------------------------------------------------------
+##
+## GENERATE SHELL AND BAT MAVEN WRAPPER SCRIPTS
+##
+#set( $commandNames = [] )
 #foreach( $cmd in $commands )
   #if( $cmd.isFile() )
     #set( $mojo = $cmd.name )
+    $commandNames.add($cmd.name)
     $generator.parse( "amps-command-sh.vm", "amps-${mojo}", "mojo", $mojo )
     $generator.parse( "amps-command-bat.vm", "amps-${mojo}.bat", "mojo", $mojo )
   #end
 #end
+##-----------------------------------------------------------------------------
+##
+## GENERATE HELP SCRIPTS
+##
+$generator.parse( "amps-help-sh.vm", "amps-help", "commandNames", $commandNames )
+$generator.parse( "amps-help-bat.vm", "amps-help.bat", "commandNames", $commandNames )
 ##-----------------------------------------------------------------------------

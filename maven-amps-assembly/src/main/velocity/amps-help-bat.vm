@@ -1,0 +1,58 @@
+@echo off
+if "%OS%" == "Windows_NT" setlocal
+
+
+if /I "%1"=="--verbose" goto verboseoutput
+if /I "%1"=="-v" goto verboseoutput
+if /I "%1"=="/verbose" goto verboseoutput
+if /I "%1"=="/v" goto verboseoutput
+
+
+echo.
+echo Atlassian Plugin SDK Help
+echo =========================
+echo.
+echo The following scripts are available to assist with plugin development
+echo.
+
+#foreach( $command in $commandNames )
+
+    #parse( "commands/${command}" )
+    echo amps-${command}
+    echo     ${goalhelp}
+    echo.
+
+#end
+goto :finalmessage
+
+:verboseoutput
+#foreach( $command in $commandNames )
+
+    #parse( "commands/${command}" )
+    echo amps-${command}
+    echo     ${goalhelp}
+    echo.
+
+    #if ($opts.size() > 0)
+
+            echo     The following options are available:
+            #foreach($o in $opts)
+                #if ($o.short)
+                    echo     -$o.short [value], --$o.name [value]
+                #else
+                    echo     --$o.name [value]
+                #end
+                echo         $o.description
+                echo.
+            #end
+
+
+    #end
+
+#end
+
+:finalmessage
+
+echo For detailed information on a particular script, use the '--help' option, eg. 'amps-run --help'.
+echo For an entire list of all scripts and their parameters, run 'amps-help --verbose'.
+echo.
