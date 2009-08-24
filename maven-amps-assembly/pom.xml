@@ -159,7 +159,6 @@
         </plugins>
     </build>
     <properties>
-        <maven.version>2.2.1</maven.version>
         <script.output.directory>target/bin</script.output.directory>
     </properties>
 </project>
