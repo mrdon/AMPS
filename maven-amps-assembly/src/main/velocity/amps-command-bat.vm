@@ -31,9 +31,9 @@ echo ${goalhelp}
     echo The following options are available:
     #foreach($o in $opts)
         #if ($o.short)
-            echo /$o.short [value], /$o.name [value]
+            echo -$o.short [value], --$o.name [value]
         #else
-            echo /$o.name [value]
+            echo --$o.name [value]
         #end
         echo     $o.description
         echo.
@@ -82,13 +82,13 @@ set MVN_PARAMS=
 :loopstart
 if "%1"=="" goto loopend
 #foreach($o in $opts)
-    if /I "%1"=="/$o.name" (
+    if /I "%1"=="--$o.name" (
         set MVN_PARAMS=%MVN_PARAMS% -D$o.maven=%2
         shift
         shift
         goto loopstart
     ) #if ($o.short) #set ( $elseCount = $elseCount + 1 ) else (
-            if /I "%1"=="/$o.short" (
+            if /I "%1"=="-$o.short" (
                 set MVN_PARAMS=%MVN_PARAMS% -D$o.maven=%2
                 shift
                 shift
