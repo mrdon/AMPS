@@ -43,12 +43,11 @@ public class MavenGoals
 
     private final Map<String, Container> idToContainerMap = new HashMap<String, Container>()
     {{
-            put("tomcat5x", new Container("tomcat5x", "https://m2proxy.atlassian.com/repository/public/org/apache/tomcat/apache-tomcat/5.5.25/apache-tomcat-5.5.25.zip"));
-            put("tomcat6x", new Container("tomcat6x", "http://apache.mirror.aussiehq.net.au/tomcat/tomcat-6/v6.0.18/bin/apache-tomcat-6.0.18.zip"));
-            put("resin3x", new Container("resin3x", "http://www.caucho.com/download/resin-3.0.26.zip"));
-            put("jboss42x", new Container("jboss42x", "http://internode.dl.sourceforge.net/sourceforge/jboss/jboss-4.2.3.GA.zip"));
-            put("jetty6x", new Container("jetty6x"));
-
+            put("tomcat5x", new Container("tomcat5x", "org.apache.tomcat", "apache-tomcat", "5.5.26"));
+            put("tomcat6x", new Container("tomcat6x", "org.apache.tomcat", "apache-tomcat", "6.0.20"));
+            put("resin3x",  new Container("resin3x",  "com.caucho",        "resin",         "3.0.26"));
+            put("jboss42x", new Container("jboss42x", "org.jboss.jbossas", "jbossas",       "4.2.3.GA"));
+            put("jetty6x",  new Container("jetty6x"));
         }};
 
     private final Map<String, String> defaultArtifactIdToVersionMap = new HashMap<String, String>()
@@ -294,12 +293,50 @@ public class MavenGoals
         return null;
     }
 
+    private void unpackContainer(final Container container, String outputDirectory) throws MojoExecutionException
+    {
+        executeMojo(
+            plugin(
+                    groupId("org.apache.maven.plugins"),
+                    artifactId("maven-dependency-plugin"),
+                    version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+            ),
+            goal("unpack"),
+            configuration(
+                    element(name("artifactItems"),
+                            element(name("artifactItem"),
+                                    element(name("groupId"), container.getGroupId()),
+                                    element(name("artifactId"), container.getArtifactId()),
+                                    element(name("version"), container.getVersion()),
+                                    element(name("type"), "zip"))),
+                    element(name("outputDirectory"), outputDirectory)
+            ),
+            executionEnvironment(project, session, pluginManager));
+
+    }
+
     public int startWebapp(final String productId, final File war, final Map<String, String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
             final Product webappContext) throws MojoExecutionException
     {
+        final Container container = findContainer(webappContext.getContainerId());
+        File containerDir = new File(project.getBuild().getDirectory() + "/container/" + container.getId());
+
+        // retrieve non-embedded containers
+        if (!"embedded".equals(container.getType()))
+        {
+            if (containerDir.exists())
+            {
+                log.info("Reusing unpacked container '" + container.getId() + "' from " + containerDir.getPath());
+            }
+            else
+            {
+                log.info("Unpacking container '" + container.getId() + "' from container artifact: " + container.toString());
+                unpackContainer(container, containerDir.getPath());
+            }
+        }
+
         final int rmiPort = pickFreePort(0);
         final int actualHttpPort = pickFreePort(webappContext.getHttpPort());
-        final Container container = findContainer(webappContext.getContainerId());
         final List<Element> sysProps = new ArrayList<Element>();
         if (webappContext.getJvmArgs() == null)
         {
@@ -344,16 +381,15 @@ public class MavenGoals
                 configuration(
                         element(name("wait"), "false"),
                         element(name("container"),
-                                element(name("containerId"), container.getId()),
-                                element(name("type"), container.getType()),
-                                element(name("zipUrlInstaller"),
-                                        element(name("url"), container.getUrl())
-                                ),
-                                element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
-                                element(name("dependencies"), deps.toArray(new Element[deps.size()]))
+                            element(name("containerId"), container.getId()),
+                            element(name("type"), container.getType()),
+                            element(name("home"), containerDir.getPath() + "/"  + container.getArtifactId() + "-" + container.getVersion()),
+                            element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
+                            element(name("dependencies"), deps.toArray(new Element[deps.size()]))
                         ),
                         element(name("configuration"),
-                                element(name("home"), "${project.build.directory}/" + productId + "/" + container.getId()),
+                                element(name("home"), containerDir.getPath() + "/cargo-" + productId + "-home"),
+                                element(name("type"), "standalone"),
                                 element(name("properties"), props.toArray(new Element[props.size()])),
                                 element(name("deployables"),
                                         element(name("deployable"),
@@ -481,7 +517,7 @@ public class MavenGoals
                                 element(name("type"), container.getType())
                         ),
                         element(name("configuration"),
-                                element(name("home"), "${project.build.directory}/" + productId + "/" + container.getId())
+                                element(name("home"), "${project.build.directory}/container/" + container.getId() + "/cargo-" + productId + "-home")
                         )
                 ),
                 executionEnvironment(project, session, pluginManager)
@@ -639,39 +675,51 @@ public class MavenGoals
         );
     }
 
-    private static class Container
+    private static class Container extends ProductArtifact
     {
         private final String id;
         private final String type;
-        private final String url;
 
-        public Container(final String id, final String url)
+        /**
+         * Installable container that can be downloaded by Maven.
+         *
+         * @param id identifier of container, eg. "tomcat5x".
+         * @param groupId groupId of container.
+         * @param artifactId artifactId of container.
+         * @param version version number of container.
+         */
+        public Container(final String id, final String groupId, final String artifactId, final String version)
         {
+            super(groupId, artifactId, version);
             this.id = id;
             this.type = "installed";
-            this.url = url;
         }
 
+        /**
+         * Embedded container packaged with Cargo.
+         *
+         * @param id identifier of container, eg. "jetty6x".
+         */
         public Container(final String id)
         {
             this.id = id;
             this.type = "embedded";
-            this.url = null;
         }
 
+        /**
+         * @return identifier of container.
+         */
         public String getId()
         {
             return id;
         }
 
+        /**
+         * @return "installed" or "embedded".
+         */
         public String getType()
         {
             return type;
-        }
-
-        public String getUrl()
-        {
-            return url;
         }
     }
 }
