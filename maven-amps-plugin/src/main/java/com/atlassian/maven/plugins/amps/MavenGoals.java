@@ -396,7 +396,10 @@ public class MavenGoals
                                                 element(name("groupId"), "foo"),
                                                 element(name("artifactId"), "bar"),
                                                 element(name("type"), "war"),
-                                                element(name("location"), war.getPath())
+                                                element(name("location"), war.getPath()),
+                                                element(name("properties"),
+                                                        element(name("context"), webappContext.getContextPath())
+                                                )
                                         )
                                 )
                         )
