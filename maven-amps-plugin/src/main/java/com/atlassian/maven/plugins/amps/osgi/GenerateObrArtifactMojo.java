@@ -1,44 +1,41 @@
 package com.atlassian.maven.plugins.amps.osgi;
 
 import com.atlassian.maven.plugins.amps.AbstractAmpsMojo;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
-import org.apache.maven.project.MavenProjectHelper;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.Artifact;
-import org.apache.commons.io.FileUtils;
-import org.jfrog.maven.annomojo.annotations.MojoGoal;
-import org.jfrog.maven.annomojo.annotations.MojoParameter;
-import org.jfrog.maven.annomojo.annotations.MojoComponent;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProjectHelper;
+import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
-import org.codehaus.plexus.archiver.ArchiverException;
+import org.jfrog.maven.annomojo.annotations.MojoComponent;
+import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.HashSet;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Generates the obr artifact, containing the plugin, its dependencies, and the obr XML file.  The OBR file looks like
  * this:
- *
+ * <p/>
  * <pre>
  * this-plugin.jar
  * obr.xml
  * dependencies/required-plugin.jar
  * </pre>
- *
+ * <p/>
  * All plugins in the root directory will be installed, while the ones in the "dependencies" directory will be installed
  * only if they are needed.
  */
-@MojoGoal("generate-obr-artifact")
+@MojoGoal ("generate-obr-artifact")
 public class GenerateObrArtifactMojo extends AbstractAmpsMojo
 {
     @MojoParameter
@@ -47,7 +44,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     /**
      * The Jar archiver.
      */
-    @MojoComponent(role="org.codehaus.plexus.archiver.Archiver", roleHint="jar")
+    @MojoComponent (role = "org.codehaus.plexus.archiver.Archiver", roleHint = "jar")
     private JarArchiver jarArchiver;
 
     /**
@@ -62,7 +59,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     /**
      * Specifies whether or not to attach the artifact to the project
      */
-    @MojoParameter(expression="${attach}", defaultValue="true")
+    @MojoParameter (expression = "${attach}", defaultValue = "true")
     private boolean attach;
 
     /**
@@ -74,21 +71,20 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     /**
      * The directory where the generated archive file will be put.
      */
-    @MojoParameter(defaultValue="${project.build.directory}")
+    @MojoParameter (defaultValue = "${project.build.directory}")
     protected File outputDirectory;
 
     /**
-     * The filename to be used for the generated archive file.
-     * For the source:jar goal, "-sources" is appended to this filename.
-     * For the source:test-jar goal, "-test-sources" is appended.
+     * The filename to be used for the generated archive file. For the source:jar goal, "-sources" is appended to this
+     * filename. For the source:test-jar goal, "-test-sources" is appended.
      */
-    @MojoParameter(defaultValue="${project.build.finalName}")
+    @MojoParameter (defaultValue = "${project.build.finalName}")
     protected String finalName;
 
     /**
      * Contains the full list of projects in the reactor.
      */
-    @MojoParameter(expression="${reactorProjects}", readonly = true)
+    @MojoParameter (expression = "${reactorProjects}", readonly = true)
     protected List reactorProjects;
 
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -101,7 +97,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
         }
         catch (IOException e)
         {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new MojoExecutionException(e.getMessage(), e);
         }
     }
 
@@ -183,7 +179,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     private List<File> resolvePluginDependencies()
     {
         List<File> deps = new ArrayList<File>();
-        for (Artifact artifact : new HashSet<Artifact>(project.getDependencyArtifacts()))
+        for (Artifact artifact : (Set<Artifact>) project.getDependencyArtifacts())
         {
             if (pluginDependencies.contains(new PluginDependency(artifact.getGroupId(), artifact.getArtifactId())))
             {
