@@ -44,6 +44,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <productVersion>\${dollar}{jira.version}</productVersion>
+                    <testResourcesVersion>\${dollar}{jira.version}</testResourcesVersion>
                 </configuration>
             </plugin>
             <plugin>
