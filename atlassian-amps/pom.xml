@@ -7,10 +7,10 @@
     </parent>
 
     <groupId>com.atlassian.amps</groupId>
-    <artifactId>maven-amps-assembly</artifactId>
+    <artifactId>atlassian-amps</artifactId>
     <packaging>pom</packaging>
 
-    <name>Maven AMPS Assembly</name>
+    <name>Atlassian AMPS SDK</name>
 
     <dependencies>
 
