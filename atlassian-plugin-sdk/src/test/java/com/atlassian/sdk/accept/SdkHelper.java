@@ -36,6 +36,7 @@ public class SdkHelper
 
         ExecRunner runner = new ExecRunner();
         File command = new File(bin, scriptName + extension);
+
         if (!isWindows())
         {
             runner.run(baseDir, Arrays.asList(
@@ -44,8 +45,8 @@ public class SdkHelper
                     sdkHome.getAbsolutePath() + "/apache-maven/bin/mvn",
                     command.getAbsolutePath()), Collections.<String, String>emptyMap());
 
-            // Shouldn't be necessary but get a "text file is busy" exception on linux
-            Thread.sleep(500);
+            // Shouldn't be necessary but get a "text file busy" exception on linux
+            Thread.sleep(2000);
         }
         List<String> cmdlist = new ArrayList<String>(Arrays.asList(args));
         cmdlist.add(0, command.getAbsolutePath());
