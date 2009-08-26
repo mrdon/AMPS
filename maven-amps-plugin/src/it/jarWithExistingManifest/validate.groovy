@@ -1,5 +1,7 @@
 import java.util.jar.Manifest
 
+assert mavenExitCode == 0, "The maven build should not have failed!"
+
 final def testJar = new File("$basedir/target/testjar.jar")
 assert testJar.exists(), "Test jar should exist at $testJar.absolutePath"
 

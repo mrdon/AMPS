@@ -1,3 +1,5 @@
+assert mavenExitCode == 0, "The maven build should not have failed!"
+
 def atlassianPlugin = new File(basedir, 'target/classes/atlassian-plugin.xml')
 assert atlassianPlugin.exists()
 

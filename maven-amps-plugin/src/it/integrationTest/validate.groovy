@@ -1,3 +1,5 @@
+assert mavenExitCode == 0, "The maven build should not have failed!"
+
 def product = project.properties['shitty.product']
 product = 'amps'.equals(product) ? 'refapp' : product
 

@@ -1,3 +1,5 @@
+assert mavenExitCode == 0, "The maven build should not have failed!"
+
 def metaInfLib = new File(basedir, 'target/classes/META-INF/lib')
 assert metaInfLib.exists(), "The $metaInfLib directory should exist"
 

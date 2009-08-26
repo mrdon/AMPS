@@ -1,3 +1,5 @@
+assert mavenExitCode == 0, "The maven build should not have failed!"
+
 def surefireReports = new File(basedir, 'target/shitty-it-surefire-reports')
 assert surefireReports.exists()
 

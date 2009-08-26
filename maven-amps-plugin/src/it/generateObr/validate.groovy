@@ -1,3 +1,5 @@
+assert mavenExitCode == 0, "The maven build should not have failed!"
+
 def obrFile = new File(basedir, 'target/maven-amps-plugin-genenerate-obr-artifact-test-testing-all.obr')
 assert obrFile.exists(), "The $obrFile file should exist"
 
