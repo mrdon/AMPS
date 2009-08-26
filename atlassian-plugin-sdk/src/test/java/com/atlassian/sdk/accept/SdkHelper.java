@@ -54,6 +54,7 @@ public class SdkHelper
         Assert.assertEquals(0, runner.run(baseDir, cmdlist, new HashMap<String, String>()
         {{
             put("MAVEN_OPTS", "-Xmx256m");
+            put("JAVA_HOME", System.getProperty("java.home"));
         }}));
     }
 
@@ -76,7 +77,9 @@ public class SdkHelper
             }
             else
             {
-                IOUtils.copy(zip.getInputStream(entry), new FileOutputStream(target));
+                FileOutputStream fout = new FileOutputStream(target);
+                IOUtils.copy(zip.getInputStream(entry), fout);
+                IOUtils.closeQuietly(fout);
             }
         }
     }
