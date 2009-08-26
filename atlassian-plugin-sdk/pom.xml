@@ -115,7 +115,7 @@
                                     <groupId>org.twdata.maven</groupId>
                                     <artifactId>console-colorizer</artifactId>
                                     <!-- If you change this, ensure you change the mvn diff -->
-                                    <version>0.2</version>
+                                    <version>0.3</version>
                                     <outputDirectory>${project.build.directory}/apache-maven-${maven.version}/lib
                                     </outputDirectory>
                                 </artifactItem>
