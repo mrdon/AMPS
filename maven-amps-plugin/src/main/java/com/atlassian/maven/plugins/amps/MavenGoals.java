@@ -283,7 +283,7 @@ public class MavenGoals
         return null;
     }
 
-    private void unpackContainer(final Container container, String outputDirectory) throws MojoExecutionException
+    private void unpackContainer(final Container container) throws MojoExecutionException
     {
         executeMojo(
             plugin(
@@ -299,20 +299,24 @@ public class MavenGoals
                                     element(name("artifactId"), container.getArtifactId()),
                                     element(name("version"), container.getVersion()),
                                     element(name("type"), "zip"))),
-                    element(name("outputDirectory"), outputDirectory)
+                    element(name("outputDirectory"), container.getRootDirectory(getBuildDirectory()))
             ),
             executionEnvironment(project, session, pluginManager));
+    }
 
+    private String getBuildDirectory()
+    {
+        return project.getBuild().getDirectory();
     }
 
     public int startWebapp(final String productId, final File war, final Map<String, String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
             final Product webappContext) throws MojoExecutionException
     {
         final Container container = findContainer(webappContext.getContainerId());
-        File containerDir = new File(project.getBuild().getDirectory() + "/container/" + container.getId());
+        File containerDir = new File(container.getRootDirectory(getBuildDirectory()));
 
         // retrieve non-embedded containers
-        if (!"embedded".equals(container.getType()))
+        if (!container.isEmbedded())
         {
             if (containerDir.exists())
             {
@@ -321,7 +325,7 @@ public class MavenGoals
             else
             {
                 log.info("Unpacking container '" + container.getId() + "' from container artifact: " + container.toString());
-                unpackContainer(container, containerDir.getPath());
+                unpackContainer(container);
             }
         }
 
@@ -373,12 +377,12 @@ public class MavenGoals
                         element(name("container"),
                             element(name("containerId"), container.getId()),
                             element(name("type"), container.getType()),
-                            element(name("home"), containerDir.getPath() + "/"  + container.getArtifactId() + "-" + container.getVersion()),
+                            element(name("home"), container.getInstallDirectory(getBuildDirectory())),
                             element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
                             element(name("dependencies"), deps.toArray(new Element[deps.size()]))
                         ),
                         element(name("configuration"),
-                                element(name("home"), containerDir.getPath() + "/cargo-" + productId + "-home"),
+                                element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId)),
                                 element(name("type"), "standalone"),
                                 element(name("properties"), props.toArray(new Element[props.size()])),
                                 element(name("deployables"),
@@ -509,7 +513,7 @@ public class MavenGoals
                                 element(name("type"), container.getType())
                         ),
                         element(name("configuration"),
-                                element(name("home"), "${project.build.directory}/container/" + container.getId() + "/cargo-" + productId + "-home")
+                                element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId))
                         )
                 ),
                 executionEnvironment(project, session, pluginManager)
@@ -712,6 +716,42 @@ public class MavenGoals
         public String getType()
         {
             return type;
+        }
+
+        /**
+         * @return <code>true</code> if the container type is "embedded".
+         */
+        public boolean isEmbedded()
+        {
+            return "embedded".equals(type);
+        }
+
+        /**
+         * @param buildDir project.build.directory.
+         * @return root directory of the container that will house the container installation and configuration.
+         */
+        public String getRootDirectory(String buildDir)
+        {
+            return buildDir + File.separator + "container" + File.separator + getId();
+        }
+
+        /**
+         * @param buildDir project.build.directory.
+         * @return directory housing the installed container.
+         */
+        public String getInstallDirectory(String buildDir)
+        {
+            return getRootDirectory(buildDir) + File.separator + getArtifactId() + "-" + getVersion();
+        }
+
+        /**
+         * @param buildDir project.build.directory.
+         * @param productId product name.
+         * @return directory to house the container configuration for the specified product.
+         */
+        public String getConfigDirectory(String buildDir, String productId)
+        {
+            return getRootDirectory(buildDir) + File.separator + "cargo-" + productId + "-home";
         }
     }
 }
