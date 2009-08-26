@@ -23,7 +23,7 @@ goto continue
 
 :showhelp
 echo.
-echo Usage: amps-${mojo} [options]
+echo Usage: atlas-${mojo} [options]
 echo.
 echo ${goalhelp}
 #if ($opts.size() > 0)
@@ -50,7 +50,7 @@ rem ---------------------------------------------------------------
 set PRGDIR=%~dp0
 set CURRENTDIR=%cd%
 cd %PRGDIR%..
-set AMPS_HOME=%cd%
+set ATLAS_HOME=%cd%
 cd %CURRENTDIR%
 
 
@@ -58,15 +58,15 @@ rem ---------------------------------------------------------------
 rem Identify Maven location relative to script
 rem ---------------------------------------------------------------
 
-set M2_HOME=%AMPS_HOME%\apache-maven
+set M2_HOME=%ATLAS_HOME%\apache-maven
 set MAVEN_EXECUTABLE=%M2_HOME%\bin\mvn.bat
 
 #if( $echoPaths )
 echo.
-echo AMPS Version:    ${version}
-echo AMPS Home:       %AMPS_HOME%
-echo AMPS Scripts:    %AMPS_HOME%\bin
-echo AMPS Maven Home: %M2_HOME%
+echo ATLAS Version:    ${version}
+echo ATLAS Home:       %ATLAS_HOME%
+echo ATLAS Scripts:    %ATLAS_HOME%\bin
+echo ATLAS Maven Home: %M2_HOME%
 echo --------
 #end
 

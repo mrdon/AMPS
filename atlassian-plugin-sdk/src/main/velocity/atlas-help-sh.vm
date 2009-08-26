@@ -17,7 +17,7 @@ echo
 #foreach( $command in $commandNames )
 
     #parse( "commands/${command}" )
-    echo "amps-${command}"
+    echo "atlas-${command}"
     echo "    ${goalhelp}"
     echo
 
@@ -38,6 +38,6 @@ echo
 
 #end
 
-echo "For detailed information on a particular script, use the '--help' option, eg. 'amps-run --help'."
-echo "For an entire list of all scripts and their parameters, run 'amps-help --verbose'."
+echo "For detailed information on a particular script, use the '--help' option, eg. 'atlas-run --help'."
+echo "For an entire list of all scripts and their parameters, run 'atlas-help --verbose'."
 echo

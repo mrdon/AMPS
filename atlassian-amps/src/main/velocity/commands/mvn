@@ -1,5 +1,0 @@
-#set( $mvnCommand = "" )
-
-#set( $goalhelp = "Execute arbitrary Maven commands using the version of Maven bundled with AMPS." )
-
-#set( $opts = [] )

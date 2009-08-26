@@ -7,10 +7,10 @@
     </parent>
 
     <groupId>com.atlassian.amps</groupId>
-    <artifactId>atlassian-amps</artifactId>
+    <artifactId>atlassian-plugin-sdk</artifactId>
     <packaging>pom</packaging>
 
-    <name>Atlassian AMPS SDK</name>
+    <name>Atlassian Plugin SDK</name>
 
     <dependencies>
 

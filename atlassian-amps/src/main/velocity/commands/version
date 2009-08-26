@@ -1,7 +1,0 @@
-#set( $mvnCommand = "--version" )
-
-#set( $goalhelp = "Displays version and runtime information for Atlassian AMPS." )
-
-#set( $opts = [] )
-
-#set( $echoPaths = "true" )
