@@ -29,7 +29,7 @@ public class SdkHelper
     }
 
     public static void runSdkScript(File sdkHome, File baseDir, String scriptName, String... args)
-            throws IOException
+            throws IOException, InterruptedException
     {
         String extension = isWindows() ? ".bat" : "";
         File bin = new File(sdkHome, "bin");
@@ -43,6 +43,9 @@ public class SdkHelper
                     "755",
                     sdkHome.getAbsolutePath() + "/apache-maven/bin/mvn",
                     command.getAbsolutePath()), Collections.<String, String>emptyMap());
+
+            // Shouldn't be necessary but get a "text file is busy" exception on linux
+            Thread.sleep(500);
         }
         List<String> cmdlist = new ArrayList<String>(Arrays.asList(args));
         cmdlist.add(0, command.getAbsolutePath());

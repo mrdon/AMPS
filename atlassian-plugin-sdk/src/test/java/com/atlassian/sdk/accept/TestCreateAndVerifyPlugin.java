@@ -7,24 +7,24 @@ import java.io.IOException;
 
 public class TestCreateAndVerifyPlugin extends SdkTestBase
 {
-    public void testJIRA() throws IOException
+    public void testJIRA() throws IOException, InterruptedException
     {
         createAndVerify("jira");
     }
 
-    public void testRefapp() throws IOException
+    public void testRefapp() throws IOException, InterruptedException
     {
         createAndVerify("refapp");
     }
 
-    public void testConfluence() throws IOException
+    public void testConfluence() throws IOException, InterruptedException
     {
         createAndVerify("confluence");
     }
 
 
     private void createAndVerify(String productId)
-            throws IOException
+            throws IOException, InterruptedException
     {
         runSdkScript(sdkHome, baseDir, "atlas-create-" + productId + "-plugin",
                 "-a", "foo-" + productId + "-plugin",
