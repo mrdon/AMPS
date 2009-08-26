@@ -82,7 +82,8 @@
   'example' : '5005'
 },{
   'name' : 'jvm-debug-suspend',
-  'maven' : 'jvm.debug.suspend',
-  'description' : 'Suspend JVM until debugger connects (default is false).',
+  'maven' : 'jvm.debug.suspend=true',
+  'flag' : 'true',
+  'description' : 'Suspend JVM until debugger connects.',
   'example' : 'true'
 }] )

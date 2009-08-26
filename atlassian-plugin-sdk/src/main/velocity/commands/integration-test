@@ -82,12 +82,14 @@
   'example' : 'it/**'
 },{
   'name' : 'no-webapp',
-  'maven' : 'noWepapp',
-  'description' : 'Whether the reference application will not be started or not (default is false).',
+  'maven' : 'noWepapp=true',
+  'flag' : 'true',
+  'description' : 'Do not start the application.',
   'example' : 'true'
 },{
   'name' : 'skip-tests',
-  'maven' : 'skipTests',
-  'description' : 'Skip the tests (default is false).',
+  'maven' : 'skipTests=true',
+  'flag' : 'true',
+  'description' : 'Skip the tests.',
   'example' : 'true'  
 }] )

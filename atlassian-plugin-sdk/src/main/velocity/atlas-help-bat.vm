@@ -38,9 +38,17 @@ goto :finalmessage
             echo     The following options are available:
             #foreach($o in $opts)
                 #if ($o.short)
-                    echo     -$o.short [value], --$o.name [value]
+                    #if($o.flag)
+                        echo     -$o.short, --$o.name
+                    #else
+                        echo     -$o.short [value], --$o.name [value]
+                    #end
                 #else
-                    echo     --$o.name [value]
+                    #if($o.flag)
+                        echo     --$o.name
+                    #else
+                        echo     --$o.name [value]
+                    #end
                 #end
                 echo         $o.description
                 echo.

@@ -19,9 +19,17 @@ if [ $# -ge 1 ]; then
                 echo "The following options are available:"
                 #foreach($o in $opts)
                     #if ($o.short)
-                        echo "-$o.short [value], --$o.name [value]"
+                        #if($o.flag)
+                            echo "-$o.short, --$o.name"
+                        #else
+                            echo "-$o.short [value], --$o.name [value]"
+                        #end
                     #else
-                        echo "--$o.name [value]"
+                        #if($o.flag)
+                            echo "--$o.name"
+                        #else
+                            echo "--$o.name [value]"
+                        #end
                     #end
                     echo "    $o.description"
                     echo
@@ -87,8 +95,13 @@ do
         #foreach($o in $opts)
             #if ($o.short) "-$o.short" | #end "--$o.name")
                 ##echo "$o.name: ${dollar}{2}";
-                MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven=${dollar}{2}"
-                shift 2;;
+                #if ($o.flag)
+                    MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven"
+                    shift 1;;
+                #else
+                    MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven=${dollar}{2}"
+                    shift 2;;
+                #end
         #end
         *)
             ##echo "Not matched: ${dollar}{1}.";
