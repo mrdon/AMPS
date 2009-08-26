@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.atlassian.amps</groupId>
@@ -8,7 +9,7 @@
 
     <groupId>com.atlassian.amps</groupId>
     <artifactId>atlassian-plugin-sdk</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <name>Atlassian Plugin SDK</name>
 
@@ -22,6 +23,13 @@
             <type>tar.gz</type>
             <classifier>bin</classifier>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 
@@ -57,8 +65,10 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <taskdef name="texen" classname="org.apache.texen.ant.TexenTask" />
-                                <texen templatePath="src/main/velocity" controlTemplate="control.vm" contextProperties="${project.build.outputDirectory}/script.properties" outputDirectory="${script.output.directory}" outputFile="../texen.log" />
+                                <taskdef name="texen" classname="org.apache.texen.ant.TexenTask"/>
+                                <texen templatePath="src/main/velocity" controlTemplate="control.vm"
+                                       contextProperties="${project.build.outputDirectory}/script.properties"
+                                       outputDirectory="${script.output.directory}" outputFile="../texen.log"/>
                             </tasks>
                         </configuration>
                     </execution>
@@ -148,14 +158,44 @@
                         <configuration>
                             <tasks>
                                 <echo>Patching Maven 2 scripts</echo>
-                                <patch patchfile="src/main/resources/patches/mvn.diff" originalfile="${project.build.directory}/apache-maven-${maven.version}/bin/mvn" />
-                                <patch patchfile="src/main/resources/patches/settings.xml.diff" originalfile="${project.build.directory}/apache-maven-${maven.version}/conf/settings.xml" />
+                                <patch patchfile="src/main/resources/patches/mvn.diff"
+                                       originalfile="${project.build.directory}/apache-maven-${maven.version}/bin/mvn"/>
+                                <patch patchfile="src/main/resources/patches/settings.xml.diff"
+                                       originalfile="${project.build.directory}/apache-maven-${maven.version}/conf/settings.xml"/>
                             </tasks>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>Acceptance-Tests</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                        <configuration>
+                            <skip>false</skip>
+                            <systemProperties>
+                                <property>
+                                    <name>amps.zip</name>
+                                    <value>${project.build.directory}/${project.artifactId}-${project.version}-bin.zip
+                                    </value>
+                                </property>
+                                <property>
+                                    <name>amps.base</name>
+                                    <value>${project.build.directory}/amps-temp</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <properties>

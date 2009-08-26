@@ -20,12 +20,12 @@
 >           <snapshots>
 >             <enabled>true</enabled>
 >             <updatePolicy>daily</updatePolicy>
->             <checksumPolicy>fail</checksumPolicy>
+>             <checksumPolicy>warn</checksumPolicy>
 > 
 >           </snapshots>
 >           <releases>
 >             <enabled>true</enabled>
->             <checksumPolicy>fail</checksumPolicy>
+>             <checksumPolicy>warn</checksumPolicy>
 >           </releases>
 >         </repository>
 > 
@@ -37,10 +37,10 @@
 >           <releases>
 >             <enabled>true</enabled>
 > 
->             <checksumPolicy>fail</checksumPolicy>
+>             <checksumPolicy>warn</checksumPolicy>
 >           </releases>
 >           <snapshots>
->             <checksumPolicy>fail</checksumPolicy>
+>             <checksumPolicy>warn</checksumPolicy>
 >           </snapshots>
 >         </pluginRepository>
 >       </pluginRepositories>
