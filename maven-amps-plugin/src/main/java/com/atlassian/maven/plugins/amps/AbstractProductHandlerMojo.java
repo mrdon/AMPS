@@ -8,8 +8,8 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -138,6 +138,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoParameter(expression = "${project.build.finalName}", required = true)
     protected String finalName;
+
+    @MojoParameter (expression = "${install.plugin}", defaultValue = "true")
+    protected boolean installPlugin;
 
     /**
      * The artifact resolver is used to dynamically resolve JARs that have to be in the embedded

@@ -13,9 +13,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.HashMap;
 
 /**
  * Run the webapp
@@ -29,9 +29,6 @@ public class RunMojo extends AbstractProductHandlerMojo
 
     @MojoParameter (expression = "${wait}", defaultValue = "true")
     private boolean wait;
-
-    @MojoParameter (expression = "${install.plugin}", defaultValue = "true")
-    private boolean installPlugin;
 
     /**
      * Whether or not to write properties used by the plugin to amps.properties.

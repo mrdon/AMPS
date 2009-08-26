@@ -8,17 +8,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
+import org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -417,7 +407,6 @@ public class MavenGoals
     public void runTests(final String productId, final String containerId, final String functionalTestPattern, final int httpPort, final String contexPath, final String pluginJar)
             throws MojoExecutionException
     {
-
         // Automatically exclude tests for other products
         final List<Element> excludes = new ArrayList<Element>();
         excludes.add(element(name("exclude"), "**/*$*"));

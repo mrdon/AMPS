@@ -5,10 +5,10 @@ import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
-import org.jfrog.maven.annomojo.annotations.MojoComponent;
 
 import java.io.File;
 
@@ -83,6 +83,8 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     {
         ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals);
         Product ctx = getProductContexts(goals).get(0);
+        ctx.setInstallPlugin(installPlugin);
+        
         int actualHttpPort;
         if (!noWebapp)
         {

@@ -14,12 +14,12 @@ public class IntegrationTest
         final String httpPort = System.getProperty("http.port");
         final String contextPath = System.getProperty("context.path");
 
-        String url = new StringBuilder().append("http://localhost:").append(httpPort).append("/").append(contextPath).toString();
+        final String url = new StringBuilder().append("http://localhost:").append(httpPort).append("/").append(contextPath).append("/plugins/servlet/it").toString();
 
         HttpClient client = new HttpClient();
         HttpMethod method = new GetMethod(url);
         client.executeMethod(method);
 
-        assertEquals(200, method.getStatusCode());
+        assertEquals("Should have 200: " + url, 200, method.getStatusCode());
     }
 }
