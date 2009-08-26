@@ -38,9 +38,8 @@ echo ${goalhelp}
         echo     $o.description
         echo.
     #end
-    goto end
 #end
-
+goto end
 
 :continue
 
@@ -49,16 +48,27 @@ rem Find absolute path to the program
 rem ---------------------------------------------------------------
 
 set PRGDIR=%~dp0
-set AMPS_HOME=%PRGDIR%..
+set CURRENTDIR=%cd%
+cd %PRGDIR%..
+set AMPS_HOME=%cd%
+cd %CURRENTDIR%
+
 
 rem ---------------------------------------------------------------
 rem Identify Maven location relative to script
 rem ---------------------------------------------------------------
 
-
 set M2_HOME=%AMPS_HOME%\apache-maven
 set MAVEN_EXECUTABLE=%M2_HOME%\bin\mvn.bat
 
+#if( $echoPaths )
+echo.
+echo AMPS Version:    ${version}
+echo AMPS Home:       %AMPS_HOME%
+echo AMPS Scripts:    %AMPS_HOME%\bin
+echo AMPS Maven Home: %M2_HOME%
+echo --------
+#end
 
 rem Check that the target executable exists
 

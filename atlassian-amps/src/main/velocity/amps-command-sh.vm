@@ -54,10 +54,19 @@ PRGDIR=`dirname "${dollar}{PRG}"`
 # Identify Maven location relative to script #
 ##############################################
 
-AMPS_HOME="${dollar}{PRGDIR}"/..
+AMPS_HOME=`cd ${dollar}{PRGDIR} && pwd -P`
+AMPS_HOME=`dirname ${dollar}{AMPS_HOME}`
 M2_HOME="${dollar}{AMPS_HOME}"/apache-maven
 MAVEN_EXECUTABLE="${dollar}{M2_HOME}"/bin/mvn
 
+#if( $echoPaths )
+echo
+echo "AMPS Version:    ${version}"
+echo "AMPS Home:       ${dollar}{AMPS_HOME}"
+echo "AMPS Scripts:    ${dollar}{AMPS_HOME}/bin"
+echo "AMPS Maven Home: ${dollar}{M2_HOME}"
+echo "--------"
+#end
 
 # Check that target executable exists
 if [ ! -x "${dollar}{MAVEN_EXECUTABLE}" ]; then
