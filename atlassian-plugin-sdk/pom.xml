@@ -183,13 +183,13 @@
                             <skip>false</skip>
                             <systemProperties>
                                 <property>
-                                    <name>amps.zip</name>
+                                    <name>sdk.zip</name>
                                     <value>${project.build.directory}/${project.artifactId}-${project.version}-bin.zip
                                     </value>
                                 </property>
                                 <property>
-                                    <name>amps.base</name>
-                                    <value>${project.build.directory}/amps-temp</value>
+                                    <name>sdk.base</name>
+                                    <value>${project.build.directory}/sdk-temp</value>
                                 </property>
                             </systemProperties>
                         </configuration>

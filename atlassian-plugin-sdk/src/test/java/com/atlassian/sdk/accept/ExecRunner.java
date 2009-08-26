@@ -1,4 +1,4 @@
-package com.atlassian.amps.accept;
+package com.atlassian.sdk.accept;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

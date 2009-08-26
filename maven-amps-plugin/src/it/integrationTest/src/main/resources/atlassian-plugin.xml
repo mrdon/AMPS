@@ -5,7 +5,7 @@
         <version>1</version>
     </plugin-info>
 
-    <servlet name="ItServlet" class="com.atlassian.amps.test.it.ItServlet" key="it">
+    <servlet name="ItServlet" class="com.atlassian.sdk.test.it.ItServlet" key="it">
         <url-pattern>/it</url-pattern>
     </servlet>
 

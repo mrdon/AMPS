@@ -1,4 +1,4 @@
-package com.atlassian.amps.accept;
+package com.atlassian.sdk.accept;
 
 import org.apache.commons.io.IOUtils;
 
@@ -17,22 +17,22 @@ import java.util.zip.ZipEntry;
 
 import junit.framework.Assert;
 
-public class AmpsHelper
+public class SdkHelper
 {
-    public static File setupAmps(File baseDir) throws IOException
+    public static File setupSdk(File baseDir) throws IOException
     {
-        File ampsZip = new File(System.getProperty("amps.zip"));
+        File sdkZip = new File(System.getProperty("sdk.zip"));
 
         baseDir.mkdirs();
-        unzip(ampsZip, baseDir);
-        return new File(baseDir, ampsZip.getName().substring(0, ampsZip.getName().length() - "-bin.zip".length()));
+        unzip(sdkZip, baseDir);
+        return new File(baseDir, sdkZip.getName().substring(0, sdkZip.getName().length() - "-bin.zip".length()));
     }
 
-    public static void runAmpsScript(File ampsHome, File baseDir, String scriptName, String... args)
+    public static void runSdkScript(File sdkHome, File baseDir, String scriptName, String... args)
             throws IOException
     {
         String extension = isWindows() ? ".bat" : "";
-        File bin = new File(ampsHome, "bin");
+        File bin = new File(sdkHome, "bin");
 
         ExecRunner runner = new ExecRunner();
         File command = new File(bin, scriptName + extension);
@@ -41,7 +41,7 @@ public class AmpsHelper
             runner.run(baseDir, Arrays.asList(
                     "/bin/chmod",
                     "755",
-                    ampsHome.getAbsolutePath() + "/apache-maven/bin/mvn",
+                    sdkHome.getAbsolutePath() + "/apache-maven/bin/mvn",
                     command.getAbsolutePath()), Collections.<String, String>emptyMap());
         }
         List<String> cmdlist = new ArrayList<String>(Arrays.asList(args));

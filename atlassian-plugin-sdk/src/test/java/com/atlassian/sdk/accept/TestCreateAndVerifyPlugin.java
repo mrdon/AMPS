@@ -1,11 +1,11 @@
-package com.atlassian.amps.accept;
+package com.atlassian.sdk.accept;
 
-import static com.atlassian.amps.accept.AmpsHelper.runAmpsScript;
+import static com.atlassian.sdk.accept.SdkHelper.runSdkScript;
 
 import java.io.File;
 import java.io.IOException;
 
-public class TestCreateAndVerifyPlugin extends AmpsTestBase
+public class TestCreateAndVerifyPlugin extends SdkTestBase
 {
     public void testJIRA() throws IOException
     {
@@ -26,18 +26,18 @@ public class TestCreateAndVerifyPlugin extends AmpsTestBase
     private void createAndVerify(String productId)
             throws IOException
     {
-        runAmpsScript(ampsHome, baseDir, "amps-create-" + productId + "-plugin",
+        runSdkScript(sdkHome, baseDir, "atlas-create-" + productId + "-plugin",
                 "-a", "foo-" + productId + "-plugin",
                 "-g", "com.example",
                 "-p", "com.example.foo",
                 "-v", "1.0-SNAPSHOT",
-                "-i", "false");
+                "--non-interactive");
 
         File appDir = new File(baseDir, "foo-" + productId + "-plugin");
         assertTrue(appDir.exists());
 
         /* Restore these once AMPS-82 is done
-        runAmpsScript(ampsHome, appDir, "amps-mvn", "verify");
+        runSdkScript(sdkHome, appDir, "atlas-mvn", "verify");
 
         File pluginJar = new File(new File(appDir, "target"), "foo-" + productId + "-plugin-1.0-SNAPSHOT.jar");
         assertTrue(pluginJar.exists());
