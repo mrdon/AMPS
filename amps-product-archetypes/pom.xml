@@ -15,6 +15,7 @@
         <module>refapp-plugin-archetype</module>
         <module>confluence-plugin-archetype</module>
         <module>jira-plugin-archetype</module>
+        <module>bamboo-plugin-archetype</module>
     </modules>
 
     <dependencies>
