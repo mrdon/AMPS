@@ -1,4 +1,4 @@
-#set( $mvnCommand = "refapp:create" )
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-refapp-plugin:$version:create" )
 
 #set( $goalhelp = "Creates a Ref App plugin." )
 

@@ -7,82 +7,95 @@ import static com.atlassian.maven.plugins.amps.util.ConfigFileUtils.replace;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.apache.tools.ant.taskdefs.Java;
-import org.codehaus.cargo.container.internal.AntContainerExecutorThread;
-import org.codehaus.cargo.util.AntUtils;
 
 import java.io.File;
 import java.io.IOException;
 
-public class FeCruProductHandler implements ProductHandler {
+public class FeCruProductHandler implements ProductHandler
+{
 
     private final MavenProject project;
     private final MavenGoals goals;
 
-    public FeCruProductHandler(MavenProject project, MavenGoals goals) {
+    public FeCruProductHandler(MavenProject project, MavenGoals goals)
+    {
         this.project = project;
         this.goals = goals;
     }
 
-    public String getId() {
+    public String getId()
+    {
         return ProductHandlerFactory.FECRU;
     }
 
-    public int getDefaultHttpPort() {
+    public int getDefaultHttpPort()
+    {
         return 5990;
     }
 
-    public int start(Product ctx) throws MojoExecutionException {
+    public int start(Product ctx) throws MojoExecutionException
+    {
         extractAndProcessHomeDirectory(ctx);
 
-        try {
+        try
+        {
             execFishEyeCmd(ctx, getHomeDirectory(), "run");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new MojoExecutionException("Error starting fisheye.", e);
         }
 
         return ctx.getHttpPort();
     }
 
-    public void stop(Product ctx) throws MojoExecutionException {
-        try {
+    public void stop(Product ctx) throws MojoExecutionException
+    {
+        try
+        {
             execFishEyeCmd(ctx, getHomeDirectory(), "stop");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new MojoExecutionException("Failed to stop FishEye/Crucible instance at " + ctx.getServer() + ":" + ctx.getHttpPort());
         }
     }
 
-    private void execFishEyeCmd(Product ctx, File homeDir, String bootCmd) {
-        final Java java = (Java) new AntUtils().createAntTask("java");
-        java.setJar(new File(homeDir, "fisheyeboot.jar"));
-        java.createArg().setValue(bootCmd);
-        java.createArg().setValue("--debug");
-
-        if (ctx.getJvmArgs() != null && ctx.getJvmArgs().length() > 0)
-        {
-            java.setJvmargs(ctx.getJvmArgs());
-        }
-
-        java.setFork(true);
-
-        // todo logging
-        // java.setOutput(getContainerOutputLog());
-
-        final Thread antRunner = new AntContainerExecutorThread(java);
-        antRunner.start();
+    private void execFishEyeCmd(Product ctx, File homeDir, String bootCmd)
+    {
+//        final Java java = (Java) new AntUtils().createAntTask("java");
+//        java.setJar(new File(homeDir, "fisheyeboot.jar"));
+//        java.createArg().setValue(bootCmd);
+//        java.createArg().setValue("--debug");
+//
+//        if (ctx.getJvmArgs() != null && ctx.getJvmArgs().length() > 0)
+//        {
+//            java.setJvmargs(ctx.getJvmArgs());
+//        }
+//
+//        java.setFork(true);
+//
+//        // todo logging
+//        // java.setOutput(getContainerOutputLog());
+//
+//        final Thread antRunner = new AntContainerExecutorThread(java);
+//        antRunner.start();
 
         //getLog().info("Started Fisheye.");
     }
 
-    private File getHomeDirectory() {
+    private File getHomeDirectory()
+    {
         return new File(getBuildDirectory(), "fecru-home");
     }
 
-    private File getBuildDirectory() {
+    private File getBuildDirectory()
+    {
         return new File(project.getBuild().getDirectory());
     }
 
-    private void extractAndProcessHomeDirectory(Product ctx) throws MojoExecutionException {
+    private void extractAndProcessHomeDirectory(Product ctx) throws MojoExecutionException
+    {
         final File ampsDistZip = goals.copyHome(getBuildDirectory(),
                 new ProductArtifact(
                         "com.atlassian.fecru",
@@ -110,7 +123,8 @@ public class FeCruProductHandler implements ProductHandler {
     /**
      * The control port is the httpPort with a "1" appended to it //todo doc this
      */
-    private int controlPort(int httpPort) {
+    private int controlPort(int httpPort)
+    {
         return httpPort * 10 + 1;
     }
 }

@@ -1,4 +1,4 @@
-#set( $mvnCommand = "bamboo:create" )
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-bamboo-plugin:$version:create" )
 
 #set( $goalhelp = "Creates a Bamboo plugin." )
 

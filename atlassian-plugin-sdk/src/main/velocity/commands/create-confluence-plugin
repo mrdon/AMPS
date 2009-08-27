@@ -1,4 +1,4 @@
-#set( $mvnCommand = "confluence:create" )
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-confluence-plugin:$version:create" )
 
 #set( $goalhelp = "Creates a Confluence plugin." )
 
