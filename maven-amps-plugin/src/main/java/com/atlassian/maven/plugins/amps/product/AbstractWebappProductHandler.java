@@ -3,24 +3,18 @@ package com.atlassian.maven.plugins.amps.product;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 public abstract class AbstractWebappProductHandler implements ProductHandler
 {
@@ -149,35 +143,6 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         {
             e.printStackTrace();
             throw new MojoExecutionException(e.getMessage());
-        }
-    }
-
-    private void unzip(final File zipFile, final String destDir) throws IOException
-    {
-        final ZipFile zip = new ZipFile(zipFile);
-        final Enumeration<? extends ZipEntry> entries = zip.entries();
-        while (entries.hasMoreElements())
-        {
-            final ZipEntry zipEntry = entries.nextElement();
-            final File file = new File(destDir + "/" + zipEntry.getName());
-            if (zipEntry.isDirectory())
-            {
-                file.mkdirs();
-                continue;
-            }
-            InputStream is = null;
-            OutputStream fos = null;
-            try
-            {
-                is = zip.getInputStream(zipEntry);
-                fos = new FileOutputStream(file);
-                IOUtils.copy(is, fos);
-            }
-            finally
-            {
-                IOUtils.closeQuietly(is);
-                IOUtils.closeQuietly(fos);
-            }
         }
     }
 
