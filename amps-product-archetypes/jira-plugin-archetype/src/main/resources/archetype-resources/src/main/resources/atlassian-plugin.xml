@@ -1,5 +1,5 @@
 #set( $dollar = '$' )
-<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" pluginsVersion="2">
+<atlassian-plugin key="\${groupId}.\${artifactId}" name="\${artifactId}" plugins-version="2">
     <plugin-info>
         <description>${dollar}{project.description}</description>
         <version>${dollar}{project.version}</version>
