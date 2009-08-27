@@ -8,7 +8,17 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,9 +45,9 @@ public class MavenGoals
     {{
             put("tomcat5x", new Container("tomcat5x", "org.apache.tomcat", "apache-tomcat", "5.5.26"));
             put("tomcat6x", new Container("tomcat6x", "org.apache.tomcat", "apache-tomcat", "6.0.20"));
-            put("resin3x",  new Container("resin3x",  "com.caucho",        "resin",         "3.0.26"));
-            put("jboss42x", new Container("jboss42x", "org.jboss.jbossas", "jbossas",       "4.2.3.GA"));
-            put("jetty6x",  new Container("jetty6x"));
+            put("resin3x", new Container("resin3x", "com.caucho", "resin", "3.0.26"));
+            put("jboss42x", new Container("jboss42x", "org.jboss.jbossas", "jbossas", "4.2.3.GA"));
+            put("jetty6x", new Container("jetty6x"));
         }};
 
     private final Map<String, String> defaultArtifactIdToVersionMap = new HashMap<String, String>()
@@ -84,15 +94,15 @@ public class MavenGoals
         configs.add(element(name("commands"),
                 element(name("pi"), new StringBuilder()
                         .append("resources").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:filter-plugin-descriptor").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:filter-plugin-descriptor").append(" ")
                         .append("compile").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:copy-bundled-dependencies").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:generate-manifest").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:validate-manifest").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:jar").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:install").toString()),
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:copy-bundled-dependencies").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:validate-manifest").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:install").toString()),
                 element(name("pu"), new StringBuilder()
-                        .append("com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:uninstall").toString())));
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:uninstall").toString())));
         if (port > 0)
         {
             configs.add(element(name("port"), String.valueOf(port)));
@@ -105,13 +115,11 @@ public class MavenGoals
                 ),
                 goal("execute"),
                 configuration(configs.toArray(new Element[0])),
-                executionEnvironment(project, session, pluginManager)
-        );
+                executionEnvironment(project, session, pluginManager));
     }
 
     public void createPlugin(final String productId) throws MojoExecutionException
     {
-
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -120,13 +128,11 @@ public class MavenGoals
                 ),
                 goal("generate"),
                 configuration(
-                        element(name("archetypeRepository"), "http://maven.atlassian.com/public"),
                         element(name("archetypeGroupId"), "com.atlassian.maven.archetypes"),
                         element(name("archetypeArtifactId"), productId + "-plugin-archetype"),
                         element(name("archetypeVersion"), VersionUtils.getVersion())
                 ),
-                executionEnvironment(project, session, pluginManager)
-        );
+                executionEnvironment(project, session, pluginManager));
     }
 
     public void copyBundledDependencies() throws MojoExecutionException
@@ -286,22 +292,22 @@ public class MavenGoals
     private void unpackContainer(final Container container) throws MojoExecutionException
     {
         executeMojo(
-            plugin(
-                    groupId("org.apache.maven.plugins"),
-                    artifactId("maven-dependency-plugin"),
-                    version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
-            ),
-            goal("unpack"),
-            configuration(
-                    element(name("artifactItems"),
-                            element(name("artifactItem"),
-                                    element(name("groupId"), container.getGroupId()),
-                                    element(name("artifactId"), container.getArtifactId()),
-                                    element(name("version"), container.getVersion()),
-                                    element(name("type"), "zip"))),
-                    element(name("outputDirectory"), container.getRootDirectory(getBuildDirectory()))
-            ),
-            executionEnvironment(project, session, pluginManager));
+                plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+                ),
+                goal("unpack"),
+                configuration(
+                        element(name("artifactItems"),
+                                element(name("artifactItem"),
+                                        element(name("groupId"), container.getGroupId()),
+                                        element(name("artifactId"), container.getArtifactId()),
+                                        element(name("version"), container.getVersion()),
+                                        element(name("type"), "zip"))),
+                        element(name("outputDirectory"), container.getRootDirectory(getBuildDirectory()))
+                ),
+                executionEnvironment(project, session, pluginManager));
     }
 
     private String getBuildDirectory()
@@ -375,11 +381,11 @@ public class MavenGoals
                 configuration(
                         element(name("wait"), "false"),
                         element(name("container"),
-                            element(name("containerId"), container.getId()),
-                            element(name("type"), container.getType()),
-                            element(name("home"), container.getInstallDirectory(getBuildDirectory())),
-                            element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
-                            element(name("dependencies"), deps.toArray(new Element[deps.size()]))
+                                element(name("containerId"), container.getId()),
+                                element(name("type"), container.getType()),
+                                element(name("home"), container.getInstallDirectory(getBuildDirectory())),
+                                element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
+                                element(name("dependencies"), deps.toArray(new Element[deps.size()]))
                         ),
                         element(name("configuration"),
                                 element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId)),

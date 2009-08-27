@@ -12,6 +12,15 @@
 
     <name>Maven Confluence Plugin</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.maven.archetypes</groupId>
+            <artifactId>confluence-plugin-archetype</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+    
     <profiles>
         <profile>
             <id>shitty</id>
