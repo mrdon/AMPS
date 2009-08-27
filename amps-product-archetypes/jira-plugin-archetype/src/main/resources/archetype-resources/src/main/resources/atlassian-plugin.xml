@@ -3,7 +3,6 @@
     <plugin-info>
         <description>${dollar}{project.description}</description>
         <version>${dollar}{project.version}</version>
-        <!-- Add the <organization> stanza to pom.xml, and then uncomment this. -->
-        <!--<vendor name="${project.organization.name}" url="${project.organization.url}"/>-->
+        <vendor name="${dollar}{project.organization.name}" url="${dollar}{project.organization.url}" />
     </plugin-info>
 </atlassian-plugin>

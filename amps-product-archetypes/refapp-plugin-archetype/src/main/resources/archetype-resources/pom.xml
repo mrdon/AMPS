@@ -10,6 +10,11 @@
     <artifactId>\${artifactId}</artifactId>
     <version>\${version}</version>
 
+    <organization>
+        <name>Example Company</name>
+        <url>http://www.example.com/</url>
+    </organization>
+
     <name>\${artifactId}</name>
     <description>This is the \${groupId}:\${artifactId} plugin for Atlassian Refapp.</description>
     <packaging>atlassian-plugin</packaging>

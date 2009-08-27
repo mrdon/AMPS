@@ -3,10 +3,7 @@
     <plugin-info>
         <description>${dollar}{project.description}</description>
         <version>${dollar}{project.version}</version>
-        <!-- TODO: Add vendor details -->
-        <!--
-        <vendor name="Example Company" url="http://www.example.com"/>
-        -->
+        <vendor name="${dollar}{project.organization.name}" url="${dollar}{project.organization.url}" />
     </plugin-info>
 
     <macro name="${artifactId}" class="${groupId}.ExampleMacro" key="my-macro">
