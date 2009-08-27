@@ -22,7 +22,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     /**
      * Pattern for to use to find integration tests
      */
-    @MojoParameter(expression = "${functionalTestPattern}")
+    @MojoParameter(expression = "${functional.test.pattern}")
     private final String functionalTestPattern = "it/**";
 
     /**
@@ -34,7 +34,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     /**
      * Whether the reference application will not be started or not
      */
-    @MojoParameter(expression = "${noWebapp}", defaultValue = "false")
+    @MojoParameter(expression = "${no.webapp}", defaultValue = "false")
     private final boolean noWebapp = false;
 
     @MojoComponent

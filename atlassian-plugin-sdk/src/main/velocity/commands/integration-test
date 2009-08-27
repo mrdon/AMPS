@@ -42,7 +42,7 @@
   'example' : 'test/log4j.properties'
 },{
   'name' : 'test-version',
-  'maven' : 'testResources.version',
+  'maven' : 'test.resources.version',
   'description' : 'Version to use for test resources (default is LATEST).',
   'example' : 'LATEST'
 },{
@@ -76,13 +76,8 @@
   'description' : 'The product to launch with the plugin.',
   'example' : 'jira'
 },{
-  'name' : 'functional-test-pattern',
-  'maven' : 'functionalTestPattern',
-  'description' : 'Ant pattern used to find integration tests (default is it/**).',
-  'example' : 'it/**'
-},{
   'name' : 'no-webapp',
-  'maven' : 'noWepapp=true',
+  'maven' : 'no.webapp=true',
   'flag' : 'true',
   'description' : 'Do not start the application.',
   'example' : 'true'

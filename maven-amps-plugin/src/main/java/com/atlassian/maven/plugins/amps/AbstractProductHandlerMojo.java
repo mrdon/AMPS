@@ -67,7 +67,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * The test resources version
      */
-    @MojoParameter(expression = "${testResources.version}", defaultValue = "LATEST")
+    @MojoParameter(expression = "${test.resources.version}", defaultValue = "LATEST")
     protected String testResourcesVersion;
 
     /**

@@ -42,7 +42,7 @@
   'example' : 'test/log4j.properties'
 },{
   'name' : 'test-version',
-  'maven' : 'testResources.version',
+  'maven' : 'test.resources.version',
   'description' : 'Version to use for test resources (default is LATEST).',
   'example' : 'LATEST'
 },{
