@@ -6,7 +6,7 @@
         <vendor name="${dollar}{project.organization.name}" url="${dollar}{project.organization.url}" />
     </plugin-info>
 
-    <macro name="${artifactId}" class="${groupId}.ExampleMacro" key="my-macro">
+    <macro name="${artifactId}" class="${package}.ExampleMacro" key="my-macro">
     <!-- TODO: Add macro description -->
     <!-- <description></description> -->
     </macro>

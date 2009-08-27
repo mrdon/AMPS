@@ -1,4 +1,4 @@
-package ${groupId};
+package ${package};
 
 import java.util.Map;
 import java.util.List;

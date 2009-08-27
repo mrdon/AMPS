@@ -6,7 +6,7 @@
         <vendor name="${dollar}{project.organization.name}" url="${dollar}{project.organization.url}" />
     </plugin-info>
 
-    <servlet name="${artifactId}" class="${groupId}.ExampleServlet" key="test">
+    <servlet name="${artifactId}" class="${package}.ExampleServlet" key="test">
         <url-pattern>/test</url-pattern>
     </servlet>
 </atlassian-plugin>

@@ -1,4 +1,4 @@
-package ${groupId};
+package ${package};
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

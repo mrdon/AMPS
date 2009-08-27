@@ -1,9 +1,9 @@
-package ${groupId};
+package ${package};
 
 import junit.framework.TestCase;
 
 /**
- * Testing {@link ${groupId}.ExampleMacro}
+ * Testing {@link ${package}.ExampleMacro}
  */
 public class TestExampleMacro extends TestCase
 {
