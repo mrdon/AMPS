@@ -25,7 +25,7 @@ public class SdkHelper
 
         baseDir.mkdirs();
         unzip(sdkZip, baseDir);
-        return new File(baseDir, sdkZip.getName().substring(0, sdkZip.getName().length() - "-bin.zip".length()));
+        return new File(baseDir, sdkZip.getName().substring(0, sdkZip.getName().length() - ".zip".length()));
     }
 
     public static void runSdkScript(File sdkHome, File baseDir, String scriptName, String... args)
@@ -44,9 +44,6 @@ public class SdkHelper
                     "755",
                     sdkHome.getAbsolutePath() + "/apache-maven/bin/mvn",
                     command.getAbsolutePath()), Collections.<String, String>emptyMap());
-
-            // Shouldn't be necessary but get a "text file busy" exception on linux
-            Thread.sleep(2000);
         }
         List<String> cmdlist = new ArrayList<String>(Arrays.asList(args));
         cmdlist.add(0, command.getAbsolutePath());

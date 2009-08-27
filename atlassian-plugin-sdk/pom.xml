@@ -179,7 +179,7 @@
                             <systemProperties>
                                 <property>
                                     <name>sdk.zip</name>
-                                    <value>${project.build.directory}/${project.artifactId}-${project.version}-bin.zip
+                                    <value>${project.build.directory}/${project.artifactId}-${project.version}.zip
                                     </value>
                                 </property>
                                 <property>
