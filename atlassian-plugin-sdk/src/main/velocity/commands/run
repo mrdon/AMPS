@@ -1,4 +1,4 @@
-#set( $mvnCommand = "amps:run" )
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-plugin:run" )
 
 #set( $goalhelp = "Runs the product with your plugin installed." )
 

@@ -1,4 +1,4 @@
-#set( $mvnCommand = "amps:cli" )
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-plugin:cli" )
 
 #set( $goalhelp = "Enables a command-line interface to the plugin development kit." )
 

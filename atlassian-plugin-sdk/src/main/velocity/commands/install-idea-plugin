@@ -1,4 +1,4 @@
-#set( $mvnCommand = "amps:idea" )
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-plugin:idea" )
 
 #set( $goalhelp = "Configures IntelliJ IDEA for CLI integration." )
 

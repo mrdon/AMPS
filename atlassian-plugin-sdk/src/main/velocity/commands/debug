@@ -1,4 +1,4 @@
-#set( $mvnCommand = "amps:debug" )
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-plugin:debug" )
 
 #set( $goalhelp = "Runs the product in debug mode with your plugin installed." )
 
