@@ -28,7 +28,7 @@
 >         </repository>
 > 	      <repository>
 > 	        <id>atlassian-plugin-sdk</id>
->           <url>file://${env.M2_HOME}/../repository</url>
+>           <url>file://${env.ATLAS_HOME}/repository</url>
 >           <snapshots>
 >             <enabled>false</enabled>
 >           </snapshots>

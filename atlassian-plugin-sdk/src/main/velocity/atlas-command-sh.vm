@@ -65,6 +65,7 @@ PRGDIR=`dirname "${dollar}{PRG}"`
 
 ATLAS_HOME=`cd ${dollar}{PRGDIR} && pwd -P`
 ATLAS_HOME=`dirname ${dollar}{ATLAS_HOME}`
+export ATLAS_HOME
 M2_HOME="${dollar}{ATLAS_HOME}"/apache-maven
 MAVEN_EXECUTABLE="${dollar}{M2_HOME}"/bin/mvn
 
