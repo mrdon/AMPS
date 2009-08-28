@@ -41,6 +41,15 @@
             </includes>
         </fileSet>
 
+        <!-- the repository -->
+        <fileSet>
+            <directory>target/repository</directory>
+            <outputDirectory>repository</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
         <!-- SH files are chmod +x to be executable on unix environments -->
         <fileSet>
             <directory>target/bin</directory>
@@ -66,8 +75,6 @@
         </fileSet>
 
     </fileSets>
-
-
 
 
 </assembly>

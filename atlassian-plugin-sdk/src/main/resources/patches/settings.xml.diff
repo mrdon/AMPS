@@ -3,7 +3,7 @@
 >     <!-- The Atlassian maven plugins group used for all Atlassian Maven plugins -->
 >     <pluginGroup>com.atlassian.maven.plugins</pluginGroup>
 > 
-246a251,297
+246a251,304
 > 
 >     <!-- Default profile containing Atlassian servers -->
 >     <profile>
@@ -14,29 +14,37 @@
 > 
 >       <repositories>
 >         <repository>
-> 
 >           <id>central</id>
 >           <url>https://m2proxy.atlassian.com/repository/public</url>
 >           <snapshots>
 >             <enabled>true</enabled>
 >             <updatePolicy>daily</updatePolicy>
 >             <checksumPolicy>warn</checksumPolicy>
-> 
 >           </snapshots>
 >           <releases>
 >             <enabled>true</enabled>
 >             <checksumPolicy>warn</checksumPolicy>
 >           </releases>
 >         </repository>
-> 
+> 	      <repository>
+> 	        <id>atlassian-plugin-sdk</id>
+>           <url>file://${env.M2_HOME}/../repository</url>
+>           <snapshots>
+>             <enabled>false</false>
+>           </snapshots>
+>           <releases>
+>             <enabled>true</enabled>
+>             <checksumPolicy>warn</checksumPolicy>
+>           </releases>
+>         </repository>
 >       </repositories>
+> 
 >       <pluginRepositories>
 >         <pluginRepository>
 >           <id>central</id>
 >           <url>https://m2proxy.atlassian.com/repository/public</url>
 >           <releases>
 >             <enabled>true</enabled>
-> 
 >             <checksumPolicy>warn</checksumPolicy>
 >           </releases>
 >           <snapshots>
@@ -45,7 +53,6 @@
 >         </pluginRepository>
 >       </pluginRepositories>
 >       <properties>
-> 
 >         <downloadSources>true</downloadSources>
 >         <downloadJavadocs>true</downloadJavadocs>
 >       </properties>
