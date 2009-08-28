@@ -30,7 +30,7 @@
 > 	        <id>atlassian-plugin-sdk</id>
 >           <url>file://${env.M2_HOME}/../repository</url>
 >           <snapshots>
->             <enabled>false</false>
+>             <enabled>false</enabled>
 >           </snapshots>
 >           <releases>
 >             <enabled>true</enabled>
