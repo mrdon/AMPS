@@ -148,7 +148,7 @@ public class MavenGoals
                         element(name("includeScope"), "runtime"),
                         element(name("excludeScope"), "provided"),
                         element(name("excludeScope"), "test"),
-                        element(name("type"), "jar"),
+                        element(name("includeTypes"), "jar"),
                         element(name("outputDirectory"), "${project.build.outputDirectory}/META-INF/lib")
                 ),
                 executionEnvironment(project, session, pluginManager)
