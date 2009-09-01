@@ -52,6 +52,7 @@ public class SdkHelper
         {{
             put("MAVEN_OPTS", "-Xmx256m");
             put("JAVA_HOME", System.getProperty("java.home"));
+            put("PATH", System.getenv("PATH"));
         }}));
     }
 
