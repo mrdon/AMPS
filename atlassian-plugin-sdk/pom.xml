@@ -27,6 +27,56 @@
             <version>1.4</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- The following are necessary to ensure the modules are scheduled before this on in a multi-module build -->
+        <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-confluence-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-refapp-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-jira-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-bamboo-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.archetypes</groupId>
+            <artifactId>confluence-plugin-archetype</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.archetypes</groupId>
+            <artifactId>jira-plugin-archetype</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.archetypes</groupId>
+            <artifactId>bamboo-plugin-archetype</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.archetypes</groupId>
+            <artifactId>refapp-plugin-archetype</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 
