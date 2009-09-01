@@ -49,6 +49,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <productVersion>\${dollar}{confluence.version}</productVersion>
+                    <testResourcesVersion>\${dollar}{confluence.version}</testResourcesVersion>
                 </configuration>
             </plugin>
             <plugin>
@@ -62,7 +63,8 @@
     </build>
 
     <properties>
-        <confluence.version>RELEASE</confluence.version>
+        <confluence.version>3.0.1</confluence.version>
+        <confluence.data.version>3.0</confluence.data.version>
     </properties>
 
 </project>

@@ -41,7 +41,10 @@
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-refapp-plugin</artifactId>
                 <version>${project.version}</version>
-                <extensions>true</extensions> 
+                <extensions>true</extensions>
+                <configuration>
+                    <productVersion>\${dollar}{refapp.version}</productVersion>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -52,5 +55,9 @@
             </plugin>
         </plugins>
     </build>
+    
+    <properties>
+        <refapp.version>2.3.9</refapp.version>
+    </properties>
 
 </project>
