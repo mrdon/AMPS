@@ -49,7 +49,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <productVersion>\${dollar}{confluence.version}</productVersion>
-                    <testResourcesVersion>\${dollar}{confluence.version}</testResourcesVersion>
+                    <testResourcesVersion>\${dollar}{confluence.data.version}</testResourcesVersion>
                 </configuration>
             </plugin>
             <plugin>
