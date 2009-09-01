@@ -36,11 +36,9 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
         File appDir = new File(baseDir, "foo-" + productId + "-plugin");
         assertTrue(appDir.exists());
 
-        /* Restore these once AMPS-82 is done
-        runSdkScript(sdkHome, appDir, "atlas-mvn", "verify");
+        runSdkScript(sdkHome, appDir, "atlas-integration-test");
 
         File pluginJar = new File(new File(appDir, "target"), "foo-" + productId + "-plugin-1.0-SNAPSHOT.jar");
         assertTrue(pluginJar.exists());
-        */
     }
 }
