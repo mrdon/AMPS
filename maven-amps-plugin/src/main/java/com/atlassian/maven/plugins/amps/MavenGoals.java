@@ -342,6 +342,9 @@ public class MavenGoals
         {
             webappContext.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
         }
+
+        Map<String, String> sysPropsMap = new HashMap<String, String>(systemProperties);
+        sysPropsMap.put("atlassian.dev.mode", "true");
         for (final Map.Entry<String, String> entry : systemProperties.entrySet())
         {
             webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=" + entry.getValue());
