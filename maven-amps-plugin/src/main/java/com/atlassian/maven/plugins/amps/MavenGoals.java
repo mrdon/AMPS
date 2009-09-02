@@ -345,7 +345,7 @@ public class MavenGoals
 
         Map<String, String> sysPropsMap = new HashMap<String, String>(systemProperties);
         sysPropsMap.put("atlassian.dev.mode", "true");
-        for (final Map.Entry<String, String> entry : systemProperties.entrySet())
+        for (final Map.Entry<String, String> entry : sysPropsMap.entrySet())
         {
             webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=" + entry.getValue());
             sysProps.add(element(name(entry.getKey()), entry.getValue()));
