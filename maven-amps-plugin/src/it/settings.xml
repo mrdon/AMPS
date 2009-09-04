@@ -53,6 +53,9 @@ under the License.
     <!-- Default profile containing Atlassian servers -->
     <profile>
       <id>defaultProfile</id>
+      <activation>
+          <activeByDefault>true</activeByDefault>
+      </activation>
       <repositories>
         <repository>
           <id>atlassian-public</id>
