@@ -1,0 +1,2 @@
+-s
+${project.build.directory}/it/settings.xml
