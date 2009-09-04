@@ -150,6 +150,7 @@
                                             <includes>
                                                 <include>**/pom.xml</include>
                                                 <include>**/goals.txt</include>
+                                                <include>**/flags.txt</include>
                                             </includes>
                                         </resource>
                                         <resource>
@@ -158,6 +159,7 @@
                                             <excludes>
                                                 <exclude>**/pom.xml</exclude>
                                                 <exclude>**/goals.txt</exclude>
+                                                <exclude>**/flags.txt</exclude>
                                             </excludes>
                                         </resource>
                                     </resources>
