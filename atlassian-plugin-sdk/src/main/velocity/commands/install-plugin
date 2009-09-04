@@ -1,4 +1,4 @@
-#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-plugin:install" )
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-dispatcher-plugin:install" )
 
 #set( $goalhelp = "Installs the plugin into a running application." )
 

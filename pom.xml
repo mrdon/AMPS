@@ -32,6 +32,7 @@
 
     <modules>
         <module>maven-amps-plugin</module>
+        <module>maven-amps-dispatcher-plugin</module>
         <module>atlassian-plugin-sdk</module>
         <module>amps-product-plugins</module>
         <module>amps-product-archetypes</module>
