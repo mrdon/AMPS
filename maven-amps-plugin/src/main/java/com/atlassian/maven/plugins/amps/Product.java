@@ -45,7 +45,7 @@ public class Product
     /**
      * The test resources version
      */
-    protected String testResourcesVersion = "LATEST";
+    protected String productDataVersion = "LATEST";
 
     /**
      */
@@ -158,14 +158,14 @@ public class Product
         this.version = version;
     }
 
-    public String getTestResourcesVersion()
+    public String getProductDataVersion()
     {
-        return testResourcesVersion;
+        return productDataVersion;
     }
 
-    public void setTestResourcesVersion(String testResourcesVersion)
+    public void setProductDataVersion(String productDataVersion)
     {
-        this.testResourcesVersion = testResourcesVersion;
+        this.productDataVersion = productDataVersion;
     }
 
     public List<ProductArtifact> getPluginArtifacts()

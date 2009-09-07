@@ -72,6 +72,7 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
     public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
         ConfigFileUtils.replace(new File(homeDir, "confluence.cfg.xml"), "@project-dir@", homeDir.getParent());
+        ConfigFileUtils.replace(new File(homeDir, "confluence.cfg.xml"), "/confluence-home/", "/home/");
 
         File script = new File(new File(homeDir, "database"), "confluencedb.script");
         if (script.exists())

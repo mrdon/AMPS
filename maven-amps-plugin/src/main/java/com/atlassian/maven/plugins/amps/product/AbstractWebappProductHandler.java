@@ -168,7 +168,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
                         new ProductArtifact(
                                 getTestResourcesArtifact().getGroupId(),
                                 getTestResourcesArtifact().getArtifactId(),
-                                ctx.getTestResourcesVersion()));
+                                ctx.getProductDataVersion()));
                 final File tmpDir = new File(getBaseDirectory(), "tmp-resources");
                 tmpDir.mkdir();
 

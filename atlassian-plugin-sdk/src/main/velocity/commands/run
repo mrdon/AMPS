@@ -43,7 +43,12 @@
 },{
   'name' : 'test-version',
   'maven' : 'test.resources.version',
-  'description' : 'Version to use for test resources (default is LATEST).',
+  'description' : 'Version to use for test resources. DEPRECATED: use data-version instead.',
+  'example' : 'LATEST'
+},{
+  'name' : 'data-version',
+  'maven' : 'product.data.version',
+  'description' : 'Version to use for data resources (default is LATEST)',
   'example' : 'LATEST'
 },{
   'name' : 'sal-version',

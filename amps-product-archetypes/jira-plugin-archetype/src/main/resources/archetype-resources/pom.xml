@@ -49,7 +49,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <productVersion>\${dollar}{jira.version}</productVersion>
-                    <testResourcesVersion>\${dollar}{jira.data.version}</testResourcesVersion>
+                    <productDataVersion>\${dollar}{jira.data.version}</productDataVersion>
                 </configuration>
             </plugin>
             <plugin>

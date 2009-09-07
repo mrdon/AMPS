@@ -100,7 +100,7 @@ public class FeCruProductHandler implements ProductHandler
                 new ProductArtifact(
                         "com.atlassian.fecru",
                         "amps-fecru",
-                        ctx.getTestResourcesVersion()));
+                        ctx.getProductDataVersion()));
 
         final File homeDir = getHomeDirectory();
         try

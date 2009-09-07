@@ -66,9 +66,16 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     /**
      * The test resources version
+     * @deprecated Since 3.0-beta2
      */
-    @MojoParameter(expression = "${test.resources.version}", defaultValue = "LATEST")
-    protected String testResourcesVersion;
+    @MojoParameter(expression = "${test.resources.version}")
+    private String testResourcesVersion;
+
+    /**
+     * The test resources version
+     */
+    @MojoParameter(expression = "${product.data.version}", defaultValue = "LATEST")
+    private String productDataVersion;
 
     /**
      */
@@ -183,6 +190,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     private Product createDefaultProductContext() throws MojoExecutionException
     {
+        String dversion = (testResourcesVersion != null ? testResourcesVersion : productDataVersion);
         Product ctx = new Product();
         ctx.setId(getProductId());
         ctx.setContainerId(containerId);
@@ -193,7 +201,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setLibArtifacts(libArtifacts);
         ctx.setPluginArtifacts(pluginArtifacts);
         ctx.setLog4jProperties(log4jProperties);
-        ctx.setTestResourcesVersion(testResourcesVersion);
+        ctx.setProductDataVersion(dversion);
         ctx.setHttpPort(httpPort);
         ctx.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
 

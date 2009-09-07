@@ -43,7 +43,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <productVersion>\${dollar}{bamboo.version}</productVersion>
-                    <testResourcesVersion>\${dollar}{bamboo.data.version}</testResourcesVersion>
+                    <productDataVersion>\${dollar}{bamboo.data.version}</productDataVersion>
                 </configuration>
             </plugin>
             <plugin>
