@@ -57,8 +57,8 @@
     </build>
 
     <properties>
-        <bamboo.version>2.3.1</bamboo.version>
-        <bamboo.data.version>2.2</bamboo.data.version>
+        <bamboo.version>${bamboo.version}</bamboo.version>
+        <bamboo.data.version>${bamboo.data.version}</bamboo.data.version>
     </properties>
 
 </project>

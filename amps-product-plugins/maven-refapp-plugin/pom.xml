@@ -33,6 +33,7 @@
             </build>
             <properties>
                 <shitty.product>refapp</shitty.product>
+                <product.version>${refapp.version}</product.version>
             </properties>
         </profile>
     </profiles>

@@ -57,7 +57,7 @@
     </build>
     
     <properties>
-        <refapp.version>2.3.9</refapp.version>
+        <refapp.version>${refapp.version}</refapp.version>
     </properties>
 
 </project>

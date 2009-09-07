@@ -42,6 +42,8 @@
             </build>
             <properties>
                 <shitty.product>confluence</shitty.product>
+                <product.version>${confluence.version}</product.version>
+                <product.data.version>${confluence.data.version}</product.data.version>
             </properties>
         </profile>
     </profiles>

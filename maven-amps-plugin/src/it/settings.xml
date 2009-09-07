@@ -48,50 +48,56 @@ under the License.
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
 
-  <profiles>
+    <profiles>
 
-    <!-- Default profile containing Atlassian servers -->
-    <profile>
-      <id>defaultProfile</id>
-      <activation>
-          <activeByDefault>true</activeByDefault>
-      </activation>
-      <repositories>
-        <repository>
-          <id>atlassian-public</id>
-          <url>http://maven.atlassian.com/repository/public</url>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-            <checksumPolicy>warn</checksumPolicy>
-          </releases>
-        </repository>
-      </repositories>
+        <!-- Default profile containing Atlassian servers -->
+        <profile>
+            <id>defaultProfile</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>atlassian-public</id>
+                    <url>http://maven.atlassian.com/repository/public</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </releases>
+                </repository>
+            </repositories>
 
-      <pluginRepositories>
-        <pluginRepository>
-          <id>atlassian-public</id>
-          <url>http://maven.atlassian.com/repository/public</url>
-          <releases>
-            <enabled>true</enabled>
-            <checksumPolicy>warn</checksumPolicy>
-          </releases>
-          <snapshots>
-            <checksumPolicy>warn</checksumPolicy>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-      <properties>
-        <downloadSources>true</downloadSources>
-        <downloadJavadocs>true</downloadJavadocs>
-      </properties>
-    </profile>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>atlassian-public</id>
+                    <url>http://maven.atlassian.com/repository/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </releases>
+                    <snapshots>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+            <properties>
+                <downloadSources>true</downloadSources>
+                <downloadJavadocs>true</downloadJavadocs>
+                <refapp.version>${refapp.version}</refapp.version>
+                <jira.version>${jira.version}</jira.version>
+                <jira.data.version>${jira.data.version}</jira.data.version>
+                <confluence.version>${confluence.version}</confluence.version>
+                <confluence.data.version>${confluence.data.version}</confluence.data.version>
+                <bamboo.version>${bamboo.version}</bamboo.version>
+                <bamboo.data.version>${bamboo.data.version}</bamboo.data.version>
+            </properties>
+        </profile>
 
-  </profiles>
-
+    </profiles>
 
 </settings>

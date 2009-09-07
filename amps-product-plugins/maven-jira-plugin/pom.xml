@@ -42,6 +42,8 @@
             </build>
             <properties>
                 <shitty.product>jira</shitty.product>
+                <product.version>${jira.version}</product.version>
+                <product.data.version>${jira.data.version}</product.data.version>
             </properties>
         </profile>
     </profiles>

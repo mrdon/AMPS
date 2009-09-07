@@ -78,6 +78,8 @@
                                                 <includes>
                                                     <include>**/pom.xml</include>
                                                     <include>**/goals.txt</include>
+                                                    <include>**/flags.txt</include>
+                                                    <include>settings.xml</include>
                                                 </includes>
                                             </resource>
                                         </resources>
@@ -98,6 +100,8 @@
                                                 <excludes>
                                                     <exclude>**/pom.xml</exclude>
                                                     <exclude>**/goals.txt</exclude>
+                                                    <exclude>**/flags.txt</exclude>
+                                                    <exclude>settings.xml</exclude>
                                                 </excludes>
                                             </resource>
                                         </resources>
