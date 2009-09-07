@@ -69,11 +69,6 @@ public class BambooProductHandler extends AbstractWebappProductHandler
         return "WEB-INF/classes/atlassian-bundled-plugins.zip";
     }
 
-    public File getHomeDirectory()
-    {
-        return new File(new File(project.getBuild().getDirectory(), getId()), "bamboo-home");
-    }
-
     public void processHomeDirectory(final Product ctx, final File homeDir) throws MojoExecutionException
     {
         ConfigFileUtils.replace(new File(homeDir, "bamboo.cfg.xml"), "@project-dir@", homeDir.getParent());

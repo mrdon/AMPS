@@ -159,28 +159,46 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         {
 
             final File outputDir = getBaseDirectory();
-            final File confHomeZip = goals.copyHome(outputDir,
-                    new ProductArtifact(
-                            getTestResourcesArtifact().getGroupId(),
-                            getTestResourcesArtifact().getArtifactId(),
-                            ctx.getTestResourcesVersion()));
-            final File tmpDir = new File(getBaseDirectory(), "tmp-resources");
-            tmpDir.mkdir();
+            final File homeDir = new File(outputDir, "home");
 
-            File homeDir;
+            // Only create the home dir if it doesn't exist
+            if (!homeDir.exists())
+            {
+                final File confHomeZip = goals.copyHome(outputDir,
+                        new ProductArtifact(
+                                getTestResourcesArtifact().getGroupId(),
+                                getTestResourcesArtifact().getArtifactId(),
+                                ctx.getTestResourcesVersion()));
+                final File tmpDir = new File(getBaseDirectory(), "tmp-resources");
+                tmpDir.mkdir();
+
+                try
+                {
+                    unzip(confHomeZip, tmpDir.getPath());
+                    FileUtils.copyDirectory(tmpDir.listFiles()[0], outputDir, true);
+                    File tmp = new File(outputDir, ctx.getId() + "-home");
+                    boolean result = tmp.renameTo(homeDir);
+                    if (!result) { throw new IOException("Rename " + tmp.getPath() + " to " + homeDir.getPath() + " unsuccessful from " + tmpDir.getPath()); }
+                }
+                catch (final IOException ex)
+                {
+                    throw new MojoExecutionException("Unable to copy home directory", ex);
+                }
+                // just in case
+                homeDir.mkdir();
+                processHomeDirectory(ctx, homeDir);
+            }
+
+            // Always override files regardless of home directory existing or not
             try
             {
-                unzip(confHomeZip, tmpDir.getPath());
-                FileUtils.copyDirectory(tmpDir.listFiles()[0], outputDir);
-                final String homeDirName = tmpDir.listFiles()[0].listFiles()[0].getName();
-                homeDir = new File(outputDir, homeDirName);
-                overrideAndPatchHomeDir(homeDirName);
+                overrideAndPatchHomeDir(homeDir, ctx.getId());
             }
-            catch (final IOException ex)
+            catch (IOException e)
             {
-                throw new MojoExecutionException("Unable to copy home directory", ex);
+                throw new MojoExecutionException("Unable to override files using src/test/resources", e);
             }
-            processHomeDirectory(ctx, homeDir);
+
             return homeDir;
         }
         else
@@ -189,12 +207,12 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         }
     }
 
-    private void overrideAndPatchHomeDir(final String homeDirName) throws IOException
+    private void overrideAndPatchHomeDir(File homeDir, final String productId) throws IOException
     {
-        final File srcDir = new File(project.getBasedir(), "src/test/resources/"+homeDirName);
-        final File outputDir = new File(getBaseDirectory(), homeDirName);
+        final File srcDir = new File(project.getBasedir(), "src/test/resources/"+productId + "-home");
+        final File outputDir = new File(getBaseDirectory(), "home");
         if (srcDir.exists() && outputDir.exists())
-            FileUtils.copyDirectory(srcDir, outputDir);
+            FileUtils.copyDirectory(srcDir, homeDir);
     }
 
     private boolean isStaticPlugin() throws IOException
@@ -260,7 +278,16 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         }
     }
 
-    protected abstract File getHomeDirectory();
+    protected File getHomeDirectory()
+    {
+        File homeDir = new File(new File(project.getBuild().getDirectory(), getId()), "home");
+        // Make sure it exists
+        if (!homeDir.exists())
+        {
+            homeDir.mkdirs();
+        }
+        return homeDir;
+    }
 
     protected abstract void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException;
 

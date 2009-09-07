@@ -52,7 +52,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
             {
                 put("jira.home", fixSlashes(getHomeDirectory().getPath()));
                 put("cargo.datasource.datasource", "cargo.datasource.url=jdbc:hsqldb:"
-                        + fixSlashes(project.getBuild().getDirectory()) + "/" + getId() + "/jira-home/database|"
+                        + fixSlashes(getHomeDirectory().getAbsolutePath()) + "/database|"
                         + "cargo.datasource.driver=org.hsqldb.jdbcDriver|" + "cargo.datasource.username=sa|"
                         + "cargo.datasource.password=|" + "cargo.datasource.type=javax.sql.DataSource|"
                         + "cargo.datasource.jndi=jdbc/JiraDS");
@@ -108,15 +108,10 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public File getHomeDirectory()
-    {
-        return new File(new File(project.getBuild().getDirectory(), getId()), "jira-home");
-    }
-
-    @Override
     public void processHomeDirectory(final Product ctx, final File homeDir) throws MojoExecutionException
     {
         ConfigFileUtils.replace(new File(homeDir, "database.script"), "@project-dir@", homeDir.getParent());
+        ConfigFileUtils.replace(new File(homeDir, "database.script"), "/jira-home/", "/home/");
     }
 
     @Override

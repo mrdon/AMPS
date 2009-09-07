@@ -69,11 +69,6 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         return "WEB-INF/classes/com/atlassian/confluence/setup/atlassian-bundled-plugins.zip";
     }
 
-    public File getHomeDirectory()
-    {
-        return new File(new File(project.getBuild().getDirectory(), getId()), "confluence-home");
-    }
-
     public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
         ConfigFileUtils.replace(new File(homeDir, "confluence.cfg.xml"), "@project-dir@", homeDir.getParent());

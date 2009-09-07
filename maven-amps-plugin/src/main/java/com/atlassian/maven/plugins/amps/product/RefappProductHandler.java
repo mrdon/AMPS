@@ -74,18 +74,6 @@ public class RefappProductHandler extends AbstractWebappProductHandler
         return map;
     }
 
-    protected File getHomeDirectory()
-    {
-        File homeDir = new File(new File(project.getBuild().getDirectory(), getId()), "refapp-home");
-        // Make sure it exists
-        if (!homeDir.exists())
-        {
-            homeDir.mkdirs();
-        }
-        return homeDir;
-    }
-
-
     protected ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.refapp", "atlassian-refapp", VersionUtils.getVersion());
