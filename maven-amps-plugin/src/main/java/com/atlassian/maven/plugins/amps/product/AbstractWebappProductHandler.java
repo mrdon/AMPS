@@ -4,7 +4,9 @@ import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
+import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.Validate;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
@@ -95,7 +97,7 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
                 pluginsDir = new File(webappDir, "WEB-INF/lib");
             }
 
-            if (pluginsDir==null)
+            if (pluginsDir == null)
             {
                 pluginsDir = bundledPluginsDir;
             }
@@ -178,7 +180,10 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
                     FileUtils.copyDirectory(tmpDir.listFiles()[0], outputDir, true);
                     File tmp = new File(outputDir, ctx.getId() + "-home");
                     boolean result = tmp.renameTo(homeDir);
-                    if (!result) { throw new IOException("Rename " + tmp.getPath() + " to " + homeDir.getPath() + " unsuccessful from " + tmpDir.getPath()); }
+                    if (!result)
+                    {
+                        throw new IOException("Rename " + tmp.getPath() + " to " + homeDir.getPath() + " unsuccessful");
+                    }
                 }
                 catch (final IOException ex)
                 {
@@ -209,10 +214,12 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
 
     private void overrideAndPatchHomeDir(File homeDir, final String productId) throws IOException
     {
-        final File srcDir = new File(project.getBasedir(), "src/test/resources/"+productId + "-home");
+        final File srcDir = new File(project.getBasedir(), "src/test/resources/" + productId + "-home");
         final File outputDir = new File(getBaseDirectory(), "home");
         if (srcDir.exists() && outputDir.exists())
+        {
             FileUtils.copyDirectory(srcDir, homeDir);
+        }
     }
 
     private boolean isStaticPlugin() throws IOException
@@ -280,12 +287,13 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
 
     protected File getHomeDirectory()
     {
-        File homeDir = new File(new File(project.getBuild().getDirectory(), getId()), "home");
+        File homeDir = file(project.getBuild().getDirectory(), getId(), "home");
         // Make sure it exists
         if (!homeDir.exists())
         {
             homeDir.mkdirs();
         }
+        Validate.isTrue(homeDir.exists() && homeDir.isDirectory());
         return homeDir;
     }
 
