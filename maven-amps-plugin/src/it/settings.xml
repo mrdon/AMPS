@@ -95,6 +95,8 @@ under the License.
                 <confluence.data.version>${confluence.data.version}</confluence.data.version>
                 <bamboo.version>${bamboo.version}</bamboo.version>
                 <bamboo.data.version>${bamboo.data.version}</bamboo.data.version>
+                <fecru.version>${fecru.version}</fecru.version>
+                <fecru.data.version>${fecru.data.version}</fecru.data.version>
             </properties>
         </profile>
 

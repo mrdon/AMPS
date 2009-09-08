@@ -16,15 +16,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractWebappProductHandler implements ProductHandler
+public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
-    protected final MavenGoals goals;
-    protected final MavenProject project;
 
     public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals)
     {
-        this.project = project;
-        this.goals = goals;
+        super(project, goals);
     }
 
     public int start(final Product ctx) throws MojoExecutionException
@@ -215,45 +212,6 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
             FileUtils.copyDirectory(srcDir, homeDir);
     }
 
-    private boolean isStaticPlugin() throws IOException
-    {
-        final File atlassianPluginXml = new File(project.getBasedir(), "src/main/resources/atlassian-plugin.xml");
-        if (atlassianPluginXml.exists())
-        {
-            String text = FileUtils.readFileToString(atlassianPluginXml);
-            return !text.contains("pluginsVersion=\"2\"") && !text.contains("plugins-version=\"2\"");
-        }
-        else
-        {
-            // probably an osgi bundle
-            return false;
-        }
-    }
-
-    private void addThisPluginToDirectory(final File pluginsDir) throws IOException
-    {
-        final File thisPlugin = getPluginFile();
-
-        // remove any existing version
-        for (final Iterator<?> iterateFiles = FileUtils.iterateFiles(pluginsDir, null, false); iterateFiles.hasNext();)
-        {
-            final File file = (File) iterateFiles.next();
-            if (file.getName().contains(project.getArtifactId()))
-            {
-                file.delete();
-            }
-        }
-
-        // add the plugin jar to the directory
-        FileUtils.copyFile(thisPlugin, new File(pluginsDir, thisPlugin.getName()));
-
-    }
-
-    private File getPluginFile()
-    {
-        return new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".jar");
-    }
-
     private void addArtifactsToDirectory(final MavenGoals goals, final List<ProductArtifact> artifacts, final File pluginsDir) throws MojoExecutionException
     {
         // first remove plugins from the webapp that we want to update
@@ -276,17 +234,6 @@ public abstract class AbstractWebappProductHandler implements ProductHandler
         {
             goals.copyPlugins(pluginsDir, artifacts);
         }
-    }
-
-    protected File getHomeDirectory()
-    {
-        File homeDir = new File(new File(project.getBuild().getDirectory(), getId()), "home");
-        // Make sure it exists
-        if (!homeDir.exists())
-        {
-            homeDir.mkdirs();
-        }
-        return homeDir;
     }
 
     protected abstract void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException;

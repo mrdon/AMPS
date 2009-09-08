@@ -15,12 +15,18 @@ public class ZipUtils {
 
     public static void unzip(final File zipFile, final String destDir) throws IOException
     {
+        unzip(zipFile, destDir, 0);
+    }
+
+    public static void unzip(final File zipFile, final String destDir, int leadingPathSegmentsToTrim) throws IOException
+    {
         final ZipFile zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
         while (entries.hasMoreElements())
         {
             final ZipEntry zipEntry = entries.nextElement();
-            final File file = new File(destDir + "/" + zipEntry.getName());
+            String zipPath = trimPathSegments(zipEntry.getName(), leadingPathSegmentsToTrim);
+            final File file = new File(destDir + "/" + zipPath);
             if (zipEntry.isDirectory())
             {
                 file.mkdirs();
@@ -40,6 +46,19 @@ public class ZipUtils {
                 IOUtils.closeQuietly(fos);
             }
         }
+    }
+
+    private static String trimPathSegments(String zipPath, final int trimLeadingPathSegments)
+    {
+        for (int i = 0; i < trimLeadingPathSegments; i++)
+        {
+            int nextSlash = zipPath.indexOf("/");
+            if (nextSlash == -1) {
+                break;
+            }
+            zipPath = zipPath.substring(nextSlash);
+        }
+        return zipPath;
     }
 
 }

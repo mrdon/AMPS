@@ -1,21 +1,20 @@
 package com.atlassian.sdk.accept;
 
+import junit.framework.Assert;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.Enumeration;
-import java.util.zip.ZipFile;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
-
-import junit.framework.Assert;
+import java.util.zip.ZipFile;
 
 public class SdkHelper
 {

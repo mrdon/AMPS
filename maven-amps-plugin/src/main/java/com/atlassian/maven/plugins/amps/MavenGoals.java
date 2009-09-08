@@ -585,9 +585,19 @@ public class MavenGoals
         );
     }
 
+    public File copyDist(final File targetDirectory, final ProductArtifact artifact) throws MojoExecutionException
+    {
+        return copyZip(targetDirectory, artifact, "test-dist.zip");
+    }
+
     public File copyHome(final File targetDirectory, final ProductArtifact artifact) throws MojoExecutionException
     {
-        final File testResourcesZip = new File(targetDirectory, "test-resources.zip");
+        return copyZip(targetDirectory, artifact, "test-resources.zip");
+    }
+
+    public File copyZip(final File targetDirectory, final ProductArtifact artifact, final String localName) throws MojoExecutionException
+    {
+        final File artifactZip = new File(targetDirectory, localName);
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -602,12 +612,12 @@ public class MavenGoals
                                         element(name("artifactId"), artifact.getArtifactId()),
                                         element(name("type"), "zip"),
                                         element(name("version"), artifact.getVersion()),
-                                        element(name("destFileName"), testResourcesZip.getName()))),
-                        element(name("outputDirectory"), testResourcesZip.getParent())
+                                        element(name("destFileName"), artifactZip.getName()))),
+                        element(name("outputDirectory"), artifactZip.getParent())
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
-        return testResourcesZip;
+        return artifactZip;
     }
 
     public void generateManifest(final Map<String, String> instructions) throws MojoExecutionException
