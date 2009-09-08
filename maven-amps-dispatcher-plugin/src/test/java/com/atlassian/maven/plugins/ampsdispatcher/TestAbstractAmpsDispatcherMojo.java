@@ -7,9 +7,11 @@ import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Build;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TestAbstractAmpsDispatcherMojo extends TestCase
 {
@@ -41,6 +43,21 @@ public class TestAbstractAmpsDispatcherMojo extends TestCase
         assertPlugin(true, "maven-bamboo-plugin");
         assertPlugin(false, "maven-refappsd-plugin");
         assertPlugin(false, "mas");
+    }
+
+    public void testDetermineGoal()
+    {
+        when(session.getGoals()).thenReturn(Arrays.asList("foo"));
+        assertEquals("foo", mojo.determineGoal());
+
+        when(session.getGoals()).thenReturn(Arrays.asList("foo:bar"));
+        assertEquals("bar", mojo.determineGoal());
+
+        when(session.getGoals()).thenReturn(Arrays.asList("foo:bar:baz"));
+        assertEquals("baz", mojo.determineGoal());
+
+        when(session.getGoals()).thenReturn(Arrays.asList("foo", "bar"));
+        assertEquals("foo", mojo.determineGoal());
     }
 
     private void assertPlugin(boolean expected, String artifactId)

@@ -63,8 +63,7 @@ public abstract class AbstractAmpsDispatcherMojo extends AbstractMojo
         if (targetArtifactId != null && session.getGoals().size() > 0)
         {
             // We only pass in the first goal since we know the shell scripts only pass in one goal
-            String goal = (String) session.getGoals().get(0);
-            goal = goal.substring(goal.indexOf(":") + 1);
+            String goal = determineGoal();
 
             executeMojo(
                 plugin(
@@ -80,6 +79,13 @@ public abstract class AbstractAmpsDispatcherMojo extends AbstractMojo
         {
             throw new MojoFailureException("Couldn't detect an AMPS product to dispatch to");
         }
+    }
+
+    final String determineGoal()
+    {
+        String goal = (String) session.getGoals().get(0);
+        goal = goal.substring(goal.lastIndexOf(":") + 1);
+        return goal;
     }
 
     final String detectAmpsProduct()
