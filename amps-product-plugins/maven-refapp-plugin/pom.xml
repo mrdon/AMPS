@@ -34,6 +34,7 @@
             <properties>
                 <shitty.product>refapp</shitty.product>
                 <product.version>${refapp.version}</product.version>
+                <product.data.version>${refapp.data.version}</product.data.version>
             </properties>
         </profile>
     </profiles>
