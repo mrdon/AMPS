@@ -2,3 +2,5 @@
 ${project.build.directory}/it/settings.xml
 -Dproduct.version=${product.version}
 -Dproduct.data.version=${product.data.version}
+-Dhttp.port=${http.port}
+-Drmi.port=${rmi.port}
