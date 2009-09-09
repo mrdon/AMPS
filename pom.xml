@@ -145,6 +145,6 @@
         <bamboo.version>2.3.1</bamboo.version>
         <bamboo.data.version>2.2</bamboo.data.version>
         <fecru.version>2.0.4-SNAPSHOT</fecru.version>
-        <fecru.data.version>2.0.4-SNAPSHOT</fecru.data.version>
+        <fecru.data.version>2.0.4.1-SNAPSHOT</fecru.data.version>
     </properties>
 </project>
