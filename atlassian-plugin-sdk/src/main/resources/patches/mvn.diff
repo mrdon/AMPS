@@ -1,4 +1,4 @@
-157,163c157,171
+157,163c157,172
 < exec "$JAVACMD" \
 <   $MAVEN_OPTS \
 <   -classpath "${M2_HOME}"/boot/classworlds-*.jar \
@@ -15,6 +15,7 @@
 >     "-Dmaven.home=${M2_HOME}"  \
 >     ${CLASSWORLDS_LAUNCHER} $QUOTED_ARGS
 > else
+>   MAVEN_OPTS="${MAVEN_OPTS} -Dansi.color=true"
 >   exec "$JAVACMD" \
 >     $MAVEN_OPTS \
 >     -cp "${M2_HOME}"/boot/classworlds-1.1.jar:"${M2_HOME}"/lib/console-colorizer-0.3.jar \

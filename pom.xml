@@ -144,5 +144,6 @@
         <jira.data.version>4.0-Beta3rc1</jira.data.version>
         <bamboo.version>2.3.1</bamboo.version>
         <bamboo.data.version>2.2</bamboo.data.version>
+        <clover.version>2.6.0</clover.version>
     </properties>
 </project>
