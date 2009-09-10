@@ -1,60 +1,61 @@
-82a83,86
->
->     <!-- The Atlassian maven plugins group used for all Atlassian Maven plugins -->
->     <pluginGroup>com.atlassian.maven.plugins</pluginGroup>
->
-246a251,304
->
->     <!-- Default profile containing Atlassian servers -->
->     <profile>
->       <id>defaultProfile</id>
->       <activation>
->         <activeByDefault>true</activeByDefault>
->       </activation>
-> 
->       <repositories>
->         <repository>
->           <id>atlassian-public</id>
->           <url>https://m2proxy.atlassian.com/repository/public</url>
->           <snapshots>
->             <enabled>true</enabled>
->             <updatePolicy>daily</updatePolicy>
->             <checksumPolicy>warn</checksumPolicy>
->           </snapshots>
->           <releases>
->             <enabled>true</enabled>
->             <checksumPolicy>warn</checksumPolicy>
->           </releases>
->         </repository>
-> 	      <repository>
-> 	        <id>atlassian-plugin-sdk</id>
->           <url>file://${env.ATLAS_HOME}/repository</url>
->           <snapshots>
->             <enabled>false</enabled>
->           </snapshots>
->           <releases>
->             <enabled>true</enabled>
->             <checksumPolicy>warn</checksumPolicy>
->           </releases>
->         </repository>
->       </repositories>
-> 
->       <pluginRepositories>
->         <pluginRepository>
->           <id>atlassian-public</id>
->           <url>https://m2proxy.atlassian.com/repository/public</url>
->           <releases>
->             <enabled>true</enabled>
->             <checksumPolicy>warn</checksumPolicy>
->           </releases>
->           <snapshots>
->             <checksumPolicy>warn</checksumPolicy>
->           </snapshots>
->         </pluginRepository>
->       </pluginRepositories>
->       <properties>
->         <downloadSources>true</downloadSources>
->         <downloadJavadocs>true</downloadJavadocs>
->       </properties>
+79,82c79,80
+<     <!-- pluginGroup
+<      | Specifies a further group identifier to use for plugin lookup.
+<     <pluginGroup>com.your.plugins</pluginGroup>
+<     -->
+---
+>      <!-- The Atlassian maven plugins group used for all Atlassian Maven plugins -->
+>      <pluginGroup>com.atlassian.maven.plugins</pluginGroup>
+246a245,296
+>      <!-- Default profile containing Atlassian servers -->
+>      <profile>
+>        <id>defaultProfile</id>
+>        <activation>
+>          <activeByDefault>true</activeByDefault>
+>        </activation>
+>  
+>        <repositories>
+>          <repository>
+>            <id>atlassian-public</id>
+>            <url>https://m2proxy.atlassian.com/repository/public</url>
+>            <snapshots>
+>              <enabled>true</enabled>
+>              <updatePolicy>daily</updatePolicy>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </snapshots>
+>            <releases>
+>              <enabled>true</enabled>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </releases>
+>          </repository>
+>  	      <repository>
+>  	        <id>atlassian-plugin-sdk</id>
+>            <url>file://${env.ATLAS_HOME}/repository</url>
+>            <snapshots>
+>              <enabled>false</enabled>
+>            </snapshots>
+>            <releases>
+>              <enabled>true</enabled>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </releases>
+>          </repository>
+>        </repositories>
+>  
+>        <pluginRepositories>
+>          <pluginRepository>
+>            <id>atlassian-public</id>
+>            <url>https://m2proxy.atlassian.com/repository/public</url>
+>            <releases>
+>              <enabled>true</enabled>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </releases>
+>            <snapshots>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </snapshots>
+>          </pluginRepository>
+>        </pluginRepositories>
+>        <properties>
+>          <downloadSources>true</downloadSources>
+>          <downloadJavadocs>true</downloadJavadocs>
+>        </properties>
 >     </profile>
->

@@ -16,6 +16,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 
 import junit.framework.Assert;
+import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
 
 public class SdkHelper
 {
@@ -47,6 +48,8 @@ public class SdkHelper
         }
         List<String> cmdlist = new ArrayList<String>(Arrays.asList(args));
         cmdlist.add(0, command.getAbsolutePath());
+        cmdlist.add("-s");
+        cmdlist.add(file(sdkHome, "apache-maven", "conf", "settings.xml").getPath());
 
         Assert.assertEquals(0, runner.run(baseDir, cmdlist, new HashMap<String, String>()
         {{
