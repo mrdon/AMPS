@@ -13,5 +13,5 @@
     <artifactId>fecru-plugin-archetype</artifactId>
 
     <name>Atlassian Crucible Plugin Archetype</name>
-    <description>This archetype can be used to create a new Atlassian Crucible plugin project</description>    
+    <description>This archetype can be used to create a new Atlassian FishEye or Crucible plugin project</description>
 </project>
