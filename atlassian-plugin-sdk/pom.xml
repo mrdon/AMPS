@@ -30,6 +30,18 @@
         <!-- The following are necessary to ensure the modules are scheduled before this on in a multi-module build -->
         <dependency>
             <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-amps-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-amps-dispatcher-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
             <artifactId>maven-confluence-plugin</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
@@ -163,8 +175,7 @@
                                     <artifactId>console-colorizer</artifactId>
                                     <!-- If you change this, ensure you change the mvn diff -->
                                     <version>0.3</version>
-                                    <outputDirectory>${project.build.directory}/apache-maven-${maven.version}/lib
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/apache-maven-${maven.version}/lib</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -184,6 +195,21 @@
                         </goals>
                         <configuration>
                             <artifacts>
+                                <!-- the plugins  -->
+                                <artifact>com.atlassian.maven.plugins:maven-amps-plugin:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.plugins:maven-amps-dispatcher-plugin:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.plugins:maven-refapp-plugin:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.plugins:maven-confluence-plugin:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.plugins:maven-jira-plugin:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.plugins:maven-bamboo-plugin:${project.version}</artifact>
+
+                                <!-- the archetypes -->
+                                <artifact>com.atlassian.maven.archetypes:refapp-plugin-archetype:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.archetypes:confluence-plugin-archetype:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.archetypes:jira-plugin-archetype:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.archetypes:bamboo-plugin-archetype:${project.version}</artifact>
+
+                                <!-- restricted artifacts -->
                                 <artifact>javax.servlet:servlet-api:2.3</artifact>
                                 <artifact>javax.mail:mail:1.4</artifact>
                                 <artifact>javax.mail:mail:1.3.3</artifact>
