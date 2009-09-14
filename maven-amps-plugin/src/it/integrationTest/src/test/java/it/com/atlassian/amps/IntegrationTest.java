@@ -14,7 +14,7 @@ public class IntegrationTest
         final String httpPort = System.getProperty("http.port");
         final String contextPath = System.getProperty("context.path");
 
-        final String url = new StringBuilder().append("http://localhost:").append(httpPort).append("/").append(contextPath).append("/plugins/servlet/it").toString();
+        final String url = new StringBuilder().append("http://localhost:").append(httpPort).append(contextPath).append("/plugins/servlet/it").toString();
 
         HttpClient client = new HttpClient();
         HttpMethod method = new GetMethod(url);

@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.atlassian.amps</groupId>
         <artifactId>atlassian-amps-product-plugins</artifactId>
-        <version>3.0-SNAPSHOT</version>
+        <version>3.0-beta5-SNAPSHOT</version>
     </parent>
 
     <groupId>com.atlassian.maven.plugins</groupId>
@@ -33,6 +33,8 @@
             </build>
             <properties>
                 <shitty.product>fecru</shitty.product>
+                <product.version>${fecru.version}</product.version>
+                <product.data.version>${fecru.data.version}</product.data.version>
             </properties>
         </profile>
     </profiles>

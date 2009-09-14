@@ -9,10 +9,10 @@ assert ampsFile.exists(), "amps.properties doesn't exists at $ampsFile.absoluteP
 final Properties amps = new Properties();
 ampsFile.withInputStream { amps.load(it) }
 
-final String baseUrl = "http://localhost:${amps['http.port']}/${amps['context.path']}"
+final String baseUrl = "http://localhost:${amps['http.port']}${amps['context.path']}"
 new HTTPBuilder(baseUrl).request(GET) {
   response.success = { assert it.statusLine.statusCode < 400 , "Expected status code below 400 on home page of application" }
-  response.failure = { assert false, "The HTTP GET should have succeeded" }
+  response.failure = { assert false, "The HTTP GET (" + baseUrl + ") should have succeeded" }
 }
 
 final File cliState = new File("${project.build.directory}/cli.state")

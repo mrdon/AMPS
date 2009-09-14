@@ -16,6 +16,7 @@
         <module>maven-confluence-plugin</module>
         <module>maven-jira-plugin</module>
         <module>maven-refapp-plugin</module>
+        <module>maven-fecru-plugin</module>
     </modules>
 
     <dependencies>
@@ -37,7 +38,7 @@
                     <classifier>integration-tests</classifier>
                     <type>zip</type>
                     <scope>test</scope>
-                </dependency>                
+                </dependency>
             </dependencies>
             <build>
                 <pluginManagement>

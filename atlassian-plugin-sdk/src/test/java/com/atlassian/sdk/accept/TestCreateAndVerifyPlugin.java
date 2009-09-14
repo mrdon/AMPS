@@ -22,6 +22,11 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
         createAndVerify("confluence");
     }
 
+    public void testFeCru() throws IOException, InterruptedException
+    {
+        createAndVerify("fecru");
+    }
+
 
     private void createAndVerify(String productId)
             throws IOException, InterruptedException

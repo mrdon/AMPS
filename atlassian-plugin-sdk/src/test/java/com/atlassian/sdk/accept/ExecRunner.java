@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -26,17 +25,10 @@ public class ExecRunner
             // show the command
             log.info("Running '" + command + "'");
 
-            List<String> envlist = new ArrayList<String>();
-            for (Map.Entry<String,String> entry : env.entrySet())
-            {
-                envlist.add(entry.getKey() + "=" + entry.getValue());
-            }
-
             // exec command on system runtime
-            Process proc = Runtime.getRuntime().exec(
-                    command.toArray(new String[command.size()]),
-                    envlist.toArray(new String[envlist.size()]),
-                    baseDir);
+            ProcessBuilder procBuilder = new ProcessBuilder(command).directory(baseDir);
+            procBuilder.environment().putAll(env);
+            Process proc = procBuilder.start();
 
             // copy input and error to the output stream
             StreamPumper inputPumper =
