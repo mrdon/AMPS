@@ -41,6 +41,7 @@ public class TestAbstractAmpsDispatcherMojo extends TestCase
         assertPlugin(true, "maven-jira-plugin");
         assertPlugin(true, "maven-confluence-plugin");
         assertPlugin(true, "maven-bamboo-plugin");
+        assertPlugin(true, "maven-fecru-plugin");
         assertPlugin(false, "maven-refappsd-plugin");
         assertPlugin(false, "mas");
     }

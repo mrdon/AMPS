@@ -1,6 +1,6 @@
 #set( $mvnCommand = "com.atlassian.maven.plugins:maven-fecru-plugin:$version:create" )
 
-#set( $goalhelp = "Creates a Bamboo plugin." )
+#set( $goalhelp = "Creates a FishEye/Crucible plugin." )
 
 #set( $opts = [
 {

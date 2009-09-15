@@ -1,4 +1,4 @@
-You have successfully created a plugin using the Refapp plugin archetype. What to do now:
+You have successfully created a plugin using the Confluence plugin archetype. What to do now:
 
 1. CUSTOMISE THE PLUGIN
 
@@ -22,7 +22,7 @@ Building with your plugin with Maven is really easy:
 - Run 'mvn compile' to compile the plugin.
 - Run 'mvn test' to run the unit tests.
 - Run 'mvn package' to produce the JAR.
-- Run 'mvn refapp:run' to run your plugin in the latest version of the refapp
+- Run 'mvn confluence:run' to run your plugin in the latest version of Confluence
 
 Please remove this file before releasing your plugin.
 

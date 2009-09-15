@@ -65,6 +65,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-fecru-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.atlassian.maven.archetypes</groupId>
             <artifactId>confluence-plugin-archetype</artifactId>
             <version>${project.version}</version>
@@ -208,12 +214,14 @@
                                 <artifact>com.atlassian.maven.plugins:maven-confluence-plugin:${project.version}</artifact>
                                 <artifact>com.atlassian.maven.plugins:maven-jira-plugin:${project.version}</artifact>
                                 <artifact>com.atlassian.maven.plugins:maven-bamboo-plugin:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.plugins:maven-fecru-plugin:${project.version}</artifact>
 
                                 <!-- the archetypes -->
                                 <artifact>com.atlassian.maven.archetypes:refapp-plugin-archetype:${project.version}</artifact>
                                 <artifact>com.atlassian.maven.archetypes:confluence-plugin-archetype:${project.version}</artifact>
                                 <artifact>com.atlassian.maven.archetypes:jira-plugin-archetype:${project.version}</artifact>
                                 <artifact>com.atlassian.maven.archetypes:bamboo-plugin-archetype:${project.version}</artifact>
+                                <artifact>com.atlassian.maven.archetypes:fecru-plugin-archetype:${project.version}</artifact>
 
                                 <!-- restricted artifacts -->
                                 <artifact>javax.servlet:servlet-api:2.3</artifact>

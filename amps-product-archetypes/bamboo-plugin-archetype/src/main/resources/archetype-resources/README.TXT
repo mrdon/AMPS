@@ -6,7 +6,7 @@ You have successfully created a plugin using the Bamboo plugin archetype. What t
   - If you use Eclipse, run 'mvn eclipse:eclipse' to generate an Eclipse project file.
   - If you use IDEA, run 'mvn idea:idea' to generate an IDEA project file.
 - Edit pom.xml. Add information about your project, its developers and your organisation. Check the version of
-  Confluence in the dependencies section is correct.
+  Bamboo in the dependencies section is correct.
 - Edit the plugin descriptor, src/main/resources/atlassian-plugin.xml. Add or modify plugin modules in your project.
 - Edit the plugin code in src/main/java/ or the unit tests in src/test/java/.
 
