@@ -50,7 +50,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * Webapp version
      */
     @MojoParameter(expression = "${product.version}")
-    protected String productVersion;
+    private String productVersion;
 
     /**
      * JVM arguments to pass to cargo
@@ -191,6 +191,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private Product createDefaultProductContext() throws MojoExecutionException
     {
         String dversion = (testResourcesVersion != null ? testResourcesVersion : productDataVersion);
+        dversion = System.getProperty("product.data.version", dversion);
+        String pversion = System.getProperty("product.version", productVersion);
+
         Product ctx = new Product();
         ctx.setId(getProductId());
         ctx.setContainerId(containerId);
@@ -210,7 +213,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setPdkVersion(pdkVersion);
 
         ctx.setHttpPort(httpPort);
-        ctx.setVersion(productVersion);
+        ctx.setVersion(pversion);
         ctx.setContextPath(contextPath);
         return ctx;
     }
