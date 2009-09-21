@@ -2,7 +2,7 @@
 #parse( "commands/${mojo}" )
 ##-----------------------------------------------------------------------------
 @echo off
-if "%OS%" == "Windows_NT" setlocal
+if "%OS%" == "Windows_NT" setlocal enabledelayedexpansion
 
 
 
@@ -67,7 +67,7 @@ rem Identify Maven location relative to script
 rem ---------------------------------------------------------------
 
 set M2_HOME=%ATLAS_HOME%\apache-maven
-set MAVEN_EXECUTABLE=%M2_HOME%\bin\mvn.bat
+set MAVEN_EXECUTABLE="%M2_HOME%\bin\mvn.bat"
 
 #if( $echoPaths )
 echo.
@@ -80,7 +80,7 @@ echo --------
 
 rem Check that the target executable exists
 
-if not exist "%MAVEN_EXECUTABLE%" (
+if not exist "!MAVEN_EXECUTABLE!" (
 	echo Cannot find %MAVEN_EXECUTABLE%
 	echo This file is needed to run this program
 	goto end
