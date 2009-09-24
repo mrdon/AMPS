@@ -12,9 +12,12 @@ import org.apache.maven.project.MavenProject;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.lang.reflect.Method;
 
 public class FeCruProductHandler extends AbstractProductHandler
 {
@@ -97,8 +100,6 @@ public class FeCruProductHandler extends AbstractProductHandler
         try
         {
             execFishEyeCmd(ctx, "stop", false);
-            //orderly shutdown means we no longer need a shutdown hook
-            clearShutdownHook();
         }
         catch (Exception e)
         {
@@ -106,49 +107,22 @@ public class FeCruProductHandler extends AbstractProductHandler
         }
     }
 
-    private void execFishEyeCmd(Product ctx, String bootCommand, boolean registerShutdownHook, String... bootArgs) throws MojoExecutionException
+    private void execFishEyeCmd(Product ctx, String bootCommand, boolean registerShutdownHook) throws MojoExecutionException
     {
-        List<String> cmdParams = new ArrayList<String>();
-        cmdParams.add("java");
-        if (ctx.getJvmArgs() != null) {
-            cmdParams.addAll(Arrays.asList(ctx.getJvmArgs().split("\\s")));
-        } else {
-            cmdParams.add("-Xmx512m");
-            cmdParams.add("-XX:MaxPermSize=160m");
-        }
-        cmdParams.addAll(Arrays.asList("-jar", "fisheyeboot.jar"));
-        cmdParams.add(bootCommand);
-        cmdParams.addAll(Arrays.asList(bootArgs));
 
-        ProcessBuilder builder = new ProcessBuilder(cmdParams);
-        builder.directory(getHomeDirectory());
-        try
-        {
-            Process process = builder.start();
-            if (registerShutdownHook)
-            {
-                registerShutdownHook(process);
-            }
-        }
-        catch (IOException e)
-        {
-            throw new MojoExecutionException("Failed to execture fisheye command '" + bootCommand + "'", e);
+        try {
+            ClassLoader cl = new URLClassLoader(new URL[] {new URL("file:" + new File(getHomeDirectory(), "fisheyeboot.jar").getAbsolutePath())});
+            Class<?> fisheyeCtl = cl.loadClass("com.cenqua.fisheye.FishEyeCtl");
+            Method main = fisheyeCtl.getDeclaredMethod("mainImpl", String[].class);
+            main.invoke(null, new Object[] {new String[] {bootCommand}});
+        } catch (Exception e) {
+            throw new MojoExecutionException("Failed to execute fisheye command '" + bootCommand + "'", e);
         }
 
-        //todo switch on "fisheye-embeded" env variable for 'embedded' mode for ease of debugging etc.
-//        try {
-//            ClassLoader cl = new URLClassLoader(new URL[] {new URL("file:///" + new File(getHomeDirectory(), "fisheyeboot.jar").getAbsolutePath())});
-//            Class<?> fisheyeCtl = cl.loadClass("com.cenqua.fisheye.FishEyeCtl");
-//            Method main = fisheyeCtl.getDeclaredMethod("mainImpl", String[].class);
-//            main.invoke(null, new Object[] {cmdParams.<String>toArray(new String[cmdParams.size()])});
-//        } catch (Exception e) {
-//            throw new MojoExecutionException("Failed to execture fisheye command '" + bootCommand + "'", e);
-//        }
 
-//
-//        // todo logging
-//        // java.setOutput(getContainerOutputLog());
-//
+        // todo logging
+        // java.setOutput(getContainerOutputLog());
+
         //getLog().info("Started Fisheye.");
     }
 
