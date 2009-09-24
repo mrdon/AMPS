@@ -21,4 +21,18 @@ public class ConfigFileUtils
             throw new MojoExecutionException("Unable to replace " + cfgFile, ex);
         }
     }
+
+    public static void replaceAll(File cfgFile, String pattern, String replacement) throws MojoExecutionException
+    {
+        try
+        {
+            String config = FileUtils.readFileToString(cfgFile);
+            config = config.replaceAll(pattern, replacement); // obeys regex
+            FileUtils.writeStringToFile(cfgFile, config);
+        }
+        catch (IOException ex)
+        {
+            throw new MojoExecutionException("Unable to replace " + cfgFile, ex);
+        }
+    }
 }

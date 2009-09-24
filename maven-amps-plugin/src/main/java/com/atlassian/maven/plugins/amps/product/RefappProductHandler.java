@@ -1,19 +1,14 @@
 package com.atlassian.maven.plugins.amps.product;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Arrays;
+import java.util.*;
 
 public class RefappProductHandler extends AbstractWebappProductHandler
 {
@@ -66,7 +61,7 @@ public class RefappProductHandler extends AbstractWebappProductHandler
         return Collections.emptyList();
     }
 
-    protected Map<String, String> getSystemProperties()
+    protected Map<String, String> getSystemProperties(Product ctx)
     {
         Map<String, String> map = new HashMap<String, String>();
         map.put("refapp.home", getHomeDirectory().getPath());

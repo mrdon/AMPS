@@ -17,6 +17,7 @@
         <module>jira-plugin-archetype</module>
         <module>bamboo-plugin-archetype</module>
         <module>fecru-plugin-archetype</module>
+        <module>crowd-plugin-archetype</module>
     </modules>
 
     <dependencies>

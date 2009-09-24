@@ -1,18 +1,14 @@
 package com.atlassian.maven.plugins.amps.product;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Arrays;
+import java.util.*;
 
 public class ConfluenceProductHandler extends AbstractWebappProductHandler
 {
@@ -48,7 +44,7 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         return 1990;
     }
 
-    public Map<String, String> getSystemProperties()
+    public Map<String, String> getSystemProperties(Product ctx)
     {
         return Collections.singletonMap("confluence.home", getHomeDirectory().getPath());
     }

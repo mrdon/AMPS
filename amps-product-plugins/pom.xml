@@ -17,6 +17,7 @@
         <module>maven-jira-plugin</module>
         <module>maven-refapp-plugin</module>
         <module>maven-fecru-plugin</module>
+        <module>maven-crowd-plugin</module>
     </modules>
 
     <dependencies>

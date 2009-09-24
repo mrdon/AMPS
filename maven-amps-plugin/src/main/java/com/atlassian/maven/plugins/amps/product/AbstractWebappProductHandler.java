@@ -3,6 +3,7 @@ package com.atlassian.maven.plugins.amps.product;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -10,15 +11,10 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
-
     public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals)
     {
         super(project, goals);
@@ -34,7 +30,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
         final File combinedWebappWar = addArtifacts(ctx, homeDir, webappWar);
 
-        return goals.startWebapp(getId(), combinedWebappWar, getSystemProperties(), getExtraContainerDependencies(), ctx);
+        return goals.startWebapp(getId(), combinedWebappWar, getSystemProperties(ctx), getExtraContainerDependencies(), ctx);
     }
 
     public void stop(final Product ctx) throws MojoExecutionException
@@ -227,7 +223,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
                 final File file = (File) iterateFiles.next();
                 for (final ProductArtifact webappArtifact : artifacts)
                 {
-                    if (!file.isDirectory() && file.getName().contains(webappArtifact.getArtifactId()))
+                    if (!file.isDirectory() && doesFileNameMatchArtifact(file.getName(), webappArtifact.getArtifactId()))
                     {
                         file.delete();
                     }
@@ -257,7 +253,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
     protected abstract List<ProductArtifact> getExtraContainerDependencies();
 
-    protected abstract Map<String, String> getSystemProperties();
+    protected abstract Map<String, String> getSystemProperties(Product ctx);
 
     protected abstract ProductArtifact getArtifact();
 

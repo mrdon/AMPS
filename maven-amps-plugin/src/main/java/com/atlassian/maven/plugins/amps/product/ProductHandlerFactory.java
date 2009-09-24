@@ -13,6 +13,7 @@ public class ProductHandlerFactory
     public static final String JIRA = "jira";
     public static final String BAMBOO = "bamboo";
     public static final String FECRU = "fecru";
+    public static final String CROWD = "crowd";
 
     public static ProductHandler create(String id, MavenProject project, MavenGoals goals)
     {
@@ -36,12 +37,16 @@ public class ProductHandlerFactory
         {
             return new FeCruProductHandler(project, goals);
         }
+        else if (CROWD.equals(id))
+        {
+            return new CrowdProductHandler(project, goals);
+        }
 
         throw new IllegalArgumentException("Unknown product id:" + id);
     }
 
     public static Collection<String> getIds()
     {
-        return Arrays.asList(REFAPP, CONFLUENCE, JIRA, BAMBOO, FECRU);
+        return Arrays.asList(REFAPP, CONFLUENCE, JIRA, BAMBOO, FECRU, CROWD);
     }
 }

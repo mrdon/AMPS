@@ -8,6 +8,7 @@ public class FileUtils
     {
         return file(new File(parent), kids);
     }
+
     public static File file(File parent, String... kids)
     {
         File cur = parent;
@@ -16,5 +17,12 @@ public class FileUtils
             cur = new File(cur, kid);
         }
         return cur;
+    }
+
+    public static boolean doesFileNameMatchArtifact(String fileName, String artifactId)
+    {
+        // this is not perfect, but it sure beats fileName.contains(artifactId)        
+        String pattern = "^" + artifactId + "-\\d.*$";
+        return fileName.matches(pattern);
     }
 }

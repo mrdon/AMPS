@@ -27,6 +27,10 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
         createAndVerify("fecru");
     }
 
+    public void testCrowd() throws IOException, InterruptedException
+    {
+        createAndVerify("crowd");
+    }
 
     private void createAndVerify(String productId)
             throws IOException, InterruptedException

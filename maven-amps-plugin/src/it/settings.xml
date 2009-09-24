@@ -97,6 +97,8 @@ under the License.
                 <bamboo.data.version>${bamboo.data.version}</bamboo.data.version>
                 <fecru.version>${fecru.version}</fecru.version>
                 <fecru.data.version>${fecru.data.version}</fecru.data.version>
+                <crowd.version>${crowd.version}</crowd.version>
+                <crowd.data.version>${crowd.data.version}</crowd.data.version>
             </properties>
         </profile>
 

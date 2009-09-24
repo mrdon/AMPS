@@ -2,14 +2,15 @@ package com.atlassian.maven.plugins.amps.product;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.plugin.MojoExecutionException;
+import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
 import org.apache.commons.io.FileUtils;
-import static org.apache.commons.io.FileUtils.iterateFiles;
 import static org.apache.commons.io.FileUtils.copyFile;
+import static org.apache.commons.io.FileUtils.iterateFiles;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         for (final Iterator<?> iterateFiles = iterateFiles(targetDir, null, false); iterateFiles.hasNext();)
         {
             final File file = (File) iterateFiles.next();
-            if (file.getName().contains(project.getArtifactId()))
+            if (doesFileNameMatchArtifact(file.getName(), project.getArtifactId()))
             {
                 file.delete();
             }
@@ -72,7 +73,7 @@ public abstract class AbstractProductHandler implements ProductHandler
                 final File file = (File) iterateFiles.next();
                 for (final ProductArtifact webappArtifact : artifacts)
                 {
-                    if (!file.isDirectory() && file.getName().contains(webappArtifact.getArtifactId()))
+                    if (!file.isDirectory() && doesFileNameMatchArtifact(file.getName(), webappArtifact.getArtifactId()))
                     {
                         file.delete();
                     }
@@ -96,5 +97,4 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
         return homeDir;
     }
-
 }

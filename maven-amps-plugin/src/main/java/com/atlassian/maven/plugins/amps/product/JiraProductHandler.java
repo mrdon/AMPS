@@ -8,12 +8,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JiraProductHandler extends AbstractWebappProductHandler
 {
@@ -45,7 +40,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public Map<String, String> getSystemProperties()
+    public Map<String, String> getSystemProperties(Product ctx)
     {
         return new HashMap<String, String>()
         {
@@ -131,10 +126,5 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     public List<ProductArtifact> getDefaultBundledPlugins()
     {
         return Collections.emptyList();
-    }
-
-    public static void main(final String[] args)
-    {
-        System.out.println("c:\\blah\\blah/blah".replaceAll("\\\\", "/"));
     }
 }

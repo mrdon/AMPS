@@ -1,17 +1,17 @@
 package com.atlassian.maven.plugins.ampsdispatcher;
 
 import junit.framework.TestCase;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.PluginManager;
-import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Build;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.plugin.PluginManager;
+import org.apache.maven.project.MavenProject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TestAbstractAmpsDispatcherMojo extends TestCase
 {
@@ -41,6 +41,7 @@ public class TestAbstractAmpsDispatcherMojo extends TestCase
         assertPlugin(true, "maven-jira-plugin");
         assertPlugin(true, "maven-confluence-plugin");
         assertPlugin(true, "maven-bamboo-plugin");
+        assertPlugin(true, "maven-crowd-plugin");
         assertPlugin(true, "maven-fecru-plugin");
         assertPlugin(false, "maven-refappsd-plugin");
         assertPlugin(false, "mas");

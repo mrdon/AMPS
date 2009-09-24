@@ -92,7 +92,8 @@
                     <configuration>
                         <offline>false</offline>
                         <itDirectory>${project.build.directory}/it</itDirectory>
-                        <!--<jvmArgs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</jvmArgs>-->
+                        <jvmArgs>-Xmx128m</jvmArgs>
+                        <!--<jvmArgs>-Xmx128m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</jvmArgs>-->
                     </configuration>
                 </plugin>
             </plugins>
@@ -146,6 +147,8 @@
         <bamboo.data.version>2.2</bamboo.data.version>
         <fecru.version>2.0.4-422</fecru.version>
         <fecru.data.version>2.0.4.1-SNAPSHOT</fecru.data.version>
+        <crowd.version>2.0.2-m1</crowd.version>
+        <crowd.data.version>2.0.2-m1</crowd.data.version>
         <clover.version>2.6.0</clover.version>
     </properties>
 </project>
