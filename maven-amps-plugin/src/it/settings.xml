@@ -70,6 +70,17 @@ under the License.
                         <checksumPolicy>warn</checksumPolicy>
                     </releases>
                 </repository>
+                <repository>
+                    <id>atlassian-plugin-sdk</id>
+                    <url>file://${project.build.directory}/repository</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </releases>
+                </repository>
             </repositories>
 
             <pluginRepositories>

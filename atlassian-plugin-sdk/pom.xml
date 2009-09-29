@@ -210,43 +210,12 @@
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-repository-bundle-plugin</artifactId>
-                <version>0.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>bundle</goal>
                         </goals>
-                        <configuration>
-                            <artifacts>
-                                <!-- the plugins  -->
-                                <artifact>com.atlassian.maven.plugins:maven-amps-plugin:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.plugins:maven-amps-dispatcher-plugin:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.plugins:maven-refapp-plugin:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.plugins:maven-confluence-plugin:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.plugins:maven-jira-plugin:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.plugins:maven-bamboo-plugin:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.plugins:maven-fecru-plugin:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.plugins:maven-crowd-plugin:${project.version}</artifact>
-                                
-                                <!-- the archetypes -->
-                                <artifact>com.atlassian.maven.archetypes:refapp-plugin-archetype:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.archetypes:confluence-plugin-archetype:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.archetypes:jira-plugin-archetype:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.archetypes:bamboo-plugin-archetype:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.archetypes:fecru-plugin-archetype:${project.version}</artifact>
-                                <artifact>com.atlassian.maven.archetypes:crowd-plugin-archetype:${project.version}</artifact>
-                                
-                                <!-- restricted artifacts -->
-                                <artifact>javax.servlet:servlet-api:2.3</artifact>
-                                <artifact>javax.mail:mail:1.4</artifact>
-                                <artifact>javax.mail:mail:1.3.3</artifact>
-                                <artifact>javax.transaction:jta:1.0.1b</artifact>
-                                <artifact>javax.transaction:jta:1.0.1B</artifact>
-                                <artifact>jta:jta:1.0.1B</artifact>
-                                <artifact>javax.jms:jms:1.1</artifact>
-                            </artifacts>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
