@@ -89,6 +89,7 @@ fi
 # Transform Parameters into Maven Parameters #
 ##############################################
 
+MAVEN_OPTS="-Xmx256M -XX:MaxPermSize=256M"
 MVN_PARAMS=""
 
 while [ $# -gt 0 ]
