@@ -105,6 +105,9 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     {
         return Arrays.asList(
                 new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", "0.4"),
+                new ProductArtifact("org.apache.felix", "org.apache.felix.webconsole", "1.2.8"),
+                new ProductArtifact("org.apache.felix", "org.osgi.compendium", "1.2.0"),
+                new ProductArtifact("com.atlassian.labs.httpservice", "httpservice-bridge", "0.5.1"),
                 new ProductArtifact("commons-fileupload", "commons-fileupload", "1.2.1")
         );
     }

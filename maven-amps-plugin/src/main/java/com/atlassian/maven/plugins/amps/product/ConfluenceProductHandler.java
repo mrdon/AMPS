@@ -87,7 +87,11 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
 
     public List<ProductArtifact> getDefaultPlugins()
     {
-        return Collections.emptyList();
+        return Arrays.asList(
+                new ProductArtifact("org.apache.felix", "org.apache.felix.webconsole", "1.2.8"),
+                new ProductArtifact("org.apache.felix", "org.osgi.compendium", "1.2.0"),
+                new ProductArtifact("com.atlassian.labs.httpservice", "httpservice-bridge", "0.5.1")
+                );
     }
 
     public List<ProductArtifact> getDefaultLibPlugins()
