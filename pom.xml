@@ -14,6 +14,15 @@
     <name>Atlassian Maven Plugin Suite (parent pom)</name>
     <url>http://studio.atlassian.com/browse/AMPS</url>
 
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
     <scm>
         <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/trunk</connection>
         <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/trunk</developerConnection>
