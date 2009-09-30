@@ -30,6 +30,18 @@
             <version>2.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.atlassian.fisheye</groupId>
+            <artifactId>atlassian-fisheye-api</artifactId>
+            <version>\${dollar}{fecru.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.crucible</groupId>
+            <artifactId>atlassian-crucible-scmutils</artifactId>
+            <version>\${dollar}{fecru.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
