@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
 
 public abstract class AbstractProductHandler implements ProductHandler
 {
@@ -97,4 +99,5 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
         return homeDir;
     }
+
 }

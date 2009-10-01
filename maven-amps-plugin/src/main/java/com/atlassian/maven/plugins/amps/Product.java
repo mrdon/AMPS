@@ -75,13 +75,17 @@ public class Product
     private String restVersion;
 
     /**
+     * Version of the Felix OSGi web console
+     */
+    private String webConsoleVersion;
+
+    /**
      * Product id
      *
      */
     private String id;
 
     private ArtifactRetriever artifactRetriever;
-
     /**
      * Flag to indicate whether or not to install the plugin
      */
@@ -256,5 +260,15 @@ public class Product
     public void setInstallPlugin(final boolean installPlugin)
     {
         this.installPlugin = installPlugin;
+    }
+
+    public String getWebConsoleVersion()
+    {
+        return webConsoleVersion;
+    }
+
+    public void setWebConsoleVersion(String webConsoleVersion)
+    {
+        this.webConsoleVersion = webConsoleVersion;
     }
 }

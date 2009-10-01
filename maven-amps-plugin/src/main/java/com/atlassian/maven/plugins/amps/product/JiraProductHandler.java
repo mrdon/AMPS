@@ -14,7 +14,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
 {
     public JiraProductHandler(final MavenProject project, final MavenGoals goals)
     {
-        super(project, goals);
+        super(project, goals, new JiraPluginProvider());
     }
 
     public String getId()
@@ -62,14 +62,6 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public Collection<ProductArtifact> getSalArtifacts(final String salVersion)
-    {
-        return Arrays.asList(
-                new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
-                new ProductArtifact("com.atlassian.sal", "sal-jira-plugin", salVersion));
-    }
-
-    @Override
     public File getPluginsDirectory(final String webappDir, final File homeDir)
     {
         return new File(new File(homeDir, "plugins"), "installed-plugins");
@@ -110,17 +102,6 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public List<ProductArtifact> getDefaultPlugins()
-    {
-        return Arrays.asList(
-                new ProductArtifact("org.apache.felix", "org.apache.felix.webconsole", "1.2.8"),
-                new ProductArtifact("org.apache.felix", "org.osgi.compendium", "1.2.0"),
-                new ProductArtifact("com.atlassian.labs.httpservice", "httpservice-bridge", "0.5.1"),
-                new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", "0.4"),
-                new ProductArtifact("commons-fileupload", "commons-fileupload", "1.2.1"));
-    }
-
-    @Override
     public List<ProductArtifact> getDefaultLibPlugins()
     {
         return Collections.emptyList();
@@ -130,5 +111,26 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     public List<ProductArtifact> getDefaultBundledPlugins()
     {
         return Collections.emptyList();
+    }
+
+    private static class JiraPluginProvider extends AbstractPluginProvider
+    {
+
+        @Override
+        protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
+        {
+            return Arrays.asList(
+                new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-jira-plugin", salVersion));
+        }
+
+        @Override
+        protected Collection<ProductArtifact> getPdkInstallArtifacts(String pdkInstallVersion)
+        {
+            List<ProductArtifact> plugins = new ArrayList<ProductArtifact>();
+            plugins.addAll(super.getPdkInstallArtifacts(pdkInstallVersion));
+            plugins.add(new ProductArtifact("commons-fileupload", "commons-fileupload", "1.2.1"));
+            return plugins;
+        }
     }
 }

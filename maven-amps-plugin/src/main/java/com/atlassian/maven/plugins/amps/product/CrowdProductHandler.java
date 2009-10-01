@@ -15,7 +15,7 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
 {
     public CrowdProductHandler(MavenProject project, MavenGoals goals)
     {
-        super(project, goals);
+        super(project, goals, new CrowdPluginProvider());
     }
 
     public String getId()
@@ -26,13 +26,6 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     public ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.crowd", "crowd-web-app", "RELEASE");
-    }
-
-    protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
-    {
-        return Arrays.asList(
-                new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
-                new ProductArtifact("com.atlassian.sal", "sal-crowd-plugin", salVersion));
     }
 
     public ProductArtifact getTestResourcesArtifact()
@@ -101,17 +94,6 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
         }
     }
 
-    public List<ProductArtifact> getDefaultPlugins()
-    {
-        return Arrays.asList(
-                new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", "0.4"),
-                new ProductArtifact("org.apache.felix", "org.apache.felix.webconsole", "1.2.8"),
-                new ProductArtifact("org.apache.felix", "org.osgi.compendium", "1.2.0"),
-                new ProductArtifact("com.atlassian.labs.httpservice", "httpservice-bridge", "0.5.1"),
-                new ProductArtifact("commons-fileupload", "commons-fileupload", "1.2.1")
-        );
-    }
-
     public List<ProductArtifact> getDefaultLibPlugins()
     {
         return Collections.emptyList();
@@ -120,5 +102,26 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     public List<ProductArtifact> getDefaultBundledPlugins()
     {
         return Collections.emptyList();
+    }
+
+    private static class CrowdPluginProvider extends AbstractPluginProvider
+    {
+
+        @Override
+        protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
+        {
+            return Arrays.asList(
+                new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-crowd-plugin", salVersion));
+        }
+
+        @Override
+        protected Collection<ProductArtifact> getPdkInstallArtifacts(String pdkInstallVersion)
+        {
+            List<ProductArtifact> plugins = new ArrayList<ProductArtifact>();
+            plugins.addAll(super.getPdkInstallArtifacts(pdkInstallVersion));
+            plugins.add(new ProductArtifact("commons-fileupload", "commons-fileupload", "1.2.1"));
+            return plugins;
+        }
     }
 }

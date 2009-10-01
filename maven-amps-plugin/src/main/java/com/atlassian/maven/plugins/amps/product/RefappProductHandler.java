@@ -14,7 +14,7 @@ public class RefappProductHandler extends AbstractWebappProductHandler
 {
     public RefappProductHandler(MavenProject project, MavenGoals goals)
     {
-        super(project, goals);
+        super(project, goals, new RefappPluginProvider());
     }
 
     public String getId()
@@ -46,15 +46,6 @@ public class RefappProductHandler extends AbstractWebappProductHandler
     {
     }
 
-    protected List<ProductArtifact> getDefaultPlugins()
-    {
-        return Arrays.asList(
-                new ProductArtifact("org.apache.felix", "org.apache.felix.webconsole", "1.2.8"),
-                new ProductArtifact("org.apache.felix", "org.osgi.compendium", "1.2.0"),
-                new ProductArtifact("com.atlassian.labs.httpservice", "httpservice-bridge", "0.5.1")
-                );
-    }
-
     protected List<ProductArtifact> getDefaultLibPlugins()
     {
         return Collections.emptyList();
@@ -78,9 +69,18 @@ public class RefappProductHandler extends AbstractWebappProductHandler
         return new ProductArtifact("com.atlassian.refapp", "atlassian-refapp", VersionUtils.getVersion());
     }
 
-    protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
+    protected ProductArtifact getTestResourcesArtifact()
     {
-        return Arrays.asList(
+        return null;
+    }
+
+    private static class RefappPluginProvider extends AbstractPluginProvider
+    {
+
+        @Override
+        protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
+        {
+            return Arrays.asList(
                 new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
                 new ProductArtifact("com.atlassian.sal", "sal-refimpl-appproperties-plugin", salVersion),
                 new ProductArtifact("com.atlassian.sal", "sal-refimpl-component-plugin", salVersion),
@@ -94,10 +94,12 @@ public class RefappProductHandler extends AbstractWebappProductHandler
                 new ProductArtifact("com.atlassian.sal", "sal-refimpl-transaction-plugin", salVersion),
                 new ProductArtifact("com.atlassian.sal", "sal-refimpl-upgrade-plugin", salVersion),
                 new ProductArtifact("com.atlassian.sal", "sal-refimpl-user-plugin", salVersion));
-    }
+        }
 
-    protected ProductArtifact getTestResourcesArtifact()
-    {
-        return null;
+        @Override
+        protected Collection<ProductArtifact> getPdkInstallArtifacts(String pdkInstallVersion)
+        {
+            return Collections.emptyList();
+        }
     }
 }

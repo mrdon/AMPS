@@ -15,9 +15,11 @@ import java.util.*;
 
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
-    public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals)
+    private final PluginProvider pluginProvider;
+    public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals, PluginProvider pluginProvider)
     {
         super(project, goals);
+        this.pluginProvider = pluginProvider;
     }
 
     public int start(final Product ctx) throws MojoExecutionException
@@ -36,30 +38,6 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     public void stop(final Product ctx) throws MojoExecutionException
     {
         goals.stopWebapp(getId(), ctx.getContainerId());
-    }
-
-    private List<ProductArtifact> getPluginsArtifacts(final Product ctx)
-    {
-        final List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
-        artifacts.addAll(getDefaultPlugins());
-        artifacts.addAll(ctx.getPluginArtifacts());
-
-        if (ctx.getSalVersion() != null)
-        {
-            artifacts.addAll(getSalArtifacts(ctx.getSalVersion()));
-        }
-
-        if (ctx.getPdkVersion() != null)
-        {
-            artifacts.add(new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", ctx.getPdkVersion()));
-        }
-
-        if (ctx.getRestVersion() != null)
-        {
-            artifacts.add(new ProductArtifact("com.atlassian.plugins.rest", "atlassian-rest-module", ctx.getRestVersion()));
-        }
-
-        return artifacts;
     }
 
     private File addArtifacts(final Product ctx, final File homeDir, final File webappWar) throws MojoExecutionException
@@ -102,7 +80,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             }
 
             // add plugins2 plugins
-            addArtifactsToDirectory(goals, getPluginsArtifacts(ctx), pluginsDir);
+            addArtifactsToDirectory(goals, pluginProvider.provide(ctx), pluginsDir);
 
             // add plugins1 plugins
             List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
@@ -241,8 +219,6 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
     protected abstract ProductArtifact getTestResourcesArtifact();
 
-    protected abstract Collection<ProductArtifact> getDefaultPlugins();
-
     protected abstract Collection<ProductArtifact> getDefaultBundledPlugins();
 
     protected abstract Collection<ProductArtifact> getDefaultLibPlugins();
@@ -256,7 +232,5 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     protected abstract Map<String, String> getSystemProperties(Product ctx);
 
     protected abstract ProductArtifact getArtifact();
-
-    protected abstract Collection<ProductArtifact> getSalArtifacts(String salVersion);
 
 }

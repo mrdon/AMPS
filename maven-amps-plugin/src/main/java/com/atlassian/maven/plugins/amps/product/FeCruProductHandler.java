@@ -17,18 +17,15 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Collection;
 import java.lang.reflect.Method;
 
 public class FeCruProductHandler extends AbstractProductHandler
 {
 
-    /**
-     * JVM shutdown hook to terminate child FishEye processes when mojo dies *
-     */
-    private static Thread fisheyeShutdownHook;
-
     private static final int STARTUP_CHECK_DELAY = 1000;
     private static final int STARTUP_CHECK_MAX = 1000 * 60 * 3; //todo is 3 mins enough?
+    private final PluginProvider pluginProvider = new FeCruPluginProvider();
 
     public FeCruProductHandler(MavenProject project, MavenGoals goals)
     {
@@ -52,7 +49,7 @@ public class FeCruProductHandler extends AbstractProductHandler
 
         try
         {
-            execFishEyeCmd(ctx, "run", true);
+            execFishEyeCmd("run");
         }
         catch (Exception e)
         {
@@ -99,7 +96,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         try
         {
-            execFishEyeCmd(ctx, "stop", false);
+            execFishEyeCmd("stop");
         }
         catch (Exception e)
         {
@@ -107,7 +104,7 @@ public class FeCruProductHandler extends AbstractProductHandler
         }
     }
 
-    private void execFishEyeCmd(Product ctx, String bootCommand, boolean registerShutdownHook) throws MojoExecutionException
+    private void execFishEyeCmd(String bootCommand) throws MojoExecutionException
     {
 
         try {
@@ -224,7 +221,7 @@ public class FeCruProductHandler extends AbstractProductHandler
             }
 
             // add plugins2 plugins
-            addArtifactsToDirectory(getDefaultPlugins(), userPluginsDir);
+            addArtifactsToDirectory(pluginProvider.provide(ctx), userPluginsDir);
             addArtifactsToDirectory(getPluginsArtifacts(ctx), userPluginsDir);
 
             List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
@@ -256,16 +253,6 @@ public class FeCruProductHandler extends AbstractProductHandler
         }
     }
 
-    private List<ProductArtifact> getDefaultPlugins()
-    {
-        return Arrays.asList(
-                new ProductArtifact("org.apache.felix", "org.apache.felix.webconsole", "1.2.8"),
-                new ProductArtifact("org.apache.felix", "org.osgi.compendium", "1.2.0"),
-                new ProductArtifact("com.atlassian.labs.httpservice", "httpservice-bridge", "0.5.1"),
-                new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", "0.4")
-                );
-    }
-
     /**
      * The control port is the httpPort with a "1" appended to it //todo doc this
      */
@@ -274,25 +261,16 @@ public class FeCruProductHandler extends AbstractProductHandler
         return httpPort * 10 + 1;
     }
 
-    private static void registerShutdownHook(final Process p)
+    private static class FeCruPluginProvider extends AbstractPluginProvider
     {
-        fisheyeShutdownHook = new Thread()
-        {
-            @Override
-            public void run()
-            {
-                p.destroy();
-            }
-        };
-        Runtime.getRuntime().addShutdownHook(fisheyeShutdownHook);
-    }
 
-    private static void clearShutdownHook()
-    {
-        if (fisheyeShutdownHook != null)
+        @Override
+        protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
         {
-            Runtime.getRuntime().removeShutdownHook(fisheyeShutdownHook);
-            fisheyeShutdownHook = null;
+            return Arrays.asList(
+                    new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
+                    new ProductArtifact("com.atlassian.sal", "sal-fisheye-plugin", salVersion)
+            );
         }
     }
 

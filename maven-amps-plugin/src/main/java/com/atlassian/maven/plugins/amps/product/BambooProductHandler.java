@@ -14,7 +14,7 @@ public class BambooProductHandler extends AbstractWebappProductHandler
 {
     public BambooProductHandler(MavenProject project, MavenGoals goals)
     {
-        super(project, goals);
+        super(project, goals, new BambooPluginProvider());
     }
 
     public String getId()
@@ -74,16 +74,6 @@ public class BambooProductHandler extends AbstractWebappProductHandler
                 "http://192.168.15.145:8085", "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", ""));
     }
 
-    public List<ProductArtifact> getDefaultPlugins()
-    {
-        return Arrays.asList(
-                new ProductArtifact("org.apache.felix", "org.apache.felix.webconsole", "1.2.8"),
-                new ProductArtifact("org.apache.felix", "org.osgi.compendium", "1.2.0"),
-                new ProductArtifact("com.atlassian.labs.httpservice", "httpservice-bridge", "0.5.1"),
-                new ProductArtifact("com.atlassian.pdkinstall", "pdkinstall-plugin", "0.4")
-                );
-    }
-
     public List<ProductArtifact> getDefaultLibPlugins()
     {
         return Collections.emptyList();
@@ -92,5 +82,18 @@ public class BambooProductHandler extends AbstractWebappProductHandler
     public List<ProductArtifact> getDefaultBundledPlugins()
     {
         return Collections.emptyList();
+    }
+
+    private static class BambooPluginProvider extends AbstractPluginProvider
+    {
+
+        @Override
+        protected Collection<ProductArtifact> getSalArtifacts(String salVersion)
+        {
+            return Arrays.asList(
+                new ProductArtifact("com.atlassian.sal", "sal-api", salVersion),
+                new ProductArtifact("com.atlassian.sal", "sal-bamboo-plugin", salVersion));
+        }
+
     }
 }

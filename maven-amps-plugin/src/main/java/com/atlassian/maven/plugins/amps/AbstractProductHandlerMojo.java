@@ -101,7 +101,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Atlassian Plugin Development Kit (PDK) version
      */
-    @MojoParameter(expression = "${pdk.version}")
+    @MojoParameter(expression = "${pdk.version}", defaultValue = "0.4")
     private String pdkVersion;
 
     /**
@@ -110,6 +110,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     @MojoParameter(expression = "${rest.version}")
     private String restVersion;
 
+
+    /**
+     * Felix OSGi web console version
+     */
+    @MojoParameter(expression = "${web.console.version}", defaultValue = "1.2.8")
+    private String webConsoleVersion;
 
     // ---------------- end product context
 
@@ -166,12 +172,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     @MojoParameter(expression = "${localRepository}")
     private ArtifactRepository localRepository;
 
+
     /**
      * The remote Maven repositories used by the artifact resolver to look for JARs.
      */
     @MojoParameter(expression = "${project.remoteArtifactRepositories}")
     private List repositories;
-
 
     /**
      * The artifact factory is used to create valid Maven
@@ -181,7 +187,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoComponent
     private ArtifactFactory artifactFactory;
-
     /**
      * A list of product-specific configurations
      */
@@ -211,6 +216,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setRestVersion(restVersion);
         ctx.setSalVersion(salVersion);
         ctx.setPdkVersion(pdkVersion);
+        ctx.setWebConsoleVersion(webConsoleVersion);
 
         ctx.setHttpPort(httpPort);
         ctx.setVersion(pversion);
