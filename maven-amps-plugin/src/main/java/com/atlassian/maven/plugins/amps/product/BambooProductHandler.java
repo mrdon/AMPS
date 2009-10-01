@@ -49,10 +49,10 @@ public class BambooProductHandler extends AbstractWebappProductHandler
         return Collections.singletonMap("bamboo.home", getHomeDirectory().getPath());
     }
 
+    @Override
     public File getPluginsDirectory(final String webappDir, final File homeDir)
     {
-        // indicates plugins should be bundled
-        return null;
+        return new File(homeDir, "plugins");
     }
 
     public List<ProductArtifact> getExtraContainerDependencies()

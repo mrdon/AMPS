@@ -54,17 +54,17 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
             {
                 contextPath = contextPath + "/";
             }
-
+ 
             put("crowd.property.crowd.server.url", "http://" +  ctx.getServer() + ":" + ctx.getHttpPort() + contextPath + "services/");
         }};
     }
 
+    @Override
     public File getPluginsDirectory(final String webappDir, final File homeDir)
     {
-        // indicates plugins should be bundled
-        return null;
+        return new File(homeDir, "plugins");
     }
-
+    
     public List<ProductArtifact> getExtraContainerDependencies()
     {
         return Arrays.asList(

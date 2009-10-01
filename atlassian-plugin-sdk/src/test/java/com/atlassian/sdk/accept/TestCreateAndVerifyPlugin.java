@@ -32,6 +32,11 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
         createAndVerify("crowd");
     }
 
+    public void testBamboo() throws IOException, InterruptedException
+    {
+        createAndVerify("bamboo");
+    }
+
     private void createAndVerify(String productId)
             throws IOException, InterruptedException
     {
