@@ -47,7 +47,7 @@ public class RunMojo extends AbstractProductHandlerMojo
         ProductHandler product = createProductHandler();
         Product ctx = getProductContexts(goals).get(0);
 
-        ctx.setInstallPlugin(installPlugin);
+        ctx.setInstallPlugin(shouldInstallPlugin());
 
         int actualHttpPort = product.start(ctx);
 
@@ -74,6 +74,15 @@ public class RunMojo extends AbstractProductHandlerMojo
                 // ignore
             }
         }
+    }
+
+    /**
+     * Only install a plugin if the installPlugin flag is false and the project is a jar
+     */
+    private boolean shouldInstallPlugin()
+    {
+        return installPlugin &&
+                (project.getArtifact() != null && "jar".equals(project.getArtifact().getType()));
     }
 
     private void writePropertiesFile() throws MojoExecutionException
