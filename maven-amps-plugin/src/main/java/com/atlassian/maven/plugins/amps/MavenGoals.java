@@ -231,7 +231,7 @@ public class MavenGoals
      * phase.
      *
      * @param outputDirectory the directory to copy artifacts to
-     * @param artifacts the list of artifact to copy to the given directory
+     * @param artifacts       the list of artifact to copy to the given directory
      */
     public void copyPlugins(final File outputDirectory, final List<ProductArtifact> artifacts)
             throws MojoExecutionException
@@ -241,17 +241,26 @@ public class MavenGoals
             final MavenProject artifactReactorProject = getReactorProjectForArtifact(artifact);
             if (artifactReactorProject != null)
             {
-                try
+
+                log.debug(artifact + " will be copied from reactor project " + artifactReactorProject);
+                final File artifactFile = artifactReactorProject.getArtifact().getFile();
+                if (artifactFile == null)
                 {
-                    log.debug(artifact + " will be copied from reactor project " + artifactReactorProject);
-                    final File artifactFile = artifactReactorProject.getArtifact().getFile();
+                    log.warn("The plugin " + artifact + " is in the reactor but not the file hasn't been attached.  Skipping.");
+                }
+                else
+                {
                     log.debug("Copying " + artifactFile + " to " + outputDirectory);
-                    FileUtils.copyFile(artifactFile, new File(outputDirectory, artifactFile.getName()));
+                    try
+                    {
+                        FileUtils.copyFile(artifactFile, new File(outputDirectory, artifactFile.getName()));
+                    }
+                    catch (IOException e)
+                    {
+                        throw new MojoExecutionException("Could not copy " + artifact + " to " + outputDirectory, e);
+                    }
                 }
-                catch (IOException e)
-                {
-                    throw new MojoExecutionException("Could not copy " + artifact + " to " + outputDirectory, e);
-                }
+
             }
             else
             {
@@ -316,7 +325,7 @@ public class MavenGoals
     }
 
     public int startWebapp(final String productId, final File war, final Map<String, String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
-            final Product webappContext) throws MojoExecutionException
+                           final Product webappContext) throws MojoExecutionException
     {
         final Container container = findContainer(webappContext.getContainerId());
         File containerDir = new File(container.getRootDirectory(getBuildDirectory()));
@@ -651,7 +660,7 @@ public class MavenGoals
         Element[] archive = new Element[0];
         if (manifestExists)
         {
-            archive = new Element[] { element(name("manifestFile"), "${project.build.outputDirectory}/META-INF/MANIFEST.MF") };
+            archive = new Element[]{element(name("manifestFile"), "${project.build.outputDirectory}/META-INF/MANIFEST.MF")};
         }
 
         executeMojo(
@@ -698,10 +707,10 @@ public class MavenGoals
         /**
          * Installable container that can be downloaded by Maven.
          *
-         * @param id identifier of container, eg. "tomcat5x".
-         * @param groupId groupId of container.
+         * @param id         identifier of container, eg. "tomcat5x".
+         * @param groupId    groupId of container.
          * @param artifactId artifactId of container.
-         * @param version version number of container.
+         * @param version    version number of container.
          */
         public Container(final String id, final String groupId, final String artifactId, final String version)
         {
@@ -764,7 +773,7 @@ public class MavenGoals
         }
 
         /**
-         * @param buildDir project.build.directory.
+         * @param buildDir  project.build.directory.
          * @param productId product name.
          * @return directory to house the container configuration for the specified product.
          */
