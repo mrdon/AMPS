@@ -9,8 +9,8 @@
 
     <resources>
         <resource filtered="true">src/main/resources/atlassian-plugin.xml</resource>
+        <resource filtered="false">src/test/java/it/AbstractIntegrationTestCase.java</resource>
         <resource filtered="false">src/test/java/it/IntegrationTestMyPlugin.java</resource>
-        <resource filtered="false">src/test/resources/webtester.properties</resource>
         <resource filtered="false">README.txt</resource>
         <resource filtered="false">LICENSE.TXT</resource>
     </resources>

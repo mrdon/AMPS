@@ -432,6 +432,7 @@ public class MavenGoals
         // Automatically exclude tests for other products
         final List<Element> excludes = new ArrayList<Element>();
         excludes.add(element(name("exclude"), "**/*$*"));
+        excludes.add(element(name("exclude"), "**/Abstract*"));
         for (final String type : ProductHandlerFactory.getIds())
         {
             if (!type.equals(productId))

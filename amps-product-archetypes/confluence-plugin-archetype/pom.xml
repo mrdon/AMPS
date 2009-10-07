@@ -14,4 +14,13 @@
     
     <name>Atlassian Confluence Plugin Archetype</name>
     <description>This archetype can be used to create a new Atlassian Confluence plugin project</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.confluence.plugin</groupId>
+            <artifactId>func-test</artifactId>
+            <version>2.1.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
