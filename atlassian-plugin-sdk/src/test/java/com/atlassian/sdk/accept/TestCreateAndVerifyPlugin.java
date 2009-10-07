@@ -50,7 +50,8 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
         File appDir = new File(baseDir, "foo-" + productId + "-plugin");
         assertTrue(appDir.exists());
 
-        runSdkScript(sdkHome, appDir, "atlas-integration-test");
+        runSdkScript(sdkHome, appDir, "atlas-integration-test",
+                "-p", System.getProperty("http.port", "9482"));
 
         File pluginJar = new File(new File(appDir, "target"), "foo-" + productId + "-plugin-1.0-SNAPSHOT.jar");
         assertTrue(pluginJar.exists());
