@@ -77,7 +77,7 @@ public class RunMojo extends AbstractProductHandlerMojo
     }
 
     /**
-     * Only install a plugin if the installPlugin flag is false and the project is a jar
+     * Only install a plugin if the installPlugin flag is true and the project is a jar
      */
     private boolean shouldInstallPlugin()
     {
