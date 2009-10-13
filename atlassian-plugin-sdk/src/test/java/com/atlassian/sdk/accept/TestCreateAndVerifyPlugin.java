@@ -40,15 +40,7 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
     private void createAndVerify(String productId)
             throws IOException, InterruptedException
     {
-        runSdkScript(sdkHome, baseDir, "atlas-create-" + productId + "-plugin",
-                "-a", "foo-" + productId + "-plugin",
-                "-g", "com.example",
-                "-p", "com.example.foo",
-                "-v", "1.0-SNAPSHOT",
-                "--non-interactive");
-
-        File appDir = new File(baseDir, "foo-" + productId + "-plugin");
-        assertTrue(appDir.exists());
+        File appDir = SdkHelper.createPlugin(productId, baseDir, sdkHome);
 
         runSdkScript(sdkHome, appDir, "atlas-integration-test",
                 "-p", System.getProperty("http.port", "9482"));

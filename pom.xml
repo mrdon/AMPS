@@ -193,6 +193,6 @@
         <fecru.data.version>2.0.4.1-SNAPSHOT</fecru.data.version>
         <crowd.version>2.0.2</crowd.version>
         <crowd.data.version>2.0.2-m1</crowd.data.version>
-        <clover.version>2.6.0</clover.version>
+        <clover.version>2.6.1</clover.version>
     </properties>
 </project>

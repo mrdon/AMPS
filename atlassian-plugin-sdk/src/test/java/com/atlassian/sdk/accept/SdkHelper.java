@@ -16,7 +16,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 
 import junit.framework.Assert;
-import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
 
 public class SdkHelper
 {
@@ -85,4 +84,27 @@ public class SdkHelper
         }
     }
 
+    public static File file(File parent, String... kids)
+    {
+        File cur = parent;
+        for (String kid : kids)
+        {
+            cur = new File(cur, kid);
+        }
+        return cur;
+    }
+
+    public static File createPlugin(String productId, File baseDir, File sdkHome) throws IOException, InterruptedException
+    {
+        runSdkScript(sdkHome, baseDir, "atlas-create-" + productId + "-plugin",
+                "-a", "foo-" + productId + "-plugin",
+                "-g", "com.example",
+                "-p", "com.example.foo",
+                "-v", "1.0-SNAPSHOT",
+                "--non-interactive");
+
+        File appDir = new File(baseDir, "foo-" + productId + "-plugin");
+        Assert.assertTrue(appDir.exists());
+        return appDir;
+    }
 }
