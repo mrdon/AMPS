@@ -16,12 +16,13 @@ public class TestClover extends SdkTestBase
     private void createAndRunClover(String productId)
             throws IOException, InterruptedException
     {
-        File appDir = SdkHelper.createPlugin(productId, baseDir, sdkHome);
+        final String prefix = "create-and-run-clover";
+        File appDir = SdkHelper.createPlugin(productId, baseDir, sdkHome, prefix);
 
         runSdkScript(sdkHome, appDir, "atlas-clover",
                 "-p", System.getProperty("http.port", "9482"));
 
-        File pluginJar = new File(new File(appDir, "target"), "foo-" + productId + "-plugin-1.0-SNAPSHOT.jar");
+        File pluginJar = new File(new File(appDir, "target"), prefix + "-" + productId + "-plugin-1.0-SNAPSHOT.jar");
         assertTrue(pluginJar.exists());
 
         final File cloverDir = SdkHelper.file(appDir, "target", "site", "clover");

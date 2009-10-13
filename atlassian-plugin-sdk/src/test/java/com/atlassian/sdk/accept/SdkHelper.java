@@ -94,16 +94,17 @@ public class SdkHelper
         return cur;
     }
 
-    public static File createPlugin(String productId, File baseDir, File sdkHome) throws IOException, InterruptedException
+    public static File createPlugin(String productId, File baseDir, File sdkHome, String prefix) throws IOException, InterruptedException
     {
+        final String artifactId = prefix + "-" + productId + "-plugin";
         runSdkScript(sdkHome, baseDir, "atlas-create-" + productId + "-plugin",
-                "-a", "foo-" + productId + "-plugin",
+                "-a", artifactId,
                 "-g", "com.example",
                 "-p", "com.example.foo",
                 "-v", "1.0-SNAPSHOT",
                 "--non-interactive");
 
-        File appDir = new File(baseDir, "foo-" + productId + "-plugin");
+        File appDir = new File(baseDir, artifactId);
         Assert.assertTrue(appDir.exists());
         return appDir;
     }
