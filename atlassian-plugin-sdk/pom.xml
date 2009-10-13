@@ -8,7 +8,6 @@
 
     <groupId>com.atlassian.amps</groupId>
     <artifactId>atlassian-plugin-sdk</artifactId>
-    <packaging>jar</packaging>
 
     <name>Atlassian Plugin SDK</name>
 
