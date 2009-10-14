@@ -44,8 +44,7 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
         final String prefix = "create-and-verify";
         File appDir = SdkHelper.createPlugin(productId, baseDir, sdkHome, prefix);
 
-        runSdkScript(sdkHome, appDir, "atlas-integration-test",
-                "-p", System.getProperty("http.port", "9482"));
+        runSdkScript(sdkHome, appDir, "atlas-integration-test");
 
         File pluginJar = new File(new File(appDir, "target"), prefix + "-" + productId + "-plugin-1.0-SNAPSHOT.jar");
         assertTrue(pluginJar.exists());
