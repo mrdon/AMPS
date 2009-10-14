@@ -82,7 +82,7 @@ public class RunMojo extends AbstractProductHandlerMojo
     private boolean shouldInstallPlugin()
     {
         return installPlugin &&
-                (project.getArtifact() != null && "jar".equals(project.getArtifact().getType()));
+                (project.getArtifact() != null && !"pom".equalsIgnoreCase(project.getArtifact().getType()));
     }
 
     private void writePropertiesFile() throws MojoExecutionException
