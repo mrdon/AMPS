@@ -99,6 +99,8 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     {
         ConfigFileUtils.replace(new File(homeDir, "database.script"), "@project-dir@", homeDir.getParent());
         ConfigFileUtils.replace(new File(homeDir, "database.script"), "/jira-home/", "/home/");
+        ConfigFileUtils.replace(new File(homeDir, "database.script"), "@base-url@",
+                "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath());
     }
 
     @Override
