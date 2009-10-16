@@ -79,8 +79,11 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
                 addThisPluginToDirectory(pluginsDir);
             }
 
-            // add plugins2 plugins
-            addArtifactsToDirectory(goals, pluginProvider.provide(ctx), pluginsDir);
+            // add plugins2 plugins if necessary
+            if (!isStaticPlugin())
+            {
+                addArtifactsToDirectory(goals, pluginProvider.provide(ctx), pluginsDir);
+            }
 
             // add plugins1 plugins
             List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
