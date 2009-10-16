@@ -689,9 +689,12 @@ public class MavenGoals
                 goal("install-file"),
                 configuration(
                         element(name("obrRepository"), obrXml.getPath()),
+
+                        // the following three settings are required but not really used
                         element(name("groupId"), "doesntmatter"),
                         element(name("artifactId"), "doesntmatter"),
                         element(name("version"), "doesntmatter"),
+
                         element(name("packaging"), "jar"),
                         element(name("file"), dep.getPath())
 

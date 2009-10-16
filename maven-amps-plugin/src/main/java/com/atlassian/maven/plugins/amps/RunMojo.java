@@ -4,6 +4,8 @@ import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.artifact.Artifact;
 import org.jfrog.maven.annomojo.annotations.MojoExecute;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
@@ -81,8 +83,9 @@ public class RunMojo extends AbstractProductHandlerMojo
      */
     private boolean shouldInstallPlugin()
     {
+        Artifact artifact = getMavenContext().getProject().getArtifact();
         return installPlugin &&
-                (project.getArtifact() != null && !"pom".equalsIgnoreCase(project.getArtifact().getType()));
+                (artifact != null && !"pom".equalsIgnoreCase(artifact.getType()));
     }
 
     private void writePropertiesFile() throws MojoExecutionException
@@ -94,7 +97,7 @@ public class RunMojo extends AbstractProductHandlerMojo
             props.setProperty(entry.getKey(), entry.getValue());
         }
 
-        final File ampsProperties = new File(project.getBuild().getDirectory(), "amps.properties");
+        final File ampsProperties = new File(getMavenContext().getProject().getBuild().getDirectory(), "amps.properties");
         OutputStream out = null;
         try
         {

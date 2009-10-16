@@ -19,19 +19,19 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
      * The Maven Project Object
      */
     @MojoParameter (expression = "${project}", required = true, readonly = true)
-    protected MavenProject project;
+    private MavenProject project;
 
     /**
      * The list of modules being built, the reactor
      */
     @MojoParameter (expression = "${reactorProjects}", required = true, readonly = true)
-    protected List<MavenProject> reactor;
+    private List<MavenProject> reactor;
 
     /**
      * The Maven Session Object
      */
     @MojoParameter (expression = "${session}", required = true, readonly = true)
-    protected MavenSession session;
+    private MavenSession session;
 
     /**
      * The Maven PluginManager Object

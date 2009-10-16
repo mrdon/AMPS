@@ -9,6 +9,8 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProjectHelper;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.model.Build;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
@@ -50,8 +52,6 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     /**
      * The archive configuration to use. See <a href="http://maven.apache.org/shared/maven-archiver/index.html">Maven
      * Archiver Reference</a>.
-     *
-     * @since 2.1
      */
     @MojoParameter
     private MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
@@ -62,9 +62,6 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     @MojoParameter (expression = "${attach}", defaultValue = "true")
     private boolean attach;
 
-    /**
-     * Used for attaching the source jar to the project.
-     */
     @MojoComponent
     private MavenProjectHelper projectHelper;
 
@@ -75,8 +72,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     protected File outputDirectory;
 
     /**
-     * The filename to be used for the generated archive file. For the source:jar goal, "-sources" is appended to this
-     * filename. For the source:test-jar goal, "-test-sources" is appended.
+     * The filename to be used for the generated archive file.  The "-obr" suffix will be appended.
      */
     @MojoParameter (defaultValue = "${project.build.finalName}")
     protected String finalName;
@@ -85,14 +81,15 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
      * Contains the full list of projects in the reactor.
      */
     @MojoParameter (expression = "${reactorProjects}", readonly = true)
-    protected List reactorProjects;
+    protected List<MavenProject> reactorProjects;
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         try
         {
+            Build build = getMavenContext().getProject().getBuild();
             List<File> deps = resolvePluginDependencies();
-            File obrDir = layoutObr(deps, new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".jar"));
+            File obrDir = layoutObr(deps, new File(build.getDirectory(), build.getFinalName() + ".jar"));
             generateObrZip(obrDir);
         }
         catch (IOException e)
@@ -101,11 +98,16 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
         }
     }
 
+    /**
+     * @param obrDir Directory containing the files to go into the obr zip
+     * @throws MojoExecutionException If something goes wrong
+     */
     private void generateObrZip(File obrDir) throws MojoExecutionException
     {
         MavenArchiver archiver = new MavenArchiver();
         archiver.setArchiver(jarArchiver);
         File outputFile = new File(outputDirectory, finalName + "-all.obr");
+        final MavenProject mavenProject = getMavenContext().getProject();
         try
         {
             archiver.getArchiver().addDirectory(obrDir, "");
@@ -116,41 +118,48 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
             // todo: be smarter about when this is updated
             archive.setForced(true);
 
-            archiver.createArchive(project, archive);
+            archiver.createArchive(mavenProject, archive);
         }
         catch (IOException e)
         {
-            throw new MojoExecutionException("Error creating source archive: " + e.getMessage(), e);
+            throw new MojoExecutionException("Error creating obr archive: " + e.getMessage(), e);
         }
         catch (ArchiverException e)
         {
-            throw new MojoExecutionException("Error creating source archive: " + e.getMessage(), e);
+            throw new MojoExecutionException("Error creating obr archive: " + e.getMessage(), e);
         }
         catch (DependencyResolutionRequiredException e)
         {
-            throw new MojoExecutionException("Error creating source archive: " + e.getMessage(), e);
+            throw new MojoExecutionException("Error creating obr archive: " + e.getMessage(), e);
         }
         catch (ManifestException e)
         {
-            throw new MojoExecutionException("Error creating source archive: " + e.getMessage(), e);
+            throw new MojoExecutionException("Error creating obr archive: " + e.getMessage(), e);
         }
 
         if (attach)
         {
-            projectHelper.attachArtifact(project, getType(), "all", outputFile);
+            projectHelper.attachArtifact(mavenProject, getType(), "obr", outputFile);
         }
         else
         {
-            getLog().info("NOT adding " + getType() + " to attached artifacts list.");
+            getLog().info("NOT adding " + getType() + " to attached artifacts list, so it won't be installed or deployed.");
         }
-
-
     }
 
-    private File layoutObr(List<File> deps, File mainArtifact) throws IOException, MojoExecutionException
+    /**
+     * Creates a directory containing the files that will be in the obr artifact.
+     *
+     * @param deps The dependencies for this artifact
+     * @param mainArtifact The main artifact file
+     * @return The directory containing the future obr zip contents
+     * @throws IOException If the files cannot be copied
+     * @throws MojoExecutionException If the dependencies cannot be retrieved
+     */
+    private File layoutObr(List<File> deps, File mainArtifact) throws MojoExecutionException, IOException
     {
         // create directories
-        File obrDir = new File(project.getBuild().getDirectory(), "obr");
+        File obrDir = new File(getMavenContext().getProject().getBuild().getDirectory(), "obr");
         obrDir.mkdir();
         File depDir = new File(obrDir, "dependencies");
         depDir.mkdir();
@@ -179,7 +188,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     private List<File> resolvePluginDependencies()
     {
         List<File> deps = new ArrayList<File>();
-        for (Artifact artifact : (Set<Artifact>) project.getDependencyArtifacts())
+        for (Artifact artifact : (Set<Artifact>) getMavenContext().getProject().getDependencyArtifacts())
         {
             if (pluginDependencies.contains(new PluginDependency(artifact.getGroupId(), artifact.getArtifactId())))
             {
