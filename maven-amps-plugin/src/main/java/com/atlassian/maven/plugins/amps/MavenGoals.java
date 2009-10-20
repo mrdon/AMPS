@@ -8,6 +8,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.model.Resource;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
@@ -354,6 +355,22 @@ public class MavenGoals
 
         Map<String, String> sysPropsMap = new HashMap<String, String>(systemProperties);
         sysPropsMap.put("atlassian.dev.mode", "true");
+
+        if (!sysPropsMap.containsKey("plugin.resource.directories"))
+        {
+            // collect all resource directories and make them available for
+            // on-the-fly reloading
+            StringBuilder resourceProp = new StringBuilder();
+            @SuppressWarnings("unchecked") List<Resource> resList = project.getResources();
+            for (int i = 0; i < resList.size(); i++) {
+                resourceProp.append(resList.get(i).getTargetPath());
+                if (i + 1 != resList.size()) {
+                    resourceProp.append(",");
+                }
+            }
+            sysPropsMap.put("plugin.resource.directories", resourceProp.toString());
+        }
+
         for (final Map.Entry<String, String> entry : sysPropsMap.entrySet())
         {
             webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=" + entry.getValue());
