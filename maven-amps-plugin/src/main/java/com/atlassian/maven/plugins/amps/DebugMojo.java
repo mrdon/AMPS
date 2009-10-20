@@ -6,6 +6,7 @@ import org.jfrog.maven.annomojo.annotations.MojoExecute;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 /**
  * Debug the webapp
@@ -40,6 +41,12 @@ public class DebugMojo extends RunMojo
         if (writePropertiesToFile)
         {
             properties.put("debug.port", String.valueOf(jvmDebugPort));
+        }
+
+        if (getDefaultProductId().equals(ProductHandlerFactory.FECRU)) {
+            getLog().warn("You must set the ATLAS_OPTS environment variable to the following string:");
+            getLog().warn(jvmArgs);
+            getLog().warn("when calling atlas-debug to enable Fisheye/Crucible debugging.");
         }
 
         super.doExecute();
