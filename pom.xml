@@ -136,6 +136,7 @@
                             <artifact>javax.transaction:jta:1.0.1b</artifact>
                             <artifact>javax.transaction:jta:1.0.1B</artifact>
                             <artifact>jta:jta:1.0.1B</artifact>
+                            <artifact>jta:jta:1.0.1</artifact>
                             <artifact>javax.jms:jms:1.1</artifact>
                         </artifacts>
                     </configuration>
