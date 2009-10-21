@@ -8,7 +8,7 @@
 
     <groupId>com.atlassian.amps</groupId>
     <artifactId>atlassian-amps-parent</artifactId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0</version>
     <packaging>pom</packaging>
 
     <name>Atlassian Maven Plugin Suite (parent pom)</name>
@@ -24,9 +24,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/trunk</connection>
-        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/trunk</developerConnection>
-        <url>https://studio.atlassian.com/source/browse/AMPS/trunk</url>
+        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.0</connection>
+        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.0</developerConnection>
+        <url>https://studio.atlassian.com/source/browse/AMPS/tags/atlassian-amps-parent-3.0</url>
     </scm>
 
     <issueManagement>
@@ -85,6 +85,10 @@
     <build>
         <pluginManagement>
             <plugins>
+          <plugin>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>2.0.1</version>
+          </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>shitty-maven-plugin</artifactId>
