@@ -7,6 +7,7 @@ import com.atlassian.maven.plugins.amps.ProductArtifact;
 import static com.atlassian.maven.plugins.amps.util.ConfigFileUtils.replace;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
@@ -26,10 +27,12 @@ public class FeCruProductHandler extends AbstractProductHandler
     private static final int STARTUP_CHECK_DELAY = 1000;
     private static final int STARTUP_CHECK_MAX = 1000 * 60 * 3; //todo is 3 mins enough?
     private final PluginProvider pluginProvider = new FeCruPluginProvider();
+    private final Log log;
 
-    public FeCruProductHandler(MavenProject project, MavenGoals goals)
+    public FeCruProductHandler(MavenProject project, MavenGoals goals, Log log)
     {
         super(project, goals);
+        this.log = log;
     }
 
     public String getId()
@@ -116,11 +119,7 @@ public class FeCruProductHandler extends AbstractProductHandler
             throw new MojoExecutionException("Failed to execute fisheye command '" + bootCommand + "'", e);
         }
 
-
-        // todo logging
-        // java.setOutput(getContainerOutputLog());
-
-        //getLog().info("Started Fisheye.");
+        log.info("Started FishEye/Crucible.");
     }
 
     private File getBuildDirectory()
@@ -128,38 +127,49 @@ public class FeCruProductHandler extends AbstractProductHandler
         return new File(project.getBuild().getDirectory());
     }
 
+    /**
+     * Unpack the application and its sample home diectory from the two artifact zip files.
+     * If the application already exists this isn't repeated, so you can keep your data until atlas-clean is run.
+     *
+     * @param ctx
+     * @throws MojoExecutionException
+     */
     private void extractAndProcessHomeDirectory(Product ctx) throws MojoExecutionException
     {
-        final File cruDistZip = goals.copyDist(getBuildDirectory(),
-                new ProductArtifact(
-                        "com.atlassian.crucible",
-                        "atlassian-crucible",
-                        ctx.getVersion()));
-
-        final File ampsDistZip = goals.copyHome(getBuildDirectory(),
-                new ProductArtifact(
-                        "com.atlassian.fecru",
-                        "amps-fecru",
-                        ctx.getProductDataVersion()));
-
         final File homeDir = getHomeDirectory();
-        homeDir.mkdir();
-        try
-        {
-            unzip(cruDistZip, homeDir.getPath(), 1);
-            unzip(ampsDistZip, homeDir.getPath());
-        }
-        catch (final IOException ex)
-        {
-            throw new MojoExecutionException("Unable to extract ZIP artifacts into home directory", ex);
-        }
+        if (!homeDir.exists()) {
+            final File cruDistZip = goals.copyDist(getBuildDirectory(),
+                    new ProductArtifact(
+                            "com.atlassian.crucible",
+                            "atlassian-crucible",
+                            ctx.getVersion()));
+    
+            final File ampsDistZip = goals.copyHome(getBuildDirectory(),
+                    new ProductArtifact(
+                            "com.atlassian.fecru",
+                            "amps-fecru",
+                            ctx.getProductDataVersion()));
+    
+            homeDir.mkdir();
+            try
+            {
+                unzip(cruDistZip, homeDir.getPath(), 1);
+                unzip(ampsDistZip, homeDir.getPath());
+            }
+            catch (final IOException ex)
+            {
+                throw new MojoExecutionException("Unable to extract ZIP artifacts into home directory", ex);
+            }
 
-        //setup config.xml, ports, test repos, whatever
-        final File configXml = new File(homeDir, "config.xml");
-        replace(configXml, "@CONTROL_BIND@", String.valueOf(controlPort(ctx.getHttpPort())));
-        replace(configXml, "@HTTP_BIND@", String.valueOf(ctx.getHttpPort()));
-        replace(configXml, "@HTTP_CONTEXT@", String.valueOf(ctx.getContextPath()));
-        replace(configXml, "@HOME_DIR@", String.valueOf(homeDir.getAbsolutePath()));
+            //setup config.xml, ports, test repos, whatever
+            final File configXml = new File(homeDir, "config.xml");
+            replace(configXml, "@CONTROL_BIND@", String.valueOf(controlPort(ctx.getHttpPort())));
+            replace(configXml, "@HTTP_BIND@", String.valueOf(ctx.getHttpPort()));
+            replace(configXml, "@HTTP_CONTEXT@", String.valueOf(ctx.getContextPath()));
+            replace(configXml, "@HOME_DIR@", String.valueOf(homeDir.getAbsolutePath()));
+        } else {
+            log.info("Using existing FishEye/Crucible application and instance data.");
+        }
     }
 
     private List<ProductArtifact> getPluginsArtifacts(final Product ctx)

@@ -2,6 +2,7 @@ package com.atlassian.maven.plugins.amps.product;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.plugin.logging.Log;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,7 +16,7 @@ public class ProductHandlerFactory
     public static final String FECRU = "fecru";
     public static final String CROWD = "crowd";
 
-    public static ProductHandler create(String id, MavenProject project, MavenGoals goals)
+    public static ProductHandler create(String id, MavenProject project, MavenGoals goals, Log log)
     {
         if (REFAPP.equals(id))
         {
@@ -35,7 +36,7 @@ public class ProductHandlerFactory
         }
         else if (FECRU.equals(id))
         {
-            return new FeCruProductHandler(project, goals);
+            return new FeCruProductHandler(project, goals, log);
         }
         else if (CROWD.equals(id))
         {

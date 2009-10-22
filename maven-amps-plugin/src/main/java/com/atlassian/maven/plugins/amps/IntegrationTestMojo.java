@@ -81,7 +81,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
 
     private void runTestsForProduct(String productId, MavenGoals goals, String pluginJar) throws MojoExecutionException
     {
-        ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals);
+        ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals, getLog());
         Product ctx = getProductContexts(goals).get(0);
         ctx.setInstallPlugin(installPlugin);
         
