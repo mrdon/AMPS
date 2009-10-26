@@ -363,7 +363,7 @@ public class MavenGoals
             StringBuilder resourceProp = new StringBuilder();
             @SuppressWarnings("unchecked") List<Resource> resList = project.getResources();
             for (int i = 0; i < resList.size(); i++) {
-                resourceProp.append(resList.get(i).getTargetPath());
+                resourceProp.append(resList.get(i).getDirectory());
                 if (i + 1 != resList.size()) {
                     resourceProp.append(",");
                 }
