@@ -137,7 +137,8 @@ public class FeCruProductHandler extends AbstractProductHandler
     private void extractAndProcessHomeDirectory(Product ctx) throws MojoExecutionException
     {
         final File homeDir = getHomeDirectory();
-        if (!homeDir.exists()) {
+        final File varDirectory = new File(homeDir, "var");
+        if (!varDirectory.exists()) {
             final File cruDistZip = goals.copyDist(getBuildDirectory(),
                     new ProductArtifact(
                             "com.atlassian.crucible",
@@ -150,7 +151,7 @@ public class FeCruProductHandler extends AbstractProductHandler
                             "amps-fecru",
                             ctx.getProductDataVersion()));
     
-            homeDir.mkdir();
+            createDirectory(homeDir);
             try
             {
                 unzip(cruDistZip, homeDir.getPath(), 1);
@@ -197,17 +198,24 @@ public class FeCruProductHandler extends AbstractProductHandler
         return artifacts;
     }
 
+    private void createDirectory(File dir) throws MojoExecutionException
+    {
+        if (!dir.exists() && !dir.mkdirs()) {
+                throw new MojoExecutionException("Failed to create directory " + dir.getAbsolutePath());
+        }
+    }
+
     //todo has alot in common with the AbstractWebappProductHandler
     private void addArtifacts(final Product ctx) throws MojoExecutionException
     {
         try
         {
             final File pluginsDir = new File(getHomeDirectory(), "var/plugins");
-            pluginsDir.mkdir();
+            createDirectory(pluginsDir);
             final File bundledPluginsDir = new File(pluginsDir, "bundled");
-            bundledPluginsDir.mkdir();
+            createDirectory(bundledPluginsDir);
             final File userPluginsDir = new File(pluginsDir, "user");
-            userPluginsDir.mkdir();
+            createDirectory(userPluginsDir);
 
             // add bundled plugins (todo these are already part of the dist.. this step is possibly unnecessary?)
             final File bundledPluginsZip = new File(getHomeDirectory(), "plugins/bundled-plugins.zip");
