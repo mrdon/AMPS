@@ -6,24 +6,24 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import static com.atlassian.maven.plugins.amps.util.ConfigFileUtils.replace;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Collection;
-import java.lang.reflect.Method;
+import java.util.List;
 
 public class FeCruProductHandler extends AbstractProductHandler
 {
-
     private static final int STARTUP_CHECK_DELAY = 1000;
     private static final int STARTUP_CHECK_MAX = 1000 * 60 * 3; //todo is 3 mins enough?
     private final PluginProvider pluginProvider = new FeCruPluginProvider();
@@ -50,6 +50,16 @@ public class FeCruProductHandler extends AbstractProductHandler
         extractAndProcessHomeDirectory(ctx);
         addArtifacts(ctx);
 
+        // add application overrides
+        try
+        {
+            addOverrides(ctx);
+        }
+        catch (IOException e)
+        {
+            throw new MojoExecutionException("Unable to override app files using src/test/resources/" + ctx.getId() + "-app", e);
+        }
+
         try
         {
             execFishEyeCmd("run");
@@ -62,6 +72,15 @@ public class FeCruProductHandler extends AbstractProductHandler
         waitForFishEyeToStart(ctx);
 
         return ctx.getHttpPort();
+    }
+
+    private void addOverrides(Product ctx) throws IOException
+    {
+        final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getId() + "-app");
+        if (srcDir.exists() && getHomeDirectory().exists())
+        {
+            FileUtils.copyDirectory(srcDir, getHomeDirectory());
+        }
     }
 
     private void waitForFishEyeToStart(Product ctx) throws MojoExecutionException

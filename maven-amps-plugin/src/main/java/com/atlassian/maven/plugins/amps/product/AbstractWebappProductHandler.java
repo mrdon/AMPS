@@ -11,11 +11,16 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
     private final PluginProvider pluginProvider;
+    
     public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals, PluginProvider pluginProvider)
     {
         super(project, goals);
@@ -30,7 +35,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
         final File homeDir = extractAndProcessHomeDirectory(ctx);
 
-        final File combinedWebappWar = addArtifacts(ctx, homeDir, webappWar);
+        final File combinedWebappWar = addArtifactsAndOverrides(ctx, homeDir, webappWar);
 
         return goals.startWebapp(getId(), combinedWebappWar, getSystemProperties(ctx), getExtraContainerDependencies(), ctx);
     }
@@ -40,7 +45,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
         goals.stopWebapp(getId(), ctx.getContainerId());
     }
 
-    private File addArtifacts(final Product ctx, final File homeDir, final File webappWar) throws MojoExecutionException
+    private File addArtifactsAndOverrides(final Product ctx, final File homeDir, final File webappWar) throws MojoExecutionException
     {
         try
         {
@@ -106,6 +111,16 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             if (ctx.getLog4jProperties() != null)
             {
                 FileUtils.copyFile(ctx.getLog4jProperties(), new File(webappDir, "WEB-INF/classes/log4j.properties"));
+            }
+
+            // override war files
+            try
+            {
+                addOverrides(new File(webappDir), ctx.getId());
+            }
+            catch (IOException e)
+            {
+                throw new MojoExecutionException("Unable to override WAR files using src/test/resources/" + ctx.getId() + "-app", e);
             }
 
             final File warFile = new File(webappWar.getParentFile(), getId() + ".war");
@@ -191,6 +206,15 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
         if (srcDir.exists() && outputDir.exists())
         {
             FileUtils.copyDirectory(srcDir, homeDir);
+        }
+    }
+
+    private void addOverrides(File webappDir, final String productId) throws IOException
+    {
+        final File srcDir = new File(project.getBasedir(), "src/test/resources/" + productId + "-app");
+        if (srcDir.exists() && webappDir.exists())
+        {
+            FileUtils.copyDirectory(srcDir, webappDir);
         }
     }
 
