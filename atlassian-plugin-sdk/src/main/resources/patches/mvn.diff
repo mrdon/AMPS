@@ -18,8 +18,8 @@
 >   MAVEN_OPTS="${MAVEN_OPTS} -Dansi.color=true"
 >   exec "$JAVACMD" \
 >     $MAVEN_OPTS \
->     -cp "${M2_HOME}"/boot/classworlds-1.1.jar:"${M2_HOME}"/lib/console-colorizer-0.3.jar \
+>     -cp "${M2_HOME}"/boot/classworlds-1.1.jar:"${M2_HOME}"/lib/maven-trap-0.5.jar \
 >     "-Dclassworlds.conf=${M2_HOME}/bin/m2.conf" \
 >     "-Dmaven.home=${M2_HOME}"  \
->     org.twdata.maven.colorizer.App $QUOTED_ARGS
+>     org.twdata.maven.trap.App $QUOTED_ARGS
 > fi

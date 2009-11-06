@@ -186,7 +186,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-colorizer</id>
+                        <id>copy-maven-trap</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>copy</goal>
@@ -194,10 +194,10 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.twdata.maven</groupId>
-                                    <artifactId>console-colorizer</artifactId>
+                                    <groupId>org.twdata.maven.trap</groupId>
+                                    <artifactId>maven-trap</artifactId>
                                     <!-- If you change this, ensure you change the mvn diff -->
-                                    <version>0.3</version>
+                                    <version>0.5</version>
                                     <outputDirectory>${project.build.directory}/apache-maven-${maven.version}/lib</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
