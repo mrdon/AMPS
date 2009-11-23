@@ -354,7 +354,7 @@ public class MavenGoals
         }
 
         Map<String, String> sysPropsMap = new HashMap<String, String>(systemProperties);
-        sysPropsMap.put("atlassian.dev.mode", "true");
+        sysPropsMap.put("atlassian.dev.mode", System.getProperty("atlassian.dev.mode", "true"));
 
         if (!sysPropsMap.containsKey("plugin.resource.directories"))
         {
