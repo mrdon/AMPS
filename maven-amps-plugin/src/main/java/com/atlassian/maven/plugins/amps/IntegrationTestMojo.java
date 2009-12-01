@@ -23,7 +23,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
      * Pattern for to use to find integration tests
      */
     @MojoParameter(expression = "${functional.test.pattern}")
-    private final String functionalTestPattern = "it/**";
+    private String functionalTestPattern = "it/**";
 
     /**
      * The directory containing generated test classes of the project being tested.
@@ -35,7 +35,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
      * Whether the reference application will not be started or not
      */
     @MojoParameter(expression = "${no.webapp}", defaultValue = "false")
-    private final boolean noWebapp = false;
+    private boolean noWebapp = false;
 
     @MojoComponent
     private ArtifactHandlerManager artifactHandlerManager;
@@ -85,7 +85,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         Product ctx = getProductContexts(goals).get(0);
         ctx.setInstallPlugin(installPlugin);
         
-        int actualHttpPort;
+        int actualHttpPort = 0;
         if (!noWebapp)
         {
             actualHttpPort = product.start(ctx);
