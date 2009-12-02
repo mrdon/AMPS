@@ -10,24 +10,26 @@
                         <id>default</id>
                         <phases>
                             <generate-resources>
-                                com.atlassian.maven.plugins:maven-amps-plugin:copy-bundled-dependencies
+                                com.atlassian.maven.plugins:maven-crowd-plugin:copy-bundled-dependencies
                             </generate-resources>
                             <process-resources>
                                 org.apache.maven.plugins:maven-resources-plugin:resources,
-                                com.atlassian.maven.plugins:maven-amps-plugin:filter-plugin-descriptor
+                                com.atlassian.maven.plugins:maven-crowd-plugin:filter-plugin-descriptor
                             </process-resources>
                             <compile>org.apache.maven.plugins:maven-compiler-plugin:compile</compile>
-                            <process-classes>com.atlassian.maven.plugins:maven-amps-plugin:generate-manifest</process-classes>
-                            <process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources</process-test-resources>
+                            <process-classes>com.atlassian.maven.plugins:maven-crowd-plugin:generate-manifest
+                            </process-classes>
+                            <process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources
+                            </process-test-resources>
                             <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
-                            <test>com.atlassian.maven.plugins:maven-amps-plugin:unit-test</test>
+                            <test>com.atlassian.maven.plugins:maven-crowd-plugin:unit-test</test>
                             <package>
-                                com.atlassian.maven.plugins:maven-amps-plugin:validate-manifest,
-                                com.atlassian.maven.plugins:maven-amps-plugin:jar,
-                                com.atlassian.maven.plugins:maven-amps-plugin:generate-obr-artifact
+                                com.atlassian.maven.plugins:maven-crowd-plugin:validate-manifest,
+                                com.atlassian.maven.plugins:maven-crowd-plugin:jar,
+                                com.atlassian.maven.plugins:maven-crowd-plugin:generate-obr-artifact
                             </package>
                             <integration-test>
-                                com.atlassian.maven.plugins:maven-amps-plugin:integration-test
+                                com.atlassian.maven.plugins:maven-crowd-plugin:integration-test
                             </integration-test>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                             <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
