@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Executes specific maven goals
@@ -443,7 +444,7 @@ public class MavenGoals
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
 
-    public void runTests(final String productId, final String containerId, final String functionalTestPattern, final int httpPort, final String contexPath, final String pluginJar)
+    public void runTests(final String productId, final String containerId, final String functionalTestPattern, Properties systemProperties)
             throws MojoExecutionException
     {
         // Automatically exclude tests for other products
@@ -457,6 +458,9 @@ public class MavenGoals
                 excludes.add(element(name("exclude"), "**/" + type + "/**"));
             }
         }
+
+        final Element systemProps = convertPropsToEelements(systemProperties);
+
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -471,24 +475,30 @@ public class MavenGoals
                         element(name("excludes"),
                                 excludes.toArray(new Element[excludes.size()])
                         ),
-                        element(name("systemProperties"),
-                                element(name("property"),
-                                        element(name("name"), "http.port"),
-                                        element(name("value"), String.valueOf(httpPort))
-                                ),
-                                element(name("property"),
-                                        element(name("name"), "context.path"),
-                                        element(name("value"), contexPath)
-                                ),
-                                element(name("property"),
-                                        element(name("name"), "plugin.jar"),
-                                        element(name("value"), pluginJar)
-                                )
-                        ),
+                        systemProps,
                         element(name("reportsDirectory"), "${project.build.directory}/" + productId + "/" + containerId + "/surefire-reports")
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
+    }
+
+    /**
+     * Converts a map of System properties to maven config elements
+     */
+    private Element convertPropsToEelements(Properties systemProperties)
+    {
+        ArrayList<Element> properties = new ArrayList<Element>();
+
+        // add extra system properties... overwriting any of the hard coded values above.
+        for (Map.Entry entry: systemProperties.entrySet())
+        {
+            properties.add(
+                    element(name("property"),
+                            element(name("name"),  (String)entry.getKey()),
+                            element(name("value"), (String)entry.getValue())));
+        }
+
+        return element(name("systemProperties"), properties.toArray(new Element[properties.size()]));
     }
 
     private Container findContainer(final String containerId)
