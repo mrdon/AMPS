@@ -11,6 +11,7 @@ import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
 import java.io.File;
+import java.util.Properties;
 
 /**
  * Run the integration tests against the webapp
@@ -46,6 +47,9 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     @MojoParameter(expression="${skipTests}", defaultValue = "false")
     private boolean skipTests = false;
 
+    @MojoParameter(expression="${maven.test.systemProperties}")
+    private Properties systemProperties = new Properties();
+
     protected void doExecute() throws MojoExecutionException
     {
         final MavenProject project = getMavenContext().getProject();
@@ -68,18 +72,18 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         final MavenGoals goals = getMavenGoals();
         final String pluginJar = targetDirectory.getAbsolutePath() + "/" + finalName + ".jar";
 
-        runTestsForProduct(getProductId(), goals, pluginJar);
+        runTestsForProduct(getProductId(), goals, pluginJar, systemProperties);
 
         for (String productId : ProductHandlerFactory.getIds())
         {
             if (containsTests(productId) && !productId.equals(getProductId()))
             {
-                runTestsForProduct(productId, goals, pluginJar);
+                runTestsForProduct(productId, goals, pluginJar, systemProperties);
             }
         }
     }
 
-    private void runTestsForProduct(String productId, MavenGoals goals, String pluginJar) throws MojoExecutionException
+    private void runTestsForProduct(String productId, MavenGoals goals, String pluginJar, Properties systemProperties) throws MojoExecutionException
     {
         ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals, getLog());
         Product ctx = getProductContexts(goals).get(0);
@@ -89,9 +93,14 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         if (!noWebapp)
         {
             actualHttpPort = product.start(ctx);
-
         }
-        goals.runTests(getProductId(), containerId, functionalTestPattern, actualHttpPort, ctx.getContextPath(), pluginJar);
+
+        // hard coded system properties...
+        systemProperties.put("http.port", String.valueOf(actualHttpPort));
+        systemProperties.put("context.path", ctx.getContextPath());
+        systemProperties.put("plugin.jar", pluginJar);        
+
+        goals.runTests(getProductId(), containerId, functionalTestPattern, systemProperties);
 
         if (!noWebapp)
         {
