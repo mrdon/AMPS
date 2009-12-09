@@ -57,9 +57,9 @@ rem ---------------------------------------------------------------
 
 set PRGDIR=%~dp0
 set CURRENTDIR=%cd%
-cd %PRGDIR%..
+cd /d %PRGDIR%..
 set ATLAS_HOME=%cd%
-cd %CURRENTDIR%
+cd /d %CURRENTDIR%
 
 
 rem ---------------------------------------------------------------
