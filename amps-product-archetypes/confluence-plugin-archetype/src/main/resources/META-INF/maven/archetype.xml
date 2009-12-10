@@ -4,7 +4,7 @@
         <source>src/main/java/ExampleMacro.java</source>
     </sources>
     <testSources>
-        <source>src/test/java/TestExampleMacro.java</source>
+        <source>src/test/java/ExampleMacroTest.java</source>
     </testSources>
 
     <resources>
