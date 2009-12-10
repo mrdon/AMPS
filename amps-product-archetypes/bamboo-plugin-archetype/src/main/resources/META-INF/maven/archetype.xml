@@ -4,7 +4,7 @@
         <source>src/main/java/ExampleServlet.java</source>
     </sources>
     <testSources>
-        <source>src/test/java/TestExampleServlet.java</source>
+        <source>src/test/java/ExampleServletTest.java</source>
     </testSources>
 
     <resources>
