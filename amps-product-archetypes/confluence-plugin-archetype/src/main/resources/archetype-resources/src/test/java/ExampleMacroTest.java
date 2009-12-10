@@ -1,13 +1,14 @@
 package ${package};
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Testing {@link ${package}.ExampleMacro}
  */
-public class TestExampleServlet extends TestCase
+public class ExampleMacroTest
 {
-    public void testBasic()
+    @Test
+    public void basic()
     {
         // add test here...
     }
