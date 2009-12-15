@@ -8,7 +8,7 @@
 
     <groupId>com.atlassian.amps</groupId>
     <artifactId>atlassian-amps-parent</artifactId>
-    <version>3.0.4-SNAPSHOT</version>
+    <version>3.0.4</version>
     <packaging>pom</packaging>
 
     <name>Atlassian Maven Plugin Suite (parent pom)</name>
@@ -24,9 +24,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/3.0-stable</connection>
-        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/3.0-stable</developerConnection>
-        <url>https://studio.atlassian.com/source/browse/AMPS/branches/3.0-stable</url>
+        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.0.4</connection>
+        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.0.4</developerConnection>
+        <url>https://studio.atlassian.com/source/browse/AMPS/tags/atlassian-amps-parent-3.0.4</url>
     </scm>
 
     <issueManagement>
