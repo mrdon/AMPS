@@ -395,7 +395,7 @@ public class MavenGoals
         final List<Element> props = new ArrayList<Element>();
         for (final Map.Entry<String, String> entry : systemProperties.entrySet())
         {
-            props.add(element(name(entry.getKey()), entry.getValue()));
+            sysProps.add(element(name(entry.getKey()), entry.getValue()));
         }
         props.add(element(name("cargo.servlet.port"), String.valueOf(actualHttpPort)));
         props.add(element(name("cargo.rmi.port"), String.valueOf(rmiPort)));

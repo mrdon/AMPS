@@ -47,9 +47,6 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     @MojoParameter(expression="${skipTests}", defaultValue = "false")
     private boolean skipTests = false;
 
-    @MojoParameter(expression="${maven.test.systemProperties}")
-    private Properties systemProperties = new Properties();
-
     protected void doExecute() throws MojoExecutionException
     {
         final MavenProject project = getMavenContext().getProject();
