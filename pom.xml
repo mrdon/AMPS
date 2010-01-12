@@ -60,7 +60,7 @@
     <dependencies>
         <dependency>
             <groupId>org.jfrog.maven.annomojo</groupId>
-            <artifactId>maven-plugin-anno</artifactId>
+            <artifactId>maven-plugin-tools-anno</artifactId>
             <version>${anno.mojo.version}</version>
         </dependency>
         <dependency>
