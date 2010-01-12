@@ -63,6 +63,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * System systemProperties to pass to cargo
      *
+     * TODO: this should be a Map to keep the configuration simpler, however Map params don't appear to work.
      */
     @MojoParameter
     protected Properties systemProperties = new Properties();
