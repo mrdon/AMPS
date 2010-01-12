@@ -5,6 +5,7 @@ import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class Product
 {
@@ -91,6 +92,10 @@ public class Product
      */
     private boolean installPlugin;
 
+    /**
+     * The system properties to set for the product
+     */
+    private Properties systemProperties;
 
     public String getContainerId()
     {
@@ -270,5 +275,15 @@ public class Product
     public void setWebConsoleVersion(String webConsoleVersion)
     {
         this.webConsoleVersion = webConsoleVersion;
+    }
+
+    public void setSystemProperties(Properties systemProperties)
+    {
+        this.systemProperties = systemProperties;
+    }
+
+    public Properties getSystemProperties()
+    {
+        return systemProperties;
     }
 }

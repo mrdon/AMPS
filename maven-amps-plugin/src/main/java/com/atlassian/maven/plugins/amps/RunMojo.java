@@ -4,7 +4,6 @@ import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.artifact.Artifact;
 import org.jfrog.maven.annomojo.annotations.MojoExecute;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
@@ -61,7 +60,7 @@ public class RunMojo extends AbstractProductHandlerMojo
             properties.put("context.path", ctx.getContextPath());
             writePropertiesFile();
         }
-        
+
         if (wait)
         {
             getLog().info("Type CTRL-C to exit");

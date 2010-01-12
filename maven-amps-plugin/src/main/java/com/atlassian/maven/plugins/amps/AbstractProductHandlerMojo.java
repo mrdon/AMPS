@@ -14,6 +14,7 @@ import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Base class for webapp mojos
@@ -58,8 +59,17 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     @MojoParameter(expression = "${jvmargs}")
     protected String jvmArgs;
 
+
     /**
-     * A log4j properties file
+     * System systemProperties to pass to cargo
+     *
+     */
+    @MojoParameter
+    protected Properties systemProperties = new Properties();
+
+
+    /**
+     * A log4j systemProperties file
      */
     @MojoParameter
     protected File log4jProperties;
@@ -195,6 +205,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     private Product createDefaultProductContext() throws MojoExecutionException
     {
+
+
+        System.out.println("CREATING DEFAULT PRODUCT CONTEXT = " + this);
         String dversion = (testResourcesVersion != null ? testResourcesVersion : productDataVersion);
         dversion = System.getProperty("product.data.version", dversion);
         String pversion = System.getProperty("product.version", productVersion);
@@ -205,6 +218,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setServer(server);
         ctx.setContextPath(contextPath);
         ctx.setJvmArgs(jvmArgs);
+        ctx.setSystemProperties(systemProperties);
         ctx.setBundledArtifacts(bundledArtifacts);
         ctx.setLibArtifacts(libArtifacts);
         ctx.setPluginArtifacts(pluginArtifacts);

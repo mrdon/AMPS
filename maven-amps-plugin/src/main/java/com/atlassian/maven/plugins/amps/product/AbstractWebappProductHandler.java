@@ -13,9 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
@@ -37,7 +39,23 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
         final File combinedWebappWar = addArtifactsAndOverrides(ctx, homeDir, webappWar);
 
-        return goals.startWebapp(getId(), combinedWebappWar, getSystemProperties(ctx), getExtraContainerDependencies(), ctx);
+        final Map<String, String> properties = mergeSystemProperties(ctx);
+
+        return goals.startWebapp(getId(), combinedWebappWar, properties, getExtraContainerDependencies(), ctx);
+    }
+
+    private Map<String, String> mergeSystemProperties(Product ctx)
+    {
+        final Map<String, String> properties = getSystemProperties(ctx);
+        final Properties configuredProperties = ctx.getSystemProperties();
+        final Map<String, String> systemProperties = new HashMap<String, String>();
+        systemProperties.putAll(properties);
+        // product properties may be overwritten in the pom.xml if necessary
+        for (Map.Entry entry: configuredProperties.entrySet())
+        {
+            systemProperties.put((String)entry.getKey(), (String)entry.getValue());
+        }
+        return systemProperties;
     }
 
     public void stop(final Product ctx) throws MojoExecutionException
