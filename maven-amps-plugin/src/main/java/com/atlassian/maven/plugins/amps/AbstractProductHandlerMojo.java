@@ -206,8 +206,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private Product createDefaultProductContext() throws MojoExecutionException
     {
 
-
-        System.out.println("CREATING DEFAULT PRODUCT CONTEXT = " + this);
         String dversion = (testResourcesVersion != null ? testResourcesVersion : productDataVersion);
         dversion = System.getProperty("product.data.version", dversion);
         String pversion = System.getProperty("product.version", productVersion);
