@@ -111,7 +111,8 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
 
         try {
-            ClassLoader cl = new URLClassLoader(new URL[] {new URL("file:" + new File(getHomeDirectory(), "fisheyeboot.jar").getAbsolutePath())});
+            URL fisheyebootUrl = new File(getHomeDirectory(), "fisheyeboot.jar").toURI().toURL();
+            ClassLoader cl = new URLClassLoader(new URL[] {fisheyebootUrl});
             Class<?> fisheyeCtl = cl.loadClass("com.cenqua.fisheye.FishEyeCtl");
             Method main = fisheyeCtl.getDeclaredMethod("mainImpl", String[].class);
             main.invoke(null, new Object[] {new String[] {bootCommand}});
