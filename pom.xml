@@ -195,7 +195,7 @@
         <jira.data.version>4.0</jira.data.version>
         <bamboo.version>2.3.1</bamboo.version>
         <bamboo.data.version>2.2</bamboo.data.version>
-        <fecru.version>2.0.5-429</fecru.version>
+        <fecru.version>2.1.4-460</fecru.version>
         <fecru.data.version>2.0.4.1-SNAPSHOT</fecru.data.version>
         <crowd.version>2.0.2</crowd.version>
         <crowd.data.version>2.0.2-m1</crowd.data.version>
