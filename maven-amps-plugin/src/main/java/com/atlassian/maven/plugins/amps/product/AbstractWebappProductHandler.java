@@ -3,9 +3,8 @@ package com.atlassian.maven.plugins.amps.product;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
-import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
@@ -19,10 +18,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
+import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
+
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
     private final PluginProvider pluginProvider;
-    
+
     public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals, PluginProvider pluginProvider)
     {
         super(project, goals);
@@ -171,29 +173,11 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             // Only create the home dir if it doesn't exist
             if (!homeDir.exists())
             {
-                final File confHomeZip = goals.copyHome(outputDir,
-                        new ProductArtifact(
-                                getTestResourcesArtifact().getGroupId(),
-                                getTestResourcesArtifact().getArtifactId(),
-                                ctx.getProductDataVersion()));
-                final File tmpDir = new File(getBaseDirectory(), "tmp-resources");
-                tmpDir.mkdir();
 
-                try
-                {
-                    unzip(confHomeZip, tmpDir.getPath());
-                    FileUtils.copyDirectory(tmpDir.listFiles()[0], outputDir, true);
-                    File tmp = new File(outputDir, ctx.getId() + "-home");
-                    boolean result = tmp.renameTo(homeDir);
-                    if (!result)
-                    {
-                        throw new IOException("Rename " + tmp.getPath() + " to " + homeDir.getPath() + " unsuccessful");
-                    }
-                }
-                catch (final IOException ex)
-                {
-                    throw new MojoExecutionException("Unable to copy home directory", ex);
-                }
+                //find and extract productHomeZip
+                final File productHomeZip = getProductHomeZip(ctx, outputDir);
+                extractProductHomeZip(productHomeZip, homeDir, ctx, outputDir);
+
                 // just in case
                 homeDir.mkdir();
                 processHomeDirectory(ctx, homeDir);
@@ -210,10 +194,62 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             }
 
             return homeDir;
-        }
-        else
+        } else
         {
             return getHomeDirectory();
+        }
+    }
+
+    private File getProductHomeZip(final Product ctx, final File outputDir) throws MojoExecutionException
+    {
+        File productHomeZip = null;
+        String dpath = ctx.getProductDataPath();
+
+        //use custom zip if supplied
+        if (StringUtils.isNotBlank(dpath))
+        {
+            File customHomeZip = new File(dpath);
+
+            if (customHomeZip.exists())
+            {
+                productHomeZip = customHomeZip;
+            }
+        }
+
+        //if we didn't find a custom zip, use the default
+        if (productHomeZip == null)
+        {
+            productHomeZip = goals.copyHome(outputDir,
+                    new ProductArtifact(
+                            getTestResourcesArtifact().getGroupId(),
+                            getTestResourcesArtifact().getArtifactId(),
+                            ctx.getProductDataVersion()));
+        }
+
+        return productHomeZip;
+    }
+
+    private void extractProductHomeZip(File productHomeZip, File homeDir,
+                                       Product ctx, File outputDir)
+            throws MojoExecutionException
+    {
+        final File tmpDir = new File(getBaseDirectory(), "tmp-resources");
+        tmpDir.mkdir();
+
+        try
+        {
+            unzip(productHomeZip, tmpDir.getPath());
+            FileUtils.copyDirectory(tmpDir.listFiles()[0], outputDir, true);
+            File tmp = new File(outputDir, ctx.getId() + "-home");
+            boolean result = tmp.renameTo(homeDir);
+            if (!result)
+            {
+                throw new IOException("Rename " + tmp.getPath() + " to " + homeDir.getPath() + " unsuccessful");
+            }
+        }
+        catch (final IOException ex)
+        {
+            throw new MojoExecutionException("Unable to copy home directory", ex);
         }
     }
 

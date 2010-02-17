@@ -3,23 +3,13 @@ package com.atlassian.maven.plugins.amps;
 import com.atlassian.core.util.FileUtils;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
+import com.atlassian.maven.plugins.amps.util.ZipUtils;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.model.Resource;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 /**
  * Executes specific maven goals
@@ -494,7 +486,7 @@ public class MavenGoals
         {
             properties.add(
                     element(name("property"),
-                            element(name("name"),  (String)entry.getKey()),
+                            element(name("name"), (String)entry.getKey()),
                             element(name("value"), (String)entry.getValue())));
         }
 
@@ -728,6 +720,66 @@ public class MavenGoals
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
+    }
+
+    /**
+     * Copies and creates a zip file of the previous run's home directory minus any installed plugins.
+     *
+     * @param homeDirectory The path to the previous run's home directory.
+     * @param targetZip     The path to the final zip file.
+     * @param productId     The name of the product.
+     *
+     * @since 3.1-m3
+     */
+    public void createHomeResourcesZip(final File homeDirectory, final File targetZip, final String productId)
+    {
+        if (homeDirectory == null || !homeDirectory.exists())
+        {
+            String homePath = "null";
+            if(homeDirectory != null) {
+                homePath = homeDirectory.getAbsolutePath();
+            }
+            log.info("home directory doesn't exist, skipping. [" + homePath + "]");
+            return;
+        }
+
+        final File appDir = new File(project.getBuild().getDirectory(), productId);
+        final File tmpDir = new File(appDir, "tmp-resources");
+        final File genDir = new File(tmpDir, "generated-home");
+        final String entryBase = "generated-resources/" + productId + "-home";
+
+        if (genDir.exists())
+        {
+            FileUtils.deleteDir(genDir);
+        }
+
+        genDir.mkdirs();
+
+        try
+        {
+            FileUtils.copyDirectory(homeDirectory, genDir, true);
+
+            //we want to get rid of the plugins folders.
+            File homePlugins = new File(genDir, "plugins");
+            File bundledPlugins = new File(genDir, "bundled-plugins");
+
+            if (homePlugins.exists())
+            {
+                FileUtils.deleteDir(homePlugins);
+            }
+
+            if (bundledPlugins.exists())
+            {
+                FileUtils.deleteDir(bundledPlugins);
+            }
+
+            ZipUtils.zipDir(targetZip, tmpDir.listFiles()[0], entryBase);
+        } catch (IOException e)
+        {
+            throw new RuntimeException("Error zipping home directory", e);
+        }
+
+
     }
 
     private static class Container extends ProductArtifact

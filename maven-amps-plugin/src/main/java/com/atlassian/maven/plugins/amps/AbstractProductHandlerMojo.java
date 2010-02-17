@@ -19,8 +19,7 @@ import java.util.Properties;
 /**
  * Base class for webapp mojos
  */
-public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerAwareMojo
-{
+public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerAwareMojo {
     // ------ start inline product context
 
     /**
@@ -87,6 +86,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoParameter(expression = "${product.data.version}", defaultValue = "LATEST")
     private String productDataVersion;
+
+    /**
+     * The path to a custom test resources zip
+     */
+    @MojoParameter(expression = "${product.data.path}")
+    private String productDataPath;
 
     /**
      */
@@ -210,6 +215,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         String dversion = (testResourcesVersion != null ? testResourcesVersion : productDataVersion);
         dversion = System.getProperty("product.data.version", dversion);
         String pversion = System.getProperty("product.version", productVersion);
+        String dpath = System.getProperty("product.data.path", productDataPath);
 
         Product ctx = new Product();
         ctx.setId(getProductId());
@@ -223,6 +229,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setPluginArtifacts(pluginArtifacts);
         ctx.setLog4jProperties(log4jProperties);
         ctx.setProductDataVersion(dversion);
+        ctx.setProductDataPath(dpath);
         ctx.setHttpPort(httpPort);
         ctx.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
 

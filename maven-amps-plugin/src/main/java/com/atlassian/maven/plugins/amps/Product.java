@@ -49,6 +49,11 @@ public class Product
     protected String productDataVersion = "LATEST";
 
     /**
+     * The path to a custom test resources zip
+     */
+    protected String productDataPath = "";
+
+    /**
      */
     private List<ProductArtifact> pluginArtifacts = new ArrayList<ProductArtifact>();
 
@@ -175,6 +180,16 @@ public class Product
     public void setProductDataVersion(String productDataVersion)
     {
         this.productDataVersion = productDataVersion;
+    }
+
+    public String getProductDataPath()
+    {
+        return productDataPath;
+    }
+
+    public void setProductDataPath(String productDataPath)
+    {
+        this.productDataPath = productDataPath;
     }
 
     public List<ProductArtifact> getPluginArtifacts()
