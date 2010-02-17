@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.osgi;
 
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.artifact.Artifact;
@@ -22,11 +23,14 @@ import aQute.libg.header.OSGiHeader;
 public class PackageImportVersionValidator
 {
     private final MavenProject project;
+    private final Log log;
     private final Map<String,Set<String>> jarPackageCache = new HashMap<String,Set<String>>();
+    private static final int MIN_PACKAGES_FOR_WILDCARD = 4;
 
-    public PackageImportVersionValidator(MavenProject project)
+    public PackageImportVersionValidator(MavenProject project, Log log)
     {
         this.project = project;
+        this.log = log;
     }
 
     /**
@@ -35,11 +39,12 @@ public class PackageImportVersionValidator
      * @throws MojoFailureException If the validation fails.  Will contain user-friendly error message trying to guess
      * a desirable bnd configuration for package imports.
      */
-    public void validate(String imports) throws MojoFailureException
+    public void validate(String imports)
     {
         if (imports != null)
         {
-            Map<String,String> unknownPackages = new HashMap<String,String>();
+            Map<String,String> foundPackages = new HashMap<String,String>();
+            boolean validationFailed = false;
 
             Map<String,Map<String,String>> pkgImports = OSGiHeader.parseHeader(imports);
             for (Map.Entry<String,Map<String,String>> pkgImport : pkgImports.entrySet())
@@ -49,25 +54,43 @@ public class PackageImportVersionValidator
                 {
                     Map<String,String> props = pkgImport.getValue();
                     String version = props.get("version");
+                    foundPackages.put(pkg, guessVersion( pkg));
                     if (version == null || version.length() == 0)
                     {
-                        unknownPackages.put(pkg, guessVersion( pkg));
+                        validationFailed = true;
                     }
                 }
                 else
                 {
-                    unknownPackages.put(pkg, guessVersion(pkg));
+                    validationFailed = true;
+                    foundPackages.put(pkg, guessVersion(pkg));
                 }
             }
 
-            if (!unknownPackages.isEmpty())
+            if (validationFailed)
             {
-                StringBuilder sb = new StringBuilder("Manifest must contain versions for all imports.  Suggested changes:\n");
-                for (Map.Entry<String,String> entry : compressPackages(unknownPackages).entrySet())
+                StringBuilder sb = new StringBuilder();
+                sb.append("The manifest should contain versions for all imports to prevent ambiguity at install time ");
+                sb.append("due to multiple versions of a package.  Here are some suggestions generated for this project ");
+                sb.append("to start from:\n ");
+                sb.append("  <configuration>\n");
+                sb.append("    <instructions>\n");
+                sb.append("      <Import-Package>\n");
+                for (Map.Entry<String,String> entry : compressPackages(foundPackages).entrySet())
                 {
-                    sb.append(entry.getKey()).append(";version=\"").append(entry.getValue()).append("\",\n");
+                    sb.append("        ").append(entry.getKey()).append(";version=\"").append(entry.getValue()).append("\",\n");
                 }
-                throw new MojoFailureException(sb.substring(0, sb.length() - 2));
+                sb.delete(sb.length() - 2, sb.length());
+                sb.append("\n");
+                sb.append("      </Import-Package>\n");
+                sb.append("    </instructions>\n");
+                sb.append("  </configuration>\n");
+                sb.append("You may notice many packages you weren't expecting.  This is usually because of a bundled jar ");
+                sb.append("that references packages that don't apply.  You can usually remove these or if necessary, ");
+                sb.append("mark them as optional by adding ';resolution:=optional' to the package import.  Packages ");
+                sb.append("that are detected as version '0.0.0' usually mean either they are JDK packages or ones that ");
+                sb.append("aren't referenced in your project, and therefore, likely candidates for removal entirely.");
+                log.warn(sb.toString());
             }
         }
     }
@@ -75,73 +98,75 @@ public class PackageImportVersionValidator
     /**
      * Compress packages into sets of wildcard expressions, where applicable.
      *
-     * @param unknownPackages The raw set of packages and versions
+     * @param allPackages The raw set of packages and versions
      * @return A map of import package pattern and version
      */
-    static Map<String,String> compressPackages(Map<String, String> unknownPackages)
+    static Map<String,String> compressPackages(Map<String, String> allPackages)
     {
         Map<String,String> pkgs = new HashMap<String,String>();
-        Set<String> unmatchedPackages = new TreeSet<String>(unknownPackages.keySet());
+        Set<String> unmatchedPackages = new TreeSet<String>(allPackages.keySet());
 
         // Iterate through all packages to compress
-        for (String pkg : new TreeSet<String>(unknownPackages.keySet()))
+        for (String pkg : new TreeSet<String>(allPackages.keySet()))
         {
             // only process unmatched packages
             if (!unmatchedPackages.contains(pkg))
             {
                 continue;
             }
-            String version = unknownPackages.get(pkg);
+            String version = allPackages.get(pkg);
 
             // Create set of all other unmatched patches
             Set<String> others = new TreeSet<String>(unmatchedPackages);
             others.remove(pkg);
 
-            // Iterate through characters in packages, looking for packages with matching versions and characters
+            // Build list of packages with the same version
+            for (Iterator<String> i = others.iterator(); i.hasNext(); )
+            {
+                String otherPkg = i.next();
+                if (!allPackages.get(otherPkg).equals(version))
+                {
+                    i.remove();
+                }
+            }
+
+
+            // Iterate through characters in the current package, looking for packages with matching characters and a
+            // minimum of 3 packages
+            int numberOfPackages = 1;
             for (int curpos = 0; curpos<pkg.length(); curpos++)
             {
                 char curchar = pkg.charAt(curpos);
-                boolean sameVersion = true;
+                if (curchar == '.')
+                {
+                    numberOfPackages++;
+                }
+
                 for (Iterator<String> i = others.iterator(); i.hasNext(); )
                 {
-                    String other = i.next();
+                    String otherPkg = i.next();
 
                     // Remove other package if the character at the same index is different
-                    if (otherMatchesNextChar(curpos, curchar, other))
+                    if (otherNotMatchesNextChar(curpos, curchar, otherPkg))
                     {
                         i.remove();
                     }
-
-                    // Stop looking if the package has a different version (i.e. a wildcard isn't possible)
-                    else if (!unknownPackages.get(other).equals(version))
-                    {
-                        sameVersion = false;
-                        break;
-                    }
                 }
 
-                // If we are at the end of the original package or all packages are the same
-                if (curpos == pkg.length() -1 || sameVersion)
+                if (numberOfPackages == MIN_PACKAGES_FOR_WILDCARD || curpos == pkg.length() - 1)
                 {
-                    // one or more other packages have the same version, create wildcard pattern
-                    if (others.size() > 0 && sameVersion)
+                    if (others.size() > 0 && numberOfPackages == MIN_PACKAGES_FOR_WILDCARD)
                     {
-                        StringBuilder pattern = greedlyBuildPattern(pkg, others, curpos);
+                        String pattern = greedlyBuildPattern(pkg, others, curpos).toString();
                         pkgs.put(pattern + "*", version);
+                        unmatchedPackages.removeAll(others);
                     }
-
-                    // No wildcard possible
                     else
                     {
+                        // No wildcard possible
                         pkgs.put(pkg, version);
                     }
                     unmatchedPackages.remove(pkg);
-
-                    // Remove all wildcard-matched packages
-                    if (sameVersion)
-                    {
-                        unmatchedPackages.removeAll(others);
-                    }
                     break;
                 }
             }
@@ -149,7 +174,7 @@ public class PackageImportVersionValidator
         return pkgs;
     }
 
-    private static boolean otherMatchesNextChar(int curpos, char curchar, String other)
+    private static boolean otherNotMatchesNextChar(int curpos, char curchar, String other)
     {
         return other.length() <= curpos || curchar != other.charAt(curpos);
     }
@@ -164,12 +189,13 @@ public class PackageImportVersionValidator
     private static StringBuilder greedlyBuildPattern(String pkg, Set<String> others, int curpos)
     {
         StringBuilder pattern = new StringBuilder(pkg.substring(0, curpos + 1));
-        for (int greedyPos = curpos + 1; greedyPos < pkg.length(); greedyPos++)
+        boolean canConsumeAnotherChar = true;
+        for (int greedyPos = curpos + 1; greedyPos < pkg.length() && canConsumeAnotherChar; greedyPos++)
         {
-            boolean canConsumeAnotherChar = true;
             for (String greedyOther : others)
             {
-                if (otherMatchesNextChar(greedyPos, pkg.charAt(greedyPos), greedyOther))
+                canConsumeAnotherChar = true;
+                if (otherNotMatchesNextChar(greedyPos, pkg.charAt(greedyPos), greedyOther))
                 {
                     canConsumeAnotherChar = false;
                     break;

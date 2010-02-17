@@ -39,7 +39,8 @@ public class ValidateManifestMojo extends AbstractAmpsMojo
 
                 mfin = new FileInputStream(mfile);
                 Manifest mf = new Manifest(mfin);
-                PackageImportVersionValidator validator = new PackageImportVersionValidator(getMavenContext().getProject());
+                PackageImportVersionValidator validator = new PackageImportVersionValidator(getMavenContext().getProject(),
+                        getMavenContext().getLog());
                 validator.validate(mf.getMainAttributes().getValue(Constants.IMPORT_PACKAGE));
             }
             catch (IOException e)

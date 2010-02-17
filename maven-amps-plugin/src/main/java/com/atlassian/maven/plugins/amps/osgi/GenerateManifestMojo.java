@@ -25,7 +25,7 @@ public class GenerateManifestMojo extends AbstractAmpsMojo
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         final MavenProject project = getMavenContext().getProject();
-        if (!instructions.isEmpty() || OsgiHelper.isAtlassianPlugin(project))
+        if (!instructions.isEmpty())
         {
             getLog().info("Generating a manifest for this plugin");
 
@@ -45,6 +45,24 @@ public class GenerateManifestMojo extends AbstractAmpsMojo
                 instructions.put(Constants.BUNDLE_CLASSPATH, sb.toString());
             }
             getMavenGoals().generateManifest(instructions);
+        }
+        else if  (OsgiHelper.isAtlassianPlugin(project))
+        {
+            getLog().warn("Atlassian plugin detected as the organisation name includes the string 'Atlassian'.  If " +
+                          "this is meant for production, you should add bundle " +
+                          "instructions specifically configuring what packages are imported and exported.  This " +
+                          "helps catch manifest generation bugs during the build rather than upon install.  The " +
+                          "bundle generation configuration can be specified " +
+                          "via the <instructions> element in the plugin configuration.  For example:\n" +
+                          "    <configuration>\n" +
+                          "        <Import-Package>\n" +
+                          "            com.atlassian.myplugin*,\n" +
+                          "            com.library.optional.*;resolution:=optional,\n" +
+                          "            *\n" +
+                          "        </Import-Package>\n" +
+                          "    </configuration>\n\n" +
+                          "See the Maven bundle plugin (which is used under the covers) for more info: " +
+                          "http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html#ApacheFelixMavenBundlePlugin%28BND%29-Instructions");
         }
         else
         {
