@@ -24,13 +24,15 @@ public class PackageImportVersionValidator
 {
     private final MavenProject project;
     private final Log log;
+    private final String productName;
     private final Map<String,Set<String>> jarPackageCache = new HashMap<String,Set<String>>();
     private static final int MIN_PACKAGES_FOR_WILDCARD = 4;
 
-    public PackageImportVersionValidator(MavenProject project, Log log)
+    public PackageImportVersionValidator(MavenProject project, Log log, String productName)
     {
         this.project = project;
         this.log = log;
+        this.productName = productName;
     }
 
     /**
@@ -71,7 +73,8 @@ public class PackageImportVersionValidator
             {
                 StringBuilder sb = new StringBuilder();
                 sb.append("The manifest should contain versions for all imports to prevent ambiguity at install time ");
-                sb.append("due to multiple versions of a package.  Here are some suggestions generated for this project ");
+                sb.append("due to multiple versions of a package.  Here are some suggestions for the ");
+                sb.append("maven-").append(productName).append("-plugin configuration generated for this project ");
                 sb.append("to start from:\n ");
                 sb.append("  <configuration>\n");
                 sb.append("    <instructions>\n");

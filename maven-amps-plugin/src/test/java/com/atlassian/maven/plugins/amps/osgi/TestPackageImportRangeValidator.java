@@ -31,7 +31,7 @@ public class TestPackageImportRangeValidator extends TestCase
         super.setUp();
         project = mock(MavenProject.class);
         log = mock(Log.class);
-        validator = new PackageImportVersionValidator(project, log);
+        validator = new PackageImportVersionValidator(project, log, "foo");
     }
 
     public void testValidateWithProperVersion() throws MojoFailureException

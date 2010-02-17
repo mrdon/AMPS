@@ -53,7 +53,7 @@ public class GenerateManifestMojo extends AbstractAmpsMojo
                           "instructions specifically configuring what packages are imported and exported.  This " +
                           "helps catch manifest generation bugs during the build rather than upon install.  The " +
                           "bundle generation configuration can be specified " +
-                          "via the <instructions> element in the plugin configuration.  For example:\n" +
+                          "via the <instructions> element in the maven-" + getPluginInformation().getId()+"-plugin configuration.  For example:\n" +
                           "    <configuration>\n" +
                           "        <Import-Package>\n" +
                           "            com.atlassian.myplugin*,\n" +
