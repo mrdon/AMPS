@@ -12,6 +12,10 @@ import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
 import java.io.File;
 import java.util.Properties;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
 
 /**
  * Run the integration tests against the webapp
@@ -31,6 +35,12 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
      */
     @MojoParameter(expression = "${project.build.testOutputDirectory}", required = true)
     private File testClassesDirectory;
+
+    /**
+     * The list of specific test groups to execute
+     */
+    @MojoParameter
+    private List<TestGroup> testGroups = new ArrayList<TestGroup>();
 
     /**
      * Whether the reference application will not be started or not
@@ -69,39 +79,101 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         final MavenGoals goals = getMavenGoals();
         final String pluginJar = targetDirectory.getAbsolutePath() + "/" + finalName + ".jar";
 
-        runTestsForProduct(getProductId(), goals, pluginJar, systemProperties);
+        runTestsForTestGroup(getProductId(), goals, pluginJar, systemProperties);
 
-        for (String productId : ProductHandlerFactory.getIds())
+        for (String testGroupId : getTestGroupIds())
         {
-            if (containsTests(productId) && !productId.equals(getProductId()))
+            if (containsTests(testGroupId) && !testGroupId.equals(getProductId()))
             {
-                runTestsForProduct(productId, goals, pluginJar, systemProperties);
+                runTestsForTestGroup(testGroupId, goals, pluginJar, systemProperties);
             }
         }
     }
 
-    private void runTestsForProduct(String productId, MavenGoals goals, String pluginJar, Properties systemProperties) throws MojoExecutionException
+    private Set<String> getTestGroupIds()
     {
-        ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals, getLog());
-        Product ctx = getProductContexts(goals).get(0);
-        ctx.setInstallPlugin(installPlugin);
-        
-        int actualHttpPort = 0;
-        if (!noWebapp)
+        Set<String> ids = new HashSet<String>();
+        ids.addAll(ProductHandlerFactory.getIds());
+        for (TestGroup group : testGroups)
         {
-            actualHttpPort = product.start(ctx);
+            ids.add(group.getId());
+        }
+        return ids;
+    }
+
+    private Set<String> getProductIdsForTestGroup(String testGroupId) throws MojoExecutionException
+    {
+        Set<String> productIds = new HashSet<String>();
+
+        for (TestGroup group : testGroups)
+        {
+            if (group.getId().equals(testGroupId))
+            {
+                productIds.addAll(group.getProductIds());
+            }
+        }
+        if (ProductHandlerFactory.getIds().contains(testGroupId))
+        {
+            productIds.add(testGroupId);
         }
 
-        // hard coded system properties...
-        systemProperties.put("http.port", String.valueOf(actualHttpPort));
-        systemProperties.put("context.path", ctx.getContextPath());
-        systemProperties.put("plugin.jar", pluginJar);        
+        if (productIds.isEmpty())
+        {
+            throw new MojoExecutionException("Unknown test group id");
+        }
 
+        return productIds;
+    }
+
+    private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Properties systemProperties) throws MojoExecutionException
+    {
+        Set<String> productIds = getProductIdsForTestGroup(testGroupId);
+
+        // Create a container object to hold product-related stuff
+        List<TestGroupProductExecution> products = new ArrayList<TestGroupProductExecution>();
+        for (String productId : productIds)
+        {
+            ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals, getLog());
+            Product ctx = getProductContexts(goals).get(productId);
+            products.add(new TestGroupProductExecution(ctx, product));
+        }
+
+        // Install the plugin in each product and start it
+        for (TestGroupProductExecution testGroupProductExecution : products)
+        {
+            ProductHandler productHandler = testGroupProductExecution.getProductHandler();
+            Product product = testGroupProductExecution.getProduct();
+            product.setInstallPlugin(installPlugin);
+
+            int actualHttpPort = 0;
+            if (!noWebapp)
+            {
+                actualHttpPort = productHandler.start(product);
+            }
+
+            if (products.size() == 1)
+            {
+                systemProperties.put("http.port", String.valueOf(actualHttpPort));
+                systemProperties.put("context.path", product.getContextPath());
+            }
+            // hard coded system properties...
+            systemProperties.put("http." + product.getId() + ".port", String.valueOf(actualHttpPort));
+            systemProperties.put("context." + product.getId() + ".path", product.getContextPath());
+            systemProperties.put("plugin.jar", pluginJar);
+        }
+
+        // Actually run the tests
         goals.runTests(getProductId(), containerId, functionalTestPattern, systemProperties);
 
-        if (!noWebapp)
+        // Shut all products down
+        for (TestGroupProductExecution testGroupProductExecution : products)
         {
-            product.stop(ctx);
+            ProductHandler productHandler = testGroupProductExecution.getProductHandler();
+            Product product = testGroupProductExecution.getProduct();
+            if (!noWebapp)
+            {
+                productHandler.stop(product);
+            }
         }
     }
 
@@ -130,5 +202,27 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             }
         }
         return false;
+    }
+
+    private static class TestGroupProductExecution
+    {
+        private final Product product;
+        private final ProductHandler productHandler;
+
+        public TestGroupProductExecution(Product product, ProductHandler productHandler)
+        {
+            this.product = product;
+            this.productHandler = productHandler;
+        }
+
+        public ProductHandler getProductHandler()
+        {
+            return productHandler;
+        }
+
+        public Product getProduct()
+        {
+            return product;
+        }
     }
 }

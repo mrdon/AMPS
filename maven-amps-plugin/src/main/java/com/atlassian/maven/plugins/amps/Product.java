@@ -12,7 +12,7 @@ public class Product
     /**
      * Container to run in
      */
-    protected String containerId = "tomcat6x";
+    protected String containerId;
     /**
      * HTTP port for the servlet containers
      */
@@ -21,7 +21,7 @@ public class Product
     /**
      * Application context path
      */
-    protected String contextPath = "/";
+    protected String contextPath;
 
     /**
      * Application server
@@ -31,7 +31,7 @@ public class Product
     /**
      * Webapp version
      */
-    protected String version = "RELEASE";
+    protected String version;
 
     /**
      * JVM arguments to pass to cargo
@@ -46,7 +46,7 @@ public class Product
     /**
      * The test resources version
      */
-    protected String productDataVersion = "LATEST";
+    protected String productDataVersion;
 
     /**
      * The path to a custom test resources zip
@@ -100,7 +100,7 @@ public class Product
     /**
      * The system properties to set for the product
      */
-    private Properties systemProperties;
+    private Properties systemProperties = new Properties();
 
     public String getContainerId()
     {

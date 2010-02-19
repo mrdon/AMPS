@@ -15,6 +15,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Base class for webapp mojos
@@ -22,10 +24,16 @@ import java.util.Properties;
 public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerAwareMojo {
     // ------ start inline product context
 
+    private static final String DEFAULT_CONTAINER = "tomcat6x";
+    private static final String DEFAULT_SERVER = "localhost";
+    private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";
+    private static final String DEFAULT_PDK_VERSION = "0.4";
+    private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
+
     /**
      * Container to run in
      */
-    @MojoParameter(expression = "${container}", defaultValue = "tomcat6x")
+    @MojoParameter(expression = "${container}", defaultValue = DEFAULT_CONTAINER)
     protected String containerId;
 
     /**
@@ -43,7 +51,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Application server
      */
-    @MojoParameter(expression = "${server}", defaultValue = "localhost")
+    @MojoParameter(expression = "${server}", defaultValue = DEFAULT_SERVER)
     protected String server;
 
     /**
@@ -84,7 +92,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * The test resources version
      */
-    @MojoParameter(expression = "${product.data.version}", defaultValue = "LATEST")
+    @MojoParameter(expression = "${product.data.version}", defaultValue = DEFAULT_PRODUCT_DATA_VERSION)
     private String productDataVersion;
 
     /**
@@ -117,7 +125,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Atlassian Plugin Development Kit (PDK) version
      */
-    @MojoParameter(expression = "${pdk.version}", defaultValue = "0.4")
+    @MojoParameter(expression = "${pdk.version}", defaultValue = DEFAULT_PDK_VERSION)
     private String pdkVersion;
 
     /**
@@ -130,7 +138,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Felix OSGi web console version
      */
-    @MojoParameter(expression = "${web.console.version}", defaultValue = "1.2.8")
+    @MojoParameter(expression = "${web.console.version}", defaultValue = DEFAULT_WEB_CONSOLE_VERSION)
     private String webConsoleVersion;
 
     // ---------------- end product context
@@ -209,14 +217,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     @MojoParameter
     private List<Product> products = new ArrayList<Product>();
 
+
     private Product createDefaultProductContext() throws MojoExecutionException
     {
-
-        String dversion = (testResourcesVersion != null ? testResourcesVersion : productDataVersion);
-        dversion = System.getProperty("product.data.version", dversion);
-        String pversion = System.getProperty("product.version", productVersion);
-        String dpath = System.getProperty("product.data.path", productDataPath);
-
         Product ctx = new Product();
         ctx.setId(getProductId());
         ctx.setContainerId(containerId);
@@ -228,10 +231,11 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setLibArtifacts(libArtifacts);
         ctx.setPluginArtifacts(pluginArtifacts);
         ctx.setLog4jProperties(log4jProperties);
-        ctx.setProductDataVersion(dversion);
-        ctx.setProductDataPath(dpath);
         ctx.setHttpPort(httpPort);
-        ctx.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
+
+        ctx.setVersion(productVersion);
+        ctx.setProductDataVersion(productDataVersion);
+        ctx.setProductDataPath(productDataPath);
 
         ctx.setRestVersion(restVersion);
         ctx.setSalVersion(salVersion);
@@ -239,9 +243,45 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setWebConsoleVersion(webConsoleVersion);
 
         ctx.setHttpPort(httpPort);
-        ctx.setVersion(pversion);
-        ctx.setContextPath(contextPath);
         return ctx;
+    }
+
+    private void postProcessProduct(Product product)
+    {
+
+        String dversion = System.getProperty("product.data.version", product.getProductDataVersion());
+        String pversion = System.getProperty("product.version", product.getVersion());
+        String dpath = System.getProperty("product.data.path", product.getProductDataPath());
+
+        product.setProductDataPath(dpath);
+        product.setProductDataVersion(dversion);
+        product.setVersion(pversion);
+        product.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
+
+        if (product.getContainerId() == null)
+        {
+            product.setContainerId(DEFAULT_CONTAINER);
+        }
+
+        if (product.getServer() == null)
+        {
+            product.setServer(DEFAULT_SERVER);
+        }
+
+        if (product.getProductDataVersion() == null)
+        {
+            product.setProductDataVersion(DEFAULT_PRODUCT_DATA_VERSION);
+        }
+
+        if (product.getPdkVersion() == null)
+        {
+            product.setPdkVersion(DEFAULT_PDK_VERSION);
+        }
+
+        if (product.getWebConsoleVersion() == null)
+        {
+            product.setWebConsoleVersion(DEFAULT_WEB_CONSOLE_VERSION);
+        }
     }
 
     private List<ProductArtifact> stringToArtifactList(String val, List<ProductArtifact> artifacts)
@@ -275,22 +315,37 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         doExecute();
     }
 
-    protected List<Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
+    protected Map<String, Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
     {
-        List<Product> list = new ArrayList<Product>(products);
+        Map<String, Product> productMap = new HashMap<String, Product>();
+
+        
         if (getProductId() != null)
         {
-            list.add(0, createDefaultProductContext());
+            boolean found = false;
+            for (Product product : products)
+            {
+                if (getProductId().equals(product.getId()))
+                {
+                    found = true;
+                }
+                productMap.put(product.getId(), product);
+            }
+            if (!found)
+            {
+                productMap.put(getProductId(), createDefaultProductContext());
+            }
         }
 
-        for (Product ctx : list)
+        for (Product ctx : productMap.values())
         {
+            postProcessProduct(ctx);
             ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext().getProject(), goals, getLog());
             ctx.setHttpPort(ctx.getHttpPort() == 0 ? handler.getDefaultHttpPort() : ctx.getHttpPort());
             ctx.setVersion(ctx.getVersion() == null ? "RELEASE" : ctx.getVersion());
             ctx.setContextPath(ctx.getContextPath() == null ? "/" + handler.getId() : ctx.getContextPath());
         }
-        return list;
+        return productMap;
     }
 
     protected abstract void doExecute() throws MojoExecutionException, MojoFailureException;

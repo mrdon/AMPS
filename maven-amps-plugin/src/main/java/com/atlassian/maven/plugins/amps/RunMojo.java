@@ -46,7 +46,7 @@ public class RunMojo extends AbstractProductHandlerMojo
     {
         final MavenGoals goals = getMavenGoals();
         ProductHandler product = createProductHandler();
-        Product ctx = getProductContexts(goals).get(0);
+        Product ctx = getProductContexts(goals).get(getProductId());
 
         ctx.setInstallPlugin(shouldInstallPlugin());
 

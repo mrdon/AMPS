@@ -34,7 +34,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     public int start(final Product ctx) throws MojoExecutionException
     {
         // Copy the webapp war to target
-        final File webappWar = goals.copyWebappWar(getId(), getBaseDirectory(),
+        final File webappWar = goals.copyWebappWar(ctx.getId(), getBaseDirectory(),
                 new ProductArtifact(getArtifact().getGroupId(), getArtifact().getArtifactId(), ctx.getVersion()));
 
         final File homeDir = extractAndProcessHomeDirectory(ctx);
@@ -43,7 +43,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
         final Map<String, String> properties = mergeSystemProperties(ctx);
 
-        return goals.startWebapp(getId(), combinedWebappWar, properties, getExtraContainerDependencies(), ctx);
+        return goals.startWebapp(ctx.getId(), combinedWebappWar, properties, getExtraContainerDependencies(), ctx);
     }
 
     private Map<String, String> mergeSystemProperties(Product ctx)
