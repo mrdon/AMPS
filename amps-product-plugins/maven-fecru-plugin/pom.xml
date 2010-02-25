@@ -30,6 +30,17 @@
                         <artifactId>shitty-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
+                <!-- pass environment properties into the SDK debug integration test -->
+                <testResources>
+                    <testResource>
+                        <targetPath>${project.build.directory}/it/debug</targetPath>
+                        <filtering>false</filtering>
+                        <directory>src/test/resources</directory>
+                        <includes>
+                            <include>env.properties</include>
+                        </includes>
+                    </testResource>
+                </testResources>                
             </build>
             <properties>
                 <shitty.product>fecru</shitty.product>
