@@ -200,7 +200,7 @@
         <jira.version>4.0.2</jira.version>
         <jira.data.version>4.0</jira.data.version>
         <bamboo.version>2.5.2</bamboo.version>
-        <bamboo.data.version>2.5.2</bamboo.data.version>
+        <bamboo.data.version>2.2</bamboo.data.version>
         <fecru.version>2.2.0-465</fecru.version>
         <fecru.data.version>2.2.0-465</fecru.data.version>
         <crowd.version>2.0.3</crowd.version>
