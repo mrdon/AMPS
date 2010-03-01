@@ -23,6 +23,14 @@
         </license>
     </licenses>
 
+    <contributors>
+        <contributor>
+            <name>Jonathan Doklovic</name>
+            <organization>Sysbliss</organization>
+            <organizationUrl>http://www.sysbliss.com/</organizationUrl>
+        </contributor>
+    </contributors>
+
     <scm>
         <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/trunk</connection>
         <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/trunk</developerConnection>
