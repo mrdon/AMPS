@@ -199,6 +199,13 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <site>
+            <id>atlassian-documentation</id>
+            <url>dav:https://docs.atlassian.com/${project.artifactId}/${project.version}</url>
+        </site>
+    </distributionManagement>
+
     <reporting>
         <plugins>
             <plugin>
@@ -214,8 +221,8 @@
         <refapp.version>2.3.10</refapp.version>
         <confluence.version>3.1.1</confluence.version>
         <confluence.data.version>3.1-SNAPSHOT</confluence.data.version>
-        <jira.version>4.1-SNAPSHOT</jira.version>
-        <jira.data.version>4.1-SNAPSHOT</jira.data.version>
+        <jira.version>4.0.2</jira.version>
+        <jira.data.version>4.0</jira.data.version>
         <bamboo.version>2.5.2</bamboo.version>
         <bamboo.data.version>2.2</bamboo.data.version>
         <fecru.version>2.2.0-465</fecru.version>
