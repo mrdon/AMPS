@@ -149,6 +149,26 @@ public class MavenGoals
         );
     }
 
+    public void extractBundledDependencies() throws MojoExecutionException
+    {
+         executeMojo(
+                 plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+                ),
+                goal("unpack-dependencies"),
+                configuration(
+                        element(name("includeScope"), "runtime"),
+                        element(name("excludeScope"), "provided"),
+                        element(name("excludeScope"), "test"),
+                        element(name("includeTypes"), "jar"),
+                        element(name("outputDirectory"), "${project.build.outputDirectory}")
+                ),
+                executionEnvironment(project, session, pluginManager)
+        );
+    }
+    
     public void filterPluginDescriptor() throws MojoExecutionException
     {
         executeMojo(
