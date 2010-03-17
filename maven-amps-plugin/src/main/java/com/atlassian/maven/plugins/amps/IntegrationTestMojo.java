@@ -11,11 +11,7 @@ import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
 import java.io.File;
-import java.util.Properties;
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Run the integration tests against the webapp
@@ -90,6 +86,18 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         }
     }
 
+    /**
+     * Returns product-specific properties to pass to the container during
+     * integration testing. Default implementation does nothing.
+     * @param product the {@code Product} object to use
+     * @return a {@code Map} of properties to add to the system properties passed
+     * to the container
+     */
+    protected Map<String, String> getProductFunctionalTestProperties(Product product)
+    {
+        return Collections.emptyMap();
+    }
+
     private Set<String> getTestGroupIds()
     {
         Set<String> ids = new HashSet<String>();
@@ -160,6 +168,8 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             systemProperties.put("http." + product.getId() + ".port", String.valueOf(actualHttpPort));
             systemProperties.put("context." + product.getId() + ".path", product.getContextPath());
             systemProperties.put("plugin.jar", pluginJar);
+
+            systemProperties.putAll(getProductFunctionalTestProperties(product));
         }
 
         // Actually run the tests
