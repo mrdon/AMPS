@@ -1,7 +1,9 @@
 package com.atlassian.maven.plugins.amps.util;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,12 +12,11 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-
-import static org.hamcrest.core.IsNot.*;
-import static org.hamcrest.core.IsEqual.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class TestZipUtils
 {
@@ -30,6 +31,7 @@ public class TestZipUtils
 
     private File tempDir;
     private File sourceZipDir;
+    private ZipFile zip;
 
     @Before
     public void ensureDirsExist() throws IOException
@@ -61,6 +63,15 @@ public class TestZipUtils
     @After
     public void removeTempDir() throws IOException
     {
+        //make sure zip is closed, else delete fails on windows
+        if (zip != null) {
+            try {
+                zip.close();
+            } catch (IOException e) {
+                //ignore
+            }
+            zip = null;
+        }
         FileUtils.deleteDirectory(tempDir);
     }
 
@@ -70,7 +81,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-with-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,FIRST_PREFIX);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         while (entries.hasMoreElements())
@@ -81,7 +92,6 @@ public class TestZipUtils
 
             assertEquals(FIRST_PREFIX,testPrefix);
         }
-
     }
 
     @Test
@@ -90,7 +100,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-nested-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,NESTED_PREFIX);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         while (entries.hasMoreElements())
@@ -112,7 +122,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-with-prefix-no-root.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,FIRST_PREFIX);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         while (entries.hasMoreElements())
@@ -134,7 +144,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-nested-prefix-no-root.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,NESTED_PREFIX);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         while (entries.hasMoreElements())
@@ -156,7 +166,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-empty-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,"");
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         while (entries.hasMoreElements())
@@ -175,7 +185,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-null-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,null);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         while (entries.hasMoreElements())
@@ -194,7 +204,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-empty-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,"");
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         int numFolders = 0;
@@ -216,7 +226,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-single-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,FIRST_PREFIX);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         int numFolders = 0;
@@ -238,7 +248,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-nested-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,NESTED_PREFIX);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         int numFolders = 0;
@@ -260,7 +270,7 @@ public class TestZipUtils
         File zipFile = new File(tempDir,"zip-single-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,FIRST_PREFIX);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         int numFiles = 0;

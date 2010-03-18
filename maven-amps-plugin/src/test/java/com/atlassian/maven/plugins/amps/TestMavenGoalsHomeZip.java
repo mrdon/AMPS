@@ -29,7 +29,7 @@ public class TestMavenGoalsHomeZip
     public static final String PLUGINS = "plugins";
     public static final String BUNDLED_PLUGINS = "bundled-plugins";
     public static final String ZIP_PREFIX = "generated-resources/" + PROJECT_ID + "-home";
-    
+
     private MavenContext ctx;
     private MavenGoals goals;
     private File tempDir;
@@ -38,6 +38,7 @@ public class TestMavenGoalsHomeZip
     private File generatedHomeDir;
     private File pluginsDir;
     private File bundledPluginsDir;
+    private ZipFile zip;
 
 
     @Before
@@ -59,7 +60,7 @@ public class TestMavenGoalsHomeZip
         //Mockito throws NoClassDefFoundError: org/apache/maven/project/ProjectBuilderConfiguration
         //when mocking the session
         //MavenSession session = mock(MavenSession.class);
-        
+
         PluginManager pluginManager = mock(PluginManager.class);
         List<MavenProject> reactor = Collections.<MavenProject>emptyList();
         ctx = mock(MavenContext.class);
@@ -78,6 +79,15 @@ public class TestMavenGoalsHomeZip
     @After
     public void removeTempDir() throws IOException
     {
+        //make sure zip is closed, else delete fails on windows
+        if (zip != null) {
+            try {
+                zip.close();
+            } catch (IOException e) {
+                //ignore
+            }
+            zip = null;
+        }
         FileUtils.deleteDirectory(tempDir);
     }
 
@@ -102,7 +112,7 @@ public class TestMavenGoalsHomeZip
 
     @Test
     public void existingGeneratedDirGetsDeleted() throws IOException
-    {
+    {        
         generatedHomeDir.mkdirs();
         File deletedFile = new File(generatedHomeDir,"should-be-deleted.txt");
         FileUtils.writeStringToFile(deletedFile,"This file should have been deleted!");
@@ -161,7 +171,7 @@ public class TestMavenGoalsHomeZip
 
         goals.createHomeResourcesZip(homeDir,zipFile,PROJECT_ID);
 
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         while (entries.hasMoreElements())
@@ -191,7 +201,7 @@ public class TestMavenGoalsHomeZip
         goals.createHomeResourcesZip(homeDir,zipFile,PROJECT_ID);
 
         boolean dataFileFound = false;
-        final ZipFile zip = new ZipFile(zipFile);
+        zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
 
         while (entries.hasMoreElements())

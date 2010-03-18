@@ -3,10 +3,15 @@ package com.atlassian.maven.plugins.amps.util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.*;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtils {
@@ -19,35 +24,43 @@ public class ZipUtils {
     public static void unzip(final File zipFile, final String destDir, int leadingPathSegmentsToTrim) throws IOException
     {
         final ZipFile zip = new ZipFile(zipFile);
-        final Enumeration<? extends ZipEntry> entries = zip.entries();
-        while (entries.hasMoreElements())
-        {
-            final ZipEntry zipEntry = entries.nextElement();
-            String zipPath = trimPathSegments(zipEntry.getName(), leadingPathSegmentsToTrim);
-            final File file = new File(destDir + "/" + zipPath);
-            if (zipEntry.isDirectory())
+        try {
+            final Enumeration<? extends ZipEntry> entries = zip.entries();
+            while (entries.hasMoreElements())
             {
-                file.mkdirs();
-                continue;
-            }
-            //make sure our parent exists in case zipentries are out of order
-            if (!file.getParentFile().exists())
-            {
-                file.getParentFile().mkdirs();
-            }
+                final ZipEntry zipEntry = entries.nextElement();
+                String zipPath = trimPathSegments(zipEntry.getName(), leadingPathSegmentsToTrim);
+                final File file = new File(destDir + "/" + zipPath);
+                if (zipEntry.isDirectory())
+                {
+                    file.mkdirs();
+                    continue;
+                }
+                //make sure our parent exists in case zipentries are out of order
+                if (!file.getParentFile().exists())
+                {
+                    file.getParentFile().mkdirs();
+                }
 
-            InputStream is = null;
-            OutputStream fos = null;
-            try
-            {
-                is = zip.getInputStream(zipEntry);
-                fos = new FileOutputStream(file);
-                IOUtils.copy(is, fos);
+                InputStream is = null;
+                OutputStream fos = null;
+                try
+                {
+                    is = zip.getInputStream(zipEntry);
+                    fos = new FileOutputStream(file);
+                    IOUtils.copy(is, fos);
+                }
+                finally
+                {
+                    IOUtils.closeQuietly(is);
+                    IOUtils.closeQuietly(fos);
+                }
             }
-            finally
-            {
-                IOUtils.closeQuietly(is);
-                IOUtils.closeQuietly(fos);
+        } finally {
+            try {
+                zip.close();
+            } catch (IOException e) {
+                // ignore
             }
         }
     }
@@ -55,10 +68,13 @@ public class ZipUtils {
      public static void zipDir(final File zipFile, final File srcDir, final String prefix) throws IOException
      {
          ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
-         addZipPrefixes(srcDir, out, prefix);
-         addZipDir(srcDir, out, prefix);
-         // Complete the ZIP file
-         out.close();
+         try {
+             addZipPrefixes(srcDir, out, prefix);
+             addZipDir(srcDir, out, prefix);
+         } finally {
+             // Complete the ZIP file
+             IOUtils.closeQuietly(out);
+         }
      }
 
      private static void addZipPrefixes(File dirObj, ZipOutputStream out, String prefix) throws IOException {
@@ -103,19 +119,20 @@ public class ZipUtils {
 
                  entryName = entryPrefix + currentFile.getName();
                  FileInputStream in = new FileInputStream(currentFile.getAbsolutePath());
+                 try {
+                     out.putNextEntry(new ZipEntry(entryName));
+                     // Transfer from the file to the ZIP file
+                     int len;
+                     while ((len = in.read(tmpBuf)) > 0)
+                     {
+                         out.write(tmpBuf, 0, len);
+                     }
 
-                 out.putNextEntry(new ZipEntry(entryName));
-
-                 // Transfer from the file to the ZIP file
-                 int len;
-                 while ((len = in.read(tmpBuf)) > 0)
-                 {
-                     out.write(tmpBuf, 0, len);
+                     // Complete the entry
+                     out.closeEntry();
+                 } finally {
+                     IOUtils.closeQuietly(in);
                  }
-
-                 // Complete the entry
-                 out.closeEntry();
-                 in.close();
              }
          }
      }
