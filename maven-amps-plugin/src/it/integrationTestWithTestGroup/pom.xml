@@ -18,7 +18,7 @@
                         <testGroup>
                             <id>foo</id>
                             <productIds>
-                                <productId>refapp</productId>
+                                <productId>${shitty.product}</productId>
                             </productIds>
                             <include>**/foo/**</include>
                         </testGroup>
