@@ -44,7 +44,7 @@ public class TestMavenGoalsHomeZip
     @Before
     public void setup(){
         //Create the temp dir
-        final File sysTempDir = new File(System.getProperty("java.io.tmpdir"));
+        final File sysTempDir = new File("target");
         String dirName = UUID.randomUUID().toString();
         tempDir = new File(sysTempDir, dirName);
         productDir = new File(tempDir,PROJECT_ID);
