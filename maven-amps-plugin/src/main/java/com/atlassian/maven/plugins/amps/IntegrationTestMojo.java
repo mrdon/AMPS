@@ -156,6 +156,11 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         {
             ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals, getLog());
             Product ctx = getProductContexts(goals).get(productId);
+            if (ctx == null)
+            {
+                throw new MojoExecutionException("The test group '" + testGroupId + "' refers to a product '" + productId
+                    + "' that doesn't have an associated <product> configuration.");
+            }
             products.add(new TestGroupProductExecution(ctx, product));
         }
 
