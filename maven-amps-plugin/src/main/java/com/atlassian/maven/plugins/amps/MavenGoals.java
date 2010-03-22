@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
@@ -463,13 +464,6 @@ public class MavenGoals
         final List<Element> excludes = new ArrayList<Element>();
         excludes.add(element(name("exclude"), "**/*$*"));
         excludes.add(element(name("exclude"), "**/Abstract*"));
-        for (final String type : ProductHandlerFactory.getIds())
-        {
-            if (!type.equals(productId))
-            {
-                excludes.add(element(name("exclude"), "**/" + type + "/**"));
-            }
-        }
 
         final Element systemProps = convertPropsToEelements(systemProperties);
 

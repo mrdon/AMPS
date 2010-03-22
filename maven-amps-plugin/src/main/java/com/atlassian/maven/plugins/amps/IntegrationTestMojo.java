@@ -21,7 +21,7 @@ import java.util.*;
 public class IntegrationTestMojo extends AbstractProductHandlerMojo
 {
     /**
-     * Pattern for to use to find integration tests
+     * Pattern for to use to find integration tests.  Only used if no test groups are defined.
      */
     @MojoParameter(expression = "${functional.test.pattern}")
     private String functionalTestPattern = "it/**";
@@ -53,6 +53,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     @MojoParameter(expression="${skipTests}", defaultValue = "false")
     private boolean skipTests = false;
 
+    private static final String NO_TEST_GROUP = "__no_test_group__";
     protected void doExecute() throws MojoExecutionException
     {
         final MavenProject project = getMavenContext().getProject();
@@ -75,12 +76,17 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         final MavenGoals goals = getMavenGoals();
         final String pluginJar = targetDirectory.getAbsolutePath() + "/" + finalName + ".jar";
 
-        runTestsForTestGroup(getProductId(), goals, pluginJar, systemProperties);
-
-        for (String testGroupId : getTestGroupIds())
+        final Set<String> testGroups = getTestGroupIds();
+        if (testGroups.isEmpty())
         {
-            if (containsTests(testGroupId) && !testGroupId.equals(getProductId()))
+            runTestsForTestGroup(NO_TEST_GROUP, goals, pluginJar, systemProperties);
+        }
+        else
+        {
+            for (String testGroupId : testGroups)
             {
+                Set<String> otherTestGroups = new HashSet<String>(testGroups);
+                otherTestGroups.remove(testGroupId);
                 runTestsForTestGroup(testGroupId, goals, pluginJar, systemProperties);
             }
         }
@@ -98,20 +104,26 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         return Collections.emptyMap();
     }
 
-    private Set<String> getTestGroupIds()
+    private Set<String> getTestGroupIds() throws MojoExecutionException
     {
         Set<String> ids = new HashSet<String>();
-        ids.addAll(ProductHandlerFactory.getIds());
+
+        //ids.addAll(ProductHandlerFactory.getIds());
         for (TestGroup group : testGroups)
         {
             ids.add(group.getId());
         }
+
         return ids;
     }
 
     private Set<String> getProductIdsForTestGroup(String testGroupId) throws MojoExecutionException
     {
         Set<String> productIds = new HashSet<String>();
+        if (NO_TEST_GROUP.equals(testGroupId))
+        {
+            productIds.add(getProductId());
+        }
 
         for (TestGroup group : testGroups)
         {
@@ -135,6 +147,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
 
     private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Properties systemProperties) throws MojoExecutionException
     {
+        String functionalTestPattern = getFunctionalTestPatternForTestGroup(testGroupId);
         Set<String> productIds = getProductIdsForTestGroup(testGroupId);
 
         // Create a container object to hold product-related stuff
@@ -187,33 +200,34 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         }
     }
 
-    private boolean containsTests(String type)
+    private String getFunctionalTestPatternForTestGroup(String testGroupId) throws MojoExecutionException
     {
-        return scanFile(new File(testClassesDirectory, "it"), type);
-    }
-
-    private boolean scanFile(File file, String type)
-    {
-        if (file.isDirectory())
+        String includePattern = null;
+        if (NO_TEST_GROUP.equals(testGroupId))
         {
-            if (file.getName().equals(type))
+            includePattern = functionalTestPattern;
+        }
+        else
+        {
+            for (TestGroup group : testGroups)
             {
-                return true;
-            }
-            else
-            {
-                for (File kid : file.listFiles())
+                if (group.getId().equals(testGroupId))
                 {
-                    if (scanFile(kid, type))
-                    {
-                        return true;
-                    }
+                    includePattern = group.getInclude();
                 }
             }
         }
-        return false;
+        if (includePattern == null)
+        {
+            throw new MojoExecutionException("Unable to determine functional test pattern");
+        }
+
+        return includePattern;
     }
 
+    /**
+     * The execution context for a product in a test group
+     */
     private static class TestGroupProductExecution
     {
         private final Product product;
