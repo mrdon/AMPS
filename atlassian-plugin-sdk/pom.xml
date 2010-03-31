@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.atlassian.amps</groupId>
         <artifactId>atlassian-amps-parent</artifactId>
-        <version>3.1-m3-SNAPSHOT</version>
+        <version>3.1-rc1</version>
     </parent>
 
     <groupId>com.atlassian.amps</groupId>
@@ -149,7 +149,7 @@
                                 <taskdef name="texen" classname="org.apache.texen.ant.TexenTask" />
                                 <texen templatePath="src/main/velocity" controlTemplate="control.vm" contextProperties="${project.build.outputDirectory}/script.properties" outputDirectory="${script.output.directory}" outputFile="../texen.log" />
                                 <copy todir="${script.output.directory}">
-                                    <fileset dir="src/main/scripts"/>
+                                    <fileset dir="src/main/scripts" />
                                 </copy>
                             </tasks>
                         </configuration>
