@@ -95,9 +95,7 @@ public class MavenGoals
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:validate-manifest").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:install").toString()),
-                element(name("pu"), new StringBuilder()
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:uninstall").toString())));
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:install").toString())));
         if (port > 0)
         {
             configs.add(element(name("port"), String.valueOf(port)));
