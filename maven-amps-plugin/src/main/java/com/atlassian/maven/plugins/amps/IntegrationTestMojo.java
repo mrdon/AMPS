@@ -39,6 +39,13 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     private List<TestGroup> testGroups = new ArrayList<TestGroup>();
 
     /**
+     * A comma separated list of test groups to run.  If not specified, all
+     * test groups are run.
+     */
+    @MojoParameter(expression = "${testGroups}")
+    private String testGroupsToRun;
+    
+    /**
      * Whether the reference application will not be started or not
      */
     @MojoParameter(expression = "${no.webapp}", defaultValue = "false")
@@ -80,6 +87,24 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         if (testGroups.isEmpty())
         {
             runTestsForTestGroup(NO_TEST_GROUP, goals, pluginJar, systemProperties);
+        }
+        else if (testGroupsToRun != null)
+        {
+        	String[] testGroupIds = testGroupsToRun.split(",");
+        	
+        	// fail fast if one of the test groups does not exist
+        	for (String testGroupId : testGroupIds)
+        	{
+	        	if (!testGroups.contains(testGroupId))
+	        	{
+	        		throw new MojoExecutionException("Test group " + testGroupId + " does not exist");
+	        	}
+        	}
+        	// now run the tests
+        	for (String testGroupId : testGroupIds)
+        	{
+	        	runTestsForTestGroup(testGroupId, goals, pluginJar, systemProperties);
+        	}
         }
         else
         {
