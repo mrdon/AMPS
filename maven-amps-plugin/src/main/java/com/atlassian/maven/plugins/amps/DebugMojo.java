@@ -43,7 +43,7 @@ public class DebugMojo extends RunMojo
             properties.put("debug.port", String.valueOf(jvmDebugPort));
         }
 
-        if (getDefaultProductId().equals(ProductHandlerFactory.FECRU) && debugNotSet()) {
+        if (ProductHandlerFactory.FECRU.equals(getDefaultProductId()) && debugNotSet()) {
             String message = "You must set the ATLAS_OPTS environment variable to the following string:'" + jvmArgs + "' when calling atlas-debug to enable Fisheye/Crucible debugging.";
             getLog().error(message);            
             throw new MojoFailureException(message);
