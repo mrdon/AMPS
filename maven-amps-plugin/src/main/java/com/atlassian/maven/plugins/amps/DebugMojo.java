@@ -32,12 +32,26 @@ public class DebugMojo extends RunMojo
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
+    	String debugArgs = " -Xdebug -Xrunjdwp:transport=dt_socket,address=" +
+    					String.valueOf(jvmDebugPort) + ",suspend=" + (jvmDebugSuspend ? "y" : "n") + ",server=y ";
+    	
+    	// add the debug jvm args for the global config
         if (jvmArgs == null)
         {
             jvmArgs = "-Xmx512m -XX:MaxPermSize=160m";
         }
-        jvmArgs += " -Xdebug -Xrunjdwp:transport=dt_socket,address=" + String.valueOf(jvmDebugPort) + ",suspend=" + (jvmDebugSuspend ? "y" : "n") + ",server=y ";
+        jvmArgs += debugArgs;
 
+        // add the debug jvm args for each of the product configs
+        for (Product product : products)
+        {
+        	if (product.getJvmArgs() == null)
+        	{
+        		product.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
+            }
+            product.setJvmArgs(product.getJvmArgs() + debugArgs);
+        }
+        
         if (writePropertiesToFile)
         {
             properties.put("debug.port", String.valueOf(jvmDebugPort));

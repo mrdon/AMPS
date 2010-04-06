@@ -215,7 +215,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * A list of product-specific configurations
      */
     @MojoParameter
-    private List<Product> products = new ArrayList<Product>();
+    protected List<Product> products = new ArrayList<Product>();
 
 
     private Product createDefaultProductContext() throws MojoExecutionException
