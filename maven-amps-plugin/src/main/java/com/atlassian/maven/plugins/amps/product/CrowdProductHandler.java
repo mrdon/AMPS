@@ -86,7 +86,7 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public String getBundledPluginPath()
+    public String getBundledPluginPath(Product ctx)
     {
         return "WEB-INF/classes/atlassian-bundled-plugins.zip";
     }

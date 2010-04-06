@@ -37,7 +37,7 @@ public class RefappProductHandler extends AbstractWebappProductHandler
         return Collections.emptyList();
     }
 
-    protected String getBundledPluginPath()
+    protected String getBundledPluginPath(Product ctx)
     {
         return "WEB-INF/classes/atlassian-bundled-plugins.zip";
     }

@@ -53,7 +53,7 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         return Collections.emptyList();
     }
 
-    public String getBundledPluginPath()
+    public String getBundledPluginPath(Product ctx)
     {
         return "WEB-INF/classes/com/atlassian/confluence/setup/atlassian-bundled-plugins.zip";
     }

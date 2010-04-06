@@ -80,7 +80,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
             bundledPluginsDir.mkdir();
             // add bundled plugins
-            final File bundledPluginsZip = new File(webappDir, getBundledPluginPath());
+            final File bundledPluginsZip = new File(webappDir, getBundledPluginPath(ctx));
             if (bundledPluginsZip.exists())
             {
                 unzip(bundledPluginsZip, bundledPluginsDir.getPath());
@@ -304,7 +304,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
     protected abstract Collection<ProductArtifact> getDefaultLibPlugins();
 
-    protected abstract String getBundledPluginPath();
+    protected abstract String getBundledPluginPath(Product ctx);
 
     protected abstract File getPluginsDirectory(String webappDir, File homeDir);
 
