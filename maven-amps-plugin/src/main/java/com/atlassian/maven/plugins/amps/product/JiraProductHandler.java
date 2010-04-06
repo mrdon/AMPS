@@ -93,20 +93,16 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     {
     	String[] version = ctx.getVersion().split("-", 2)[0].split("\\.");
     	long major = Long.parseLong(version[0]);
-    	if (major < 4)
+    	long minor = Long.parseLong(version[1]);
+    	
+    	if (major < 4 || major == 4 && minor == 0)
     	{
     		return "WEB-INF/classes/com/atlassian/jira/plugin/atlassian-bundled-plugins.zip";
     	}
-    	if (major > 4)
+    	else
     	{
     		return "WEB-INF/classes/atlassian-bundled-plugins.zip";
     	}
-    	long minor = Long.parseLong(version[1]);
-    	if (minor == 0)
-    	{
-    		return "WEB-INF/classes/com/atlassian/jira/plugin/atlassian-bundled-plugins.zip";
-    	}
-		return "WEB-INF/classes/atlassian-bundled-plugins.zip";
     }
 
     @Override
