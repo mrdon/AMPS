@@ -43,7 +43,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
      * test groups are run.
      */
     @MojoParameter(expression = "${testGroups}")
-    private String testGroupsToRun;
+    private String configuredTestGroupsToRun;
     
     /**
      * Whether the reference application will not be started or not
@@ -83,35 +83,33 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         final MavenGoals goals = getMavenGoals();
         final String pluginJar = targetDirectory.getAbsolutePath() + "/" + finalName + ".jar";
 
-        final Set<String> testGroups = getTestGroupIds();
-        if (testGroups.isEmpty())
+        final Set<String> configuredTestGroupIds = getTestGroupIds();
+        if (configuredTestGroupIds.isEmpty())
         {
             runTestsForTestGroup(NO_TEST_GROUP, goals, pluginJar, systemProperties);
         }
-        else if (testGroupsToRun != null)
+        else if (configuredTestGroupsToRun != null)
         {
-        	String[] testGroupIds = testGroupsToRun.split(",");
+        	String[] testGroupIdsToRun = configuredTestGroupsToRun.split(",");
         	
         	// fail fast if one of the test groups does not exist
-        	for (String testGroupId : testGroupIds)
+        	for (String testGroupId : testGroupIdsToRun)
         	{
-	        	if (!testGroups.contains(testGroupId))
+	        	if (!configuredTestGroupIds.contains(testGroupId))
 	        	{
 	        		throw new MojoExecutionException("Test group " + testGroupId + " does not exist");
 	        	}
         	}
         	// now run the tests
-        	for (String testGroupId : testGroupIds)
+        	for (String testGroupId : testGroupIdsToRun)
         	{
 	        	runTestsForTestGroup(testGroupId, goals, pluginJar, systemProperties);
         	}
         }
         else
         {
-            for (String testGroupId : testGroups)
+            for (String testGroupId : configuredTestGroupIds)
             {
-                Set<String> otherTestGroups = new HashSet<String>(testGroups);
-                otherTestGroups.remove(testGroupId);
                 runTestsForTestGroup(testGroupId, goals, pluginJar, systemProperties);
             }
         }
