@@ -33,9 +33,9 @@ public class DebugMojo extends RunMojo
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
     	String debugArgs = " -Xdebug -Xrunjdwp:transport=dt_socket,address=" +
-    					String.valueOf(jvmDebugPort) + ",suspend=" + (jvmDebugSuspend ? "y" : "n") + ",server=y ";
-    	
-    	// add the debug jvm args for the global config
+    				    String.valueOf(jvmDebugPort) + ",suspend=" + (jvmDebugSuspend ? "y" : "n") + ",server=y ";
+        
+        // add the debug jvm args for the global config
         if (jvmArgs == null)
         {
             jvmArgs = "-Xmx512m -XX:MaxPermSize=160m";
@@ -45,9 +45,9 @@ public class DebugMojo extends RunMojo
         // add the debug jvm args for each of the product configs
         for (Product product : products)
         {
-        	if (product.getJvmArgs() == null)
-        	{
-        		product.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
+            if (product.getJvmArgs() == null)
+            {
+                product.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
             }
             product.setJvmArgs(product.getJvmArgs() + debugArgs);
         }
