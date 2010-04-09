@@ -13,6 +13,7 @@ public class Product
      * Container to run in
      */
     protected String containerId;
+
     /**
      * HTTP port for the servlet containers
      */
@@ -87,11 +88,11 @@ public class Product
 
     /**
      * Product id
-     *
      */
     private String id;
 
     private ArtifactRetriever artifactRetriever;
+
     /**
      * Flag to indicate whether or not to install the plugin
      */
@@ -101,7 +102,7 @@ public class Product
      * The system properties to set for the product
      */
     private Properties systemProperties = new Properties();
-    
+
     /**
      * File the container should log to.
      */
