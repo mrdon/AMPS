@@ -1,6 +1,8 @@
 package com.atlassian.maven.plugins.amps;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A group of tests to run for the given product identifiers
@@ -12,6 +14,7 @@ public class TestGroup
     private String id;
     private List<String> products;
     private String include;
+    private Map<String, String> systemProperties;
 
     public String getId()
     {
@@ -45,5 +48,19 @@ public class TestGroup
     public void setInclude(String include)
     {
         this.include = include;
+    }
+    
+    public Map<String, String> getSystemProperties()
+    {
+        if (systemProperties == null)
+        {
+            return Collections.emptyMap();
+        }
+        return systemProperties;
+    }
+    
+    public void setSystemProperties(Map<String, String> systemProperties)
+    {
+        this.systemProperties = systemProperties;
     }
 }

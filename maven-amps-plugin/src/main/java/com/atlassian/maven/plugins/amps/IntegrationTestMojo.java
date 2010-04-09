@@ -86,33 +86,40 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         final Set<String> configuredTestGroupIds = getTestGroupIds();
         if (configuredTestGroupIds.isEmpty())
         {
-            runTestsForTestGroup(NO_TEST_GROUP, goals, pluginJar, systemProperties);
+            runTestsForTestGroup(NO_TEST_GROUP, goals, pluginJar, copy(systemProperties));
         }
         else if (configuredTestGroupsToRun != null)
         {
-        	String[] testGroupIdsToRun = configuredTestGroupsToRun.split(",");
-        	
-        	// fail fast if one of the test groups does not exist
-        	for (String testGroupId : testGroupIdsToRun)
-        	{
-	        	if (!configuredTestGroupIds.contains(testGroupId))
-	        	{
-	        		throw new MojoExecutionException("Test group " + testGroupId + " does not exist");
-	        	}
-        	}
-        	// now run the tests
-        	for (String testGroupId : testGroupIdsToRun)
-        	{
-	        	runTestsForTestGroup(testGroupId, goals, pluginJar, systemProperties);
-        	}
+            String[] testGroupIdsToRun = configuredTestGroupsToRun.split(",");
+            
+            // fail fast if one of the test groups does not exist
+            for (String testGroupId : testGroupIdsToRun)
+            {
+                if (!configuredTestGroupIds.contains(testGroupId))
+                {
+                    throw new MojoExecutionException("Test group " + testGroupId + " does not exist");
+                }
+            }
+            // now run the tests
+            for (String testGroupId : testGroupIdsToRun)
+            {
+                runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemProperties));
+            }
         }
         else
         {
             for (String testGroupId : configuredTestGroupIds)
             {
-                runTestsForTestGroup(testGroupId, goals, pluginJar, systemProperties);
+                runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemProperties));
             }
         }
+    }
+
+    private Properties copy(Properties systemProperties)
+    {
+        Properties copy = new Properties();
+        copy.putAll(systemProperties);
+        return copy;
     }
 
     /**
@@ -212,6 +219,8 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
 
             systemProperties.putAll(getProductFunctionalTestProperties(product));
         }
+        systemProperties.put("testGroup", testGroupId);
+        systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
 
         // Actually run the tests
         goals.runTests(getProductId(), containerId, functionalTestPattern, systemProperties);
@@ -226,6 +235,23 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 productHandler.stop(product);
             }
         }
+    }
+
+    private Map<String, String> getTestGroupSystemProperties(String testGroupId)
+    {
+        if (NO_TEST_GROUP.equals(testGroupId))
+        {
+            return Collections.emptyMap();
+        }
+
+        for (TestGroup group : testGroups)
+        {
+            if (group.getId().equals(testGroupId))
+            {
+                return group.getSystemProperties();
+            }
+        }
+        return Collections.emptyMap();
     }
 
     private String getFunctionalTestPatternForTestGroup(String testGroupId) throws MojoExecutionException
