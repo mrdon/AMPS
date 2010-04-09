@@ -216,6 +216,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoParameter
     protected List<Product> products = new ArrayList<Product>();
+    
+    /**
+     * File the container logging output will be sent to.
+     */
+    @MojoParameter
+    private String output;
 
 
     private Product createDefaultProductContext() throws MojoExecutionException
@@ -281,6 +287,11 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         if (product.getWebConsoleVersion() == null)
         {
             product.setWebConsoleVersion(DEFAULT_WEB_CONSOLE_VERSION);
+        }
+        
+        if (product.getOutput() == null)
+        {
+        	product.setOutput(output);
         }
     }
 

@@ -425,6 +425,7 @@ public class MavenGoals
                                 element(name("containerId"), container.getId()),
                                 element(name("type"), container.getType()),
                                 element(name("home"), container.getInstallDirectory(getBuildDirectory())),
+                                element(name("output"), webappContext.getOutput()),
                                 element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
                                 element(name("dependencies"), deps.toArray(new Element[deps.size()]))
                         ),

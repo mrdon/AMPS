@@ -101,6 +101,11 @@ public class Product
      * The system properties to set for the product
      */
     private Properties systemProperties = new Properties();
+    
+    /**
+     * File the container should log to.
+     */
+    private String output;
 
     public String getContainerId()
     {
@@ -301,4 +306,14 @@ public class Product
     {
         return systemProperties;
     }
+
+	public String getOutput()
+	{
+		return output;
+	}
+	
+	public void setOutput(String output)
+	{
+		this.output = output;
+	}
 }
