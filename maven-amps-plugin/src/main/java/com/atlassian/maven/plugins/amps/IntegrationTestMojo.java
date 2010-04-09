@@ -177,7 +177,8 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
 
     private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Properties systemProperties) throws MojoExecutionException
     {
-        String functionalTestPattern = getFunctionalTestPatternForTestGroup(testGroupId);
+        String[] includes = getIncludesForTestGroup(testGroupId);
+        String[] excludes = getExcludesForTestGroup(testGroupId);
         Set<String> productIds = getProductIdsForTestGroup(testGroupId);
 
         // Create a container object to hold product-related stuff
@@ -223,7 +224,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
 
         // Actually run the tests
-        goals.runTests(getProductId(), containerId, functionalTestPattern, systemProperties);
+        goals.runTests(getProductId(), containerId, includes, excludes, systemProperties);
 
         // Shut all products down
         for (TestGroupProductExecution testGroupProductExecution : products)
@@ -254,12 +255,11 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         return Collections.emptyMap();
     }
 
-    private String getFunctionalTestPatternForTestGroup(String testGroupId) throws MojoExecutionException
+    private String[] getIncludesForTestGroup(String testGroupId)
     {
-        String includePattern = null;
         if (NO_TEST_GROUP.equals(testGroupId))
         {
-            includePattern = functionalTestPattern;
+            return new String[] { functionalTestPattern };
         }
         else
         {
@@ -267,16 +267,31 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             {
                 if (group.getId().equals(testGroupId))
                 {
-                    includePattern = group.getInclude();
+                    return group.getIncludes();
                 }
             }
         }
-        if (includePattern == null)
-        {
-            throw new MojoExecutionException("Unable to determine functional test pattern");
-        }
+        return new String[] { functionalTestPattern };
+    }
 
-        return includePattern;
+
+    private String[] getExcludesForTestGroup(String testGroupId)
+    {
+        if (NO_TEST_GROUP.equals(testGroupId))
+        {
+            return new String[] {};
+        }
+        else
+        {
+            for (TestGroup group : testGroups)
+            {
+                if (group.getId().equals(testGroupId))
+                {
+                    return group.getExcludes();
+                }
+            }
+        }
+        return new String[] {};
     }
 
     /**

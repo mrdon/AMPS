@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -456,13 +457,22 @@ public class MavenGoals
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
 
-    public void runTests(final String productId, final String containerId, final String functionalTestPattern, Properties systemProperties)
-            throws MojoExecutionException
-    {
-        // Automatically exclude tests for other products
-        final List<Element> excludes = new ArrayList<Element>();
-        excludes.add(element(name("exclude"), "**/*$*"));
-        excludes.add(element(name("exclude"), "**/Abstract*"));
+    public void runTests(String productId, String containerId, String[] includes, String[] excludes, Properties systemProperties)
+    		throws MojoExecutionException
+	{
+    	List<Element> includeElements = new ArrayList<Element>(includes.length);
+    	for (String include : includes)
+    	{
+    		includeElements.add(element(name("include"), include));
+    	}
+    	
+        List<Element> excludeElements = new ArrayList<Element>(excludes.length + 2);
+        excludeElements.add(element(name("exclude"), "**/*$*"));
+        excludeElements.add(element(name("exclude"), "**/Abstract*"));
+        for (String exclude : excludes)
+        {
+        	excludeElements.add(element(name("exclude"), exclude));
+        }
 
         final Element systemProps = convertPropsToEelements(systemProperties);
 
@@ -475,18 +485,18 @@ public class MavenGoals
                 goal("test"),
                 configuration(
                         element(name("includes"),
-                                element(name("include"), functionalTestPattern)
+                        		includeElements.toArray(new Element[includeElements.size()])
                         ),
                         element(name("excludes"),
-                                excludes.toArray(new Element[excludes.size()])
+                                excludeElements.toArray(new Element[excludeElements.size()])
                         ),
                         systemProps,
                         element(name("reportsDirectory"), "${project.build.directory}/" + productId + "/" + containerId + "/surefire-reports")
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
-    }
-
+	}
+    
     /**
      * Converts a map of System properties to maven config elements
      */

@@ -13,7 +13,8 @@ public class TestGroup
 {
     private String id;
     private List<String> products;
-    private String include;
+    private String[] includes;
+    private String[] excludes;
     private Map<String, String> systemProperties;
 
     public String getId()
@@ -36,18 +37,30 @@ public class TestGroup
         this.products = products;
     }
 
-
-    public String getInclude()
+    public String[] getIncludes()
     {
-        return include;
+        return includes;
     }
 
     /**
-     * @param include The include file pattern
+     * @param includes The file patterns to include
      */
-    public void setInclude(String include)
+    public void setIncludes(String[] includes)
     {
-        this.include = include;
+        this.includes = includes;
+    }
+
+    public String[] getExcludes()
+    {
+        return excludes;
+    }
+
+    /**
+     * @param excludes The file patterns to exclude
+     */
+    public void setExcludes(String[] excludes)
+    {
+        this.excludes = excludes;
     }
     
     public Map<String, String> getSystemProperties()
@@ -62,5 +75,5 @@ public class TestGroup
     public void setSystemProperties(Map<String, String> systemProperties)
     {
         this.systemProperties = systemProperties;
-    }
+    }    
 }
