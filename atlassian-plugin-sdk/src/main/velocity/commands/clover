@@ -1,7 +1,7 @@
 
 #set( $cloverPrefix = "com.atlassian.maven.plugins:maven-clover2-plugin:${cloverVersion}" )
 
-#set( $mvnCommand = "${cloverPrefix}:setup verify ${cloverPrefix}:clover ${cloverPrefix}:log" )
+#set( $mvnCommand = "-Djava.awt.headless=true ${cloverPrefix}:setup verify ${cloverPrefix}:clover ${cloverPrefix}:log" )
 
 
 #set( $goalhelp = "Runs Clover and reports on code coverage for this plugin. For colored output, set the MAVEN_COLOR environment variable to true. (runs mvn $mvnCommand)." )
