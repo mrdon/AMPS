@@ -458,16 +458,16 @@ public class MavenGoals
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
 
-    public void runTests(String productId, String containerId, String[] includes, String[] excludes, Properties systemProperties)
+    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Properties systemProperties)
     		throws MojoExecutionException
 	{
-    	List<Element> includeElements = new ArrayList<Element>(includes.length);
+    	List<Element> includeElements = new ArrayList<Element>(includes.size());
     	for (String include : includes)
     	{
     		includeElements.add(element(name("include"), include));
     	}
-    	
-        List<Element> excludeElements = new ArrayList<Element>(excludes.length + 2);
+
+        List<Element> excludeElements = new ArrayList<Element>(excludes.size() + 2);
         excludeElements.add(element(name("exclude"), "**/*$*"));
         excludeElements.add(element(name("exclude"), "**/Abstract*"));
         for (String exclude : excludes)
@@ -475,7 +475,7 @@ public class MavenGoals
         	excludeElements.add(element(name("exclude"), exclude));
         }
 
-        final Element systemProps = convertPropsToEelements(systemProperties);
+        final Element systemProps = convertPropsToElements(systemProperties);
 
         executeMojo(
                 plugin(
@@ -501,7 +501,7 @@ public class MavenGoals
     /**
      * Converts a map of System properties to maven config elements
      */
-    private Element convertPropsToEelements(Properties systemProperties)
+    private Element convertPropsToElements(Properties systemProperties)
     {
         ArrayList<Element> properties = new ArrayList<Element>();
 

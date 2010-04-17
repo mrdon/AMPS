@@ -177,8 +177,8 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
 
     private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Properties systemProperties) throws MojoExecutionException
     {
-        String[] includes = getIncludesForTestGroup(testGroupId);
-        String[] excludes = getExcludesForTestGroup(testGroupId);
+        List<String> includes = getIncludesForTestGroup(testGroupId);
+        List<String> excludes = getExcludesForTestGroup(testGroupId);
         Set<String> productIds = getProductIdsForTestGroup(testGroupId);
 
         // Create a container object to hold product-related stuff
@@ -255,11 +255,11 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         return Collections.emptyMap();
     }
 
-    private String[] getIncludesForTestGroup(String testGroupId)
+    private List<String> getIncludesForTestGroup(String testGroupId)
     {
         if (NO_TEST_GROUP.equals(testGroupId))
         {
-            return new String[] { functionalTestPattern };
+            return Collections.singletonList(functionalTestPattern);
         }
         else
         {
@@ -271,15 +271,15 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 }
             }
         }
-        return new String[] { functionalTestPattern };
+        return Collections.singletonList(functionalTestPattern);
     }
 
 
-    private String[] getExcludesForTestGroup(String testGroupId)
+    private List<String> getExcludesForTestGroup(String testGroupId)
     {
         if (NO_TEST_GROUP.equals(testGroupId))
         {
-            return new String[] {};
+            return Collections.emptyList();
         }
         else
         {
@@ -291,7 +291,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 }
             }
         }
-        return new String[] {};
+        return Collections.emptyList();
     }
 
     /**

@@ -13,8 +13,8 @@ public class TestGroup
 {
     private String id;
     private List<String> products;
-    private String[] includes;
-    private String[] excludes;
+    private List<String> includes;
+    private List<String> excludes;
     private Map<String, String> systemProperties;
 
     public String getId()
@@ -37,39 +37,35 @@ public class TestGroup
         this.products = products;
     }
 
-    public String[] getIncludes()
+    public List<String> getIncludes()
     {
-        return includes;
+        return (includes == null) ? Collections.<String>emptyList() : includes;
     }
 
     /**
      * @param includes The file patterns to include
      */
-    public void setIncludes(String[] includes)
+    public void setIncludes(List<String> includes)
     {
         this.includes = includes;
     }
 
-    public String[] getExcludes()
+    public List<String> getExcludes()
     {
-        return excludes;
+        return (excludes == null) ? Collections.<String>emptyList() : excludes;
     }
 
     /**
      * @param excludes The file patterns to exclude
      */
-    public void setExcludes(String[] excludes)
+    public void setExcludes(List<String> excludes)
     {
         this.excludes = excludes;
     }
     
     public Map<String, String> getSystemProperties()
     {
-        if (systemProperties == null)
-        {
-            return Collections.emptyMap();
-        }
-        return systemProperties;
+        return (systemProperties == null) ? Collections.<String, String>emptyMap() : systemProperties;
     }
     
     public void setSystemProperties(Map<String, String> systemProperties)
