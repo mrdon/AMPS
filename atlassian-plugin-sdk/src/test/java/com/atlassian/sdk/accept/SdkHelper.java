@@ -1,5 +1,6 @@
 package com.atlassian.sdk.accept;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -97,6 +98,9 @@ public class SdkHelper
     public static File createPlugin(String productId, File baseDir, File sdkHome, String prefix) throws IOException, InterruptedException
     {
         final String artifactId = prefix + "-" + productId + "-plugin";
+        final File appDir = new File(baseDir, artifactId);
+        FileUtils.deleteDirectory(appDir);
+
         runSdkScript(sdkHome, baseDir, "atlas-create-" + productId + "-plugin",
                 "-a", artifactId,
                 "-g", "com.example",
@@ -104,7 +108,6 @@ public class SdkHelper
                 "-v", "1.0-SNAPSHOT",
                 "--non-interactive");
 
-        File appDir = new File(baseDir, artifactId);
         Assert.assertTrue(appDir.exists());
         return appDir;
     }
