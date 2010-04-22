@@ -89,7 +89,7 @@ fi
 # Transform Parameters into Maven Parameters #
 ##############################################
 
-MAVEN_OPTS="-Xmx256M -XX:MaxPermSize=256M ${dollar}ATLAS_OPTS"
+MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=256M ${dollar}ATLAS_OPTS"
 MVN_PARAMS=""
 
 while [ $# -gt 0 ]

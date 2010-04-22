@@ -95,7 +95,7 @@ rem NOTE: in DOS, all the 'else' statements must be on the same
 rem line as the closing bracket for the 'if' statement.
 rem ---------------------------------------------------------------
 
-set MAVEN_OPTS=-Xmx256M -XX:MaxPermSize=256M %ATLAS_OPTS%
+set MAVEN_OPTS=-Xmx512M -XX:MaxPermSize=256M %ATLAS_OPTS%
 set MVN_PARAMS=
 #set ( $elseCount = 0 )
 :loopstart
