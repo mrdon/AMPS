@@ -1,34 +1,29 @@
 package com.atlassian.maven.plugins.amps.product;
 
 import static com.atlassian.core.util.FileUtils.createZipFile;
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
 import static com.atlassian.maven.plugins.amps.util.ConfigFileUtils.replace;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.Socket;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class FeCruProductHandler extends AbstractProductHandler
 {
-
-    /**
-     * JVM shutdown hook to terminate child FishEye processes when mojo dies *
-     */
-    private static Thread fisheyeShutdownHook;
-
     private static final int STARTUP_CHECK_DELAY = 1000;
     private static final int STARTUP_CHECK_MAX = 1000 * 60 * 3; //todo is 3 mins enough?
     private final PluginProvider pluginProvider = new FeCruPluginProvider();
@@ -67,7 +62,7 @@ public class FeCruProductHandler extends AbstractProductHandler
 
         try
         {
-            execFishEyeCmd(ctx, "run", true);
+            execFishEyeCmd("run");
         }
         catch (Exception e)
         {
@@ -123,9 +118,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         try
         {
-            execFishEyeCmd(ctx, "stop", false);
-            //orderly shutdown means we no longer need a shutdown hook
-            clearShutdownHook();
+            execFishEyeCmd("stop");
         }
         catch (Exception e)
         {
@@ -133,31 +126,16 @@ public class FeCruProductHandler extends AbstractProductHandler
         }
     }
 
-    private void execFishEyeCmd(Product ctx, String bootCommand, boolean registerShutdownHook) throws MojoExecutionException
+    private void execFishEyeCmd(String bootCommand) throws MojoExecutionException
     {
-        List<String> cmdParams = new ArrayList<String>();
-        cmdParams.add("java");
-        if (ctx.getJvmArgs() != null) {
-            cmdParams.addAll(Arrays.asList(ctx.getJvmArgs().split("\\s")));
-        } else {
-            cmdParams.add("-Xmx512m");
-            cmdParams.add("-XX:MaxPermSize=160m");
-        }
-        cmdParams.addAll(Arrays.asList("-jar", "fisheyeboot.jar"));
-        cmdParams.add(bootCommand);
 
-        ProcessBuilder builder = new ProcessBuilder(cmdParams);
-        builder.directory(getHomeDirectory());
-        try
-        {
-            Process process = builder.start();
-            if (registerShutdownHook)
-            {
-                registerShutdownHook(process);
-            }
-        }
-        catch (IOException e)
-        {
+        try {
+            URL fisheyebootUrl = new File(getHomeDirectory(), "fisheyeboot.jar").toURI().toURL();
+            ClassLoader cl = new URLClassLoader(new URL[] {fisheyebootUrl});
+            Class<?> fisheyeCtl = cl.loadClass("com.cenqua.fisheye.FishEyeCtl");
+            Method main = fisheyeCtl.getDeclaredMethod("mainImpl", String[].class);
+            main.invoke(null, new Object[] {new String[] {bootCommand}});
+        } catch (Exception e) {
             throw new MojoExecutionException("Failed to execute fisheye command '" + bootCommand + "'", e);
         }
 
@@ -319,28 +297,6 @@ public class FeCruProductHandler extends AbstractProductHandler
     private int controlPort(int httpPort)
     {
         return httpPort * 10 + 1;
-    }
-
-    private static void registerShutdownHook(final Process p)
-    {
-        fisheyeShutdownHook = new Thread()
-        {
-            @Override
-            public void run()
-            {
-                p.destroy();
-            }
-        };
-        Runtime.getRuntime().addShutdownHook(fisheyeShutdownHook);
-    }
-
-    private static void clearShutdownHook()
-    {
-        if (fisheyeShutdownHook != null)
-        {
-            Runtime.getRuntime().removeShutdownHook(fisheyeShutdownHook);
-            fisheyeShutdownHook = null;
-        }
     }
 
     private static class FeCruPluginProvider extends AbstractPluginProvider
