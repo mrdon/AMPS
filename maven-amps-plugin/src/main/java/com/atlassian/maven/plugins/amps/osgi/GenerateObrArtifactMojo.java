@@ -89,6 +89,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
         {
             Build build = getMavenContext().getProject().getBuild();
             List<File> deps = resolvePluginDependencies();
+            // todo: we use build.getFinalName() here, but finalName (mojo parameter) in generateObrZip().  this seems weird.
             File obrDir = layoutObr(deps, new File(build.getDirectory(), build.getFinalName() + ".jar"));
             generateObrZip(obrDir);
         }
@@ -106,7 +107,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     {
         MavenArchiver archiver = new MavenArchiver();
         archiver.setArchiver(jarArchiver);
-        File outputFile = new File(outputDirectory, finalName + "-all.obr");
+        File outputFile = new File(outputDirectory, finalName + ".obr");
         final MavenProject mavenProject = getMavenContext().getProject();
         try
         {
@@ -139,7 +140,7 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
 
         if (attach)
         {
-            projectHelper.attachArtifact(mavenProject, getType(), "obr", outputFile);
+            projectHelper.attachArtifact(mavenProject, getType(), outputFile);
         }
         else
         {
