@@ -233,17 +233,17 @@
     <properties>
         <maven.version>2.1.0</maven.version>
         <anno.mojo.version>1.3.3</anno.mojo.version>
-        <refapp.version>2.3.10</refapp.version>
-        <confluence.version>3.1.1</confluence.version>
-        <confluence.data.version>3.1-SNAPSHOT</confluence.data.version>
-        <jira.version>4.1</jira.version>
+        <refapp.version>2.4.0</refapp.version>
+        <confluence.version>3.2</confluence.version>
+        <confluence.data.version>3.1</confluence.data.version>
+        <jira.version>4.1.1</jira.version>
         <jira.data.version>4.0</jira.data.version>
-        <bamboo.version>2.5.2</bamboo.version>
+        <bamboo.version>2.5.4</bamboo.version>
         <bamboo.data.version>2.2</bamboo.data.version>
-        <fecru.version>2.2.0-465</fecru.version>
-        <fecru.data.version>2.2.0-465</fecru.data.version>
+        <fecru.version>2.2.2-472</fecru.version>
+        <fecru.data.version>2.2.2-472</fecru.data.version>
         <crowd.version>2.0.3</crowd.version>
         <crowd.data.version>2.0.3</crowd.data.version>
-        <clover.version>2.6.3</clover.version>
+        <clover.version>3.0.2</clover.version>
     </properties>
 </project>
