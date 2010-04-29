@@ -1,0 +1,5 @@
+#set( $mvnCommand = "release:prepare release:perform" )
+
+#set( $goalhelp = "Performs a release of the plugin (runs mvn $mvnCommand)." )
+
+#set( $opts = [] )

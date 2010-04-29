@@ -1,0 +1,121 @@
+#!/bin/sh
+##-----------------------------------------------------------------------------
+#parse( "commands/${mojo}" )
+##-----------------------------------------------------------------------------
+
+
+##########################
+# Check for Help command #
+##########################
+
+if [ $# -ge 1 ]; then
+    case "$1" in
+        "-?" | "-h" | "--help" | "-help" | "help" )
+            echo
+            echo "Usage: atlas-${mojo} [options]"
+            echo
+            echo "${goalhelp}"
+            echo
+            #if ($opts.size() > 0)
+                echo "The following options are available:"
+                #foreach($o in $opts)
+                    #if ($o.short)
+                        #if($o.flag)
+                            echo "-$o.short, --$o.name"
+                        #else
+                            echo "-$o.short [value], --$o.name [value]"
+                        #end
+                    #else
+                        #if($o.flag)
+                            echo "--$o.name"
+                        #else
+                            echo "--$o.name [value]"
+                        #end
+                    #end
+                    echo "    $o.description"
+                    echo
+                #end
+            #end
+            exit;;
+    esac
+fi
+
+########################################
+# Determine the location of the script #
+########################################
+
+# resolve symbolic links
+PRG="${dollar}{0}"
+
+while [ -h "${dollar}{PRG}" ] ; do
+  ls=`ls -ld "${dollar}{PRG}"`
+  link=`expr "${dollar}{ls}" : '.*-> \(.*\)${dollar}'`
+  if expr "${dollar}{link}" : '/.*' > /dev/null; then
+    PRG="${dollar}{link}"
+  else
+    PRG=`dirname "${dollar}{PRG}"`/"${dollar}{link}"
+  fi
+done
+
+PRGDIR=`dirname "${dollar}{PRG}"`
+
+##############################################
+# Identify Maven location relative to script #
+##############################################
+
+ATLAS_HOME=`cd "${dollar}{PRGDIR}" && pwd -P`
+ATLAS_HOME=`dirname "${dollar}{ATLAS_HOME}"`
+export ATLAS_HOME
+M2_HOME="${dollar}{ATLAS_HOME}"/apache-maven
+MAVEN_EXECUTABLE="${dollar}{M2_HOME}"/bin/mvn
+
+#if( $echoPaths )
+echo
+echo "ATLAS Version:    ${version}"
+echo "ATLAS Home:       ${dollar}{ATLAS_HOME}"
+echo "ATLAS Scripts:    ${dollar}{ATLAS_HOME}/bin"
+echo "ATLAS Maven Home: ${dollar}{M2_HOME}"
+echo "--------"
+#end
+
+# Check that target executable exists
+if [ ! -x "${dollar}{MAVEN_EXECUTABLE}" ]; then
+  echo "Cannot find ${dollar}{MAVEN_EXECUTABLE}"
+  echo "This file is needed to run this program"
+  exit 1
+fi
+
+##############################################
+# Transform Parameters into Maven Parameters #
+##############################################
+
+MAVEN_OPTS="-Xmx768M -XX:MaxPermSize=256M ${dollar}ATLAS_OPTS"
+MVN_PARAMS=""
+
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        #foreach($o in $opts)
+            #if ($o.short) "-$o.short" | #end "--$o.name")
+                ##echo "$o.name: ${dollar}{2}";
+                #if ($o.flag)
+                    MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven"
+                    shift 1;;
+                #else
+                    MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven=${dollar}{2}"
+                    shift 2;;
+                #end
+        #end
+        *)
+            ##echo "Not matched: ${dollar}{1}.";
+            MVN_PARAMS="${dollar}{MVN_PARAMS} ${dollar}{1}"
+            shift 1;; ## Only shift one, continue with next command
+    esac
+done
+
+#################
+# Execute Maven #
+#################
+
+echo "Executing: ${dollar}{MAVEN_EXECUTABLE} $mvnCommand ${dollar}{MVN_PARAMS}"
+"${dollar}{MAVEN_EXECUTABLE}" $mvnCommand ${dollar}{MVN_PARAMS}

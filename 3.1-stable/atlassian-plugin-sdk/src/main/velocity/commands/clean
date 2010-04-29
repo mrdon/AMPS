@@ -1,0 +1,5 @@
+#set( $mvnCommand = "clean" )
+
+#set( $goalhelp = "Removes files generated during the build-time in a project's directory (runs mvn $mvnCommand)." )
+
+#set( $opts = [] )

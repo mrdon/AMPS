@@ -1,0 +1,36 @@
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-jira-plugin:$version:create" )
+
+#set( $goalhelp = "Creates a JIRA plugin." )
+
+#set( $opts = [
+{
+  'name' : 'artifact-id',
+  'short' : 'a',
+  'maven' : 'artifactId',
+  'description' : 'Name of the project (corresponds to the Maven artifactId).',
+  'example' : 'my-project'
+},{
+  'name' : 'group-id',
+  'short' : 'g',
+  'maven' : 'groupId',
+  'description' : 'Identifier for the logical group of artifacts associated with the project (corresponds to the Maven groupId).',
+  'example' : 'com.company.project'
+},{
+  'name' : 'version',
+  'short' : 'v',
+  'maven' : 'version',
+  'description' : 'Version of the project (default is 1.0-SNAPSHOT).',
+  'example' : '1.0-SNAPSHOT'
+},{
+  'name' : 'package',
+  'short' : 'p',
+  'maven' : 'package',
+  'description' : 'Java package that will contain the plugin source code (default is group-id value).',
+  'example' : 'com.company.project'
+},{
+  'name' : 'non-interactive',
+  'maven' : 'interactiveMode=false',
+  'flag' : 'true',
+  'description' : 'Does not prompt the user for input. Turns off interactive mode.',
+  'example' : 'false'
+}] )
