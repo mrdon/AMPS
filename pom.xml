@@ -237,7 +237,7 @@
         <confluence.version>3.2</confluence.version>
         <confluence.data.version>3.1</confluence.data.version>
         <jira.version>4.1.1</jira.version>
-        <jira.data.version>4.0</jira.data.version>
+        <jira.data.version>4.1.1</jira.data.version>
         <bamboo.version>2.5.4</bamboo.version>
         <bamboo.data.version>2.2</bamboo.data.version>
         <fecru.version>2.2.2-472</fecru.version>
