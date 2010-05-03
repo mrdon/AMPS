@@ -1,7 +1,0 @@
-#set( $mvnCommand = "--version" )
-
-#set( $goalhelp = "Displays version and runtime information for the Atlassian Plugin SDK." )
-
-#set( $opts = [] )
-
-#set( $echoPaths = "true" )

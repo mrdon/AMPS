@@ -1,5 +1,0 @@
-#set( $mvnCommand = "" )
-
-#set( $goalhelp = "Execute arbitrary Maven commands using the version of Maven bundled with the Atlassian Plugin SDK." )
-
-#set( $opts = [] )

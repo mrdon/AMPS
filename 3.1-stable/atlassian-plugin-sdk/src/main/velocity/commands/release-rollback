@@ -1,5 +1,0 @@
-#set( $mvnCommand = "release:rollback" )
-
-#set( $goalhelp = "Rolls back a release of the plugin (runs mvn $mvnCommand)." )
-
-#set( $opts = [] )

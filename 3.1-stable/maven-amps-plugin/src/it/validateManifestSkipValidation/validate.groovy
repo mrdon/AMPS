@@ -1,1 +1,0 @@
-assert mavenExitCode == 0, "The maven build should not have failed!"

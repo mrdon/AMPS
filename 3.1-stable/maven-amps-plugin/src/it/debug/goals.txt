@@ -1,1 +1,0 @@
-${shitty.product}:debug org.codehaus.groovy.maven:gmaven-plugin::execute

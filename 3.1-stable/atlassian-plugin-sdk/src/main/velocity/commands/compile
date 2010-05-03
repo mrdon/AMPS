@@ -1,5 +1,0 @@
-#set( $mvnCommand = "compile" )
-
-#set( $goalhelp = "Compiles the sources of your project (runs mvn $mvnCommand)." )
-
-#set( $opts = [] )

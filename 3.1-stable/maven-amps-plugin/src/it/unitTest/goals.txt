@@ -1,1 +1,0 @@
-test-compile ${shitty.product}:unit-test
