@@ -22,6 +22,12 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         return "confluence";
     }
 
+    protected boolean isStaticPlugin()
+    {
+        // assume all Confluence plugins should be installed as bundled plugins -- a pretty good assumption
+        return false;
+    }
+
     public ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.confluence", "confluence-webapp", "RELEASE");
