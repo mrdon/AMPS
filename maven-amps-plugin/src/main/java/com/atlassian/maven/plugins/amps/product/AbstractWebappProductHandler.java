@@ -49,7 +49,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     private Map<String, String> mergeSystemProperties(Product ctx)
     {
         final Map<String, String> properties = getSystemProperties(ctx);
-        final Properties configuredProperties = ctx.getSystemProperties();
+        final Map<String, String> configuredProperties = ctx.getSystemProperties();
         final Map<String, String> systemProperties = new HashMap<String, String>();
         systemProperties.putAll(properties);
         // product properties may be overwritten in the pom.xml if necessary

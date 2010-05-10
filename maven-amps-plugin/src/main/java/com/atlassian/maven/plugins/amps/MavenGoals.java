@@ -367,8 +367,8 @@ public class MavenGoals
         }
 
         Map<String, String> sysPropsMap = new HashMap<String, String>(systemProperties);
-        sysPropsMap.put("atlassian.dev.mode", System.getProperty("atlassian.dev.mode", "true"));
-        sysPropsMap.put("java.awt.headless", System.getProperty("java.awt.headless", "true"));
+        setDefaultSystemProperty(sysPropsMap, "atlassian.dev.mode", "true");
+        setDefaultSystemProperty(sysPropsMap, "java.awt.headless", "true");
 
         if (!sysPropsMap.containsKey("plugin.resource.directories"))
         {
@@ -453,12 +453,20 @@ public class MavenGoals
         return actualHttpPort;
     }
 
+    private static void setDefaultSystemProperty(final Map<String, String> props, final String key, final String value)
+    {
+        if (!props.containsKey(key))
+        {
+            props.put(key, System.getProperty(key, value));
+        }
+    }
+
     private String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
     {
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
 
-    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Properties systemProperties)
+    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Map<String, String> systemProperties)
     		throws MojoExecutionException
 	{
     	List<Element> includeElements = new ArrayList<Element>(includes.size());
@@ -501,12 +509,12 @@ public class MavenGoals
     /**
      * Converts a map of System properties to maven config elements
      */
-    private Element convertPropsToElements(Properties systemProperties)
+    private Element convertPropsToElements(Map<String, String> systemProperties)
     {
         ArrayList<Element> properties = new ArrayList<Element>();
 
         // add extra system properties... overwriting any of the hard coded values above.
-        for (Map.Entry entry: systemProperties.entrySet())
+        for (Map.Entry<String, String> entry: systemProperties.entrySet())
         {
             properties.add(
                     element(name("property"),

@@ -3,8 +3,10 @@ package com.atlassian.maven.plugins.amps;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Properties;
 
 public class Product
@@ -101,7 +103,7 @@ public class Product
     /**
      * The system properties to set for the product
      */
-    private Properties systemProperties = new Properties();
+    private Map<String, String> systemProperties = new HashMap<String, String>();
 
     /**
      * File the container should log to.
@@ -298,12 +300,12 @@ public class Product
         this.webConsoleVersion = webConsoleVersion;
     }
 
-    public void setSystemProperties(Properties systemProperties)
+    public void setSystemProperties(Map<String, String> systemProperties)
     {
         this.systemProperties = systemProperties;
     }
 
-    public Properties getSystemProperties()
+    public Map<String, String> getSystemProperties()
     {
         return systemProperties;
     }
