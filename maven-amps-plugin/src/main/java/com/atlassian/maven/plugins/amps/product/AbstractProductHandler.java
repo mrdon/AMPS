@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps.product;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
 import org.apache.commons.io.FileUtils;
@@ -11,10 +12,12 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 
 public abstract class AbstractProductHandler implements ProductHandler
 {
@@ -99,5 +102,15 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
         return homeDir;
     }
+
+    protected Map<String, String> mergeSystemProperties(Product ctx)
+    {
+        final Map<String, String> properties = new HashMap<String, String>();
+        properties.putAll(getSystemProperties(ctx));
+        properties.putAll(ctx.getSystemProperties());
+        return properties;
+    }
+
+    protected abstract Map<String, String> getSystemProperties(Product ctx);
 
 }

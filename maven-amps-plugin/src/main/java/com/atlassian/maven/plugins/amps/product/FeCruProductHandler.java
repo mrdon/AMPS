@@ -20,7 +20,9 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class FeCruProductHandler extends AbstractProductHandler
 {
@@ -47,6 +49,12 @@ public class FeCruProductHandler extends AbstractProductHandler
 
     public int start(Product ctx) throws MojoExecutionException
     {
+        final Map<String, String> properties = mergeSystemProperties(ctx);
+        for (final Map.Entry<String, String> entry : properties.entrySet())
+        {
+            System.setProperty(entry.getKey(), entry.getValue());
+        }
+        
         extractAndProcessHomeDirectory(ctx);
         addArtifacts(ctx);
 
@@ -297,6 +305,11 @@ public class FeCruProductHandler extends AbstractProductHandler
     private int controlPort(int httpPort)
     {
         return httpPort * 10 + 1;
+    }
+
+    protected Map<String, String> getSystemProperties(Product ctx)
+    {
+        return Collections.emptyMap();
     }
 
     private static class FeCruPluginProvider extends AbstractPluginProvider

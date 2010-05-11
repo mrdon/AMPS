@@ -230,6 +230,10 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setServer(server);
         ctx.setContextPath(contextPath);
         ctx.setJvmArgs(jvmArgs);
+
+        setDefaultSystemProperty(systemProperties, "atlassian.dev.mode", "true");
+        setDefaultSystemProperty(systemProperties, "java.awt.headless", "true");
+
         ctx.setSystemProperties(systemProperties);
         ctx.setBundledArtifacts(bundledArtifacts);
         ctx.setLibArtifacts(libArtifacts);
@@ -248,6 +252,14 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         ctx.setHttpPort(httpPort);
         return ctx;
+    }
+
+    private static void setDefaultSystemProperty(final Map<String, String> props, final String key, final String value)
+    {
+        if (!props.containsKey(key))
+        {
+            props.put(key, System.getProperty(key, value));
+        }
     }
 
     private void postProcessProduct(Product product)

@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,20 +43,6 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
         final Map<String, String> properties = mergeSystemProperties(ctx);
 
         return goals.startWebapp(ctx.getId(), combinedWebappWar, properties, getExtraContainerDependencies(), ctx);
-    }
-
-    private Map<String, String> mergeSystemProperties(Product ctx)
-    {
-        final Map<String, String> properties = getSystemProperties(ctx);
-        final Map<String, String> configuredProperties = ctx.getSystemProperties();
-        final Map<String, String> systemProperties = new HashMap<String, String>();
-        systemProperties.putAll(properties);
-        // product properties may be overwritten in the pom.xml if necessary
-        for (Map.Entry entry: configuredProperties.entrySet())
-        {
-            systemProperties.put((String)entry.getKey(), (String)entry.getValue());
-        }
-        return systemProperties;
     }
 
     public void stop(final Product ctx) throws MojoExecutionException
@@ -309,8 +294,6 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     protected abstract File getPluginsDirectory(String webappDir, File homeDir);
 
     protected abstract List<ProductArtifact> getExtraContainerDependencies();
-
-    protected abstract Map<String, String> getSystemProperties(Product ctx);
 
     protected abstract ProductArtifact getArtifact();
 

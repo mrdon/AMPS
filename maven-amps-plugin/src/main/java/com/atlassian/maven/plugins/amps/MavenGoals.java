@@ -367,9 +367,6 @@ public class MavenGoals
         }
 
         Map<String, String> sysPropsMap = new HashMap<String, String>(systemProperties);
-        setDefaultSystemProperty(sysPropsMap, "atlassian.dev.mode", "true");
-        setDefaultSystemProperty(sysPropsMap, "java.awt.headless", "true");
-
         if (!sysPropsMap.containsKey("plugin.resource.directories"))
         {
             // collect all resource directories and make them available for
@@ -451,14 +448,6 @@ public class MavenGoals
                 executionEnvironment(project, session, pluginManager)
         );
         return actualHttpPort;
-    }
-
-    private static void setDefaultSystemProperty(final Map<String, String> props, final String key, final String value)
-    {
-        if (!props.containsKey(key))
-        {
-            props.put(key, System.getProperty(key, value));
-        }
     }
 
     private String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
