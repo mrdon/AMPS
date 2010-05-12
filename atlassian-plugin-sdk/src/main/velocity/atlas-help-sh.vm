@@ -22,7 +22,7 @@ echo
     echo
 
     #if ($opts.size() > 0)
-        if [ ${dollar}{VERBOSE} == "true" ]; then
+        if [ ${dollar}{VERBOSE} = "true" ]; then
             echo "    The following options are available:"
             #foreach($o in $opts)
                     #if ($o.short)
