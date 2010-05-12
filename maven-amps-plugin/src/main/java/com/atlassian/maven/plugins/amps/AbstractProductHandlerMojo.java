@@ -71,7 +71,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * System systemProperties to pass to cargo
      */
     @MojoParameter
-    protected Map<String, String> systemProperties = new HashMap<String, String>();
+    protected Properties systemProperties = new Properties();
 
 
     /**
@@ -254,7 +254,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         return ctx;
     }
 
-    private static void setDefaultSystemProperty(final Map<String, String> props, final String key, final String value)
+    private static void setDefaultSystemProperty(final Properties props, final String key, final String value)
     {
         if (!props.containsKey(key))
         {

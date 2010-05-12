@@ -455,7 +455,7 @@ public class MavenGoals
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
 
-    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Map<String, String> systemProperties)
+    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Properties systemProperties)
     		throws MojoExecutionException
 	{
     	List<Element> includeElements = new ArrayList<Element>(includes.size());
@@ -498,12 +498,12 @@ public class MavenGoals
     /**
      * Converts a map of System properties to maven config elements
      */
-    private Element convertPropsToElements(Map<String, String> systemProperties)
+    private Element convertPropsToElements(Properties systemProperties)
     {
         ArrayList<Element> properties = new ArrayList<Element>();
 
         // add extra system properties... overwriting any of the hard coded values above.
-        for (Map.Entry<String, String> entry: systemProperties.entrySet())
+        for (Map.Entry entry: systemProperties.entrySet())
         {
             properties.add(
                     element(name("property"),

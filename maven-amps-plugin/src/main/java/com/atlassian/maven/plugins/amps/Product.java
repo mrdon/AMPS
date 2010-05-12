@@ -103,7 +103,7 @@ public class Product
     /**
      * The system properties to set for the product
      */
-    private Map<String, String> systemProperties = new HashMap<String, String>();
+    private Properties systemProperties = new Properties();
 
     /**
      * File the container should log to.
@@ -300,12 +300,12 @@ public class Product
         this.webConsoleVersion = webConsoleVersion;
     }
 
-    public void setSystemProperties(Map<String, String> systemProperties)
+    public void setSystemProperties(Properties systemProperties)
     {
         this.systemProperties = systemProperties;
     }
 
-    public Map<String, String> getSystemProperties()
+    public Properties getSystemProperties()
     {
         return systemProperties;
     }

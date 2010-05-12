@@ -115,9 +115,9 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         }
     }
 
-    private Map<String, String> copy(Map<String, String> systemProperties)
+    private Properties copy(Properties systemProperties)
     {
-        Map<String, String> copy = new HashMap<String, String>();
+        Properties copy = new Properties();
         copy.putAll(systemProperties);
         return copy;
     }
@@ -175,7 +175,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         return productIds;
     }
 
-    private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Map<String, String> systemProperties) throws MojoExecutionException
+    private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Properties systemProperties) throws MojoExecutionException
     {
         List<String> includes = getIncludesForTestGroup(testGroupId);
         List<String> excludes = getExcludesForTestGroup(testGroupId);
