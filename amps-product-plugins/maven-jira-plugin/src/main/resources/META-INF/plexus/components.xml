@@ -31,9 +31,15 @@
                                 com.atlassian.maven.plugins:maven-jira-plugin:jar,
                                 com.atlassian.maven.plugins:maven-jira-plugin:generate-obr-artifact
                             </package>
+                            <pre-integration-test>
+                                com.atlassian.maven.plugins:maven-jira-plugin:start-selenium-server
+                            </pre-integration-test>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-jira-plugin:integration-test
                             </integration-test>
+                            <post-integration-test>
+                                com.atlassian.maven.plugins:maven-jira-plugin:stop-selenium-server
+                            </post-integration-test>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                             <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                         </phases>

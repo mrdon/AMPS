@@ -7,10 +7,6 @@
     <fileSets>
         <fileSet>
             <directory>src/it</directory>
-            <excludes>
-                <!--Add here tests that require selenium-->
-                <exclude>**/integrationTestWithSelenium/**</exclude>
-            </excludes>
             <outputDirectory></outputDirectory> <!-- don't copy in src/it to the final archive, start at the lower level -->
         </fileSet>
     </fileSets>

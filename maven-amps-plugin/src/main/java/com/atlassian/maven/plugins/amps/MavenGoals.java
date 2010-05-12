@@ -1,7 +1,6 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.core.util.FileUtils;
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import com.atlassian.maven.plugins.amps.util.ZipUtils;
 import org.apache.maven.execution.MavenSession;
@@ -10,18 +9,16 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.twdata.maven.mojoexecutor.MojoExecutor;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
@@ -36,6 +33,7 @@ public class MavenGoals
     private final PluginManager pluginManager;
     private final Log log;
     private final Map<String, String> pluginArtifactIdToVersionMap;
+    private static final String SELENIUM_PORT = "selenium.port";
 
     private final Map<String, Container> idToContainerMap = new HashMap<String, Container>()
     {{
@@ -60,8 +58,10 @@ public class MavenGoals
             put("maven-resources-plugin", "2.3");
             put("maven-jar-plugin", "2.2");
             put("maven-surefire-plugin", "2.4.3");
+            put("selenium-maven-plugin", "1.0.1");
 
         }};
+
 
     public MavenGoals(final MavenContext ctx)
     {
@@ -210,6 +210,60 @@ public class MavenGoals
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
+    }
+
+    public void startSeleniumServer(Map<String, String> configuration) throws MojoExecutionException
+    {
+        String port;
+        if (!configuration.containsKey("port"))
+        {
+            port = String.valueOf(pickFreePort(0));
+            configuration.put("port", port);
+        }
+        else
+        {
+            port = configuration.get("port");
+        }
+
+        if (!configuration.containsKey("background"))
+        {
+            configuration.put("background", "true");
+        }
+
+        log.info("Starting selenium server on port '" + port +"'");
+        executeSeleniumPlugin("start-server", configuration);
+        session.getExecutionProperties().put(SELENIUM_PORT, port);
+    }
+
+    public void stopSeleniumServer(Map<String, String> configuration) throws MojoExecutionException
+    {
+        if (!configuration.containsKey("port"))
+        {
+            configuration.put("port", session.getExecutionProperties().getProperty(SELENIUM_PORT));
+        }
+        executeSeleniumPlugin("stop-server", configuration);
+    }
+
+    private void executeSeleniumPlugin(String goal, Map<String, String> configuration) throws MojoExecutionException
+    {
+        executeMojo(plugin(
+                groupId("org.codehaus.mojo"),
+                artifactId("selenium-maven-plugin"),
+                version(defaultArtifactIdToVersionMap.get("selenium-maven-plugin")))
+                , goal(goal),
+                configuration(convertToElements(configuration)),
+                executionEnvironment(project, session, pluginManager)
+        );
+    }
+
+    private Element[] convertToElements(Map<String, String> configMap)
+    {
+        final List<MojoExecutor.Element> configElementList = new ArrayList<MojoExecutor.Element>();
+        for (final Map.Entry<String, String> entry : configMap.entrySet())
+        {
+            configElementList.add(element(entry.getKey(), entry.getValue()));
+        }
+        return configElementList.toArray(new MojoExecutor.Element[configElementList.size()]);
     }
 
     public File copyWebappWar(final String productId, final File targetDirectory, final ProductArtifact artifact)
@@ -470,6 +524,11 @@ public class MavenGoals
         for (String exclude : excludes)
         {
         	excludeElements.add(element(name("exclude"), exclude));
+        }
+
+        if (session.getExecutionProperties().contains(SELENIUM_PORT))
+        {
+            systemProperties.put(SELENIUM_PORT, session.getExecutionProperties().getProperty(SELENIUM_PORT));
         }
 
         final Element systemProps = convertPropsToElements(systemProperties);

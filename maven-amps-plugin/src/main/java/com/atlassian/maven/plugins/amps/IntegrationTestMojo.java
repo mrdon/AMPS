@@ -27,10 +27,16 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     private String functionalTestPattern = "it/**";
 
     /**
+     * Pattern for to use to find selenium integration tests.  Only used if no test groups are defined.
+     */
+    @MojoParameter(expression = "${selenium.test.pattern}")
+    private String seleniumTestPattern = "selenium/**";
+
+    /**
      * The directory containing generated test classes of the project being tested.
      */
     @MojoParameter(expression = "${project.build.testOutputDirectory}", required = true)
-    private File testClassesDirectory;
+    protected File testClassesDirectory;
 
     /**
      * The list of specific test groups to execute
@@ -55,10 +61,10 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     private ArtifactHandlerManager artifactHandlerManager;
 
     @MojoParameter(expression="${maven.test.skip}", defaultValue = "false")
-    private boolean testsSkip = false;
+    protected boolean testsSkip = false;
 
     @MojoParameter(expression="${skipTests}", defaultValue = "false")
-    private boolean skipTests = false;
+    protected boolean skipTests = false;
 
     private static final String NO_TEST_GROUP = "__no_test_group__";
     protected void doExecute() throws MojoExecutionException
@@ -68,7 +74,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         // workaround for MNG-1682/MNG-2426: force maven to install artifact using the "jar" handler
         project.getArtifact().setArtifactHandler(artifactHandlerManager.getArtifactHandler("jar"));
 
-        if (!new File(testClassesDirectory, "it").exists())
+        if (!hasIntegrationTests() && !hasSeleniumTests())
         {
             getLog().info("No integration tests found");
             return;
@@ -113,6 +119,11 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemProperties));
             }
         }
+    }
+    
+    private boolean hasIntegrationTests()
+    {
+        return new File(testClassesDirectory, "it").exists();
     }
 
     private Map<String, String> copy(Map<String, String> systemProperties)
@@ -255,11 +266,30 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         return Collections.emptyMap();
     }
 
+    private List<String> getFunctionalTestPatterns()
+    {
+        List<String> testsPatterns = new ArrayList<String>();
+        if (hasIntegrationTests())
+        {
+            testsPatterns.add(functionalTestPattern);
+        }
+        if (hasSeleniumTests())
+        {
+            testsPatterns.add(seleniumTestPattern);
+        }
+        return Collections.unmodifiableList(testsPatterns);
+    }
+
+    boolean hasSeleniumTests()
+    {
+        return new File(testClassesDirectory, AbstractSeleniumMojo.SELENIUM_PACKAGE).exists();
+    }
+
     private List<String> getIncludesForTestGroup(String testGroupId)
     {
         if (NO_TEST_GROUP.equals(testGroupId))
         {
-            return Collections.singletonList(functionalTestPattern);
+            return getFunctionalTestPatterns();
         }
         else
         {
@@ -271,7 +301,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 }
             }
         }
-        return Collections.singletonList(functionalTestPattern);
+        return getFunctionalTestPatterns();
     }
 
 

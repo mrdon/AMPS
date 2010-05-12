@@ -31,9 +31,15 @@
                                 com.atlassian.maven.plugins:maven-refapp-plugin:jar,
                                 com.atlassian.maven.plugins:maven-refapp-plugin:generate-obr-artifact
                             </package>
+                            <pre-integration-test>
+                                com.atlassian.maven.plugins:maven-refapp-plugin:start-selenium-server
+                            </pre-integration-test>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-refapp-plugin:integration-test
                             </integration-test>
+                            <post-integration-test>
+                                com.atlassian.maven.plugins:maven-refapp-plugin:stop-selenium-server
+                            </post-integration-test>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                             <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                         </phases>

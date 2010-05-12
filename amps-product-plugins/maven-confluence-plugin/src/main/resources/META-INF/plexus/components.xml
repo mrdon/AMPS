@@ -32,9 +32,15 @@
                                 com.atlassian.maven.plugins:maven-confluence-plugin:jar,
                                 com.atlassian.maven.plugins:maven-confluence-plugin:generate-obr-artifact
                             </package>
+                            <pre-integration-test>
+                                com.atlassian.maven.plugins:maven-confluence-plugin:start-selenium-server
+                            </pre-integration-test>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-confluence-plugin:integration-test
                             </integration-test>
+                            <post-integration-test>
+                                com.atlassian.maven.plugins:maven-confluence-plugin:stop-selenium-server
+                            </post-integration-test>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                             <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                         </phases>
