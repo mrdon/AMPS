@@ -38,6 +38,59 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>shitty-maven-plugin</artifactId>
                     </plugin>
+                    <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-resources-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>copy-integration-tests-with-filtering</id>
+                                    <phase>pre-integration-test</phase>
+                                    <goals>
+                                        <goal>copy-resources</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>${project.build.directory}/it</outputDirectory>
+                                        <resources>
+                                            <resource>
+                                                <directory>${project.build.directory}/it-unfiltered</directory>
+                                                <filtering>true</filtering>
+                                                <includes>
+                                                    <include>**/pom.xml</include>
+                                                    <include>**/goals.txt</include>
+                                                    <include>**/flags.txt</include>
+                                                    <include>settings.xml</include>
+                                                </includes>
+                                                <excludes>
+                                                    <exclude>integrationTest*/**</exclude>
+                                                </excludes>
+                                            </resource>
+                                        </resources>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>copy-integration-tests-without-filtering</id>
+                                    <phase>pre-integration-test</phase>
+                                    <goals>
+                                        <goal>copy-resources</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>${project.build.directory}/it</outputDirectory>
+                                        <resources>
+                                            <resource>
+                                                <directory>${project.build.directory}/it-unfiltered</directory>
+                                                <filtering>false</filtering>
+                                                <excludes>
+                                                    <exclude>**/pom.xml</exclude>
+                                                    <exclude>**/goals.txt</exclude>
+                                                    <exclude>**/flags.txt</exclude>
+                                                    <exclude>integrationTest*/**</exclude>
+                                                </excludes>
+                                            </resource>
+                                        </resources>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
                 </plugins>
             </build>
             <properties>
