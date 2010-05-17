@@ -1,1 +1,1 @@
-test-compile jar:jar  ${shitty.product}:start-selenium-server ${shitty.product}:integration-test  ${shitty.product}:stop-selenium-server
+test-compile jar:jar selenium:xvfb  ${shitty.product}:start-selenium-server ${shitty.product}:integration-test  ${shitty.product}:stop-selenium-server
