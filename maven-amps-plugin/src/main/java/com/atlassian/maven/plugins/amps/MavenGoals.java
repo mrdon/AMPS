@@ -387,7 +387,7 @@ public class MavenGoals
 
         for (final Map.Entry<String, String> entry : sysPropsMap.entrySet())
         {
-            webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=" + entry.getValue());
+            webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=\"" + entry.getValue() + "\"");
             sysProps.add(element(name(entry.getKey()), entry.getValue()));
         }
         log.info("Starting " + productId + " on the " + container.getId() + " container on ports "
