@@ -1,28 +1,29 @@
 package com.atlassian.maven.plugins.amps.osgi;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.atlassian.maven.plugins.amps.AbstractAmpsMojo;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.model.Build;
+import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Generates the obr artifact, containing the plugin, its dependencies, and the obr XML file.  The OBR file looks like
@@ -178,10 +179,13 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
             getMavenGoals().generateObrXml(dep, obrXml);
         }
 
-        // Copy in the main artifact
-        FileUtils.copyFileToDirectory(mainArtifact, obrDir, true);
+        // Copy the main artifact over
+        File mainArtifactCopy = new File(obrDir, mainArtifact.getName());
+        FileUtils.copyFile(mainArtifact, mainArtifactCopy);
 
-        getMavenGoals().generateObrXml(mainArtifact, obrXml);
+        // Generate the obr xml for the main artifact
+        // The File must be the one copied into the obrDir (see AMPS-300)
+        getMavenGoals().generateObrXml(mainArtifactCopy, obrXml);
 
         return obrDir;
     }
