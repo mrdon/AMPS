@@ -103,7 +103,7 @@ public class Product
     /**
      * The system properties to set for the product
      */
-    private Map<String,String> systemProperties = new HashMap<String,String>();
+    private Map<String,Object> systemProperties = new HashMap<String,Object>();
 
     /**
      * File the container should log to.
@@ -387,12 +387,12 @@ public class Product
         return props;
     }
 
-    public void setSystemPropertyVariables(Map<String,String> systemProperties)
+    public void setSystemPropertyVariables(Map<String,Object> systemProperties)
     {
         this.systemProperties = systemProperties;
     }
 
-    public Map<String,String> getSystemPropertyVariables()
+    public Map<String,Object> getSystemPropertyVariables()
     {
         return systemProperties;
     }

@@ -177,7 +177,7 @@ public class FeCruProductHandler extends AbstractProductHandler
                     new ProductArtifact(
                             "com.atlassian.fecru",
                             "amps-fecru",
-                            ctx.getProductDataVersion()));
+                            ctx.getDataVersion()));
     
             createDirectory(homeDir);
             try

@@ -84,7 +84,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * @since 3.2
      */
     @MojoParameter
-    protected Map<String, String> systemPropertyVariables = new HashMap<String, String>();
+    protected Map<String, Object> systemPropertyVariables = new HashMap<String, Object>();
 
 
     /**
@@ -278,7 +278,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         return ctx;
     }
 
-    private static void setDefaultSystemProperty(final Map<String,String> props, final String key, final String value)
+    private static void setDefaultSystemProperty(final Map<String,Object> props, final String key, final String value)
     {
         if (!props.containsKey(key))
         {
@@ -289,12 +289,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private void postProcessProduct(Product product)
     {
 
-        String dversion = System.getProperty("product.data.version", product.getProductDataVersion());
+        String dversion = System.getProperty("product.data.version", product.getDataVersion());
         String pversion = System.getProperty("product.version", product.getVersion());
-        String dpath = System.getProperty("product.data.path", product.getProductDataPath());
+        String dpath = System.getProperty("product.data.path", product.getDataPath());
 
-        product.setProductDataPath(dpath);
-        product.setProductDataVersion(dversion);
+        product.setDataPath(dpath);
+        product.setDataVersion(dversion);
         product.setVersion(pversion);
         product.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
 
@@ -308,9 +308,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             product.setServer(DEFAULT_SERVER);
         }
 
-        if (product.getProductDataVersion() == null)
+        if (product.getDataVersion() == null)
         {
-            product.setProductDataVersion(DEFAULT_PRODUCT_DATA_VERSION);
+            product.setDataVersion(DEFAULT_PRODUCT_DATA_VERSION);
         }
 
         if (product.getPdkVersion() == null)

@@ -188,7 +188,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     private File getProductHomeZip(final Product ctx, final File outputDir) throws MojoExecutionException
     {
         File productHomeZip = null;
-        String dpath = ctx.getProductDataPath();
+        String dpath = ctx.getDataPath();
 
         //use custom zip if supplied
         if (StringUtils.isNotBlank(dpath))
@@ -208,7 +208,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
                     new ProductArtifact(
                             getTestResourcesArtifact().getGroupId(),
                             getTestResourcesArtifact().getArtifactId(),
-                            ctx.getProductDataVersion()));
+                            ctx.getDataVersion()));
         }
 
         return productHomeZip;
