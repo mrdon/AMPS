@@ -86,7 +86,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         final Set<String> configuredTestGroupIds = getTestGroupIds();
         if (configuredTestGroupIds.isEmpty())
         {
-            runTestsForTestGroup(NO_TEST_GROUP, goals, pluginJar, copy(systemProperties));
+            runTestsForTestGroup(NO_TEST_GROUP, goals, pluginJar, copy(systemPropertyVariables));
         }
         else if (configuredTestGroupsToRun != null)
         {
@@ -103,23 +103,21 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             // now run the tests
             for (String testGroupId : testGroupIdsToRun)
             {
-                runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemProperties));
+                runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemPropertyVariables));
             }
         }
         else
         {
             for (String testGroupId : configuredTestGroupIds)
             {
-                runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemProperties));
+                runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemPropertyVariables));
             }
         }
     }
 
-    private Properties copy(Properties systemProperties)
+    private Map<String,Object> copy(Map<String,Object> systemProperties)
     {
-        Properties copy = new Properties();
-        copy.putAll(systemProperties);
-        return copy;
+        return new HashMap<String,Object>(systemProperties);
     }
 
     /**
@@ -175,7 +173,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         return productIds;
     }
 
-    private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Properties systemProperties) throws MojoExecutionException
+    private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Map<String,Object> systemProperties) throws MojoExecutionException
     {
         List<String> includes = getIncludesForTestGroup(testGroupId);
         List<String> excludes = getExcludesForTestGroup(testGroupId);
@@ -217,6 +215,9 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             systemProperties.put("http." + product.getId() + ".port", String.valueOf(actualHttpPort));
             systemProperties.put("context." + product.getId() + ".path", product.getContextPath());
             systemProperties.put("plugin.jar", pluginJar);
+
+            // yes, this means you only get one base url if multiple products, but that is what selenium would expect
+            systemProperties.put("baseurl", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
 
             systemProperties.putAll(getProductFunctionalTestProperties(product));
         }

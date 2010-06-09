@@ -450,12 +450,12 @@ public class MavenGoals
         return actualHttpPort;
     }
 
-    private String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
+    static String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
     {
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
 
-    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Properties systemProperties)
+    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Map<String,Object> systemProperties)
     		throws MojoExecutionException
 	{
     	List<Element> includeElements = new ArrayList<Element>(includes.size());
@@ -498,7 +498,7 @@ public class MavenGoals
     /**
      * Converts a map of System properties to maven config elements
      */
-    private Element convertPropsToElements(Properties systemProperties)
+    private Element convertPropsToElements(Map<String, Object> systemProperties)
     {
         ArrayList<Element> properties = new ArrayList<Element>();
 
@@ -508,7 +508,7 @@ public class MavenGoals
             properties.add(
                     element(name("property"),
                             element(name("name"), (String)entry.getKey()),
-                            element(name("value"), (String)entry.getValue())));
+                            element(name("value"), entry.getValue().toString())));
         }
 
         return element(name("systemProperties"), properties.toArray(new Element[properties.size()]));
