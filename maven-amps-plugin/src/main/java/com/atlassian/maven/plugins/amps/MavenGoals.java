@@ -14,14 +14,13 @@ import org.apache.maven.project.MavenProject;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
@@ -338,7 +337,7 @@ public class MavenGoals
         return project.getBuild().getDirectory();
     }
 
-    public int startWebapp(final String productId, final File war, final Map<String, String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
+    public int startWebapp(final String productInstanceId, final File war, final Map<String, String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
                            final Product webappContext) throws MojoExecutionException
     {
         final Container container = findContainer(webappContext.getContainerId());
@@ -387,7 +386,7 @@ public class MavenGoals
             webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=\"" + entry.getValue() + "\"");
             sysProps.add(element(name(entry.getKey()), entry.getValue()));
         }
-        log.info("Starting " + productId + " on the " + container.getId() + " container on ports "
+        log.info("Starting " + productInstanceId + " on the " + container.getId() + " container on ports "
                 + actualHttpPort + " (http) and " + rmiPort + " (rmi)");
 
         final String baseUrl = getBaseUrl(webappContext.getServer(), actualHttpPort, webappContext.getContextPath());
@@ -429,7 +428,7 @@ public class MavenGoals
                                 element(name("dependencies"), deps.toArray(new Element[deps.size()]))
                         ),
                         element(name("configuration"),
-                                element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId)),
+                                element(name("home"), container.getConfigDirectory(getBuildDirectory(), productInstanceId)),
                                 element(name("type"), "standalone"),
                                 element(name("properties"), props.toArray(new Element[props.size()])),
                                 element(name("deployables"),
@@ -528,7 +527,25 @@ public class MavenGoals
     {
         if (requestedPort > 0)
         {
-            return requestedPort;
+            Socket socket = null;
+            try
+            {
+                socket = new Socket("localhost", requestedPort);
+
+                // damn, port taken
+            }
+            catch (UnknownHostException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (IOException e)
+            {
+                return requestedPort;
+            }
+            finally
+            {
+                closeSocket(socket);
+            }
         }
         ServerSocket socket = null;
         try
@@ -542,16 +559,36 @@ public class MavenGoals
         }
         finally
         {
-            if (socket != null)
+            closeSocket(socket);
+        }
+    }
+
+    private void closeSocket(ServerSocket socket)
+    {
+        if (socket != null)
+        {
+            try
             {
-                try
-                {
-                    socket.close();
-                }
-                catch (final IOException e)
-                {
-                    throw new RuntimeException("Error closing socket", e);
-                }
+                socket.close();
+            }
+            catch (final IOException e)
+            {
+                throw new RuntimeException("Error closing socket", e);
+            }
+        }
+    }
+
+    private void closeSocket(Socket socket)
+    {
+        if (socket != null)
+        {
+            try
+            {
+                socket.close();
+            }
+            catch (final IOException e)
+            {
+                throw new RuntimeException("Error closing socket", e);
             }
         }
     }

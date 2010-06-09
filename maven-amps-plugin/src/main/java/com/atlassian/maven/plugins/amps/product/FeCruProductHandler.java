@@ -70,7 +70,7 @@ public class FeCruProductHandler extends AbstractProductHandler
 
         try
         {
-            execFishEyeCmd("run");
+            execFishEyeCmd("run", ctx.getId());
         }
         catch (Exception e)
         {
@@ -85,9 +85,9 @@ public class FeCruProductHandler extends AbstractProductHandler
     private void addOverrides(Product ctx) throws IOException
     {
         final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getId() + "-app");
-        if (srcDir.exists() && getHomeDirectory().exists())
+        if (srcDir.exists() && getHomeDirectory(ctx.getId()).exists())
         {
-            FileUtils.copyDirectory(srcDir, getHomeDirectory());
+            FileUtils.copyDirectory(srcDir, getHomeDirectory(ctx.getId()));
         }
     }
 
@@ -126,7 +126,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         try
         {
-            execFishEyeCmd("stop");
+            execFishEyeCmd("stop", ctx.getId());
         }
         catch (Exception e)
         {
@@ -134,11 +134,11 @@ public class FeCruProductHandler extends AbstractProductHandler
         }
     }
 
-    private void execFishEyeCmd(String bootCommand) throws MojoExecutionException
+    private void execFishEyeCmd(String bootCommand, String instanceId) throws MojoExecutionException
     {
 
         try {
-            URL fisheyebootUrl = new File(getHomeDirectory(), "fisheyeboot.jar").toURI().toURL();
+            URL fisheyebootUrl = new File(getHomeDirectory(instanceId), "fisheyeboot.jar").toURI().toURL();
             ClassLoader cl = new URLClassLoader(new URL[] {fisheyebootUrl});
             Class<?> fisheyeCtl = cl.loadClass("com.cenqua.fisheye.FishEyeCtl");
             Method main = fisheyeCtl.getDeclaredMethod("mainImpl", String[].class);
@@ -164,7 +164,7 @@ public class FeCruProductHandler extends AbstractProductHandler
      */
     private void extractAndProcessHomeDirectory(Product ctx) throws MojoExecutionException
     {
-        final File homeDir = getHomeDirectory();
+        final File homeDir = getHomeDirectory(ctx.getId());
         final File varDirectory = new File(homeDir, "var");
         if (!varDirectory.exists()) {
             final File cruDistZip = goals.copyDist(getBuildDirectory(),
@@ -238,7 +238,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         try
         {
-            final File pluginsDir = new File(getHomeDirectory(), "var/plugins");
+            final File pluginsDir = new File(getHomeDirectory(ctx.getId()), "var/plugins");
             createDirectory(pluginsDir);
             final File bundledPluginsDir = new File(pluginsDir, "bundled");
             createDirectory(bundledPluginsDir);
@@ -246,7 +246,7 @@ public class FeCruProductHandler extends AbstractProductHandler
             createDirectory(userPluginsDir);
 
             // add bundled plugins (todo these are already part of the dist.. this step is possibly unnecessary?)
-            final File bundledPluginsZip = new File(getHomeDirectory(), "plugins/bundled-plugins.zip");
+            final File bundledPluginsZip = new File(getHomeDirectory(ctx.getId()), "plugins/bundled-plugins.zip");
             if (bundledPluginsZip.exists())
             {
                 unzip(bundledPluginsZip, bundledPluginsDir.getPath());
@@ -273,7 +273,7 @@ public class FeCruProductHandler extends AbstractProductHandler
             List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
             //artifacts.addAll(getDefaultLibPlugins()); -- we don't support plugins 1
             artifacts.addAll(ctx.getLibArtifacts());
-            addArtifactsToDirectory(artifacts, new File(getHomeDirectory(), "lib"));
+            addArtifactsToDirectory(artifacts, new File(getHomeDirectory(ctx.getId()), "lib"));
 
             artifacts = new ArrayList<ProductArtifact>();
             //artifacts.addAll(getDefaultBundledPlugins()); -- todo default bundled plugins?

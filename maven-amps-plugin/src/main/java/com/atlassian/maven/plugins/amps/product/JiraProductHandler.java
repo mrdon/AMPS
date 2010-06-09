@@ -40,14 +40,14 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public Map<String, String> getSystemProperties(Product ctx)
+    public Map<String, String> getSystemProperties(final Product ctx)
     {
         return new HashMap<String, String>()
         {
             {
-                put("jira.home", fixSlashes(getHomeDirectory().getPath()));
+                put("jira.home", fixSlashes(getHomeDirectory(ctx.getId()).getPath()));
                 put("cargo.datasource.datasource", "cargo.datasource.url=jdbc:hsqldb:"
-                        + fixSlashes(getHomeDirectory().getAbsolutePath()) + "/database|"
+                        + fixSlashes(getHomeDirectory(ctx.getId()).getAbsolutePath()) + "/database|"
                         + "cargo.datasource.driver=org.hsqldb.jdbcDriver|" + "cargo.datasource.username=sa|"
                         + "cargo.datasource.password=|" + "cargo.datasource.type=javax.sql.DataSource|"
                         + "cargo.datasource.jndi=jdbc/JiraDS");

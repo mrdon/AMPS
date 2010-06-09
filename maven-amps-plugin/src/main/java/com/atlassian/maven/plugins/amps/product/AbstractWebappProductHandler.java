@@ -33,7 +33,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     public int start(final Product ctx) throws MojoExecutionException
     {
         // Copy the webapp war to target
-        final File webappWar = goals.copyWebappWar(ctx.getId(), getBaseDirectory(),
+        final File webappWar = goals.copyWebappWar(ctx.getId(), getBaseDirectory(ctx.getId()),
                 new ProductArtifact(getArtifact().getGroupId(), getArtifact().getArtifactId(), ctx.getVersion()));
 
         final File homeDir = extractAndProcessHomeDirectory(ctx);
@@ -47,21 +47,21 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
     public void stop(final Product ctx) throws MojoExecutionException
     {
-        goals.stopWebapp(getId(), ctx.getContainerId());
+        goals.stopWebapp(ctx.getId(), ctx.getContainerId());
     }
 
     private File addArtifactsAndOverrides(final Product ctx, final File homeDir, final File webappWar) throws MojoExecutionException
     {
         try
         {
-            final String webappDir = new File(getBaseDirectory(), "webapp").getAbsolutePath();
+            final String webappDir = new File(getBaseDirectory(ctx.getId()), "webapp").getAbsolutePath();
             if (!new File(webappDir).exists())
             {
                 unzip(webappWar, webappDir);
             }
 
             File pluginsDir = getPluginsDirectory(webappDir, homeDir);
-            final File bundledPluginsDir = new File(getBaseDirectory(), "bundled-plugins");
+            final File bundledPluginsDir = new File(getBaseDirectory(ctx.getId()), "bundled-plugins");
 
             bundledPluginsDir.mkdir();
             // add bundled plugins
@@ -140,9 +140,9 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
         }
     }
 
-    private File getBaseDirectory()
+    private File getBaseDirectory(String instanceId)
     {
-        final File dir = new File(project.getBuild().getDirectory(), getId());
+        final File dir = new File(project.getBuild().getDirectory(), instanceId);
         dir.mkdir();
         return dir;
     }
@@ -152,7 +152,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
         if (getTestResourcesArtifact() != null)
         {
 
-            final File outputDir = getBaseDirectory();
+            final File outputDir = getBaseDirectory(ctx.getId());
             final File homeDir = new File(outputDir, "home");
 
             // Only create the home dir if it doesn't exist
@@ -181,7 +181,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             return homeDir;
         } else
         {
-            return getHomeDirectory();
+            return getHomeDirectory(ctx.getId());
         }
     }
 
@@ -218,7 +218,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
                                        Product ctx, File outputDir)
             throws MojoExecutionException
     {
-        final File tmpDir = new File(getBaseDirectory(), "tmp-resources");
+        final File tmpDir = new File(getBaseDirectory(ctx.getId()), "tmp-resources");
         tmpDir.mkdir();
 
         try
@@ -241,7 +241,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     private void overrideAndPatchHomeDir(File homeDir, final String productId) throws IOException
     {
         final File srcDir = new File(project.getBasedir(), "src/test/resources/" + productId + "-home");
-        final File outputDir = new File(getBaseDirectory(), "home");
+        final File outputDir = new File(getBaseDirectory(productId), "home");
         if (srcDir.exists() && outputDir.exists())
         {
             FileUtils.copyDirectory(srcDir, homeDir);

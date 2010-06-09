@@ -145,9 +145,9 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         return ids;
     }
 
-    private Set<String> getProductIdsForTestGroup(String testGroupId) throws MojoExecutionException
+    private List<String> getProductIdsForTestGroup(String testGroupId) throws MojoExecutionException
     {
-        Set<String> productIds = new HashSet<String>();
+        List<String> productIds = new ArrayList<String>();
         if (NO_TEST_GROUP.equals(testGroupId))
         {
             productIds.add(getProductId());
@@ -160,7 +160,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 productIds.addAll(group.getProductIds());
             }
         }
-        if (ProductHandlerFactory.getIds().contains(testGroupId))
+        if (ProductHandlerFactory.getIds().contains(testGroupId) && !productIds.contains(testGroupId))
         {
             productIds.add(testGroupId);
         }
@@ -177,20 +177,33 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     {
         List<String> includes = getIncludesForTestGroup(testGroupId);
         List<String> excludes = getExcludesForTestGroup(testGroupId);
-        Set<String> productIds = getProductIdsForTestGroup(testGroupId);
+        List<String> productIds = getProductIdsForTestGroup(testGroupId);
 
         // Create a container object to hold product-related stuff
         List<TestGroupProductExecution> products = new ArrayList<TestGroupProductExecution>();
-        for (String productId : productIds)
+        int dupCounter = 0;
+        Set<String> uniqueProductIds = new HashSet<String>();
+        for (int x=0; x<productIds.size(); x++)
         {
-            ProductHandler product = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals, getLog());
+            String productId = productIds.get(x);
+            ProductHandler productHandler = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals, getLog());
             Product ctx = getProductContexts(goals).get(productId);
             if (ctx == null)
             {
                 throw new MojoExecutionException("The test group '" + testGroupId + "' refers to a product '" + productId
                     + "' that doesn't have an associated <product> configuration.");
             }
-            products.add(new TestGroupProductExecution(ctx, product));
+
+            // Give unique ids to duplicate product instances
+            if (uniqueProductIds.contains(productId))
+            {
+                ctx.setId(productId + "-" + dupCounter++);
+            }
+            else
+            {
+                uniqueProductIds.add(productId);
+            }
+            products.add(new TestGroupProductExecution(ctx, productHandler));
         }
 
         // Install the plugin in each product and start it
@@ -214,10 +227,14 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             // hard coded system properties...
             systemProperties.put("http." + product.getId() + ".port", String.valueOf(actualHttpPort));
             systemProperties.put("context." + product.getId() + ".path", product.getContextPath());
+            systemProperties.put("http." + product.getId() + ".url", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
             systemProperties.put("plugin.jar", pluginJar);
 
             // yes, this means you only get one base url if multiple products, but that is what selenium would expect
-            systemProperties.put("baseurl", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
+            if (!systemProperties.containsKey("baseurl"))
+            {
+                systemProperties.put("baseurl", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
+            }
 
             systemProperties.putAll(getProductFunctionalTestProperties(product));
         }
@@ -225,7 +242,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
 
         // Actually run the tests
-        goals.runTests(getProductId(), containerId, includes, excludes, systemProperties);
+        goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties);
 
         // Shut all products down
         for (TestGroupProductExecution testGroupProductExecution : products)

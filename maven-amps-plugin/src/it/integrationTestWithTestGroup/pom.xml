@@ -24,6 +24,16 @@
                                 <include>**/foo/**</include>
                             </includes>
                         </testGroup>
+                        <testGroup>
+                            <id>bar</id>
+                            <productIds>
+                                <productId>${shitty.product}</productId>
+                                <productId>${shitty.product}</productId>
+                            </productIds>
+                            <includes>
+                                <include>**/bar/**</include>
+                            </includes>
+                        </testGroup>
                     </testGroups>
                 </configuration>
             </plugin>
