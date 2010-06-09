@@ -3,6 +3,7 @@ package com.atlassian.maven.plugins.amps;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -12,6 +13,7 @@ import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -209,11 +211,20 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoComponent
     private ArtifactFactory artifactFactory;
+
     /**
      * A list of product-specific configurations
      */
     @MojoParameter
     protected List<Product> products = new ArrayList<Product>();
+
+    /**
+     * If the listed product configurations should inherit from the default configuration.
+     *
+     * @since 3.2
+     */
+    @MojoParameter
+    protected boolean productsInheritConfiguration = false;
     
     /**
      * File the container logging output will be sent to.
@@ -340,7 +351,48 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     {
         Map<String, Product> productMap = new HashMap<String, Product>();
 
-        
+
+        if (productsInheritConfiguration)
+        {
+            makeProductsInheritDefaultConfiguration(products, productMap);
+        }
+        else
+        {
+            addDefaultConfigAsNewProduct(products, productMap);
+        }
+
+        for (Product ctx : productMap.values())
+        {
+            postProcessProduct(ctx);
+            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext().getProject(), goals, getLog());
+            ctx.setHttpPort(ctx.getHttpPort() == 0 ? handler.getDefaultHttpPort() : ctx.getHttpPort());
+            ctx.setVersion(ctx.getVersion() == null ? "RELEASE" : ctx.getVersion());
+            ctx.setContextPath(ctx.getContextPath() == null ? "/" + handler.getId() : ctx.getContextPath());
+        }
+        return productMap;
+    }
+
+    void makeProductsInheritDefaultConfiguration(List<Product> products, Map<String, Product> productMap) throws MojoExecutionException
+    {
+        if (products.size() == 0)
+        {
+            productMap.put(getProductId(), createDefaultProductContext());
+        }
+        else
+        {
+            Product defaultProduct = createDefaultProductContext();
+            for (Product product : products)
+            {
+                Product processedProduct = product.merge(defaultProduct);
+                productMap.put(processedProduct.getId(), processedProduct);
+            }
+        }
+
+    }
+
+    void addDefaultConfigAsNewProduct(List<Product> products, Map<String, Product> productMap)
+            throws MojoExecutionException
+    {
         if (getProductId() != null)
         {
             boolean found = false;
@@ -357,16 +409,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                 productMap.put(getProductId(), createDefaultProductContext());
             }
         }
-
-        for (Product ctx : productMap.values())
-        {
-            postProcessProduct(ctx);
-            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext().getProject(), goals, getLog());
-            ctx.setHttpPort(ctx.getHttpPort() == 0 ? handler.getDefaultHttpPort() : ctx.getHttpPort());
-            ctx.setVersion(ctx.getVersion() == null ? "RELEASE" : ctx.getVersion());
-            ctx.setContextPath(ctx.getContextPath() == null ? "/" + handler.getId() : ctx.getContextPath());
-        }
-        return productMap;
     }
 
     protected abstract void doExecute() throws MojoExecutionException, MojoFailureException;

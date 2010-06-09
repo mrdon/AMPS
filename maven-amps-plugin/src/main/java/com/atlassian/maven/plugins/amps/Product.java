@@ -98,7 +98,7 @@ public class Product
     /**
      * Flag to indicate whether or not to install the plugin
      */
-    private boolean installPlugin;
+    private Boolean installPlugin;
 
     /**
      * The system properties to set for the product
@@ -109,6 +109,43 @@ public class Product
      * File the container should log to.
      */
     private String output;
+
+    /**
+     * Creates a new product that is merged with this one, where the properties in this one override the passed
+     * in product.
+     * @param product The product to merge with
+     * @return A new product
+     */
+    public Product merge(Product product)
+    {
+        Product prod = new Product();
+        prod.setOutput(output == null ? product.getOutput() : output);
+        prod.setSystemProperties(systemProperties.isEmpty() ? product.getSystemProperties() : systemProperties);
+        prod.setInstallPlugin(installPlugin == null ? product.isInstallPlugin() : installPlugin);
+        prod.setArtifactRetriever(artifactRetriever == null ? product.getArtifactRetriever() : artifactRetriever);
+        prod.setId(id == null ? product.getId() : id);
+        prod.setWebConsoleVersion(webConsoleVersion == null ? product.getWebConsoleVersion() : webConsoleVersion);
+        prod.setRestVersion(restVersion == null ? product.getRestVersion() : restVersion);
+        prod.setPdkVersion(pdkVersion == null ? product.getPdkVersion() : pdkVersion);
+        prod.setSalVersion(salVersion == null ? product.getSalVersion() : salVersion);
+        
+        prod.setBundledArtifacts(bundledArtifacts.isEmpty() ? product.getBundledArtifacts() : bundledArtifacts);
+        prod.setPluginArtifacts(pluginArtifacts.isEmpty() ? product.getPluginArtifacts() : pluginArtifacts);
+        prod.setLibArtifacts(libArtifacts.isEmpty() ? product.getLibArtifacts() : libArtifacts);
+
+        prod.setDataPath(productDataPath.length() == 0 ? product.getDataPath() : productDataPath);
+        prod.setDataVersion(productDataVersion == null ? product.getDataVersion() : productDataVersion);
+        prod.setLog4jProperties(log4jProperties == null ? product.getLog4jProperties() : log4jProperties);
+        prod.setJvmArgs(jvmArgs == null ? product.getJvmArgs() : jvmArgs);
+        prod.setVersion(version == null ? product.getVersion() : version);
+
+        prod.setServer(server == null ? product.getServer() : server);
+        prod.setContextPath(contextPath == null ? product.getContextPath() : contextPath);
+        prod.setContainerId(containerId == null ? product.getContainerId() : containerId);
+        prod.setHttpPort(httpPort == 0 ? product.getHttpPort() : httpPort);
+
+        return prod;
+    }
 
     public String getContainerId()
     {
@@ -180,21 +217,53 @@ public class Product
         this.version = version;
     }
 
+    public String getDataVersion()
+    {
+        return productDataVersion;
+    }
+
+    public void setDataVersion(String productDataVersion)
+    {
+        this.productDataVersion = productDataVersion;
+    }
+
+    /**
+     * @deprecated since 3.2
+     */
     public String getProductDataVersion()
     {
         return productDataVersion;
     }
 
+    /**
+     * @deprecated since 3.2
+     */
     public void setProductDataVersion(String productDataVersion)
     {
         this.productDataVersion = productDataVersion;
     }
 
+    public String getDataPath()
+    {
+        return productDataPath;
+    }
+
+    public void setDataPath(String productDataPath)
+    {
+        this.productDataPath = productDataPath;
+    }
+
+    /**
+     * @deprecated since 3.2
+     */
     public String getProductDataPath()
     {
         return productDataPath;
     }
 
+    /**
+     * @deprecated since 3.2
+     */
     public void setProductDataPath(String productDataPath)
     {
         this.productDataPath = productDataPath;
@@ -280,12 +349,12 @@ public class Product
         this.id = id;
     }
 
-    public boolean isInstallPlugin()
+    public Boolean isInstallPlugin()
     {
         return installPlugin;
     }
 
-    public void setInstallPlugin(final boolean installPlugin)
+    public void setInstallPlugin(final Boolean installPlugin)
     {
         this.installPlugin = installPlugin;
     }
@@ -319,4 +388,5 @@ public class Product
 	{
 		this.output = output;
 	}
+
 }
