@@ -103,7 +103,7 @@ public class Product
     /**
      * The system properties to set for the product
      */
-    private Properties systemProperties = new Properties();
+    private Map<String,String> systemProperties = new HashMap<String,String>();
 
     /**
      * File the container should log to.
@@ -120,7 +120,7 @@ public class Product
     {
         Product prod = new Product();
         prod.setOutput(output == null ? product.getOutput() : output);
-        prod.setSystemProperties(systemProperties.isEmpty() ? product.getSystemProperties() : systemProperties);
+        prod.setSystemPropertyVariables(systemProperties.isEmpty() ? product.getSystemPropertyVariables() : systemProperties);
         prod.setInstallPlugin(installPlugin == null ? product.isInstallPlugin() : installPlugin);
         prod.setArtifactRetriever(artifactRetriever == null ? product.getArtifactRetriever() : artifactRetriever);
         prod.setId(id == null ? product.getId() : id);
@@ -369,12 +369,30 @@ public class Product
         this.webConsoleVersion = webConsoleVersion;
     }
 
+    /**
+     * @deprecated Since 3.2, use systemPropertyVariables
+     */
     public void setSystemProperties(Properties systemProperties)
+    {
+        this.systemProperties.putAll((Map) systemProperties);
+    }
+
+    /**
+     * @deprecated Since 3.2, use systemPropertyVariables
+     */
+    public Properties getSystemProperties()
+    {
+        Properties props = new Properties();
+        props.putAll(systemProperties);
+        return props;
+    }
+
+    public void setSystemPropertyVariables(Map<String,String> systemProperties)
     {
         this.systemProperties = systemProperties;
     }
 
-    public Properties getSystemProperties()
+    public Map<String,String> getSystemPropertyVariables()
     {
         return systemProperties;
     }

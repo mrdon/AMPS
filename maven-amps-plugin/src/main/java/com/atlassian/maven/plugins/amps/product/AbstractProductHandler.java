@@ -107,7 +107,7 @@ public abstract class AbstractProductHandler implements ProductHandler
     {
         final Map<String, String> properties = new HashMap<String, String>();
         properties.putAll(getSystemProperties(ctx));
-        for (Map.Entry entry : ctx.getSystemProperties().entrySet())
+        for (Map.Entry entry : ctx.getSystemPropertyVariables().entrySet())
         {
             properties.put((String) entry.getKey(), (String) entry.getValue());
         }

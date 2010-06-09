@@ -71,9 +71,20 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     /**
      * System systemProperties to pass to cargo
+     *
+     * @deprecated Since 3.2, use systemPropertyVariables instead
      */
     @MojoParameter
+    @Deprecated
     protected Properties systemProperties = new Properties();
+
+    /**
+     * System Properties to pass to cargo using a more familiar syntax.
+     *
+     * @since 3.2
+     */
+    @MojoParameter
+    protected Map<String, String> systemPropertyVariables = new HashMap<String, String>();
 
 
     /**
@@ -242,10 +253,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setContextPath(contextPath);
         ctx.setJvmArgs(jvmArgs);
 
-        setDefaultSystemProperty(systemProperties, "atlassian.dev.mode", "true");
-        setDefaultSystemProperty(systemProperties, "java.awt.headless", "true");
+        systemPropertyVariables.putAll((Map) systemProperties);
 
-        ctx.setSystemProperties(systemProperties);
+        setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
+        setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
+
+        ctx.setSystemPropertyVariables(systemPropertyVariables);
         ctx.setBundledArtifacts(bundledArtifacts);
         ctx.setLibArtifacts(libArtifacts);
         ctx.setPluginArtifacts(pluginArtifacts);
@@ -253,8 +266,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setHttpPort(httpPort);
 
         ctx.setVersion(productVersion);
-        ctx.setProductDataVersion(productDataVersion);
-        ctx.setProductDataPath(productDataPath);
+        ctx.setDataVersion(productDataVersion);
+        ctx.setDataPath(productDataPath);
 
         ctx.setRestVersion(restVersion);
         ctx.setSalVersion(salVersion);
@@ -265,7 +278,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         return ctx;
     }
 
-    private static void setDefaultSystemProperty(final Properties props, final String key, final String value)
+    private static void setDefaultSystemProperty(final Map<String,String> props, final String key, final String value)
     {
         if (!props.containsKey(key))
         {
