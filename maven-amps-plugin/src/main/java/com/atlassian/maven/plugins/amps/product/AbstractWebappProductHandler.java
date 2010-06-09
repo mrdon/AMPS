@@ -226,11 +226,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             unzip(productHomeZip, tmpDir.getPath());
             FileUtils.copyDirectory(tmpDir.listFiles()[0], outputDir, true);
             File tmp = new File(outputDir, ctx.getId() + "-home");
-            boolean result = tmp.renameTo(homeDir);
-            if (!result)
-            {
-                throw new IOException("Rename " + tmp.getPath() + " to " + homeDir.getPath() + " unsuccessful");
-            }
+            FileUtils.moveDirectory(tmp, homeDir);
         }
         catch (final IOException ex)
         {
