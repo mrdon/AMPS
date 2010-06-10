@@ -14,11 +14,15 @@
                 <version>testing</version>
                 <configuration>
                     <container>tomcat6x</container>
+                    <productInheritConfiguration>true</productInheritConfiguration>
+                    <systemPropertyVariables>
+                        <shitty.product>${shitty.product}</shitty.product>
+                    </systemPropertyVariables>
                     <testGroups>
                         <testGroup>
                             <id>foo</id>
                             <productIds>
-                                <productId>${shitty.product}</productId>
+                                <productId>${shitty.product}-1</productId>
                             </productIds>
                             <includes>
                                 <include>**/foo/**</include>
@@ -27,14 +31,24 @@
                         <testGroup>
                             <id>bar</id>
                             <productIds>
-                                <productId>${shitty.product}</productId>
-                                <productId>${shitty.product}</productId>
+                                <productId>${shitty.product}-1</productId>
+                                <productId>${shitty.product}-2</productId>
                             </productIds>
                             <includes>
                                 <include>**/bar/**</include>
                             </includes>
                         </testGroup>
                     </testGroups>
+                    <products>
+                        <product>
+                            <id>${shitty.product}</id>
+                            <instanceId>${shitty.product}-1</instanceId>
+                        </product>
+                        <product>
+                            <id>${shitty.product}</id>
+                            <instanceId>${shitty.product}-2</instanceId>
+                        </product>
+                    </products>
                 </configuration>
             </plugin>
             <plugin>

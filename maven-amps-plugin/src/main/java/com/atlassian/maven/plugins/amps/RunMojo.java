@@ -52,7 +52,7 @@ public class RunMojo extends AbstractProductHandlerMojo
 
         int actualHttpPort = product.start(ctx);
 
-        getLog().info(ctx.getId() + " started successfully and available at http://localhost:" + actualHttpPort + ctx.getContextPath());
+        getLog().info(ctx.getInstanceId() + " started successfully and available at http://localhost:" + actualHttpPort + ctx.getContextPath());
 
         if (writePropertiesToFile)
         {

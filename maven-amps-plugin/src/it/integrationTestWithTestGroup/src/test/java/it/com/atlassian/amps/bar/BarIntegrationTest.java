@@ -16,8 +16,9 @@ public class BarIntegrationTest
     @Test
     public void anIntegrationTest() throws Exception
     {
-        tryServer("refapp");
-        tryServer("refapp-0");
+        String productId = System.getProperty("shitty.product");
+        tryServer(productId + "-1");
+        tryServer(productId + "-2");
     }
 
     private void tryServer(String id)

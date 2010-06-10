@@ -65,12 +65,12 @@ public class FeCruProductHandler extends AbstractProductHandler
         }
         catch (IOException e)
         {
-            throw new MojoExecutionException("Unable to override app files using src/test/resources/" + ctx.getId() + "-app", e);
+            throw new MojoExecutionException("Unable to override app files using src/test/resources/" + ctx.getInstanceId() + "-app", e);
         }
 
         try
         {
-            execFishEyeCmd("run", ctx.getId());
+            execFishEyeCmd("run", ctx.getInstanceId());
         }
         catch (Exception e)
         {
@@ -84,10 +84,10 @@ public class FeCruProductHandler extends AbstractProductHandler
 
     private void addOverrides(Product ctx) throws IOException
     {
-        final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getId() + "-app");
-        if (srcDir.exists() && getHomeDirectory(ctx.getId()).exists())
+        final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getInstanceId() + "-app");
+        if (srcDir.exists() && getHomeDirectory(ctx.getInstanceId()).exists())
         {
-            FileUtils.copyDirectory(srcDir, getHomeDirectory(ctx.getId()));
+            FileUtils.copyDirectory(srcDir, getHomeDirectory(ctx.getInstanceId()));
         }
     }
 
@@ -126,7 +126,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         try
         {
-            execFishEyeCmd("stop", ctx.getId());
+            execFishEyeCmd("stop", ctx.getInstanceId());
         }
         catch (Exception e)
         {
@@ -164,7 +164,7 @@ public class FeCruProductHandler extends AbstractProductHandler
      */
     private void extractAndProcessHomeDirectory(Product ctx) throws MojoExecutionException
     {
-        final File homeDir = getHomeDirectory(ctx.getId());
+        final File homeDir = getHomeDirectory(ctx.getInstanceId());
         final File varDirectory = new File(homeDir, "var");
         if (!varDirectory.exists()) {
             final File cruDistZip = goals.copyDist(getBuildDirectory(),
@@ -238,7 +238,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         try
         {
-            final File pluginsDir = new File(getHomeDirectory(ctx.getId()), "var/plugins");
+            final File pluginsDir = new File(getHomeDirectory(ctx.getInstanceId()), "var/plugins");
             createDirectory(pluginsDir);
             final File bundledPluginsDir = new File(pluginsDir, "bundled");
             createDirectory(bundledPluginsDir);
@@ -246,7 +246,7 @@ public class FeCruProductHandler extends AbstractProductHandler
             createDirectory(userPluginsDir);
 
             // add bundled plugins (todo these are already part of the dist.. this step is possibly unnecessary?)
-            final File bundledPluginsZip = new File(getHomeDirectory(ctx.getId()), "plugins/bundled-plugins.zip");
+            final File bundledPluginsZip = new File(getHomeDirectory(ctx.getInstanceId()), "plugins/bundled-plugins.zip");
             if (bundledPluginsZip.exists())
             {
                 unzip(bundledPluginsZip, bundledPluginsDir.getPath());
@@ -273,7 +273,7 @@ public class FeCruProductHandler extends AbstractProductHandler
             List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
             //artifacts.addAll(getDefaultLibPlugins()); -- we don't support plugins 1
             artifacts.addAll(ctx.getLibArtifacts());
-            addArtifactsToDirectory(artifacts, new File(getHomeDirectory(ctx.getId()), "lib"));
+            addArtifactsToDirectory(artifacts, new File(getHomeDirectory(ctx.getInstanceId()), "lib"));
 
             artifacts = new ArrayList<ProductArtifact>();
             //artifacts.addAll(getDefaultBundledPlugins()); -- todo default bundled plugins?

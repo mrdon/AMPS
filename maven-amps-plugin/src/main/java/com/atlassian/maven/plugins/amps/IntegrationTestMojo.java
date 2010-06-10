@@ -115,9 +115,9 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         }
     }
 
-    private Map<String,Object> copy(Map<String,Object> systemProperties)
+    private Map<String,Object> copy(Map<String,Object> systemPropertyVariables)
     {
-        return new HashMap<String,Object>(systemProperties);
+        return new HashMap<String,Object>(systemPropertyVariables);
     }
 
     /**
@@ -183,21 +183,20 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         List<TestGroupProductExecution> products = new ArrayList<TestGroupProductExecution>();
         int dupCounter = 0;
         Set<String> uniqueProductIds = new HashSet<String>();
-        for (int x=0; x<productIds.size(); x++)
+        for (String productId : productIds)
         {
-            String productId = productIds.get(x);
-            ProductHandler productHandler = ProductHandlerFactory.create(productId, getMavenContext().getProject(), goals, getLog());
             Product ctx = getProductContexts(goals).get(productId);
             if (ctx == null)
             {
                 throw new MojoExecutionException("The test group '" + testGroupId + "' refers to a product '" + productId
                     + "' that doesn't have an associated <product> configuration.");
             }
+            ProductHandler productHandler = ProductHandlerFactory.create(ctx.getId(), getMavenContext().getProject(), goals, getLog());
 
             // Give unique ids to duplicate product instances
             if (uniqueProductIds.contains(productId))
             {
-                ctx.setId(productId + "-" + dupCounter++);
+                ctx.setInstanceId(productId + "-" + dupCounter++);
             }
             else
             {
@@ -224,16 +223,20 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 systemProperties.put("http.port", String.valueOf(actualHttpPort));
                 systemProperties.put("context.path", product.getContextPath());
             }
+
+            String baseUrl = MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath());
             // hard coded system properties...
-            systemProperties.put("http." + product.getId() + ".port", String.valueOf(actualHttpPort));
-            systemProperties.put("context." + product.getId() + ".path", product.getContextPath());
-            systemProperties.put("http." + product.getId() + ".url", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
+            systemProperties.put("http." + product.getInstanceId() + ".port", String.valueOf(actualHttpPort));
+            systemProperties.put("context." + product.getInstanceId() + ".path", product.getContextPath());
+            systemProperties.put("http." + product.getInstanceId() + ".url", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
+
+            systemProperties.put("baseurl." + product.getInstanceId(), baseUrl);
             systemProperties.put("plugin.jar", pluginJar);
 
             // yes, this means you only get one base url if multiple products, but that is what selenium would expect
             if (!systemProperties.containsKey("baseurl"))
             {
-                systemProperties.put("baseurl", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
+                systemProperties.put("baseurl", baseUrl);
             }
 
             systemProperties.putAll(getProductFunctionalTestProperties(product));

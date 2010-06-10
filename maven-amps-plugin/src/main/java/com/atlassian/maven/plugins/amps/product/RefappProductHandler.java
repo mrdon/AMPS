@@ -59,8 +59,8 @@ public class RefappProductHandler extends AbstractWebappProductHandler
     protected Map<String, String> getSystemProperties(Product ctx)
     {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("refapp.home", getHomeDirectory(ctx.getId()).getPath());
-        map.put("osgi.cache", getHomeDirectory(ctx.getId()).getPath()+ "/osgi-cache");
+        map.put("refapp.home", getHomeDirectory(ctx.getInstanceId()).getPath());
+        map.put("osgi.cache", getHomeDirectory(ctx.getInstanceId()).getPath()+ "/osgi-cache");
         return map;
     }
 

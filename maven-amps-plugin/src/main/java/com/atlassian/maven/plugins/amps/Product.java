@@ -93,6 +93,11 @@ public class Product
      */
     private String id;
 
+    /**
+     * The name of the instance of the product
+     */
+    private String instanceId;
+
     private ArtifactRetriever artifactRetriever;
 
     /**
@@ -124,6 +129,7 @@ public class Product
         prod.setInstallPlugin(installPlugin == null ? product.isInstallPlugin() : installPlugin);
         prod.setArtifactRetriever(artifactRetriever == null ? product.getArtifactRetriever() : artifactRetriever);
         prod.setId(id == null ? product.getId() : id);
+        prod.setInstanceId(instanceId == null ? product.getInstanceId() : instanceId);
         prod.setWebConsoleVersion(webConsoleVersion == null ? product.getWebConsoleVersion() : webConsoleVersion);
         prod.setRestVersion(restVersion == null ? product.getRestVersion() : restVersion);
         prod.setPdkVersion(pdkVersion == null ? product.getPdkVersion() : pdkVersion);
@@ -347,6 +353,16 @@ public class Product
     public void setId(String id)
     {
         this.id = id;
+    }
+
+    public String getInstanceId()
+    {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId)
+    {
+        this.instanceId = instanceId;
     }
 
     public Boolean isInstallPlugin()

@@ -3,7 +3,6 @@ package com.atlassian.maven.plugins.amps;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -13,12 +12,11 @@ import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Base class for webapp mojos
@@ -327,6 +325,11 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         {
         	product.setOutput(output);
         }
+
+        if (product.getInstanceId() == null)
+        {
+            product.setInstanceId(product.getId());
+        }
     }
 
     private List<ProductArtifact> stringToArtifactList(String val, List<ProductArtifact> artifacts)
@@ -397,7 +400,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             for (Product product : products)
             {
                 Product processedProduct = product.merge(defaultProduct);
-                productMap.put(processedProduct.getId(), processedProduct);
+                productMap.put(processedProduct.getInstanceId(), processedProduct);
             }
         }
 
@@ -415,7 +418,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                 {
                     found = true;
                 }
-                productMap.put(product.getId(), product);
+                productMap.put(product.getInstanceId(), product);
             }
             if (!found)
             {

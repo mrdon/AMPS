@@ -33,7 +33,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     public int start(final Product ctx) throws MojoExecutionException
     {
         // Copy the webapp war to target
-        final File webappWar = goals.copyWebappWar(ctx.getId(), getBaseDirectory(ctx.getId()),
+        final File webappWar = goals.copyWebappWar(ctx.getId(), getBaseDirectory(ctx.getInstanceId()),
                 new ProductArtifact(getArtifact().getGroupId(), getArtifact().getArtifactId(), ctx.getVersion()));
 
         final File homeDir = extractAndProcessHomeDirectory(ctx);
@@ -42,26 +42,26 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
         final Map<String, String> properties = mergeSystemProperties(ctx);
 
-        return goals.startWebapp(ctx.getId(), combinedWebappWar, properties, getExtraContainerDependencies(), ctx);
+        return goals.startWebapp(ctx.getInstanceId(), combinedWebappWar, properties, getExtraContainerDependencies(), ctx);
     }
 
     public void stop(final Product ctx) throws MojoExecutionException
     {
-        goals.stopWebapp(ctx.getId(), ctx.getContainerId());
+        goals.stopWebapp(ctx.getInstanceId(), ctx.getContainerId());
     }
 
     private File addArtifactsAndOverrides(final Product ctx, final File homeDir, final File webappWar) throws MojoExecutionException
     {
         try
         {
-            final String webappDir = new File(getBaseDirectory(ctx.getId()), "webapp").getAbsolutePath();
+            final String webappDir = new File(getBaseDirectory(ctx.getInstanceId()), "webapp").getAbsolutePath();
             if (!new File(webappDir).exists())
             {
                 unzip(webappWar, webappDir);
             }
 
             File pluginsDir = getPluginsDirectory(webappDir, homeDir);
-            final File bundledPluginsDir = new File(getBaseDirectory(ctx.getId()), "bundled-plugins");
+            final File bundledPluginsDir = new File(getBaseDirectory(ctx.getInstanceId()), "bundled-plugins");
 
             bundledPluginsDir.mkdir();
             // add bundled plugins
@@ -121,11 +121,11 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             // override war files
             try
             {
-                addOverrides(new File(webappDir), ctx.getId());
+                addOverrides(new File(webappDir), ctx.getInstanceId());
             }
             catch (IOException e)
             {
-                throw new MojoExecutionException("Unable to override WAR files using src/test/resources/" + ctx.getId() + "-app", e);
+                throw new MojoExecutionException("Unable to override WAR files using src/test/resources/" + ctx.getInstanceId() + "-app", e);
             }
 
             final File warFile = new File(webappWar.getParentFile(), getId() + ".war");
@@ -152,7 +152,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
         if (getTestResourcesArtifact() != null)
         {
 
-            final File outputDir = getBaseDirectory(ctx.getId());
+            final File outputDir = getBaseDirectory(ctx.getInstanceId());
             final File homeDir = new File(outputDir, "home");
 
             // Only create the home dir if it doesn't exist
@@ -171,7 +171,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             // Always override files regardless of home directory existing or not
             try
             {
-                overrideAndPatchHomeDir(homeDir, ctx.getId());
+                overrideAndPatchHomeDir(homeDir, ctx.getInstanceId());
             }
             catch (IOException e)
             {
@@ -181,7 +181,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             return homeDir;
         } else
         {
-            return getHomeDirectory(ctx.getId());
+            return getHomeDirectory(ctx.getInstanceId());
         }
     }
 
@@ -218,7 +218,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
                                        Product ctx, File outputDir)
             throws MojoExecutionException
     {
-        final File tmpDir = new File(getBaseDirectory(ctx.getId()), "tmp-resources");
+        final File tmpDir = new File(getBaseDirectory(ctx.getInstanceId()), "tmp-resources");
         tmpDir.mkdir();
 
         try

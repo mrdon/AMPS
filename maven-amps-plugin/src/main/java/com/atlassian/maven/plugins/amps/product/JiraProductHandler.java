@@ -45,9 +45,9 @@ public class JiraProductHandler extends AbstractWebappProductHandler
         return new HashMap<String, String>()
         {
             {
-                put("jira.home", fixSlashes(getHomeDirectory(ctx.getId()).getPath()));
+                put("jira.home", fixSlashes(getHomeDirectory(ctx.getInstanceId()).getPath()));
                 put("cargo.datasource.datasource", "cargo.datasource.url=jdbc:hsqldb:"
-                        + fixSlashes(getHomeDirectory(ctx.getId()).getAbsolutePath()) + "/database|"
+                        + fixSlashes(getHomeDirectory(ctx.getInstanceId()).getAbsolutePath()) + "/database|"
                         + "cargo.datasource.driver=org.hsqldb.jdbcDriver|" + "cargo.datasource.username=sa|"
                         + "cargo.datasource.password=|" + "cargo.datasource.type=javax.sql.DataSource|"
                         + "cargo.datasource.jndi=jdbc/JiraDS");
