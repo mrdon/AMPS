@@ -22,11 +22,11 @@ public class TestAbstractProductHandlerMojo extends TestCase
         SomeMojo mojo = new SomeMojo("foo");
 
         Product fooProd = new Product();
-        fooProd.setId("foo");
+        fooProd.setInstanceId("foo");
         fooProd.setVersion("1.0");
 
         Product barProd = new Product();
-        barProd.setId("bar");
+        barProd.setInstanceId("bar");
         barProd.setVersion("2.0");
 
         Map<String,Product> prodMap = new HashMap<String, Product>();
