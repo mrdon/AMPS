@@ -38,6 +38,29 @@ public class TestAbstractProductHandlerMojo extends TestCase
         assertEquals("/foo", prodMap.get("bar").getContextPath());
     }
 
+    public void testMakeProductsInheritDefaultConfigurationDifferentInstanceIds() throws Exception
+    {
+        SomeMojo mojo = new SomeMojo("baz");
+
+        Product fooProd = new Product();
+        fooProd.setInstanceId("foo");
+        fooProd.setVersion("1.0");
+
+        Product barProd = new Product();
+        barProd.setInstanceId("bar");
+        barProd.setVersion("2.0");
+
+        Map<String,Product> prodMap = new HashMap<String, Product>();
+        mojo.makeProductsInheritDefaultConfiguration(asList(fooProd, barProd), prodMap);
+        assertEquals(3, prodMap.size());
+        assertEquals("1.0", prodMap.get("foo").getVersion());
+        assertEquals("/foo", prodMap.get("foo").getContextPath());
+        assertEquals("2.0", prodMap.get("bar").getVersion());
+        assertEquals("/foo", prodMap.get("bar").getContextPath());
+        assertEquals(null, prodMap.get("baz").getVersion());
+        assertEquals("/foo", prodMap.get("baz").getContextPath());
+    }
+
     public void testMakeProductsInheritDefaultConfigurationNoProducts() throws Exception
     {
         SomeMojo mojo = new SomeMojo("foo");

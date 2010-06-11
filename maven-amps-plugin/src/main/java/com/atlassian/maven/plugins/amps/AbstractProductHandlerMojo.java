@@ -390,11 +390,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     void makeProductsInheritDefaultConfiguration(List<Product> products, Map<String, Product> productMap) throws MojoExecutionException
     {
-        if (products.size() == 0)
-        {
-            productMap.put(getProductId(), createDefaultProductContext());
-        }
-        else
+        productMap.put(getProductId(), createDefaultProductContext());
+        if (!products.isEmpty())
         {
             Product defaultProduct = createDefaultProductContext();
             for (Product product : products)
