@@ -49,6 +49,7 @@
                 filterPluginDescriptorWithoutPluginDescriptor,
                 filterPluginDescriptorWithPluginDescriptor, generateManifestWithInstructions,
                 generateManifestWithNoInstructions, generateObr, integrationTest,
+                <!-- Commented out until Bamboo doesn't hang when multiple instances are used-->
                 <!-- integrationTestWithTestGroup, -->
                 jarWithExistingManifest, run, 
                 unitTest, validateManifestSkipValidation, validateManifestWithInvalidManifest,
