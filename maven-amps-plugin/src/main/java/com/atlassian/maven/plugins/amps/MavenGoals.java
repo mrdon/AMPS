@@ -523,39 +523,31 @@ public class MavenGoals
         return container;
     }
 
-    private int pickFreePort(final int requestedPort)
+    int pickFreePort(final int requestedPort)
     {
-        if (requestedPort > 0)
-        {
-            Socket socket = null;
-            try
-            {
-                socket = new Socket("localhost", requestedPort);
-
-                // damn, port taken
-            }
-            catch (UnknownHostException e)
-            {
-                throw new RuntimeException(e);
-            }
-            catch (IOException e)
-            {
-                return requestedPort;
-            }
-            finally
-            {
-                closeSocket(socket);
-            }
-        }
         ServerSocket socket = null;
         try
         {
-            socket = new ServerSocket(0);
-            return socket.getLocalPort();
+            socket = new ServerSocket(requestedPort);
+            return requestedPort > 0 ? requestedPort : socket.getLocalPort();
         }
         catch (final IOException e)
         {
-            throw new RuntimeException("Error opening socket", e);
+            // happens if the requested port is taken, so we need to pick a new one
+            ServerSocket zeroSocket = null;
+            try
+            {
+                zeroSocket = new ServerSocket(0);
+                return zeroSocket.getLocalPort();
+            }
+            catch (final IOException ex)
+            {
+                throw new RuntimeException("Error opening socket", ex);
+            }
+            finally
+            {
+                closeSocket(zeroSocket);
+            }
         }
         finally
         {
@@ -564,21 +556,6 @@ public class MavenGoals
     }
 
     private void closeSocket(ServerSocket socket)
-    {
-        if (socket != null)
-        {
-            try
-            {
-                socket.close();
-            }
-            catch (final IOException e)
-            {
-                throw new RuntimeException("Error closing socket", e);
-            }
-        }
-    }
-
-    private void closeSocket(Socket socket)
     {
         if (socket != null)
         {

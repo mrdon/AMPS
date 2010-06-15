@@ -228,14 +228,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     protected List<Product> products = new ArrayList<Product>();
 
     /**
-     * If the listed product configurations should inherit from the default configuration.
-     *
-     * @since 3.2
-     */
-    @MojoParameter
-    protected boolean productsInheritConfiguration = false;
-    
-    /**
      * File the container logging output will be sent to.
      */
     @MojoParameter
@@ -368,14 +360,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         Map<String, Product> productMap = new HashMap<String, Product>();
 
 
-        if (productsInheritConfiguration)
-        {
-            makeProductsInheritDefaultConfiguration(products, productMap);
-        }
-        else
-        {
-            addDefaultConfigAsNewProduct(products, productMap);
-        }
+        makeProductsInheritDefaultConfiguration(products, productMap);
 
         for (Product ctx : productMap.values())
         {
@@ -401,27 +386,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             }
         }
 
-    }
-
-    void addDefaultConfigAsNewProduct(List<Product> products, Map<String, Product> productMap)
-            throws MojoExecutionException
-    {
-        if (getProductId() != null)
-        {
-            boolean found = false;
-            for (Product product : products)
-            {
-                if (getProductId().equals(product.getId()))
-                {
-                    found = true;
-                }
-                productMap.put(product.getInstanceId(), product);
-            }
-            if (!found)
-            {
-                productMap.put(getProductId(), createDefaultProductContext());
-            }
-        }
     }
 
     protected abstract void doExecute() throws MojoExecutionException, MojoFailureException;
