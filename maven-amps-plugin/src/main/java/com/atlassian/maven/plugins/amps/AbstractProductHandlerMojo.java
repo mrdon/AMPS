@@ -243,8 +243,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setContextPath(contextPath);
         ctx.setJvmArgs(jvmArgs);
 
-        systemPropertyVariables.putAll((Map) systemProperties);
-
         setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
         setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
 
@@ -351,6 +349,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         stringToArtifactList(pluginArtifactsString, pluginArtifacts);
         stringToArtifactList(libArtifactsString, libArtifacts);
         stringToArtifactList(bundledArtifactsString, bundledArtifacts);
+        systemPropertyVariables.putAll((Map) systemProperties);
 
         doExecute();
     }
