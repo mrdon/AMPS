@@ -316,10 +316,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         	product.setOutput(output);
         }
 
-        if (product.getInstanceId() == null)
-        {
-            product.setInstanceId(product.getId());
-        }
+        product.setInstanceId(getProductInstanceId(product));
     }
 
     private List<ProductArtifact> stringToArtifactList(String val, List<ProductArtifact> artifacts)
@@ -381,11 +378,17 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             for (Product product : products)
             {
                 Product processedProduct = product.merge(defaultProduct);
-                productMap.put(processedProduct.getInstanceId(), processedProduct);
+                String id = getProductInstanceId(processedProduct);
+                productMap.put(id, processedProduct);
             }
         }
-
     }
+
+    private String getProductInstanceId(Product processedProduct)
+    {
+        return processedProduct.getInstanceId() == null ? processedProduct.getId() : processedProduct.getInstanceId();
+    }
+
 
     protected abstract void doExecute() throws MojoExecutionException, MojoFailureException;
 }
