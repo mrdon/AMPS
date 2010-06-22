@@ -454,7 +454,7 @@ public class MavenGoals
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
 
-    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Map<String,Object> systemProperties)
+    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Map<String, Object> systemProperties, final File targetDirectory)
     		throws MojoExecutionException
 	{
     	List<Element> includeElements = new ArrayList<Element>(includes.size());
@@ -471,7 +471,12 @@ public class MavenGoals
         	excludeElements.add(element(name("exclude"), exclude));
         }
 
+        final String testOutputDir = targetDirectory.getAbsolutePath() + "/" + productId + "/" + containerId + "/surefire-reports";
+        final String reportsDirectory = "reportsDirectory";
+        systemProperties.put(reportsDirectory, testOutputDir);
+        
         final Element systemProps = convertPropsToElements(systemProperties);
+
 
         executeMojo(
                 plugin(
@@ -488,7 +493,7 @@ public class MavenGoals
                                 excludeElements.toArray(new Element[excludeElements.size()])
                         ),
                         systemProps,
-                        element(name("reportsDirectory"), "${project.build.directory}/" + productId + "/" + containerId + "/surefire-reports")
+                        element(name(reportsDirectory), testOutputDir)
                 ),
                 executionEnvironment(project, session, pluginManager)
         );

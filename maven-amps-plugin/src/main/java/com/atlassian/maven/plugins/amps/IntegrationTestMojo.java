@@ -245,7 +245,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
 
         // Actually run the tests
-        goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties);
+        goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);
 
         // Shut all products down
         for (TestGroupProductExecution testGroupProductExecution : products)
