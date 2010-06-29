@@ -61,6 +61,7 @@ public class RefappProductHandler extends AbstractWebappProductHandler
         Map<String, String> map = new HashMap<String, String>();
         map.put("refapp.home", getHomeDirectory(ctx.getInstanceId()).getPath());
         map.put("osgi.cache", getHomeDirectory(ctx.getInstanceId()).getPath()+ "/osgi-cache");
+        map.put("bundledplugins.cache", getHomeDirectory(ctx.getInstanceId()).getPath()+ "/bundled-plugins");
         return map;
     }
 

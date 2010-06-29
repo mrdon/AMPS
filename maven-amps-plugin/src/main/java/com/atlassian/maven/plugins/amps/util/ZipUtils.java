@@ -55,6 +55,7 @@ public class ZipUtils {
                     IOUtils.closeQuietly(is);
                     IOUtils.closeQuietly(fos);
                 }
+                file.setLastModified(zipEntry.getTime());
             }
         } finally {
             try {
