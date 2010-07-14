@@ -196,9 +196,15 @@ public class FeCruProductHandler extends AbstractProductHandler
             replace(configXml, "@HTTP_BIND@", String.valueOf(ctx.getHttpPort()));
             replace(configXml, "@HTTP_CONTEXT@", String.valueOf(ctx.getContextPath()));
             replace(configXml, "@HOME_DIR@", String.valueOf(homeDir.getAbsolutePath()));
+            replace(configXml, "@SITE_URL@", String.valueOf(siteUrl(ctx)));
         } else {
             log.info("Using existing FishEye/Crucible application and instance data.");
         }
+    }
+
+    private String siteUrl(Product ctx)
+    {
+        return "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + ctx.getContextPath();
     }
 
     private List<ProductArtifact> getPluginsArtifacts(final Product ctx)
