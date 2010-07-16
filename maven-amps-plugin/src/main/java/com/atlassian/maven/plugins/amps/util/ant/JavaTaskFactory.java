@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
 import org.apache.tools.ant.taskdefs.Java;
-import org.codehaus.cargo.util.AntUtils;
 
 public class JavaTaskFactory
 {
