@@ -1,22 +1,12 @@
 package com.atlassian.maven.plugins.amps.product;
 
 import static com.atlassian.core.util.FileUtils.createZipFile;
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
 import static com.atlassian.maven.plugins.amps.util.ConfigFileUtils.replace;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
-import org.apache.commons.io.FileUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.Socket;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,17 +14,34 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Path;
+
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ant.AntJavaExecutorThread;
+import com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory;
+
+import static com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory.*;
+
 public class FeCruProductHandler extends AbstractProductHandler
 {
     private static final int STARTUP_CHECK_DELAY = 1000;
     private static final int STARTUP_CHECK_MAX = 1000 * 60 * 3; //todo is 3 mins enough?
     private final PluginProvider pluginProvider = new FeCruPluginProvider();
     private final Log log;
-
+    private final JavaTaskFactory javaTaskFactory;
+    
     public FeCruProductHandler(MavenProject project, MavenGoals goals, Log log)
     {
         super(project, goals);
         this.log = log;
+        this.javaTaskFactory = new JavaTaskFactory(log);
     }
 
     public String getId()
@@ -49,12 +56,11 @@ public class FeCruProductHandler extends AbstractProductHandler
 
     public int start(Product ctx) throws MojoExecutionException
     {
-        final Map<String, String> properties = mergeSystemProperties(ctx);
-        for (final Map.Entry<String, String> entry : properties.entrySet())
+        if (ctx.getJvmArgs() == null)
         {
-            System.setProperty(entry.getKey(), entry.getValue());
+            ctx.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
         }
-        
+
         extractAndProcessHomeDirectory(ctx);
         addArtifacts(ctx);
 
@@ -68,17 +74,21 @@ public class FeCruProductHandler extends AbstractProductHandler
             throw new MojoExecutionException("Unable to override app files using src/test/resources/" + ctx.getInstanceId() + "-app", e);
         }
 
+        log.info("Starting " + ctx.getInstanceId() + " on ports "
+                + ctx.getHttpPort() + " (http) and " + controlPort(ctx.getHttpPort()) + " (control)");
+
+        AntJavaExecutorThread thread;
         try
         {
-            execFishEyeCmd("run", ctx.getInstanceId());
+            thread = execFishEyeCmd("run", ctx);
         }
         catch (Exception e)
         {
             throw new MojoExecutionException("Error starting fisheye.", e);
         }
 
-        waitForFishEyeToStart(ctx);
-
+        waitForFishEyeToStart(ctx, thread);
+        
         return ctx.getHttpPort();
     }
 
@@ -91,7 +101,7 @@ public class FeCruProductHandler extends AbstractProductHandler
         }
     }
 
-    private void waitForFishEyeToStart(Product ctx) throws MojoExecutionException
+    private void waitForFishEyeToStart(Product ctx, AntJavaExecutorThread thread) throws MojoExecutionException
     {
         boolean connected = false;
         int waited = 0;
@@ -115,6 +125,11 @@ public class FeCruProductHandler extends AbstractProductHandler
                 // ignore
             }
 
+            if (thread.isFinished())
+            {
+                throw new MojoExecutionException("Fisheye failed to start.", thread.getBuildException());
+            }
+            
             if (waited++ * STARTUP_CHECK_DELAY > STARTUP_CHECK_MAX)
             {
                 throw new MojoExecutionException("FishEye took longer than " + STARTUP_CHECK_MAX + "ms to start!");
@@ -124,30 +139,67 @@ public class FeCruProductHandler extends AbstractProductHandler
 
     public void stop(Product ctx) throws MojoExecutionException
     {
+        log.info("Stopping " + ctx.getInstanceId() + " on ports "
+                + ctx.getHttpPort() + " (http) and " + controlPort(ctx.getHttpPort()) + " (control)");
         try
         {
-            execFishEyeCmd("stop", ctx.getInstanceId());
+            execFishEyeCmd("stop", ctx);
         }
         catch (Exception e)
         {
             throw new MojoExecutionException("Failed to stop FishEye/Crucible instance at " + ctx.getServer() + ":" + ctx.getHttpPort());
         }
+        
+        waitForFishEyeToStop(ctx);
     }
 
-    private void execFishEyeCmd(String bootCommand, String instanceId) throws MojoExecutionException
+    private void waitForFishEyeToStop(Product ctx) throws MojoExecutionException
     {
+        boolean connected = true;
+        int waited = 0;
+        while (connected)
+        {
+            try
+            {
+                Thread.sleep(STARTUP_CHECK_DELAY);
+            }
+            catch (InterruptedException e)
+            {
+                // ignore
+            }
+            try
+            {
+                new Socket("localhost", ctx.getHttpPort()).close();
+            }
+            catch (IOException e)
+            {
+                connected = false;
+            }
 
-        try {
-            URL fisheyebootUrl = new File(getHomeDirectory(instanceId), "fisheyeboot.jar").toURI().toURL();
-            ClassLoader cl = new URLClassLoader(new URL[] {fisheyebootUrl});
-            Class<?> fisheyeCtl = cl.loadClass("com.cenqua.fisheye.FishEyeCtl");
-            Method main = fisheyeCtl.getDeclaredMethod("mainImpl", String[].class);
-            main.invoke(null, new Object[] {new String[] {bootCommand}});
-        } catch (Exception e) {
-            throw new MojoExecutionException("Failed to execute fisheye command '" + bootCommand + "'", e);
+            if (waited++ * STARTUP_CHECK_DELAY > STARTUP_CHECK_MAX)
+            {
+                throw new MojoExecutionException("FishEye took longer than " + STARTUP_CHECK_MAX + "ms to stop!");
+            }
         }
+    }
 
-        log.info("Started FishEye/Crucible.");
+    private AntJavaExecutorThread execFishEyeCmd(String bootCommand, Product ctx) throws MojoExecutionException
+    {
+        final Map<String, String> properties = mergeSystemProperties(ctx);
+
+        Java java = javaTaskFactory.newJavaTask(output(ctx.getOutput()).systemProperties(properties).jvmArgs(ctx.getJvmArgs()));
+
+        Path classpath = java.createClasspath();
+        classpath.createPathElement().setLocation(new File(getHomeDirectory(ctx.getInstanceId()), "fisheyeboot.jar"));
+        
+        java.setClassname("com.cenqua.fisheye.FishEyeCtl");
+        
+        java.createArg().setValue(bootCommand);
+        
+        AntJavaExecutorThread javaThread = new AntJavaExecutorThread(java);
+        javaThread.start();
+
+        return javaThread;
     }
 
     private File getBuildDirectory()

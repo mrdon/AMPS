@@ -1,7 +1,6 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.core.util.FileUtils;
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import com.atlassian.maven.plugins.amps.util.ZipUtils;
 import org.apache.maven.execution.MavenSession;
@@ -14,8 +13,6 @@ import org.apache.maven.project.MavenProject;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -507,11 +504,11 @@ public class MavenGoals
         ArrayList<Element> properties = new ArrayList<Element>();
 
         // add extra system properties... overwriting any of the hard coded values above.
-        for (Map.Entry entry: systemProperties.entrySet())
+        for (Map.Entry<String, Object> entry: systemProperties.entrySet())
         {
             properties.add(
                     element(name("property"),
-                            element(name("name"), (String)entry.getKey()),
+                            element(name("name"), entry.getKey()),
                             element(name("value"), entry.getValue().toString())));
         }
 
