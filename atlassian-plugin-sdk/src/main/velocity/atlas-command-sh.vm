@@ -118,4 +118,4 @@ done
 #################
 
 echo "Executing: ${dollar}{MAVEN_EXECUTABLE} $mvnCommand ${dollar}{MVN_PARAMS}"
-exec "${dollar}{MAVEN_EXECUTABLE}" $mvnCommand ${dollar}{MVN_PARAMS}
+sh -c "${dollar}{MAVEN_EXECUTABLE} $mvnCommand ${dollar}{MVN_PARAMS}"
