@@ -102,7 +102,7 @@ do
                     MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven"
                     shift 1;;
                 #else
-                    MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven=${dollar}{2}"
+                    MVN_PARAMS="${dollar}{MVN_PARAMS} -D$o.maven='${dollar}{2}'"
                     shift 2;;
                 #end
         #end
@@ -118,4 +118,4 @@ done
 #################
 
 echo "Executing: ${dollar}{MAVEN_EXECUTABLE} $mvnCommand ${dollar}{MVN_PARAMS}"
-"${dollar}{MAVEN_EXECUTABLE}" $mvnCommand ${dollar}{MVN_PARAMS}
+exec "${dollar}{MAVEN_EXECUTABLE}" $mvnCommand ${dollar}{MVN_PARAMS}
