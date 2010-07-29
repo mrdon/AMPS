@@ -6,8 +6,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public abstract class AbstractProductHandlerAwareMojo extends AbstractProductAwareMojo
 {
-    protected ProductHandler createProductHandler() throws MojoExecutionException
+    protected ProductHandler createProductHandler(String productId) throws MojoExecutionException
     {
-        return ProductHandlerFactory.create(getProductId(), getMavenContext().getProject(), getMavenGoals(), getLog());
+        return ProductHandlerFactory.create(productId, getMavenContext().getProject(), getMavenGoals(), getLog());
     }
 }

@@ -11,7 +11,7 @@ public class InstallMojo extends AbstractPdkMojo
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         ensurePluginKeyExists();
-        final ProductHandler product = createProductHandler();
+        final ProductHandler product = createProductHandler(getProductId());
         getMavenGoals().installPlugin(pluginKey, server, getHttpPort(product), getContextPath(product), username, password);
     }
 }

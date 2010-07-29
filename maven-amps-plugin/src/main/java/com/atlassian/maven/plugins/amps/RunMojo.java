@@ -45,8 +45,8 @@ public class RunMojo extends AbstractProductHandlerMojo
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
         final MavenGoals goals = getMavenGoals();
-        ProductHandler product = createProductHandler();
         Product ctx = getProductContexts(goals).get(getProductId());
+        ProductHandler product = createProductHandler(ctx.getId());
 
         ctx.setInstallPlugin(shouldInstallPlugin());
 
