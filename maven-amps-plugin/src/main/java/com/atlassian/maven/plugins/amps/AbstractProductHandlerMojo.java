@@ -6,6 +6,7 @@ import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
@@ -127,27 +128,31 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     /**
      * SAL version
+     * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
-    @MojoParameter(expression = "${sal.version}")
+    @MojoParameter
     private String salVersion;
 
     /**
      * Atlassian Plugin Development Kit (PDK) version
+     * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
-    @MojoParameter(expression = "${pdk.version}", defaultValue = DEFAULT_PDK_VERSION)
+    @MojoParameter(defaultValue = DEFAULT_PDK_VERSION)
     private String pdkVersion;
 
     /**
      * Atlassian REST module version
+     * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
-    @MojoParameter(expression = "${rest.version}")
+    @MojoParameter
     private String restVersion;
 
 
     /**
      * Felix OSGi web console version
+     * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
-    @MojoParameter(expression = "${web.console.version}", defaultValue = DEFAULT_WEB_CONSOLE_VERSION)
+    @MojoParameter(defaultValue =  DEFAULT_WEB_CONSOLE_VERSION)
     private String webConsoleVersion;
 
     // ---------------- end product context
@@ -257,6 +262,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setDataVersion(productDataVersion);
         ctx.setDataPath(productDataPath);
 
+        // continue to have these work for now
         ctx.setRestVersion(restVersion);
         ctx.setSalVersion(salVersion);
         ctx.setPdkVersion(pdkVersion);
@@ -348,7 +354,22 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         stringToArtifactList(bundledArtifactsString, bundledArtifacts);
         systemPropertyVariables.putAll((Map) systemProperties);
 
+        detectDeprecatedVersionOverrides();
+
         doExecute();
+    }
+
+    private void detectDeprecatedVersionOverrides()
+    {
+        Properties props = getMavenContext().getProject().getProperties();
+        for (String deprecatedProperty : new String[] {"sal.version", "rest.version", "web.console.version", "pdk.version"})
+        {
+            if (props.getProperty(deprecatedProperty) != null)
+            {
+                getLog().warn("The property '" + deprecatedProperty + "' is no longer able to be used to override the related bundled plugin." +
+                        "  Use <pluginArtifacts> or <libArtiracts> to explicitly override bundled plugins and libraries, respectively.");
+            }
+        }
     }
 
     protected Map<String, Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
