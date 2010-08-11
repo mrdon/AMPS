@@ -364,10 +364,10 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         Properties props = getMavenContext().getProject().getProperties();
         for (String deprecatedProperty : new String[] {"sal.version", "rest.version", "web.console.version", "pdk.version"})
         {
-            if (props.getProperty(deprecatedProperty) != null)
+            if (props.containsKey(deprecatedProperty))
             {
-                getLog().warn("The property '" + deprecatedProperty + "' is no longer able to be used to override the related bundled plugin." +
-                        "  Use <pluginArtifacts> or <libArtiracts> to explicitly override bundled plugins and libraries, respectively.");
+                getLog().warn("The property '" + deprecatedProperty + "' is no longer usable to override the related bundled plugin." +
+                        "  Use <pluginArtifacts> or <libArtifacts> to explicitly override bundled plugins and libraries, respectively.");
             }
         }
     }
