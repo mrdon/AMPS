@@ -13,7 +13,7 @@
                                 com.atlassian.maven.plugins:maven-crowd-plugin:copy-bundled-dependencies
                             </generate-resources>
                             <process-resources>
-                                com.atlassian.maven.plugins:maven-amps-plugin:compress-resources,
+                                com.atlassian.maven.plugins:maven-crowd-plugin:compress-resources,
                                 org.apache.maven.plugins:maven-resources-plugin:resources,
                                 com.atlassian.maven.plugins:maven-crowd-plugin:filter-plugin-descriptor
                             </process-resources>

@@ -16,7 +16,7 @@
                                 com.atlassian.maven.plugins:maven-refapp-plugin:copy-bundled-dependencies
                             </generate-resources>
                             <process-resources>
-                                com.atlassian.maven.plugins:maven-amps-plugin:compress-resources,
+                                com.atlassian.maven.plugins:maven-refapp-plugin:compress-resources,
                                 org.apache.maven.plugins:maven-resources-plugin:resources,
                                 com.atlassian.maven.plugins:maven-refapp-plugin:filter-plugin-descriptor
                             </process-resources>
