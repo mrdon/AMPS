@@ -49,6 +49,7 @@ public class MavenGoals
             put("atlassian-pdk", "2.1.6");
             put("maven-archetype-plugin", "2.0-alpha-4");
             put("maven-bundle-plugin", "2.0.0");
+            put("yuicompressor-maven-plugin", "0.7.1");
 
             // You can't actually override the version a plugin if defined in the project, so these don't actually do
             // anything, since the super pom already defines versions.
@@ -165,6 +166,23 @@ public class MavenGoals
         );
     }
     
+    public void compressResources() throws MojoExecutionException
+    {
+        executeMojo(
+                plugin(
+                        groupId("net.sf.alchim"),
+                        artifactId("yuicompressor-maven-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("yuicompressor-maven-plugin"))
+                ),
+                goal("compress"),
+                configuration(
+                        element(name("suffix"), "-min"),
+                        element(name("jswarn"), "false")
+                ),
+                executionEnvironment(project, session, pluginManager)
+        );
+    }
+
     public void filterPluginDescriptor() throws MojoExecutionException
     {
         executeMojo(
