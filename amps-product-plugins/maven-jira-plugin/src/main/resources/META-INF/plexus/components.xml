@@ -12,9 +12,6 @@
                         <id>default</id>
 
                         <phases>
-                            <generate-resources>
-                                com.atlassian.maven.plugins:maven-jira-plugin:copy-bundled-dependencies
-                            </generate-resources>
                             <process-resources>
                                 com.atlassian.maven.plugins:maven-jira-plugin:compress-resources,
                                 org.apache.maven.plugins:maven-resources-plugin:resources,
@@ -27,8 +24,11 @@
                             </process-test-resources>
                             <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
                             <test>com.atlassian.maven.plugins:maven-jira-plugin:unit-test</test>
-                            <package>
+                            <prepare-package>
                                 com.atlassian.maven.plugins:maven-jira-plugin:validate-manifest,
+                                com.atlassian.maven.plugins:maven-jira-plugin:copy-bundled-dependencies
+                            </prepare-package>
+                            <package>
                                 com.atlassian.maven.plugins:maven-jira-plugin:jar,
                                 com.atlassian.maven.plugins:maven-jira-plugin:generate-obr-artifact
                             </package>

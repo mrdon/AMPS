@@ -9,9 +9,6 @@
                     <lifecycle>
                         <id>default</id>
                         <phases>
-                            <generate-resources>
-                                com.atlassian.maven.plugins:maven-crowd-plugin:copy-bundled-dependencies
-                            </generate-resources>
                             <process-resources>
                                 com.atlassian.maven.plugins:maven-crowd-plugin:compress-resources,
                                 org.apache.maven.plugins:maven-resources-plugin:resources,
@@ -24,8 +21,11 @@
                             </process-test-resources>
                             <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
                             <test>com.atlassian.maven.plugins:maven-crowd-plugin:unit-test</test>
-                            <package>
+                            <prepare-package>
                                 com.atlassian.maven.plugins:maven-crowd-plugin:validate-manifest,
+                                com.atlassian.maven.plugins:maven-crowd-plugin:copy-bundled-dependencies
+                            </prepare-package>
+                            <package>
                                 com.atlassian.maven.plugins:maven-crowd-plugin:jar,
                                 com.atlassian.maven.plugins:maven-crowd-plugin:generate-obr-artifact
                             </package>
