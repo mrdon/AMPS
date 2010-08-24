@@ -233,10 +233,10 @@
     <properties>
         <maven.version>2.1.0</maven.version>
         <anno.mojo.version>1.3.3</anno.mojo.version>
-        <refapp.version>2.4.1</refapp.version>
-        <confluence.version>3.2.1_01</confluence.version>
+        <refapp.version>2.5.2</refapp.version>
+        <confluence.version>3.3</confluence.version>
         <confluence.data.version>3.1</confluence.data.version>
-        <jira.version>4.1.1.1</jira.version>
+        <jira.version>4.1.2</jira.version>
         <jira.data.version>4.1.1</jira.data.version>
         <bamboo.version>2.6.1</bamboo.version>
         <bamboo.data.version>2.6.1</bamboo.data.version>
