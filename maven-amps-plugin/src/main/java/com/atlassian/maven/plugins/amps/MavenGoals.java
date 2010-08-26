@@ -93,7 +93,14 @@ public class MavenGoals
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:validate-manifest").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:install").toString())));
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:install").toString()),
+                element(name("package"), new StringBuilder()
+                        .append("resources").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:filter-plugin-descriptor").append(" ")
+                        .append("compile").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:copy-bundled-dependencies").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ").toString())));
         if (port > 0)
         {
             configs.add(element(name("port"), String.valueOf(port)));
