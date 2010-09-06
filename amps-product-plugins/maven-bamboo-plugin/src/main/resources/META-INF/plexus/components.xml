@@ -12,6 +12,9 @@
                         <id>default</id>
 
                         <phases>
+                            <generate-resources>
+                                com.atlassian.maven.plugins:maven-bamboo-plugin:copy-bundled-dependencies
+                            </generate-resources>
                             <process-resources>
                                 com.atlassian.maven.plugins:maven-bamboo-plugin:compress-resources,
                                 org.apache.maven.plugins:maven-resources-plugin:resources,
@@ -24,11 +27,8 @@
                             </process-test-resources>
                             <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
                             <test>com.atlassian.maven.plugins:maven-bamboo-plugin:unit-test</test>
-                            <prepare-package>
-                                com.atlassian.maven.plugins:maven-bamboo-plugin:validate-manifest,
-                                com.atlassian.maven.plugins:maven-bamboo-plugin:copy-bundled-dependencies
-                            </prepare-package>
                             <package>
+                                com.atlassian.maven.plugins:maven-bamboo-plugin:validate-manifest,
                                 com.atlassian.maven.plugins:maven-bamboo-plugin:jar,
                                 com.atlassian.maven.plugins:maven-bamboo-plugin:generate-obr-artifact
                             </package>
