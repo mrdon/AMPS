@@ -90,9 +90,14 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
     }
 
-    protected File getHomeDirectory(String instanceId)
+    public File getHomeDirectory(Product ctx)
     {
-        File homeDir = new File(new File(project.getBuild().getDirectory(), instanceId), "home");
+        return new File(new File(project.getBuild().getDirectory(), ctx.getInstanceId()), "home");
+    }
+    
+    protected File createHomeDirectory(Product ctx)
+    {
+        File homeDir = getHomeDirectory(ctx);
         // Make sure it exists
         if (!homeDir.exists())
         {

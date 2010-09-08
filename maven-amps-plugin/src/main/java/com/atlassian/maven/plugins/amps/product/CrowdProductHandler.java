@@ -52,7 +52,7 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     {
         return new HashMap<String, String>()
         {{
-            put("crowd.home", getHomeDirectory(ctx.getInstanceId()).getPath());
+            put("crowd.home", getHomeDirectory(ctx).getPath());
 
             String contextPath = ctx.getContextPath();
             if (!contextPath.startsWith("/"))
@@ -98,7 +98,7 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
         {
             ConfigFileUtils.replaceAll(new File(homeDir, "crowd.cfg.xml"),
                     "jdbc:hsqldb:.*/crowd-home/database/defaultdb",
-                    "jdbc:hsqldb:" + getHomeDirectory(ctx.getInstanceId()).getCanonicalPath().replace("\\", "/") + "/database/defaultdb");
+                    "jdbc:hsqldb:" + getHomeDirectory(ctx).getCanonicalPath().replace("\\", "/") + "/database/defaultdb");
         }
         catch (final IOException e)
         {

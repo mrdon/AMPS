@@ -238,7 +238,13 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             {
                 systemProperties.put("baseurl", baseUrl);
             }
-
+            
+            systemProperties.put("homedir." + product.getInstanceId(), productHandler.getHomeDirectory(product).getAbsolutePath());
+            if (!systemProperties.containsKey("homedir"))
+            {
+                systemProperties.put("homedir", productHandler.getHomeDirectory(product).getAbsolutePath());
+            }
+            
             systemProperties.putAll(getProductFunctionalTestProperties(product));
         }
         systemProperties.put("testGroup", testGroupId);

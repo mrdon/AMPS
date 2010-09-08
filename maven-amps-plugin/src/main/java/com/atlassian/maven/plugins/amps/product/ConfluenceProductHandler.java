@@ -45,7 +45,7 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
 
     public Map<String, String> getSystemProperties(Product ctx)
     {
-        return Collections.singletonMap("confluence.home", getHomeDirectory(ctx.getInstanceId()).getPath());
+        return Collections.singletonMap("confluence.home", getHomeDirectory(ctx).getPath());
     }
 
     public File getPluginsDirectory(final String webappDir, File homeDir)

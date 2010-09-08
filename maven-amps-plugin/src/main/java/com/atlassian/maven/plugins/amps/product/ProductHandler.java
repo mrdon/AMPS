@@ -1,5 +1,7 @@
 package com.atlassian.maven.plugins.amps.product;
 
+import java.io.File;
+
 import org.apache.maven.plugin.MojoExecutionException;
 
 import com.atlassian.maven.plugins.amps.Product;
@@ -17,4 +19,5 @@ public interface ProductHandler
 
     int getDefaultHttpPort();
 
+    File getHomeDirectory(Product product);
 }

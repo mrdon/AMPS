@@ -46,7 +46,7 @@ public class BambooProductHandler extends AbstractWebappProductHandler
 
     public Map<String, String> getSystemProperties(Product ctx)
     {
-        return Collections.singletonMap("bamboo.home", getHomeDirectory(ctx.getInstanceId()).getPath());
+        return Collections.singletonMap("bamboo.home", getHomeDirectory(ctx).getPath());
     }
 
     @Override

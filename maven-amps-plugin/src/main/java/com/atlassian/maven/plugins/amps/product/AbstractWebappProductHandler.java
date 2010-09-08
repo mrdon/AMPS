@@ -1,12 +1,7 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
+import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
+import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +10,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
-import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
 
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
@@ -181,7 +181,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             return homeDir;
         } else
         {
-            return getHomeDirectory(ctx.getInstanceId());
+            return getHomeDirectory(ctx);
         }
     }
 
