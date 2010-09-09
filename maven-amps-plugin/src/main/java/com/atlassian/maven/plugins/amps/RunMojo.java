@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 /**
  * Run the webapp
  */
@@ -52,7 +54,7 @@ public class RunMojo extends AbstractProductHandlerMojo
     {
         final MavenGoals goals = getMavenGoals();
         Product ctx;
-        if (!"".equals(instanceId))
+        if (isBlank(instanceId))
         {
             ctx = getProductContexts(goals).get(instanceId);
             if (ctx == null)
