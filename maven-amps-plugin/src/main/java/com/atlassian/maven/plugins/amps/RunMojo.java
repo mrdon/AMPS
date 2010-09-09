@@ -38,6 +38,12 @@ public class RunMojo extends AbstractProductHandlerMojo
     protected boolean writePropertiesToFile;
 
     /**
+     * Instance id to run.  If provided, used to determine the product to run instead of just the product ID.
+     */
+    @MojoParameter(expression = "${instanceId}")
+    protected String instanceId;
+    
+    /**
      * The properties actually used by the mojo when running
      */
     protected final Map<String, String> properties = new HashMap<String, String>();
@@ -45,7 +51,19 @@ public class RunMojo extends AbstractProductHandlerMojo
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
         final MavenGoals goals = getMavenGoals();
-        Product ctx = getProductContexts(goals).get(getProductId());
+        Product ctx;
+        if (!"".equals(instanceId))
+        {
+            ctx = getProductContexts(goals).get(instanceId);
+            if (ctx == null)
+            {
+                throw new MojoExecutionException("No product with instance ID '" + instanceId + "'");
+            }
+        }
+        else
+        {
+            ctx = getProductContexts(goals).get(getProductId());
+        }
         ProductHandler product = createProductHandler(ctx.getId());
 
         ctx.setInstallPlugin(shouldInstallPlugin());
