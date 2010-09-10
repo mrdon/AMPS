@@ -13,6 +13,7 @@ import com.atlassian.confluence.pages.Page;
 import com.atlassian.confluence.spaces.SpaceManager;
 import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.user.User;
+import com.opensymphony.util.TextUtils;
 
 /**
  * This very simple macro shows you the very basic use-case of displaying *something* on the Confluence page where it is used.
@@ -68,7 +69,7 @@ public class ExampleMacro extends BaseMacro
         User user = AuthenticatedUserThreadLocal.getUser();
         if (user != null)
         {
-            String greeting = "Hello " + user.getFullName() + "<br><br>";
+            String greeting = "Hello " + TextUtils.htmlEncode(user.getFullName()) + "<br><br>";
             result.append(greeting);
         }
 
@@ -79,7 +80,7 @@ public class ExampleMacro extends BaseMacro
         {
             Page page = (Page) i.next();
             int numberOfChildren = page.getChildren().size();
-            String pageWithChildren = "Page " + page.getTitle() + " has " + numberOfChildren + " children <br> ";
+            String pageWithChildren = "Page " + TextUtils.htmlEncode(page.getTitle()) + " has " + numberOfChildren + " children <br> ";
             result.append(pageWithChildren);
         }
 
