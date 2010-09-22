@@ -190,6 +190,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     @MojoParameter(expression = "${project.build.finalName}", required = true)
     protected String finalName;
 
+    /**
+     * If the plugin and optionally its test plugin should be installed
+     */
     @MojoParameter (expression = "${install.plugin}", defaultValue = "true")
     protected boolean installPlugin;
 

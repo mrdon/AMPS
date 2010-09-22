@@ -11,10 +11,21 @@ public class IntegrationTest
     @Test
     public void anIntegrationTest() throws Exception
     {
+        assertPresent("/plugins/servlet/it");
+    }
+
+    @Test
+    public void anIntegrationTestForTestPlugin() throws Exception
+    {
+        assertPresent("/plugins/servlet/it-tests");
+    }
+
+    private void assertPresent(String resourceUrl) throws Exception
+    {
         final String httpPort = System.getProperty("http.port");
         final String contextPath = System.getProperty("context.path");
 
-        final String url = new StringBuilder().append("http://localhost:").append(httpPort).append(contextPath).append("/plugins/servlet/it").toString();
+        final String url = new StringBuilder().append("http://localhost:").append(httpPort).append(contextPath).append(resourceUrl).toString();
 
         HttpClient client = new HttpClient();
         HttpMethod method = new GetMethod(url);

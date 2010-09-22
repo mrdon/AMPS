@@ -323,6 +323,7 @@ public class FeCruProductHandler extends AbstractProductHandler
             if (ctx.isInstallPlugin())
             {
                 addThisPluginToDirectory(userPluginsDir);
+                addTestPluginToDirectory(userPluginsDir);
             }
 
             // add plugins2 plugins

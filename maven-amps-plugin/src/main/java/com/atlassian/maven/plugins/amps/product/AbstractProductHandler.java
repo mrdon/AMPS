@@ -61,9 +61,25 @@ public abstract class AbstractProductHandler implements ProductHandler
         copyFile(thisPlugin, new File(targetDir, thisPlugin.getName()));
     }
 
+    protected void addTestPluginToDirectory(final File targetDir) throws IOException
+    {
+        final File testPluginFile = getTestPluginFile();
+        if (testPluginFile.exists())
+        {
+            // add the test plugin jar to the directory
+            copyFile(testPluginFile, new File(targetDir, testPluginFile.getName()));
+        }
+
+    }
+
     protected File getPluginFile()
     {
         return new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".jar");
+    }
+
+    protected File getTestPluginFile()
+    {
+        return new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + "-tests.jar");
     }
 
     protected void addArtifactsToDirectory(final List<ProductArtifact> artifacts, final File pluginsDir) throws MojoExecutionException

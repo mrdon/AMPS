@@ -27,7 +27,8 @@
                             <package>
                                 com.atlassian.maven.plugins:maven-crowd-plugin:validate-manifest,
                                 com.atlassian.maven.plugins:maven-crowd-plugin:jar,
-                                com.atlassian.maven.plugins:maven-crowd-plugin:generate-obr-artifact
+                                com.atlassian.maven.plugins:maven-crowd-plugin:generate-obr-artifact,
+                                com.atlassian.maven.plugins:maven-crowd-plugin:test-jar
                             </package>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-crowd-plugin:integration-test

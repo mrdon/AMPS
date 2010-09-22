@@ -1,1 +1,1 @@
-test-compile jar:jar ${shitty.product}:integration-test
+test-compile jar:jar ${shitty.product}:test-jar ${shitty.product}:integration-test

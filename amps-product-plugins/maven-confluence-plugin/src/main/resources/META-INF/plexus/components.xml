@@ -31,7 +31,8 @@
                             <package>
                                 com.atlassian.maven.plugins:maven-confluence-plugin:validate-manifest,
                                 com.atlassian.maven.plugins:maven-confluence-plugin:jar,
-                                com.atlassian.maven.plugins:maven-confluence-plugin:generate-obr-artifact
+                                com.atlassian.maven.plugins:maven-confluence-plugin:generate-obr-artifact,
+                                com.atlassian.maven.plugins:maven-confluence-plugin:test-jar
                             </package>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-confluence-plugin:integration-test

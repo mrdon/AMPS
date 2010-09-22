@@ -760,6 +760,24 @@ public class MavenGoals
         );
     }
 
+    public void jarTests(String finalName) throws MojoExecutionException
+    {
+        executeMojo(
+                plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-jar-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-jar-plugin"))
+                ),
+                goal("test-jar"),
+                configuration(
+                        element(name("finalName"), finalName),
+                        element(name("archive"),
+                            element(name("manifestFile"), "${project.build.testOutputDirectory}/META-INF/MANIFEST.MF"))
+                ),
+                executionEnvironment(project, session, pluginManager)
+        );
+    }
+
     public void generateObrXml(File dep, File obrXml) throws MojoExecutionException
     {
         executeMojo(

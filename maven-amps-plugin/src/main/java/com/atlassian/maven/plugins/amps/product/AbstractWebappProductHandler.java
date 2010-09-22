@@ -87,6 +87,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             if (ctx.isInstallPlugin())
             {
                 addThisPluginToDirectory(pluginsDir);
+                addTestPluginToDirectory(pluginsDir);
             }
 
             // add plugins2 plugins if necessary

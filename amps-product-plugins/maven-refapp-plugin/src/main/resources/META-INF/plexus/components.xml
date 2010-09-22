@@ -30,7 +30,8 @@
                             <package>
                                 com.atlassian.maven.plugins:maven-refapp-plugin:validate-manifest,
                                 com.atlassian.maven.plugins:maven-refapp-plugin:jar,
-                                com.atlassian.maven.plugins:maven-refapp-plugin:generate-obr-artifact
+                                com.atlassian.maven.plugins:maven-refapp-plugin:generate-obr-artifact,
+                                com.atlassian.maven.plugins:maven-refapp-plugin:test-jar
                             </package>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-refapp-plugin:integration-test

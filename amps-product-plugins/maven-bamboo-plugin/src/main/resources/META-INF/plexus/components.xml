@@ -30,7 +30,8 @@
                             <package>
                                 com.atlassian.maven.plugins:maven-bamboo-plugin:validate-manifest,
                                 com.atlassian.maven.plugins:maven-bamboo-plugin:jar,
-                                com.atlassian.maven.plugins:maven-bamboo-plugin:generate-obr-artifact
+                                com.atlassian.maven.plugins:maven-bamboo-plugin:generate-obr-artifact,
+                                com.atlassian.maven.plugins:maven-bamboo-plugin:test-jar
                             </package>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-bamboo-plugin:integration-test

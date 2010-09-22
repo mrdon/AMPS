@@ -1,0 +1,12 @@
+<atlassian-plugin key="plugin-tests" plugins-version="2">
+
+    <plugin-info>
+        <description>Test IT Plugin's tests</description>
+        <version>1</version>
+    </plugin-info>
+
+    <servlet name="ItServlet" class="com.atlassian.amps.ItTestServlet" key="it">
+        <url-pattern>/it-tests</url-pattern>
+    </servlet>
+
+</atlassian-plugin>
