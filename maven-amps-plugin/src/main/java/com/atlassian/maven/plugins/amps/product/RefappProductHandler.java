@@ -27,35 +27,42 @@ public class RefappProductHandler extends AbstractWebappProductHandler
         return 5990;
     }
 
-    protected File getPluginsDirectory(final String webappDir, File homeDir)
+    @Override
+    protected File getUserInstalledPluginsDirectory(final File webappDir, File homeDir)
     {
         return null;
     }
 
+    @Override
     protected List<ProductArtifact> getExtraContainerDependencies()
     {
         return Collections.emptyList();
     }
 
+    @Override
     protected String getBundledPluginPath(Product ctx)
     {
         return "WEB-INF/classes/atlassian-bundled-plugins.zip";
     }
 
+    @Override
     protected void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
     }
 
+    @Override
     protected List<ProductArtifact> getDefaultLibPlugins()
     {
         return Collections.emptyList();
     }
 
+    @Override
     protected List<ProductArtifact> getDefaultBundledPlugins()
     {
         return Collections.emptyList();
     }
 
+    @Override
     protected Map<String, String> getSystemProperties(Product ctx)
     {
         Map<String, String> map = new HashMap<String, String>();
@@ -65,11 +72,13 @@ public class RefappProductHandler extends AbstractWebappProductHandler
         return map;
     }
 
+    @Override
     protected ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.refapp", "atlassian-refapp", VersionUtils.getVersion());
     }
 
+    @Override
     protected ProductArtifact getTestResourcesArtifact()
     {
         return null;

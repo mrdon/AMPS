@@ -50,7 +50,7 @@ public class BambooProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public File getPluginsDirectory(final String webappDir, final File homeDir)
+    public File getUserInstalledPluginsDirectory(final File webappDir, final File homeDir)
     {
         return new File(homeDir, "plugins");
     }

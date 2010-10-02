@@ -22,17 +22,20 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         return "confluence";
     }
 
+    @Override
     protected boolean isStaticPlugin()
     {
         // assume all Confluence plugins should be installed as bundled plugins -- a pretty good assumption
         return false;
     }
 
+    @Override
     public ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.confluence", "confluence-webapp", "RELEASE");
     }
 
+    @Override
     public ProductArtifact getTestResourcesArtifact()
     {
         return new ProductArtifact("com.atlassian.confluence.plugins", "confluence-plugin-test-resources", "LATEST");
@@ -43,27 +46,32 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         return 1990;
     }
 
+    @Override
     public Map<String, String> getSystemProperties(Product ctx)
     {
         return Collections.singletonMap("confluence.home", getHomeDirectory(ctx).getPath());
     }
 
-    public File getPluginsDirectory(final String webappDir, File homeDir)
+    @Override
+    public File getUserInstalledPluginsDirectory(final File webappDir, File homeDir)
     {
         // indicates plugins should be bundled
         return null;
     }
 
+    @Override
     public List<ProductArtifact> getExtraContainerDependencies()
     {
         return Collections.emptyList();
     }
 
+    @Override
     public String getBundledPluginPath(Product ctx)
     {
         return "WEB-INF/classes/com/atlassian/confluence/setup/atlassian-bundled-plugins.zip";
     }
 
+    @Override
     public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
         ConfigFileUtils.replace(new File(homeDir, "confluence.cfg.xml"), "@project-dir@", homeDir.getParent());
@@ -84,11 +92,13 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         }
     }
 
+    @Override
     public List<ProductArtifact> getDefaultLibPlugins()
     {
         return Collections.emptyList();
     }
 
+    @Override
     public List<ProductArtifact> getDefaultBundledPlugins()
     {
         return Collections.emptyList();

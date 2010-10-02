@@ -4,7 +4,11 @@ import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
+import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+
 import static org.apache.commons.io.FileUtils.copyFile;
 import static org.apache.commons.io.FileUtils.iterateFiles;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -12,6 +16,8 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,11 +27,247 @@ public abstract class AbstractProductHandler implements ProductHandler
 {
     protected final MavenGoals goals;
     protected final MavenProject project;
+    private final PluginProvider pluginProvider;
 
-    protected AbstractProductHandler(MavenProject project, MavenGoals goals)
+    protected AbstractProductHandler(MavenProject project, MavenGoals goals, PluginProvider pluginProvider)
     {
         this.project = project;
         this.goals = goals;
+        this.pluginProvider = pluginProvider;
+    }
+    
+    public final int start(final Product ctx) throws MojoExecutionException
+    {
+        final File homeDir = extractAndProcessHomeDirectory(ctx);
+        final File extractedApp = extractApplication(ctx, homeDir);
+        final File finalApp = addArtifactsAndOverrides(ctx, homeDir, extractedApp);
+        return startApplication(ctx, finalApp, homeDir, mergeSystemProperties(ctx));
+    }
+
+    protected final File extractAndProcessHomeDirectory(final Product ctx) throws MojoExecutionException
+    {
+        if (getTestResourcesArtifact() != null)
+        {
+            final File homeDir = getHomeDirectory(ctx);
+
+            // Only create the home dir if it doesn't exist
+            if (!homeDir.exists())
+            {
+
+                //find and extract productHomeZip
+                final File productHomeZip = getProductHomeZip(ctx);
+                extractProductHomeZip(productHomeZip, homeDir, ctx);
+
+                // just in case
+                homeDir.mkdir();
+                processHomeDirectory(ctx, homeDir);
+            }
+
+            // Always override files regardless of home directory existing or not
+            try
+            {
+                overrideAndPatchHomeDir(homeDir, ctx);
+            }
+            catch (IOException e)
+            {
+                throw new MojoExecutionException("Unable to override files using src/test/resources", e);
+            }
+
+            return homeDir;
+        }
+        else
+        {
+            return getHomeDirectory(ctx);
+        }
+    }
+
+    private File getProductHomeZip(final Product ctx) throws MojoExecutionException
+    {
+        File productHomeZip = null;
+        String dpath = ctx.getDataPath();
+
+        //use custom zip if supplied
+        if (StringUtils.isNotBlank(dpath))
+        {
+            File customHomeZip = new File(dpath);
+
+            if (customHomeZip.exists())
+            {
+                productHomeZip = customHomeZip;
+            }
+        }
+
+        //if we didn't find a custom zip, use the default
+        if (productHomeZip == null)
+        {
+            productHomeZip = goals.copyHome(getBaseDirectory(ctx),
+                    new ProductArtifact(
+                            getTestResourcesArtifact().getGroupId(),
+                            getTestResourcesArtifact().getArtifactId(),
+                            ctx.getDataVersion()));
+        }
+
+        return productHomeZip;
+    }
+
+    protected void extractProductHomeZip(File productHomeZip, File homeDir, Product ctx)
+            throws MojoExecutionException
+    {
+        final File tmpDir = new File(getBaseDirectory(ctx), "tmp-resources");
+        tmpDir.mkdir();
+
+        try
+        {
+            unzip(productHomeZip, tmpDir.getPath());
+            FileUtils.copyDirectory(tmpDir.listFiles()[0], getBaseDirectory(ctx), true);
+            File tmp = new File(getBaseDirectory(ctx), ctx.getId() + "-home");
+            FileUtils.moveDirectory(tmp, homeDir);
+        }
+        catch (final IOException ex)
+        {
+            throw new MojoExecutionException("Unable to copy home directory", ex);
+        }
+    }
+
+    private void overrideAndPatchHomeDir(File homeDir, final Product ctx) throws IOException
+    {
+        final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getInstanceId() + "-home");
+        if (srcDir.exists() && homeDir.exists())
+        {
+            FileUtils.copyDirectory(srcDir, homeDir);
+        }
+    }
+
+    private final File addArtifactsAndOverrides(final Product ctx, final File homeDir, final File app) throws MojoExecutionException
+    {
+        try
+        {
+            final File appDir;
+            if (app.isFile())
+            {
+                appDir = new File(getBaseDirectory(ctx), "webapp");
+                if (!appDir.exists())
+                {
+                    unzip(app, appDir.getAbsolutePath());
+                }
+            }
+            else
+            {
+                appDir = app;
+            }
+
+            addArtifacts(ctx, homeDir, appDir);
+
+            // override war files
+            try
+            {
+                addOverrides(appDir, ctx);
+            }
+            catch (IOException e)
+            {
+                throw new MojoExecutionException("Unable to override WAR files using src/test/resources/" + ctx.getInstanceId() + "-app", e);
+            }
+
+            if (app.isFile())
+            {
+                final File warFile = new File(app.getParentFile(), getId() + ".war");
+                com.atlassian.core.util.FileUtils.createZipFile(appDir, warFile);
+                return warFile;
+            }
+            else
+            {
+                return appDir;
+            }
+
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+            throw new MojoExecutionException(e.getMessage());
+        }
+    }
+
+    private void addArtifacts(final Product ctx, final File homeDir, final File appDir)
+            throws IOException, MojoExecutionException, Exception
+    {
+        File pluginsDir = getUserInstalledPluginsDirectory(appDir, homeDir);
+        final File bundledPluginsDir = new File(getBaseDirectory(ctx), "bundled-plugins");
+        
+        bundledPluginsDir.mkdir();
+        // add bundled plugins
+        final File bundledPluginsZip = new File(appDir, getBundledPluginPath(ctx));
+        if (bundledPluginsZip.exists())
+        {
+            unzip(bundledPluginsZip, bundledPluginsDir.getPath());
+        }
+        
+        if (isStaticPlugin())
+        {
+            if (!supportsStaticPlugins())
+            {
+                  throw new MojoExecutionException("According to your atlassian-plugin.xml file, this plugin is not " +
+                          "atlassian-plugins version 2. This app currently only supports atlassian-plugins " +
+                          "version 2.");
+            }
+            pluginsDir = new File(appDir, "WEB-INF/lib");
+        }
+        
+        if (pluginsDir == null)
+        {
+            pluginsDir = bundledPluginsDir;
+        }
+        
+        createDirectory(pluginsDir);
+        
+        // add this plugin itself if enabled
+        if (ctx.isInstallPlugin())
+        {
+            addThisPluginToDirectory(pluginsDir);
+            addTestPluginToDirectory(pluginsDir);
+        }
+        
+        // add plugins2 plugins if necessary
+        if (!isStaticPlugin())
+        {
+            addArtifactsToDirectory(pluginProvider.provide(ctx), pluginsDir);
+        }
+        
+        // add plugins1 plugins
+        List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
+        artifacts.addAll(getDefaultLibPlugins());
+        artifacts.addAll(ctx.getLibArtifacts());
+        addArtifactsToDirectory(artifacts, new File(appDir, "WEB-INF/lib"));
+        
+        artifacts = new ArrayList<ProductArtifact>();
+        artifacts.addAll(getDefaultBundledPlugins());
+        artifacts.addAll(ctx.getBundledArtifacts());
+        
+        addArtifactsToDirectory(artifacts, bundledPluginsDir);
+        
+        if (bundledPluginsDir.list().length > 0)
+        {
+            com.atlassian.core.util.FileUtils.createZipFile(bundledPluginsDir, bundledPluginsZip);
+        }
+        
+        if (ctx.getLog4jProperties() != null && getLog4jPropertiesPath() != null)
+        {
+            FileUtils.copyFile(ctx.getLog4jProperties(), new File(appDir, getLog4jPropertiesPath()));
+        }
+    }
+    
+    abstract protected void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException;
+    abstract protected ProductArtifact getTestResourcesArtifact();
+    abstract protected File extractApplication(Product ctx, File homeDir) throws MojoExecutionException;
+    abstract protected int startApplication(Product ctx, File app, File homeDir, Map<String, String> properties) throws MojoExecutionException;
+    abstract protected boolean supportsStaticPlugins();
+    abstract protected Collection<? extends ProductArtifact> getDefaultBundledPlugins();
+    abstract protected Collection<? extends ProductArtifact> getDefaultLibPlugins();
+    abstract protected String getBundledPluginPath(Product ctx);
+    abstract protected File getUserInstalledPluginsDirectory(File webappDir, File homeDir);
+    
+    protected String getLog4jPropertiesPath()
+    {
+        return null;
     }
 
     protected boolean isStaticPlugin() throws IOException
@@ -43,7 +285,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
     }
 
-    protected void addThisPluginToDirectory(final File targetDir) throws IOException
+    protected final void addThisPluginToDirectory(final File targetDir) throws IOException
     {
         final File thisPlugin = getPluginFile();
 
@@ -72,7 +314,7 @@ public abstract class AbstractProductHandler implements ProductHandler
 
     }
 
-    protected File getPluginFile()
+    protected final File getPluginFile()
     {
         return new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".jar");
     }
@@ -82,7 +324,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         return new File(project.getBuild().getDirectory(), project.getBuild().getFinalName() + "-tests.jar");
     }
 
-    protected void addArtifactsToDirectory(final List<ProductArtifact> artifacts, final File pluginsDir) throws MojoExecutionException
+    protected final void addArtifactsToDirectory(final List<ProductArtifact> artifacts, final File pluginsDir) throws MojoExecutionException
     {
         // first remove plugins from the webapp that we want to update
         if (pluginsDir.isDirectory() && pluginsDir.exists())
@@ -106,23 +348,40 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
     }
 
-    public File getHomeDirectory(Product ctx)
+    protected final void addOverrides(File appDir, final Product ctx) throws IOException
     {
-        return new File(new File(project.getBuild().getDirectory(), ctx.getInstanceId()), "home");
+        final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getInstanceId() + "-app");
+        if (srcDir.exists() && appDir.exists())
+        {
+            FileUtils.copyDirectory(srcDir, appDir);
+        }
     }
     
-    protected File createHomeDirectory(Product ctx)
+    public final File getBaseDirectory(Product ctx)
     {
-        File homeDir = getHomeDirectory(ctx);
-        // Make sure it exists
-        if (!homeDir.exists())
-        {
-            homeDir.mkdirs();
-        }
-        return homeDir;
+        return createDirectory(new File(project.getBuild().getDirectory(), ctx.getInstanceId()));
     }
 
-    protected Map<String, String> mergeSystemProperties(Product ctx)
+    public final File getHomeDirectory(Product ctx)
+    {
+        return new File(getBaseDirectory(ctx), "home");
+    }
+    
+    protected final File createHomeDirectory(Product ctx)
+    {
+        return createDirectory(getHomeDirectory(ctx));
+    }
+
+    protected final File createDirectory(File dir)
+    {
+        if (!dir.exists() && !dir.mkdirs())
+        {
+            throw new RuntimeException("Failed to create directory " + dir.getAbsolutePath());
+        }
+        return dir;
+    }
+
+    protected final Map<String, String> mergeSystemProperties(Product ctx)
     {
         final Map<String, String> properties = new HashMap<String, String>();
         properties.putAll(getSystemProperties(ctx));
