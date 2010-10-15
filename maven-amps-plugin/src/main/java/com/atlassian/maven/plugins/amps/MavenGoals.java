@@ -90,6 +90,7 @@ public class MavenGoals
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:filter-plugin-descriptor").append(" ")
                         .append("compile").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:copy-bundled-dependencies").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:compress-resources").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:validate-manifest").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ")
