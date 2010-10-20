@@ -32,7 +32,26 @@
             <version>2.4</version>
             <scope>provided</scope>
         </dependency>
-  </dependencies>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.atlassian.refapp</groupId>
+                <artifactId>atlassian-platform-libraries</artifactId>
+                <version>\${dollar}{refapp.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.refapp</groupId>
+                <artifactId>atlassian-platform-plugins</artifactId>
+                <version>\${dollar}{refapp.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
