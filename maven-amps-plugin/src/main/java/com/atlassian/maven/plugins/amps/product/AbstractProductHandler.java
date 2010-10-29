@@ -1,18 +1,13 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
 import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-
+import static org.apache.commons.io.FileUtils.copyDirectory;
 import static org.apache.commons.io.FileUtils.copyFile;
 import static org.apache.commons.io.FileUtils.iterateFiles;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
+import static org.apache.commons.io.FileUtils.moveDirectory;
+import static org.apache.commons.io.FileUtils.readFileToString;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +17,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
 
 public abstract class AbstractProductHandler implements ProductHandler
 {
@@ -46,16 +48,15 @@ public abstract class AbstractProductHandler implements ProductHandler
 
     protected final File extractAndProcessHomeDirectory(final Product ctx) throws MojoExecutionException
     {
-        if (getTestResourcesArtifact() != null)
+        final File productHomeZip = getProductHomeZip(ctx);
+        if (productHomeZip != null)
         {
             final File homeDir = getHomeDirectory(ctx);
 
             // Only create the home dir if it doesn't exist
             if (!homeDir.exists())
             {
-
                 //find and extract productHomeZip
-                final File productHomeZip = getProductHomeZip(ctx);
                 extractProductHomeZip(productHomeZip, homeDir, ctx);
 
                 // just in case
@@ -87,7 +88,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         String dpath = ctx.getDataPath();
 
         //use custom zip if supplied
-        if (StringUtils.isNotBlank(dpath))
+        if (isNotBlank(dpath))
         {
             File customHomeZip = new File(dpath);
 
@@ -98,13 +99,14 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
 
         //if we didn't find a custom zip, use the default
-        if (productHomeZip == null)
+        if (productHomeZip == null && getTestResourcesArtifact() != null)
         {
-            productHomeZip = goals.copyHome(getBaseDirectory(ctx),
-                    new ProductArtifact(
-                            getTestResourcesArtifact().getGroupId(),
-                            getTestResourcesArtifact().getArtifactId(),
-                            ctx.getDataVersion()));
+            ProductArtifact artifact = new ProductArtifact(
+                getTestResourcesArtifact().getGroupId(), getTestResourcesArtifact().getArtifactId(), ctx.getDataVersion());
+            if (artifact != null)
+            {
+                productHomeZip = goals.copyHome(getBaseDirectory(ctx), artifact);
+            }
         }
 
         return productHomeZip;
@@ -119,9 +121,9 @@ public abstract class AbstractProductHandler implements ProductHandler
         try
         {
             unzip(productHomeZip, tmpDir.getPath());
-            FileUtils.copyDirectory(tmpDir.listFiles()[0], getBaseDirectory(ctx), true);
+            copyDirectory(tmpDir.listFiles()[0], getBaseDirectory(ctx), true);
             File tmp = new File(getBaseDirectory(ctx), ctx.getId() + "-home");
-            FileUtils.moveDirectory(tmp, homeDir);
+            moveDirectory(tmp, homeDir);
         }
         catch (final IOException ex)
         {
@@ -134,7 +136,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getInstanceId() + "-home");
         if (srcDir.exists() && homeDir.exists())
         {
-            FileUtils.copyDirectory(srcDir, homeDir);
+            copyDirectory(srcDir, homeDir);
         }
     }
 
@@ -251,7 +253,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         
         if (ctx.getLog4jProperties() != null && getLog4jPropertiesPath() != null)
         {
-            FileUtils.copyFile(ctx.getLog4jProperties(), new File(appDir, getLog4jPropertiesPath()));
+            copyFile(ctx.getLog4jProperties(), new File(appDir, getLog4jPropertiesPath()));
         }
     }
     
@@ -275,7 +277,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         final File atlassianPluginXml = new File(project.getBasedir(), "src/main/resources/atlassian-plugin.xml");
         if (atlassianPluginXml.exists())
         {
-            String text = FileUtils.readFileToString(atlassianPluginXml);
+            String text = readFileToString(atlassianPluginXml);
             return !text.contains("pluginsVersion=\"2\"") && !text.contains("plugins-version=\"2\"");
         }
         else
@@ -329,7 +331,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         // first remove plugins from the webapp that we want to update
         if (pluginsDir.isDirectory() && pluginsDir.exists())
         {
-            for (final Iterator<?> iterateFiles = FileUtils.iterateFiles(pluginsDir, null, false); iterateFiles.hasNext();)
+            for (final Iterator<?> iterateFiles = iterateFiles(pluginsDir, null, false); iterateFiles.hasNext();)
             {
                 final File file = (File) iterateFiles.next();
                 for (final ProductArtifact webappArtifact : artifacts)
@@ -353,7 +355,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getInstanceId() + "-app");
         if (srcDir.exists() && appDir.exists())
         {
-            FileUtils.copyDirectory(srcDir, appDir);
+            copyDirectory(srcDir, appDir);
         }
     }
     
