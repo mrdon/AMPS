@@ -32,9 +32,9 @@
     </contributors>
 
     <scm>
-        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.2.2</connection>
-        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.2.2</developerConnection>
-        <url>https://studio.atlassian.com/source/browse/AMPS/tags/atlassian-amps-parent-3.2.2</url>
+        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/3.2-stable</connection>
+        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/3.2-stable</developerConnection>
+        <url>https://studio.atlassian.com/source/browse/AMPS/branches/3.2-stable</url>
     </scm>
 
     <issueManagement>
@@ -234,15 +234,15 @@
         <maven.version>2.1.0</maven.version>
         <anno.mojo.version>1.3.3</anno.mojo.version>
         <refapp.version>2.5.2</refapp.version>
-        <confluence.version>3.3</confluence.version>
+        <confluence.version>3.4.1</confluence.version>
         <confluence.data.version>3.1</confluence.data.version>
-        <jira.version>4.1.2</jira.version>
+        <jira.version>4.2</jira.version>
         <jira.data.version>4.1.1</jira.data.version>
-        <bamboo.version>2.6.1</bamboo.version>
+        <bamboo.version>2.6.2</bamboo.version>
         <bamboo.data.version>2.6.1</bamboo.data.version>
-        <fecru.version>2.2.3.1-475</fecru.version>
-        <fecru.data.version>2.2.3.1-475</fecru.data.version>
-        <crowd.version>2.0.4</crowd.version>
+        <fecru.version>2.4.1-20101027024419</fecru.version>
+        <fecru.data.version>2.4.1-20101027024419</fecru.data.version>
+        <crowd.version>2.0.7</crowd.version>
         <crowd.data.version>2.0.3</crowd.data.version>
         <clover.version>3.0.2</clover.version>
     </properties>
