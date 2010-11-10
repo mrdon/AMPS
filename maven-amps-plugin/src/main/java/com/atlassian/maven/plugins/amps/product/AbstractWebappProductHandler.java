@@ -16,7 +16,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 {
     public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals, Log log, PluginProvider pluginProvider)
     {
-        super(project, goals, pluginProvider);
+        super(project, goals, log, pluginProvider);
     }
 
     public final void stop(final Product ctx) throws MojoExecutionException
