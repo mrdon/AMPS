@@ -239,7 +239,7 @@
         <jira.version>4.2</jira.version>
         <jira.data.version>4.1.1</jira.data.version>
         <bamboo.version>2.7.1</bamboo.version>
-        <bamboo.data.version>2.7.1</bamboo.data.version>
+        <bamboo.data.version>2.6.1</bamboo.data.version>
         <fecru.version>2.4.1-20101027024419</fecru.version>
         <fecru.data.version>2.4.1-20101027024419</fecru.data.version>
         <crowd.version>2.0.7</crowd.version>
