@@ -5,6 +5,7 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
@@ -12,9 +13,9 @@ import java.util.*;
 
 public class BambooProductHandler extends AbstractWebappProductHandler
 {
-    public BambooProductHandler(MavenProject project, MavenGoals goals)
+    public BambooProductHandler(MavenProject project, MavenGoals goals, Log log)
     {
-        super(project, goals, new BambooPluginProvider());
+        super(project, goals, log, new BambooPluginProvider());
     }
 
     public String getId()

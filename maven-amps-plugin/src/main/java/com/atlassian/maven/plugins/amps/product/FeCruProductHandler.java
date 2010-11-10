@@ -31,13 +31,11 @@ public class FeCruProductHandler extends AbstractProductHandler
     private static final int STARTUP_CHECK_MAX = 1000 * 60 * 3; //todo is 3 mins enough?
     private static final String FISHEYE_INST = "fisheye.inst";
     
-    private final Log log;
     private final JavaTaskFactory javaTaskFactory;
     
     public FeCruProductHandler(MavenProject project, MavenGoals goals, Log log)
     {
-        super(project, goals, new FeCruPluginProvider());
-        this.log = log;
+        super(project, goals, log, new FeCruPluginProvider());
         this.javaTaskFactory = new JavaTaskFactory(log);
     }
 
