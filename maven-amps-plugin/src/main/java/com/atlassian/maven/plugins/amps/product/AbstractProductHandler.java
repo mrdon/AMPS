@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
@@ -30,14 +29,12 @@ public abstract class AbstractProductHandler implements ProductHandler
 {
     protected final MavenGoals goals;
     protected final MavenProject project;
-    protected final Log log;
     private final PluginProvider pluginProvider;
 
-    protected AbstractProductHandler(MavenProject project, MavenGoals goals, Log log, PluginProvider pluginProvider)
+    protected AbstractProductHandler(MavenProject project, MavenGoals goals, PluginProvider pluginProvider)
     {
         this.project = project;
         this.goals = goals;
-        this.log = log;
         this.pluginProvider = pluginProvider;
     }
     
@@ -97,12 +94,12 @@ public abstract class AbstractProductHandler implements ProductHandler
 
             if (customHomeZip.exists())
             {
-                log.info("Using custom product data path: " + customHomeZip.getAbsolutePath());
                 productHomeZip = customHomeZip;
             }
             else
             {
-                log.warn("Unable to use custom product data path, file '" + customHomeZip.getAbsolutePath() + "' does not exist");
+                throw new MojoExecutionException("Unable to use custom test resources set by <productDataPath>. File '" +
+                        customHomeZip.getAbsolutePath() + "' does not exist");
             }
         }
 

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
@@ -14,9 +13,9 @@ import com.atlassian.maven.plugins.amps.ProductArtifact;
 
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
-    public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals, Log log, PluginProvider pluginProvider)
+    public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals, PluginProvider pluginProvider)
     {
-        super(project, goals, log, pluginProvider);
+        super(project, goals, pluginProvider);
     }
 
     public final void stop(final Product ctx) throws MojoExecutionException

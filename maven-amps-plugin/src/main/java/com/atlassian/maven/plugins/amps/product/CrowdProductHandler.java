@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import com.atlassian.maven.plugins.amps.MavenGoals;
@@ -21,9 +20,9 @@ import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 public class CrowdProductHandler extends AbstractWebappProductHandler
 {
-    public CrowdProductHandler(final MavenProject project, final MavenGoals goals, Log log)
+    public CrowdProductHandler(final MavenProject project, final MavenGoals goals)
     {
-        super(project, goals, log, new CrowdPluginProvider());
+        super(project, goals, new CrowdPluginProvider());
     }
 
     public String getId()

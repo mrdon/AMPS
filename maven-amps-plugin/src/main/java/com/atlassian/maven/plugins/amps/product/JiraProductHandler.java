@@ -5,7 +5,6 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
@@ -13,9 +12,9 @@ import java.util.*;
 
 public class JiraProductHandler extends AbstractWebappProductHandler
 {
-    public JiraProductHandler(final MavenProject project, final MavenGoals goals, Log log)
+    public JiraProductHandler(final MavenProject project, final MavenGoals goals)
     {
-        super(project, goals, log, new JiraPluginProvider());
+        super(project, goals, new JiraPluginProvider());
     }
 
     public String getId()

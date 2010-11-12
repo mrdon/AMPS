@@ -5,7 +5,6 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
@@ -13,9 +12,9 @@ import java.util.*;
 
 public class RefappProductHandler extends AbstractWebappProductHandler
 {
-    public RefappProductHandler(MavenProject project, MavenGoals goals, Log log)
+    public RefappProductHandler(MavenProject project, MavenGoals goals)
     {
-        super(project, goals, log, new RefappPluginProvider());
+        super(project, goals, new RefappPluginProvider());
     }
 
     public String getId()

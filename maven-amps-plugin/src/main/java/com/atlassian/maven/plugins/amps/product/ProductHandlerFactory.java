@@ -20,19 +20,19 @@ public class ProductHandlerFactory
     {
         if (REFAPP.equals(id))
         {
-            return new RefappProductHandler(project, goals, log);
+            return new RefappProductHandler(project, goals);
         }
         else if (CONFLUENCE.equals(id))
         {
-            return new ConfluenceProductHandler(project, goals, log);
+            return new ConfluenceProductHandler(project, goals);
         }
         else if (JIRA.equals(id))
         {
-            return new JiraProductHandler(project, goals, log);
+            return new JiraProductHandler(project, goals);
         }
         else if (BAMBOO.equals(id))
         {
-            return new BambooProductHandler(project, goals, log);
+            return new BambooProductHandler(project, goals);
         }
         else if (FECRU.equals(id))
         {
@@ -40,7 +40,7 @@ public class ProductHandlerFactory
         }
         else if (CROWD.equals(id))
         {
-            return new CrowdProductHandler(project, goals, log);
+            return new CrowdProductHandler(project, goals);
         }
 
         throw new IllegalArgumentException("Unknown product id:" + id);
