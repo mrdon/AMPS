@@ -25,7 +25,8 @@
                             <package>
                                 com.atlassian.maven.plugins:maven-amps-plugin:validate-manifest,
                                 com.atlassian.maven.plugins:maven-amps-plugin:jar,
-                                com.atlassian.maven.plugins:maven-amps-plugin:generate-obr-artifact
+                                com.atlassian.maven.plugins:maven-amps-plugin:generate-obr-artifact,
+                                com.atlassian.maven.plugins:maven-amps-plugin:test-jar
                             </package>
                             <integration-test>
                                 com.atlassian.maven.plugins:maven-amps-plugin:integration-test
