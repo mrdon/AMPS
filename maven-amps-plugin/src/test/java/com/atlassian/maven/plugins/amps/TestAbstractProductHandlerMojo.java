@@ -7,6 +7,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestAbstractProductHandlerMojo extends TestCase
 {
@@ -91,6 +94,17 @@ public class TestAbstractProductHandlerMojo extends TestCase
         protected void doExecute() throws MojoExecutionException, MojoFailureException
         {
 
+        }
+
+        @Override
+        protected MavenContext getMavenContext()
+        {
+            MavenProject project = mock(MavenProject.class);
+            Build build = mock(Build.class);
+            when(build.getTestOutputDirectory()).thenReturn(".");
+            when(project.getBuild()).thenReturn(build);
+            MavenContext ctx = new MavenContext(project, null, null, null, null);
+            return ctx;
         }
     }
 }

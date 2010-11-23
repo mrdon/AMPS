@@ -43,3 +43,32 @@ else
 {
     assert false, 'Not sure what happened here!'
 }
+
+final File testCliState = new File("${project.build.directory}/testcli.state")
+if (!testCliState.exists())
+{
+    testCliState.createNewFile()
+    testCliState.text = '0'
+}
+
+
+if (testCliState.text == '0')
+{
+    new HTTPBuilder("$baseUrl/plugins/servlet/testcli").request(GET) {
+      response.failure = { assert it.statusLine.statusCode == 404 , "Expected status code 404 on CLI Servlet, the test plugin is not yet installed" }
+      response.success = { assert false, "The HTTP GET should have 404'd, the test plugin should not have been installed yet" }
+    }
+    testCliState.text = '1'
+}
+else if (testCliState.text == '1')
+{
+    new HTTPBuilder("$baseUrl/plugins/servlet/testcli").request(GET) {
+      response.failure = { assert false , "Expected request to have worked! Test plugin should have been installed" }
+      response.success = { assert it.statusLine.statusCode == 200, "The HTTP GET should have 200'd, the test plugin should have been installed" }
+    }
+    testCliState.text = '2'
+}
+else
+{
+    assert false, 'Not sure what happened here!'
+}

@@ -4,7 +4,6 @@ import com.atlassian.core.util.FileUtils;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import com.atlassian.maven.plugins.amps.util.ZipUtils;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
@@ -95,6 +94,11 @@ public class MavenGoals
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:validate-manifest").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:install").toString()),
+                element(name("tpi"), new StringBuilder()
+                        .append("testResources").append(" ")
+                        .append("testCompile").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:test-jar").append(" ")
+                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:test-install").toString()),
                 element(name("package"), new StringBuilder()
                         .append("resources").append(" ")
                         .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:filter-plugin-descriptor").append(" ")
@@ -606,10 +610,10 @@ public class MavenGoals
         );
     }
 
-    public void installPlugin(final String pluginKey, final String server, final int port, final String contextPath, final String username, final String password)
+    public void installPlugin(PdkParams pdkParams)
             throws MojoExecutionException
     {
-        final String baseUrl = getBaseUrl(server, port, contextPath);
+        final String baseUrl = getBaseUrl(pdkParams.getServer(), pdkParams.getPort(), pdkParams.getContextPath());
         executeMojo(
                 plugin(
                         groupId("com.atlassian.maven.plugins"),
@@ -618,10 +622,11 @@ public class MavenGoals
                 ),
                 goal("install"),
                 configuration(
-                        element(name("username"), username),
-                        element(name("password"), password),
+                        element(name("pluginFile"), pdkParams.getPluginFile()),
+                        element(name("username"), pdkParams.getUsername()),
+                        element(name("password"), pdkParams.getPassword()),
                         element(name("serverUrl"), baseUrl),
-                        element(name("pluginKey"), pluginKey)
+                        element(name("pluginKey"), pdkParams.getPluginKey())
                 ),
                 executionEnvironment(project, session, pluginManager)
         );
