@@ -391,6 +391,7 @@ public abstract class AbstractProductHandler implements ProductHandler
     protected final Map<String, String> mergeSystemProperties(Product ctx)
     {
         final Map<String, String> properties = new HashMap<String, String>();
+
         properties.putAll(getSystemProperties(ctx));
         for (Map.Entry<String, Object> entry : ctx.getSystemPropertyVariables().entrySet())
         {

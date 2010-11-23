@@ -389,23 +389,7 @@ public class MavenGoals
             webappContext.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
         }
 
-        Map<String, String> sysPropsMap = new HashMap<String, String>(systemProperties);
-        if (!sysPropsMap.containsKey("plugin.resource.directories"))
-        {
-            // collect all resource directories and make them available for
-            // on-the-fly reloading
-            StringBuilder resourceProp = new StringBuilder();
-            @SuppressWarnings("unchecked") List<Resource> resList = project.getResources();
-            for (int i = 0; i < resList.size(); i++) {
-                resourceProp.append(resList.get(i).getDirectory());
-                if (i + 1 != resList.size()) {
-                    resourceProp.append(",");
-                }
-            }
-            sysPropsMap.put("plugin.resource.directories", resourceProp.toString());
-        }
-
-        for (final Map.Entry<String, String> entry : sysPropsMap.entrySet())
+        for (final Map.Entry<String, String> entry : systemProperties.entrySet())
         {
             webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=\"" + entry.getValue() + "\"");
             sysProps.add(element(name(entry.getKey()), entry.getValue()));

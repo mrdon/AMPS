@@ -3,11 +3,14 @@ package com.atlassian.maven.plugins.amps;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
+import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
@@ -252,6 +255,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
         setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
+        setDefaultSystemProperty(systemPropertyVariables, "plugin.resource.directories", buildResourcesList());
 
         ctx.setSystemPropertyVariables(systemPropertyVariables);
         ctx.setBundledArtifacts(bundledArtifacts);
@@ -272,6 +276,41 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         ctx.setHttpPort(httpPort);
         return ctx;
+    }
+
+    /**
+     * @return a comma-separated list of resource directories.  If a test plugin is detected, the 
+     * test resources directories are included as well.
+     */
+    private String buildResourcesList()
+    {
+        // collect all resource directories and make them available for
+        // on-the-fly reloading
+        StringBuilder resourceProp = new StringBuilder();
+        MavenProject mavenProject = getMavenContext().getProject();
+        @SuppressWarnings("unchecked") List<Resource> resList = mavenProject.getResources();
+        for (int i = 0; i < resList.size(); i++) {
+            resourceProp.append(resList.get(i).getDirectory());
+            if (i + 1 != resList.size()) {
+                resourceProp.append(",");
+            }
+        }
+
+        if (ProjectUtils.shouldDeployTestJar(getMavenContext()))
+        {
+            @SuppressWarnings("unchecked") List<Resource> testResList = mavenProject.getTestResources();
+            for (int i = 0; i < testResList.size(); i++) {
+                if (i == 0 && resourceProp.length() > 0)
+                {
+                    resourceProp.append(",");
+                }
+                resourceProp.append(testResList.get(i).getDirectory());
+                if (i + 1 != testResList.size()) {
+                    resourceProp.append(",");
+                }
+            }
+        }
+        return resourceProp.toString();
     }
 
     private static void setDefaultSystemProperty(final Map<String,Object> props, final String key, final String value)

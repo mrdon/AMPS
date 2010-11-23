@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps;
 
+import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -48,7 +49,7 @@ public class TestJarMojo extends AbstractAmpsMojo
                 shouldBuild = true;
             }
         }
-        else if (file(getMavenContext().getProject().getBuild().getTestOutputDirectory(), "atlassian-plugin.xml").exists())
+        else if (ProjectUtils.shouldDeployTestJar(getMavenContext()))
         {
             shouldBuild = true;
         }
