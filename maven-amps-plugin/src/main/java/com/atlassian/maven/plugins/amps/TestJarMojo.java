@@ -65,6 +65,7 @@ public class TestJarMojo extends AbstractAmpsMojo
                            "Manifest-Version: 1.0\n" +
                            "Bundle-SymbolicName: plugin-tests\n" +
                            "Bundle-Version: 1.0\n" +
+                           "Bundle-Name: " + finalName + "-tests\n" +
                            "DynamicImport-Package: *\n");
                 }
                 catch (IOException e)
