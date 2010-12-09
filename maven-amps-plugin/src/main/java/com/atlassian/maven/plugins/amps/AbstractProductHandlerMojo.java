@@ -33,6 +33,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private static final String DEFAULT_PDK_VERSION = "0.4";
     private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
 
+    private static final String PLUGIN_RESOURCE_DIRS_PROPERTY = "plugin.resource.directories";
+
     /**
      * Container to run in
      */
@@ -255,7 +257,10 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
         setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
-        setDefaultSystemProperty(systemPropertyVariables, "plugin.resource.directories", buildResourcesList());
+        if (!systemPropertyVariables.containsKey(PLUGIN_RESOURCE_DIRS_PROPERTY)) {
+            setDefaultSystemProperty(systemPropertyVariables,
+                    PLUGIN_RESOURCE_DIRS_PROPERTY, buildResourcesList());
+        }
 
         ctx.setSystemPropertyVariables(systemPropertyVariables);
         ctx.setBundledArtifacts(bundledArtifacts);
