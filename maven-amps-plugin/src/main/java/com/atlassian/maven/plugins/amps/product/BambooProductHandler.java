@@ -71,7 +71,7 @@ public class BambooProductHandler extends AbstractWebappProductHandler
         ConfigFileUtils.replace(new File(homeDir, "bamboo.cfg.xml"), "/bamboo-home/", "/home/");
         ConfigFileUtils.replace(new File(homeDir, "bamboo.cfg.xml"), "${bambooHome}", homeDir.getAbsolutePath());
         ConfigFileUtils.replaceAll(new File(homeDir, "/xml-data/configuration/administration.xml"),
-                "http://[^:]+:8085", "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", ""));
+                "http://(?:[^:]|\\[.+])+:8085", "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", ""));
     }
 
     public List<ProductArtifact> getDefaultLibPlugins()
