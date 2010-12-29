@@ -125,7 +125,12 @@ public class Product
     {
         Product prod = new Product();
         prod.setOutput(output == null ? product.getOutput() : output);
-        prod.setSystemPropertyVariables(systemProperties.isEmpty() ? product.getSystemPropertyVariables() : systemProperties);
+
+        Map<String,Object> sysProps = new HashMap<String,Object>();
+        sysProps.putAll(product.getSystemPropertyVariables());
+        sysProps.putAll(systemProperties);
+        prod.setSystemPropertyVariables(sysProps);
+
         prod.setInstallPlugin(installPlugin == null ? product.isInstallPlugin() : installPlugin);
         prod.setArtifactRetriever(artifactRetriever == null ? product.getArtifactRetriever() : artifactRetriever);
         prod.setId(id == null ? product.getId() : id);
