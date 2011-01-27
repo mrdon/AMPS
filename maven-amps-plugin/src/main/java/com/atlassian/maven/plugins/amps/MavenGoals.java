@@ -844,7 +844,7 @@ public class MavenGoals
                 FileUtils.deleteDir(bundledPlugins);
             }
 
-            ZipUtils.zipDir(targetZip, tmpDir.listFiles()[0], entryBase);
+            ZipUtils.zipDir(targetZip, genDir, entryBase);
         } catch (IOException e)
         {
             throw new RuntimeException("Error zipping home directory", e);
