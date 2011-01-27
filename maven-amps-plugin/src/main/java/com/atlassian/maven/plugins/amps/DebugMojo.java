@@ -16,6 +16,8 @@ import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 @MojoRequiresDependencyResolution
 public class DebugMojo extends RunMojo
 {
+    private static final String DEFAULT_JVM_ARGS = "-Xmx512m -XX:MaxPermSize=160m";
+
     /**
      * port for debugging
      */
@@ -34,12 +36,13 @@ public class DebugMojo extends RunMojo
     {
     	String debugArgs = " -Xdebug -Xrunjdwp:transport=dt_socket,address=" +
     				    String.valueOf(jvmDebugPort) + ",suspend=" + (jvmDebugSuspend ? "y" : "n") + ",server=y ";
-        
-        // add the debug jvm args for the global config
+
         if (jvmArgs == null)
         {
-            jvmArgs = "-Xmx512m -XX:MaxPermSize=160m";
+            jvmArgs = DEFAULT_JVM_ARGS;
         }
+
+        // add the debug jvm args for the global config
         jvmArgs += debugArgs;
 
         // add the debug jvm args for each of the product configs
@@ -47,9 +50,12 @@ public class DebugMojo extends RunMojo
         {
             if (product.getJvmArgs() == null)
             {
-                product.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
+                product.setJvmArgs(jvmArgs);
             }
-            product.setJvmArgs(product.getJvmArgs() + debugArgs);
+            else
+            {
+                product.setJvmArgs(product.getJvmArgs() + debugArgs);
+            }
         }
         
         if (writePropertiesToFile)
