@@ -3,6 +3,8 @@ package com.atlassian.maven.plugins.amps.osgi;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
@@ -84,15 +86,22 @@ public class GenerateObrArtifactMojo extends AbstractAmpsMojo
     @MojoParameter (expression = "${reactorProjects}", readonly = true)
     protected List<MavenProject> reactorProjects;
 
+    @MojoParameter
+    private Map instructions = new HashMap();
+
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         try
         {
-            Build build = getMavenContext().getProject().getBuild();
-            List<File> deps = resolvePluginDependencies();
-            // todo: we use build.getFinalName() here, but finalName (mojo parameter) in generateObrZip().  this seems weird.
-            File obrDir = layoutObr(deps, new File(build.getDirectory(), build.getFinalName() + ".jar"));
-            generateObrZip(obrDir);
+            if (!instructions.isEmpty()) {
+                Build build = getMavenContext().getProject().getBuild();
+                List<File> deps = resolvePluginDependencies();
+                // todo: we use build.getFinalName() here, but finalName (mojo parameter) in generateObrZip().  this seems weird.
+                File obrDir = layoutObr(deps, new File(build.getDirectory(), build.getFinalName() + ".jar"));
+                generateObrZip(obrDir);
+            } else {
+                getLog().info("Skipping OBR generation... no OSGi bundle manifest instructions found in pom.xml");
+            }
         }
         catch (IOException e)
         {
