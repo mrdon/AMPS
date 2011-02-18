@@ -221,8 +221,10 @@ public class MavenGoals
         );
     }
 
-    public void runUnitTests() throws MojoExecutionException
+    public void runUnitTests(Map<String, Object> systemProperties) throws MojoExecutionException
     {
+        final Element systemProps = convertPropsToElements(systemProperties);
+
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -231,6 +233,7 @@ public class MavenGoals
                 ),
                 goal("test"),
                 configuration(
+                        systemProps,
                         element(name("excludes"),
                                 element(name("exclude"), "it/**"),
                                 element(name("exclude"), "**/*$*"))
