@@ -19,6 +19,9 @@
                             <artifactId>commons-io</artifactId>
                         </pluginDependency>
                     </pluginDependencies>
+                    <instructions>
+                        <Bundle-SymbolicName>com.atlassian.amps.it.maven-amps-plugin-genenerate-obr-artifact-test</Bundle-SymbolicName>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>
