@@ -1,0 +1,83 @@
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-plugin:$version:run-standalone" )
+
+#set( $goalHelp = "Runs any product standalone, with no plugin project defined." )
+
+#set( $opts = [{
+  'name' : 'version',
+  'short' : 'v',
+  'maven' : 'product.version',
+  'description' : 'Version of the product to run (default is RELEASE).',
+  'example' : '1.0'
+},{
+  'name' : 'container',
+  'short' : 'c',
+  'maven' : 'container',
+  'description' : 'Container to run in (default is tomcat6x).',
+  'example' : 'tomcat6x'
+},{
+  'name' : 'http-port',
+  'short' : 'p',
+  'maven' : 'http.port',
+  'description' : 'HTTP port for the servlet container.',
+  'example' : '8080'
+},{
+  'name' : 'context-path',
+  'maven' : 'context.path',
+  'description' : 'Application context path (include the leading forward slash).',
+  'example' : '/myapp'
+},{
+  'name' : 'server',
+  'maven' : 'server',
+  'description' : 'Host name of the application server (default is localhost).',
+  'example' : 'localhost'
+},{
+  'name' : 'jvmargs',
+  'maven' : 'jvmargs',
+  'description' : 'Additional JVM arguments if required.',
+  'example' : '-Xmx=512m'
+},{
+  'name' : 'log4j',
+  'maven' : 'log4jproperties',
+  'description' : 'Log4j properties file.',
+  'example' : 'test/log4j.properties'
+},{
+  'name' : 'test-version',
+  'maven' : 'test.resources.version',
+  'description' : 'Version to use for test resources. DEPRECATED: use data-version instead.',
+  'example' : 'LATEST'
+},{
+  'name' : 'data-version',
+  'maven' : 'product.data.version',
+  'description' : 'Version to use for data resources (default is LATEST)',
+  'example' : 'LATEST'
+},{
+  'name' : 'sal-version',
+  'maven' : 'sal.version',
+  'description' : 'Version of SAL to use.',
+  'example' : '2.0.11'
+},{
+  'name' : 'rest-version',
+  'maven' : 'rest.version',
+  'description' : 'Version of the Atlassian REST module to use.',
+  'example' : '1.0'
+},{
+  'name' : 'plugins',
+  'maven' : 'plugins',
+  'description' : 'Comma-delimited list of plugin artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be ommitted, defaulting to LATEST.',
+  'example' : 'groupId:artifactId::version'
+},{
+  'name' : 'lib-plugins',
+  'maven' : 'lib.plugins',
+  'description' : 'Comma-delimited list of lib artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be ommitted, defaulting to LATEST.',
+  'example' : 'groupId:artifactId:verion'
+},{
+  'name' : 'bundled-plugins',
+  'maven' : 'bundled.plugins',
+  'description' : 'Comma-delimited list of bundled plugin artifacts in GROUP_ID:ARTIFACT_ID:VERSION form, where version can be ommitted, defaulting to LATEST.',
+  'example' : 'groupId:artifactId:version'
+},{
+  'name' : 'product',
+  'maven' : 'product',
+  'description' : 'The product to launch with the plugin.',
+  'example' : 'jira'
+}] )

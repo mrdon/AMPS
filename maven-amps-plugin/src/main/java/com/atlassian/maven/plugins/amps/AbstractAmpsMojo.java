@@ -1,17 +1,13 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import java.util.List;
+
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
 
 public abstract class AbstractAmpsMojo extends AbstractMojo
 {
@@ -40,6 +36,18 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
     private PluginManager pluginManager;
 
     /**
+     * The current Maven plugin artifact id
+     */
+    @MojoParameter (expression = "${plugin.artifactId}", required = true, readonly = true)
+    private String pluginArtifactId;
+
+    /**
+     * The current Maven plugin version
+     */
+    @MojoParameter (expression = "${plugin.version}", required = true, readonly = true)
+    private String pluginVersion;
+
+    /**
      * the maven context
      */
     private MavenContext mavenContext;
@@ -48,11 +56,6 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
      * the maven goals
      */
     private MavenGoals mavenGoals;
-
-    /**
-     * Information about the currently used plugin
-     */
-    private PluginInformation pluginInformation;
 
     protected MavenContext getMavenContext()
     {
@@ -74,31 +77,6 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
 
     protected PluginInformation getPluginInformation()
     {
-        if (pluginInformation != null)
-        {
-            return pluginInformation;
-        }
-
-        if (project != null)
-        {
-            for (Plugin plugin : (List<Plugin>) project.getBuild().getPlugins())
-            {
-                if ("com.atlassian.maven.plugins".equals(plugin.getGroupId()))
-                {
-                    Collection<String> pluginIds = new ArrayList<String>(ProductHandlerFactory.getIds());
-                    pluginIds.add("amps");
-                    for (String pluginId : pluginIds)
-                    {
-                        if (("maven-" + pluginId + "-plugin").equals(plugin.getArtifactId()))
-                        {
-                            pluginInformation = new PluginInformation(pluginId, plugin.getVersion() != null ? plugin.getVersion() : "RELEASE");
-                            return pluginInformation;
-                        }
-                    }
-
-                }
-            }
-        }
-        return new PluginInformation(null, "RELEASE");
+        return new PluginInformation(pluginArtifactId, pluginVersion);
     }
 }

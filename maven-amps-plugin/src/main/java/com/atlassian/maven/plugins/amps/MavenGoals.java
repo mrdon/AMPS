@@ -1,14 +1,5 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.core.util.FileUtils;
-import com.atlassian.maven.plugins.amps.util.VersionUtils;
-import com.atlassian.maven.plugins.amps.util.ZipUtils;
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.PluginManager;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,7 +9,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
+import com.atlassian.core.util.FileUtils;
+import com.atlassian.maven.plugins.amps.util.VersionUtils;
+import com.atlassian.maven.plugins.amps.util.ZipUtils;
+
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.execution.ReactorManager;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.PluginManager;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
+
+import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 
 /**
  * Executes specific maven goals
@@ -76,6 +88,50 @@ public class MavenGoals
         map.putAll(pluginToVersionMap);
         this.pluginArtifactIdToVersionMap = Collections.unmodifiableMap(map);
 
+    }
+
+    public MavenGoals changeContext(final MavenProject newProject, final List<MavenProject> newReactor)
+    {
+        try
+        {
+            return new MavenGoals(
+                new MavenContext(
+                    newProject,
+                    newReactor,
+                    new MavenSession(
+                        session.getContainer(),
+                        session.getSettings(),
+                        session.getLocalRepository(),
+                        session.getEventDispatcher(),
+                        new ReactorManager(newReactor),
+                        session.getGoals(),
+                        session.getExecutionRootDirectory(),
+                        session.getExecutionProperties(),
+                        session.getUserProperties(),
+                        session.getStartTime()
+                    ),
+                    pluginManager,
+                    log
+                )
+            );
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    public void executeAmpsRecursively(final String ampsVersion, final String ampsGoal) throws MojoExecutionException
+    {
+        executeMojo(
+            plugin(
+                groupId("com.atlassian.maven.plugins"),
+                artifactId("maven-amps-plugin"),
+                version(ampsVersion)
+            ),
+            goal(ampsGoal),
+            configuration(),
+            executionEnvironment(project, session, pluginManager));
     }
 
     public void startCli(final PluginInformation pluginInformation, final int port) throws MojoExecutionException

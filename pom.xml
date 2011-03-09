@@ -53,6 +53,7 @@
         <module>atlassian-plugin-sdk</module>
         <module>amps-product-plugins</module>
         <module>amps-product-archetypes</module>
+        <module>standalone</module>
     </modules>
 
     <dependencyManagement>

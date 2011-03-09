@@ -205,7 +205,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * the required JARs for the defined embedded container are downloaded.
      */
     @MojoComponent
-    private ArtifactResolver artifactResolver;
+    protected ArtifactResolver artifactResolver;
 
     /**
      * The local Maven repository. This is used by the artifact resolver to download resolved
@@ -213,14 +213,14 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * time the plugin is executed.
      */
     @MojoParameter(expression = "${localRepository}")
-    private ArtifactRepository localRepository;
+    protected ArtifactRepository localRepository;
 
 
     /**
      * The remote Maven repositories used by the artifact resolver to look for JARs.
      */
     @MojoParameter(expression = "${project.remoteArtifactRepositories}")
-    private List repositories;
+    protected List repositories;
 
     /**
      * The artifact factory is used to create valid Maven
@@ -229,7 +229,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * container's classpaths.
      */
     @MojoComponent
-    private ArtifactFactory artifactFactory;
+    protected ArtifactFactory artifactFactory;
 
     /**
      * A list of product-specific configurations
