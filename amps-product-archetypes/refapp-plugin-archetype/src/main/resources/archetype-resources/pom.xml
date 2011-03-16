@@ -38,14 +38,7 @@
         <dependencies>
             <dependency>
                 <groupId>com.atlassian.refapp</groupId>
-                <artifactId>atlassian-platform-libraries</artifactId>
-                <version>\${dollar}{refapp.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.atlassian.refapp</groupId>
-                <artifactId>atlassian-platform-plugins</artifactId>
+                <artifactId>atlassian-platform</artifactId>
                 <version>\${dollar}{refapp.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
