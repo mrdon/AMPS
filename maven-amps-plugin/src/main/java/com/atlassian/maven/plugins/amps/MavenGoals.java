@@ -14,7 +14,6 @@ import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import com.atlassian.maven.plugins.amps.util.ZipUtils;
 
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.execution.ReactorManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
@@ -88,37 +87,6 @@ public class MavenGoals
         map.putAll(pluginToVersionMap);
         this.pluginArtifactIdToVersionMap = Collections.unmodifiableMap(map);
 
-    }
-
-    public MavenGoals changeContext(final MavenProject newProject, final List<MavenProject> newReactor)
-    {
-        try
-        {
-            return new MavenGoals(
-                new MavenContext(
-                    newProject,
-                    newReactor,
-                    new MavenSession(
-                        session.getContainer(),
-                        session.getSettings(),
-                        session.getLocalRepository(),
-                        session.getEventDispatcher(),
-                        new ReactorManager(newReactor),
-                        session.getGoals(),
-                        session.getExecutionRootDirectory(),
-                        session.getExecutionProperties(),
-                        session.getUserProperties(),
-                        session.getStartTime()
-                    ),
-                    pluginManager,
-                    log
-                )
-            );
-        }
-        catch (Exception e)
-        {
-            return null;
-        }
     }
 
     public void executeAmpsRecursively(final String ampsVersion, final String ampsGoal) throws MojoExecutionException

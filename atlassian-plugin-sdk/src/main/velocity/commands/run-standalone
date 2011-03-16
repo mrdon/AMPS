@@ -1,6 +1,6 @@
 #set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-plugin:$version:run-standalone" )
 
-#set( $goalHelp = "Runs any product standalone, with no plugin project defined." )
+#set( $goalhelp = "Runs any product standalone, with no plugin project defined." )
 
 #set( $opts = [{
   'name' : 'version',

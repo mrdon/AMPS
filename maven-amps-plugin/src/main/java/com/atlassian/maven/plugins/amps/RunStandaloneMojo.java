@@ -1,10 +1,11 @@
 package com.atlassian.maven.plugins.amps;
 
 import java.io.File;
-import java.util.Collections;
+import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.model.Build;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.execution.ReactorManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -12,6 +13,8 @@ import org.apache.maven.project.MavenProjectBuilder;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresProject;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Run the webapp without a plugin project
@@ -34,23 +37,48 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
         final Artifact artifact = artifactFactory.createProjectArtifact(GROUP_ID, ARTIFACT_ID, version);
         try
         {
-            // set up base directory for AMPS output
+            // overall goal here is to create a new MavenContext / MavenGoals for the standalone project
+            final MavenContext oldContext = getMavenContext();
+
+            // construct new project for new context
+            final MavenProject
+                oldProject = oldContext.getProject(),
+                newProject = projectBuilder.buildFromRepository(artifact, repositories, localRepository);
+
+            // horrible hack #1: buildFromRepository() doesn't actually set the project's remote repositories
+            newProject.setRemoteArtifactRepositories(oldProject.getRemoteArtifactRepositories());
+            newProject.setPluginArtifactRepositories(oldProject.getPluginArtifactRepositories());
+
+            // horrible hack #2: we need to modify the session to use the new project as its reactor
+            final List<MavenProject> newReactor = singletonList(newProject);
+            final MavenSession
+                oldSession = oldContext.getSession(),
+                newSession = new MavenSession(
+                    oldSession.getContainer(),
+                    oldSession.getSettings(),
+                    oldSession.getLocalRepository(),
+                    oldSession.getEventDispatcher(),
+                    new ReactorManager(newReactor),
+                    oldSession.getGoals(),
+                    oldSession.getExecutionRootDirectory(),
+                    oldSession.getExecutionProperties(),
+                    oldSession.getUserProperties(),
+                    oldSession.getStartTime()
+                );
+
+            // horrible hack #3: we need to create a base directory from scratch, and convince the project to like it
             final String baseDir = System.getProperty("user.dir") + "/amps-standalone/";
-            final MavenProject project = projectBuilder.buildFromRepository(artifact, repositories, localRepository);
-            project.setBasedir(new File(baseDir));
+            newProject.setBasedir(new File(baseDir));
+            projectBuilder.calculateConcreteState(newProject, newSession.getProjectBuilderConfiguration());
 
-            // fool build into thinking it lives in that base directory
-            final Build build = project.getBuild();
-            build.setSourceDirectory(baseDir + "src/main/java");
-            build.setScriptSourceDirectory(baseDir + "src/main/scripts");
-            build.setTestSourceDirectory(baseDir + "src/test/java");
-            build.setOutputDirectory(baseDir + "target/classes");
-            build.setTestOutputDirectory(baseDir + "target/test-classes");
-            build.setDirectory(baseDir + "target");
-
-            // execute run goal against standalone project
-            final MavenGoals goals = getMavenGoals().changeContext(project, Collections.singletonList(project));
-            goals.executeAmpsRecursively(version, "run");
+            // finally, execute run goal against standalone project
+            final MavenContext newContext = new MavenContext(
+                newProject,
+                newReactor,
+                newSession,
+                oldContext.getPluginManager(),
+                oldContext.getLog());
+            new MavenGoals(newContext).executeAmpsRecursively(version, "run");
         }
         catch (Exception e)
         {
