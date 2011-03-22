@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.atlassian.pom</groupId>
         <artifactId>atlassian-public-pom</artifactId>
-        <version>23</version>
+        <version>27</version>
     </parent>
 
     <groupId>com.atlassian.amps</groupId>
@@ -232,6 +232,7 @@
     </reporting>
 
     <properties>
+        <jdkLevel>1.6</jdkLevel>
         <maven.version>2.1.0</maven.version>
         <anno.mojo.version>1.3.3</anno.mojo.version>
         <refapp.version>2.9.1</refapp.version>
