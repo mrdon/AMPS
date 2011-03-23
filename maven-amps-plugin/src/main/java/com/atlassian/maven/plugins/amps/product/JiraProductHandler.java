@@ -4,10 +4,15 @@ import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class JiraProductHandler extends AbstractWebappProductHandler
@@ -39,6 +44,11 @@ public class JiraProductHandler extends AbstractWebappProductHandler
         return 2990;
     }
 
+    protected static File getHsqlDatabaseFile(final File homeDirectory)
+    {
+        return new File(homeDirectory, "database");
+    }
+    
     @Override
     public Map<String, String> getSystemProperties(final Product ctx)
     {
@@ -47,12 +57,11 @@ public class JiraProductHandler extends AbstractWebappProductHandler
             {
                 put("jira.home", fixSlashes(getHomeDirectory(ctx).getPath()));
                 put("cargo.datasource.datasource", "cargo.datasource.url=jdbc:hsqldb:"
-                        + fixSlashes(getHomeDirectory(ctx).getAbsolutePath()) + "/database|"
+                        + fixSlashes(getHsqlDatabaseFile(getHomeDirectory(ctx)).getAbsolutePath()) + "|"
                         + "cargo.datasource.driver=org.hsqldb.jdbcDriver|" + "cargo.datasource.username=sa|"
                         + "cargo.datasource.password=|" + "cargo.datasource.type=javax.sql.DataSource|"
                         + "cargo.datasource.jndi=jdbc/JiraDS");
             }
-
         };
     }
 
@@ -117,6 +126,36 @@ public class JiraProductHandler extends AbstractWebappProductHandler
         ConfigFileUtils.replace(new File(homeDir, "database.script"), "/jira-home/", "/home/");
         ConfigFileUtils.replace(new File(homeDir, "database.script"), "@base-url@",
                 "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + contextPath);
+        createDbConfigXmlIfNecessary(homeDir);
+    }
+
+    static void createDbConfigXmlIfNecessary(File homeDir) throws MojoExecutionException
+    {
+        File dbConfigXml = new File(homeDir, "dbconfig.xml");
+        if (dbConfigXml.exists())
+        {
+            return;
+        }
+
+        InputStream templateIn = JiraProductHandler.class.getResourceAsStream("jira-dbconfig-template.xml");
+        if (templateIn == null)
+        {
+            throw new MojoExecutionException("Missing internal resource: jira-dbconfig-template.xml");
+        }
+        
+        try
+        {
+            String template = IOUtils.toString(templateIn, "utf-8");
+            
+            File dbFile = getHsqlDatabaseFile(homeDir);
+            String jdbcUrl = "jdbc:hsqldb:file:" + dbFile.toURI().getPath();
+            String result = template.replace("<!-- JDBCURL -->", jdbcUrl);
+            FileUtils.writeStringToFile(dbConfigXml, result, "utf-8");
+        }
+        catch (IOException ioe)
+        {
+            throw new MojoExecutionException("Unable to create dbconfig.xml", ioe);
+        }
     }
 
     @Override
