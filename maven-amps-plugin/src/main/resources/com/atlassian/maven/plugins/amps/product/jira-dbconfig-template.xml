@@ -5,7 +5,7 @@
   <database-type>hsql</database-type>
   <schema-name>PUBLIC</schema-name>
   <jdbc-datasource>
-    <url><!-- JDBCURL --></url>
+    <url>@jdbc-url@</url>
     <driver-class>org.hsqldb.jdbcDriver</driver-class>
     <username>sa</username>
     <password></password>

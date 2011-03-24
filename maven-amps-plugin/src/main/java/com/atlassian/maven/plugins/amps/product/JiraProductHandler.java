@@ -149,7 +149,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
             
             File dbFile = getHsqlDatabaseFile(homeDir);
             String jdbcUrl = "jdbc:hsqldb:file:" + dbFile.toURI().getPath();
-            String result = template.replace("<!-- JDBCURL -->", jdbcUrl);
+            String result = template.replace("@jdbc-url@", jdbcUrl);
             FileUtils.writeStringToFile(dbConfigXml, result, "utf-8");
         }
         catch (IOException ioe)
