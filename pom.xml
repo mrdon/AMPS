@@ -244,8 +244,8 @@
         <bamboo.data.version>2.6.1</bamboo.data.version>
         <fecru.version>2.5.2-20110307050326</fecru.version>
         <fecru.data.version>2.5.2-20110307050326</fecru.data.version>
-        <crowd.version>2.2.2</crowd.version>
-        <crowd.data.version>2.2.2</crowd.data.version>
+        <crowd.version>2.2.3</crowd.version>
+        <crowd.data.version>${crowd.version}</crowd.data.version>
         <clover.version>3.0.2</clover.version>
     </properties>
 </project>
