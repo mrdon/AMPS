@@ -1,5 +1,9 @@
 #set( $dollar = '$' )
-<atlassian-plugin key="${dollar}{project.groupId}.${dollar}{project.artifactId}" name="${dollar}{project.name}" plugins-version="2">
+<atlassian-plugin key="${dollar}{project.groupId}.${dollar}{project.artifactId}" name="${dollar}{project.name}" plugins-version="2"
+      xmlns="http://www.atlassian.com/schema/plugins"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.atlassian.com/schema/plugins
+          http://schema.atlassian.com/jira/jira-4.3.xsd">
     <plugin-info>
         <description>${dollar}{project.description}</description>
         <version>${dollar}{project.version}</version>
