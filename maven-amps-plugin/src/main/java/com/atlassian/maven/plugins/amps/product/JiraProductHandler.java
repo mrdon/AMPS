@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static java.lang.String.format;
+
 public class JiraProductHandler extends AbstractWebappProductHandler
 {
     public JiraProductHandler(final MavenProject project, final MavenGoals goals)
@@ -48,19 +50,28 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     {
         return new File(homeDirectory, "database");
     }
-    
+
     @Override
     public Map<String, String> getSystemProperties(final Product ctx)
     {
         return new HashMap<String, String>()
         {
             {
+                final String dburl = System.getProperty("amps.datasource.url", format("jdbc:hsqldb:%s/database", fixSlashes(getHomeDirectory(ctx).getAbsolutePath())));
+                final String driverClass = System.getProperty("amps.datasource.driver", "org.hsqldb.jdbcDriver");
+                final String username = System.getProperty("amps.datasource.username", "sa");
+                final String password = System.getProperty("amps.datasource.password", "");
+                final String datasourceTypeClass = "javax.sql.DataSource";
+
+                final String datasource = format("cargo.datasource.url=%s", dburl);
+                final String driver = format("cargo.datasource.driver=%s", driverClass);
+                final String datasourceUsername = format("cargo.datasource.username=%s", username);
+                final String datasourcePassword = format("cargo.datasource.password=%s", password);
+                final String datasourceType = "cargo.datasource.type=" + datasourceTypeClass;
+                final String jndi = "cargo.datasource.jndi=jdbc/JiraDS";
+
                 put("jira.home", fixSlashes(getHomeDirectory(ctx).getPath()));
-                put("cargo.datasource.datasource", "cargo.datasource.url=jdbc:hsqldb:"
-                        + fixSlashes(getHsqlDatabaseFile(getHomeDirectory(ctx)).getAbsolutePath()) + "|"
-                        + "cargo.datasource.driver=org.hsqldb.jdbcDriver|" + "cargo.datasource.username=sa|"
-                        + "cargo.datasource.password=|" + "cargo.datasource.type=javax.sql.DataSource|"
-                        + "cargo.datasource.jndi=jdbc/JiraDS");
+                put("cargo.datasource.datasource", format("%s|%s|%s|%s|%s|%s", datasource, driver, datasourceUsername, datasourcePassword, datasourceType, jndi));
             }
         };
     }
@@ -103,7 +114,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     	String[] version = ctx.getVersion().split("-", 2)[0].split("\\.");
     	long major = Long.parseLong(version[0]);
     	long minor = Long.parseLong(version[1]);
-    	
+
     	if (major < 4 || major == 4 && minor == 0)
     	{
     		return "WEB-INF/classes/com/atlassian/jira/plugin/atlassian-bundled-plugins.zip";
@@ -142,11 +153,11 @@ public class JiraProductHandler extends AbstractWebappProductHandler
         {
             throw new MojoExecutionException("Missing internal resource: jira-dbconfig-template.xml");
         }
-        
+
         try
         {
             String template = IOUtils.toString(templateIn, "utf-8");
-            
+
             File dbFile = getHsqlDatabaseFile(homeDir);
             String jdbcUrl = "jdbc:hsqldb:file:" + dbFile.toURI().getPath();
             String result = template.replace("@jdbc-url@", jdbcUrl);
