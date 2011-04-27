@@ -56,7 +56,7 @@ public class MavenGoals
     {{
             put("maven-cli-plugin", "0.7");
             put("cargo-maven2-plugin", "1.0-beta-2-db2");
-            put("atlassian-pdk", "2.1.6");
+            put("atlassian-pdk", "2.1.8-SNAPSHOT");
             put("maven-archetype-plugin", "2.0-alpha-4");
             put("maven-bundle-plugin", "2.0.0");
             put("yuicompressor-maven-plugin", "0.7.1");
@@ -202,7 +202,7 @@ public class MavenGoals
                 executionEnvironment(project, session, pluginManager)
         );
     }
-    
+
     public void compressResources() throws MojoExecutionException
     {
         executeMojo(
@@ -513,7 +513,7 @@ public class MavenGoals
         final String testOutputDir = targetDirectory.getAbsolutePath() + "/" + productId + "/" + containerId + "/surefire-reports";
         final String reportsDirectory = "reportsDirectory";
         systemProperties.put(reportsDirectory, testOutputDir);
-        
+
         final Element systemProps = convertPropsToElements(systemProperties);
 
 
@@ -537,7 +537,7 @@ public class MavenGoals
                 executionEnvironment(project, session, pluginManager)
         );
 	}
-    
+
     /**
      * Converts a map of System properties to maven config elements
      */
