@@ -56,7 +56,7 @@ public class MavenGoals
     {{
             put("maven-cli-plugin", "0.7");
             put("cargo-maven2-plugin", "1.0-beta-2-db2");
-            put("atlassian-pdk", "2.1.8-SNAPSHOT");
+            put("atlassian-pdk", "2.1.8");
             put("maven-archetype-plugin", "2.0-alpha-4");
             put("maven-bundle-plugin", "2.0.0");
             put("yuicompressor-maven-plugin", "0.7.1");
