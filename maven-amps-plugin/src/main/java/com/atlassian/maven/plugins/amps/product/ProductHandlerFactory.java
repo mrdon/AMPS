@@ -43,7 +43,8 @@ public class ProductHandlerFactory
             return new CrowdProductHandler(project, goals);
         }
 
-        throw new IllegalArgumentException("Unknown product id:" + id);
+        throw new IllegalArgumentException("Unknown product id: '" + id + "' Valid values: "
+            + Arrays.toString(getIds().toArray()));
     }
 
     public static Collection<String> getIds()

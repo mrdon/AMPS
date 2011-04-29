@@ -167,7 +167,13 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
 
         if (productIds.isEmpty())
         {
-            throw new MojoExecutionException("Unknown test group id");
+            List<String> validTestGroups = new ArrayList<String>();
+            for (TestGroup group: testGroups)
+            {
+                validTestGroups.add(group.getId());
+            }
+            throw new MojoExecutionException("Unknown test group ID: " + testGroupId
+                + " Detected IDs: " + Arrays.toString(validTestGroups.toArray()));
         }
 
         return productIds;
