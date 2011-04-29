@@ -46,7 +46,10 @@ public class BambooProductHandler extends AbstractWebappProductHandler
 
     public Map<String, String> getSystemProperties(Product ctx)
     {
-        return Collections.singletonMap("bamboo.home", getHomeDirectory(ctx).getPath());
+        Map<String, String> systemProperties = new HashMap<String, String>();
+        systemProperties.put("bamboo.home", getHomeDirectory(ctx).getPath());
+        systemProperties.put("org.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES", "false");
+        return Collections.unmodifiableMap(systemProperties);
     }
 
     @Override
