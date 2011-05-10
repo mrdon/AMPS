@@ -19,16 +19,15 @@
     <description>This is the \${groupId}:\${artifactId} plugin for Atlassian Bamboo.</description>
     <packaging>atlassian-plugin</packaging>
 
+    <properties>
+        <bamboo.version>${bamboo.version}</bamboo.version>
+        <bamboo.data.version>${bamboo.data.version}</bamboo.data.version>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.atlassian.bamboo</groupId>
-            <artifactId>atlassian-bamboo-api</artifactId>
+            <artifactId>atlassian-bamboo-web</artifactId>
             <version>\${dollar}{bamboo.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -53,6 +52,34 @@
                     <productDataVersion>\${dollar}{bamboo.data.version}</productDataVersion>
                 </configuration>
             </plugin>
+	          <!--
+              If you have dependencies that ship with your plugin you should use the shade plugin to include them in the final jar
+              Uncomment the section below and add any jars you want to include by adding <include>groupId:artifactId</include> between the artifactSet elements.
+              See http://atlss.in/mhgZm6 for more information
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+		            <version>1.4</version>
+                <executions>
+                   <execution>
+                     <phase>package</phase>
+                     <goals>
+                       <goal>shade</goal>
+                     </goals>
+                     <!--
+                     <configuration>
+                       <artifactSet>
+                          <includes>
+                            <include>com.mygroupid:my-artifact-id</include>
+                          </includes>
+                        </artifactSet>
+                      </configuration>
+                      -->
+                   </execution>
+                </executions>
+            </plugin>
+          
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -62,10 +89,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <bamboo.version>${bamboo.version}</bamboo.version>
-        <bamboo.data.version>${bamboo.data.version}</bamboo.data.version>
-    </properties>
-
 </project>
