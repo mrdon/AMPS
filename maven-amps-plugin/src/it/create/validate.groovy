@@ -23,7 +23,11 @@ def pluginNs = new groovy.xml.Namespace("http://www.atlassian.com/schema/plugins
 def pluginXml = new XmlParser().parse(projectPluginDescriptor)
 assert pluginXml.'@key' == '${project.groupId}.${project.artifactId}', "Unexpected ${pluginXml.'@key'}"
 assert pluginXml.'@name' == '${project.name}'
-assert pluginXml.'@plugins-version' == '2'
+if (thisProduct != 'bamboo') {
+  assert pluginXml.'@plugins-version' == '2'
+} else {
+  assert pluginXml.'@plugins-version' == '1'
+}
 // only jira, confluence and refapp have namespaced archetypes:
 // we have to validate them differently.
 if (thisProduct == 'jira' || thisProduct == 'confluence' || thisProduct == 'refapp') {
@@ -38,4 +42,8 @@ if (thisProduct == 'jira' || thisProduct == 'confluence' || thisProduct == 'refa
 
 final File packageDir = new File("$projectDir/src/main/java/${'com.atlassian.it.package'.replace('.', '/')}")
 assert packageDir.exists(), "Package should exist at $packageDir"
-assert packageDir.list().length == 1, "Package should contain one example file"
+if (thisProduct != 'bamboo') {
+    assert packageDir.list().length == 1, "Package should contain one example file"
+} else {
+    assert packageDir.list().length == 2, "Package should contain two example files for Task and Task Configurator"
+}
