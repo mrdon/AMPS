@@ -8,6 +8,7 @@ import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
@@ -19,9 +20,12 @@ import static java.lang.String.format;
 
 public class JiraProductHandler extends AbstractWebappProductHandler
 {
-    public JiraProductHandler(final MavenProject project, final MavenGoals goals)
+    private final Log log;
+
+    public JiraProductHandler(final MavenProject project, final MavenGoals goals, Log log)
     {
         super(project, goals, new JiraPluginProvider());
+        this.log = log;
     }
 
     public String getId()
@@ -111,18 +115,26 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     @Override
     public String getBundledPluginPath(Product ctx)
     {
-    	String[] version = ctx.getVersion().split("-", 2)[0].split("\\.");
-    	long major = Long.parseLong(version[0]);
-    	long minor = Long.parseLong(version[1]);
+        // this location used from 4.1 onwards (inclusive)
+        String bundledPluginPluginsPath = "WEB-INF/classes/atlassian-bundled-plugins.zip";
 
-    	if (major < 4 || major == 4 && minor == 0)
-    	{
-    		return "WEB-INF/classes/com/atlassian/jira/plugin/atlassian-bundled-plugins.zip";
-    	}
-    	else
-    	{
-    		return "WEB-INF/classes/atlassian-bundled-plugins.zip";
-    	}
+    	String[] version = ctx.getVersion().split("-", 2)[0].split("\\.");
+        try
+        {
+            long major = Long.parseLong(version[0]);
+            long minor = Long.parseLong(version[1]);
+
+            if (major < 4 || major == 4 && minor == 0)
+            {
+                bundledPluginPluginsPath = "WEB-INF/classes/com/atlassian/jira/plugin/atlassian-bundled-plugins.zip";
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            log.debug(String.format("Unable to parse JIRA version '%s', assuming JIRA 4.1 or newer.", ctx.getVersion()), e);
+        }
+
+        return bundledPluginPluginsPath;
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ProductHandlerFactory
         }
         else if (JIRA.equals(id))
         {
-            return new JiraProductHandler(project, goals);
+            return new JiraProductHandler(project, goals, log);
         }
         else if (BAMBOO.equals(id))
         {
