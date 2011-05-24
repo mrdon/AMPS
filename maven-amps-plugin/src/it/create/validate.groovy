@@ -1,7 +1,5 @@
 assert mavenExitCode == 0, "The maven build should not have failed!"
 
-def thisProduct = project.properties['shitty.product']
-
 final File projectDir = new File("$basedir/amps-it-create")
 assert projectDir.exists(), "The project should have been created under $projectDir"
 
@@ -19,7 +17,6 @@ assert project[pom.packaging].text() == 'atlassian-plugin'
 final File projectPluginDescriptor = new File(projectDir, 'src/main/resources/atlassian-plugin.xml')
 assert projectPluginDescriptor.exists(), "The project's plugin descriptor should have been created at $projectPluginDescriptor"
 
-def pluginNs = new groovy.xml.Namespace("http://www.atlassian.com/schema/plugins", '')
 def pluginXml = new XmlParser().parse(projectPluginDescriptor)
 assert pluginXml.'@key' == '${project.groupId}.${project.artifactId}', "Unexpected ${pluginXml.'@key'}"
 assert pluginXml.'@name' == '${project.name}'
@@ -28,17 +25,8 @@ if (thisProduct != 'bamboo') {
 } else {
   assert pluginXml.'@plugins-version' == '1'
 }
-// only jira, confluence and refapp have namespaced archetypes:
-// we have to validate them differently.
-if (thisProduct == 'jira' || thisProduct == 'confluence' || thisProduct == 'refapp') {
-    def descriptionText = pluginXml[pluginNs.'plugin-info'][pluginNs.description].text()
-    assert descriptionText == '${project.description}', 'wrong <description> text: "' + descriptionText + '"'
-    def versionText = pluginXml[pluginNs.'plugin-info'][pluginNs.version].text()
-    assert versionText == '${project.version}', 'wrong version: "' + versionText + '"'
-} else {
-    assert pluginXml.'plugin-info'.description.text() == '${project.description}'
-    assert pluginXml.'plugin-info'.version.text() == '${project.version}'
-}
+assert pluginXml.'plugin-info'.description.text() == '${project.description}'
+assert pluginXml.'plugin-info'.version.text() == '${project.version}'
 
 final File packageDir = new File("$projectDir/src/main/java/${'com.atlassian.it.package'.replace('.', '/')}")
 assert packageDir.exists(), "Package should exist at $packageDir"
