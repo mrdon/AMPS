@@ -1,5 +1,8 @@
 assert mavenExitCode == 0, "The maven build should not have failed!"
 
+// Some reason this is here.  These not delongs here.
+def thisProduct = project.properties['shitty.product']
+
 final File projectDir = new File("$basedir/amps-it-create")
 assert projectDir.exists(), "The project should have been created under $projectDir"
 
