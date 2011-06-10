@@ -25,28 +25,7 @@ public class GenerateManifestMojo extends AbstractAmpsMojo
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         final MavenProject project = getMavenContext().getProject();
-        if (!instructions.isEmpty())
-        {
-            getLog().info("Generating a manifest for this plugin");
-
-            if (!instructions.containsKey(Constants.EXPORT_PACKAGE))
-            {
-                instructions.put(Constants.EXPORT_PACKAGE, "");
-            }
-
-            File metainfLib = file(project.getBuild().getOutputDirectory(), "META-INF", "lib");
-            if (metainfLib.exists())
-            {
-                StringBuilder sb = new StringBuilder(".");
-                for (File lib : metainfLib.listFiles())
-                {
-                    sb.append(",").append("META-INF/lib/" + lib.getName());
-                }
-                instructions.put(Constants.BUNDLE_CLASSPATH, sb.toString());
-            }
-            getMavenGoals().generateManifest(instructions);
-        }
-        else if  (OsgiHelper.isAtlassianPlugin(project))
+        if  (OsgiHelper.isAtlassianPlugin(project))
         {
             getLog().warn("Atlassian plugin detected as the organisation name includes the string 'Atlassian'.  If " +
                           "this is meant for production, you should add bundle " +
@@ -55,18 +34,47 @@ public class GenerateManifestMojo extends AbstractAmpsMojo
                           "bundle generation configuration can be specified " +
                           "via the <instructions> element in the maven-" + getPluginInformation().getId()+"-plugin configuration.  For example:\n" +
                           "    <configuration>\n" +
-                          "        <Import-Package>\n" +
-                          "            com.atlassian.myplugin*,\n" +
-                          "            com.library.optional.*;resolution:=optional,\n" +
-                          "            *\n" +
-                          "        </Import-Package>\n" +
+                          "        <instructions>\n" +
+                          "            <Import-Package>\n" +
+                          "                com.atlassian.myplugin*,\n" +
+                          "                com.library.optional.*;resolution:=optional,\n" +
+                          "                *\n" +
+                          "            </Import-Package>\n" +
+                          "        </instructions>\n" +
                           "    </configuration>\n\n" +
                           "See the Maven bundle plugin (which is used under the covers) for more info: " +
                           "http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html#ApacheFelixMavenBundlePlugin%28BND%29-Instructions");
         }
-        else
+        getLog().info("Generating a manifest for this plugin");
+
+        if (!instructions.containsKey(Constants.EXPORT_PACKAGE))
         {
-            getLog().info("No manifest instructions found, skipping manifest generation");
+            instructions.put(Constants.EXPORT_PACKAGE, "");
         }
+        if (!instructions.containsKey(Constants.IMPORT_PACKAGE))
+        {
+            getLog().info("No manifest instructions found, using \n" +
+                          "<configuration>\n" +
+                          "    <instructions>\n" +
+                          "        <Import-Package>\n" +
+                          "            *;resolution:=optional;version=\"0.0.0\"\n" +
+                          "        </Import-Package>\n" +
+                          "    </instructions>\n" +
+                          "</configuration>\n\n" +
+                          "");
+            instructions.put(Constants.IMPORT_PACKAGE, "*;resolution:=optional");
+        }
+
+        File metainfLib = file(project.getBuild().getOutputDirectory(), "META-INF", "lib");
+        if (metainfLib.exists())
+        {
+            StringBuilder sb = new StringBuilder(".");
+            for (File lib : metainfLib.listFiles())
+            {
+                sb.append(",").append("META-INF/lib/" + lib.getName());
+            }
+            instructions.put(Constants.BUNDLE_CLASSPATH, sb.toString());
+        }
+        getMavenGoals().generateManifest(instructions);
     }
 }
