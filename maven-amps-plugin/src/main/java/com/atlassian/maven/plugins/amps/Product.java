@@ -116,6 +116,11 @@ public class Product
     private String output;
 
     /**
+     * Port for debugging
+     */
+    private int jvmDebugPort;
+
+    /**
      * Creates a new product that is merged with this one, where the properties in this one override the passed
      * in product.
      * @param product The product to merge with
@@ -154,6 +159,7 @@ public class Product
         prod.setContextPath(contextPath == null ? product.getContextPath() : contextPath);
         prod.setContainerId(containerId == null ? product.getContainerId() : containerId);
         prod.setHttpPort(httpPort == 0 ? product.getHttpPort() : httpPort);
+        prod.setJvmDebugPort(jvmDebugPort == 0 ? product.getJvmDebugPort() : jvmDebugPort);
 
         return prod;
     }
@@ -428,4 +434,13 @@ public class Product
 		this.output = output;
 	}
 
+    public int getJvmDebugPort()
+    {
+        return jvmDebugPort;
+    }
+
+    public void setJvmDebugPort(int jvmDebugPort)
+    {
+        this.jvmDebugPort = jvmDebugPort;
+    }
 }

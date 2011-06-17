@@ -17,6 +17,47 @@
                 <configuration>
                     <wait>false</wait>
                     <writePropertiesToFile>true</writePropertiesToFile>
+                    <productInheritConfiguration>true</productInheritConfiguration>
+                    <systemPropertyVariables>
+                        <shitty.product>${shitty.product}</shitty.product>
+                    </systemPropertyVariables>
+                    <testGroups>
+                        <testGroup>
+                            <id>foo</id>
+                            <productIds>
+                                <productId>product-1</productId>
+                            </productIds>
+                            <includes>
+                                <include>**/foo/**</include>
+                            </includes>
+                        </testGroup>
+                        <testGroup>
+                            <id>bar</id>
+                            <productIds>
+                                <productId>product-1</productId>
+                                <productId>product-2</productId>
+                                <productId>product-3</productId>
+                            </productIds>
+                            <includes>
+                                <include>**/bar/**</include>
+                            </includes>
+                        </testGroup>
+                    </testGroups>
+                    <products>
+                        <product>
+                            <id>${shitty.product}</id>
+                            <instanceId>product-1</instanceId>
+                        </product>
+                        <product>
+                            <id>${shitty.product}</id>
+                            <instanceId>product-2</instanceId>
+                        </product>
+                        <product>
+                            <id>${shitty.product}</id>
+                            <instanceId>product-3</instanceId>
+                            <jvmDebugPort>9999</jvmDebugPort>
+                        </product>
+                    </products>
                 </configuration>
             </plugin>
 
@@ -26,7 +67,7 @@
                 <artifactId>gmaven-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
-                    <source>${project.build.directory}/it/debug/webappassertions.groovy</source>
+                    <source>${project.build.directory}/it/debugWithTestGroup/webappassertions.groovy</source>
                     <classpath>
                         <element>
                             <groupId>org.codehaus.groovy</groupId>

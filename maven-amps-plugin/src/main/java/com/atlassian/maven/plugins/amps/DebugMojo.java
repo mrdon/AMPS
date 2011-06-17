@@ -8,6 +8,8 @@ import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
+import java.util.List;
+
 /**
  * Debug the webapp
  */
@@ -34,42 +36,52 @@ public class DebugMojo extends RunMojo
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
-    	String debugArgs = " -Xdebug -Xrunjdwp:transport=dt_socket,address=" +
-    				    String.valueOf(jvmDebugPort) + ",suspend=" + (jvmDebugSuspend ? "y" : "n") + ",server=y ";
+        final List<ProductExecution> productExecutions = getProductExecutions();
 
         if (jvmArgs == null)
         {
             jvmArgs = DEFAULT_JVM_ARGS;
         }
 
-        // add the debug jvm args for the global config
-        jvmArgs += debugArgs;
-
-        // add the debug jvm args for each of the product configs
-        for (Product product : products)
+        int counter = 0;
+        for (ProductExecution productExecution : productExecutions)
         {
+            final Product product = productExecution.getProduct();
+
+            if (product.getJvmDebugPort() == 0)
+            {
+                product.setJvmDebugPort(jvmDebugPort + counter++);
+            }
+            final int port = product.getJvmDebugPort();
+
+            String debugArgs = " -Xdebug -Xrunjdwp:transport=dt_socket,address=" +
+                               String.valueOf(port) + ",suspend=" + (jvmDebugSuspend ? "y" : "n") + ",server=y ";
+
             if (product.getJvmArgs() == null)
             {
                 product.setJvmArgs(jvmArgs);
             }
-            else
+
+            product.setJvmArgs(product.getJvmArgs() + debugArgs);
+
+            if (writePropertiesToFile)
             {
-                product.setJvmArgs(product.getJvmArgs() + debugArgs);
+                if (productExecutions.size() == 1)
+                {
+                    properties.put("debug.port", String.valueOf(port));
+                }
+
+                properties.put("debug." + product.getInstanceId() + ".port", String.valueOf(port));
+            }
+
+            if (ProductHandlerFactory.FECRU.equals(getDefaultProductId()) && debugNotSet()) {
+                String message = "You must set the ATLAS_OPTS environment variable to the following string:'" + product.getJvmArgs() + "' when calling atlas-debug to enable Fisheye/Crucible debugging.";
+                getLog().error(message);
+                throw new MojoFailureException(message);
             }
         }
-        
-        if (writePropertiesToFile)
-        {
-            properties.put("debug.port", String.valueOf(jvmDebugPort));
-        }
 
-        if (ProductHandlerFactory.FECRU.equals(getDefaultProductId()) && debugNotSet()) {
-            String message = "You must set the ATLAS_OPTS environment variable to the following string:'" + jvmArgs + "' when calling atlas-debug to enable Fisheye/Crucible debugging.";
-            getLog().error(message);            
-            throw new MojoFailureException(message);
-        }
-
-        super.doExecute();
+        startProducts(productExecutions);
     }
 
     private boolean debugNotSet()

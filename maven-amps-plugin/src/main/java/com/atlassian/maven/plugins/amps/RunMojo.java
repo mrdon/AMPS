@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -26,7 +28,7 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 @MojoGoal ("run")
 @MojoExecute (phase = "package")
 @MojoRequiresDependencyResolution
-public class RunMojo extends AbstractProductHandlerMojo
+public class RunMojo extends AbstractTestGroupsHandlerMojo
 {
     private static final char CONTROL_C = (char) 27;
 
@@ -44,6 +46,12 @@ public class RunMojo extends AbstractProductHandlerMojo
      */
     @MojoParameter(expression = "${instanceId}")
     protected String instanceId;
+
+    /**
+     * Test group to run.  If provided, used to determine the products to run.
+     */
+    @MojoParameter(expression = "${testGroup}")
+    protected String testGroup;
     
     /**
      * The properties actually used by the mojo when running
@@ -52,32 +60,38 @@ public class RunMojo extends AbstractProductHandlerMojo
 
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
-        final MavenGoals goals = getMavenGoals();
-        Product ctx;
-        if (!isBlank(instanceId))
+        final List<ProductExecution> productExecutions = getProductExecutions();
+
+        startProducts(productExecutions);
+    }
+
+    protected void startProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
+    {
+        for (ProductExecution productExecution : productExecutions)
         {
-            ctx = getProductContexts(goals).get(instanceId);
-            if (ctx == null)
+            final ProductHandler productHandler = productExecution.getProductHandler();
+            final Product product = productExecution.getProduct();
+            product.setInstallPlugin(shouldInstallPlugin());
+
+            int actualHttpPort = productHandler.start(product);
+
+            getLog().info(product.getInstanceId() + " started successfully and available at http://localhost:" + actualHttpPort + product.getContextPath());
+
+            if (writePropertiesToFile)
             {
-                throw new MojoExecutionException("No product with instance ID '" + instanceId + "'");
+                if (productExecutions.size() == 1)
+                {
+                    properties.put("http.port", String.valueOf(actualHttpPort));
+                    properties.put("context.path", product.getContextPath());
+                }
+
+                properties.put("http." + product.getInstanceId() + ".port", String.valueOf(actualHttpPort));
+                properties.put("context." + product.getInstanceId() + ".path", product.getContextPath());
             }
         }
-        else
-        {
-            ctx = getProductContexts(goals).get(getProductId());
-        }
-        ProductHandler product = createProductHandler(ctx.getId());
-
-        ctx.setInstallPlugin(shouldInstallPlugin());
-
-        int actualHttpPort = product.start(ctx);
-
-        getLog().info(ctx.getInstanceId() + " started successfully and available at http://localhost:" + actualHttpPort + ctx.getContextPath());
 
         if (writePropertiesToFile)
         {
-            properties.put("http.port", String.valueOf(actualHttpPort));
-            properties.put("context.path", ctx.getContextPath());
             writePropertiesFile();
         }
 
@@ -95,6 +109,33 @@ public class RunMojo extends AbstractProductHandlerMojo
                 // ignore
             }
         }
+    }
+
+    protected List<ProductExecution> getProductExecutions() throws MojoExecutionException
+    {
+        final List<ProductExecution> productExecutions;
+        final MavenGoals goals = getMavenGoals();
+        if (!isBlank(testGroup))
+        {
+            productExecutions = getTestGroupProductExecutions(testGroup);
+        }
+        else if (!isBlank(instanceId))
+        {
+            Product ctx = getProductContexts(goals).get(instanceId);
+            if (ctx == null)
+            {
+                throw new MojoExecutionException("No product with instance ID '" + instanceId + "'");
+            }
+            ProductHandler product = createProductHandler(ctx.getId());
+            productExecutions = Collections.singletonList(new ProductExecution(ctx, product));
+        }
+        else
+        {
+            Product ctx = getProductContexts(goals).get(getProductId());
+            ProductHandler product = createProductHandler(ctx.getId());
+            productExecutions = Collections.singletonList(new ProductExecution(ctx, product));
+        }
+        return productExecutions;
     }
 
     /**

@@ -2,10 +2,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps-plugin-debug</artifactId>
+    <artifactId>maven-amps-plugin-run</artifactId>
     <packaging>atlassian-plugin</packaging>
     <version>testing</version>
-    <name>TestDebug</name>
+    <name>TestRun</name>
 
     <build>
         <plugins>
@@ -17,6 +17,42 @@
                 <configuration>
                     <wait>false</wait>
                     <writePropertiesToFile>true</writePropertiesToFile>
+                    <container>tomcat6x</container>
+                    <productInheritConfiguration>true</productInheritConfiguration>
+                    <systemPropertyVariables>
+                        <shitty.product>${shitty.product}</shitty.product>
+                    </systemPropertyVariables>
+                    <testGroups>
+                        <testGroup>
+                            <id>foo</id>
+                            <productIds>
+                                <productId>product-1</productId>
+                            </productIds>
+                            <includes>
+                                <include>**/foo/**</include>
+                            </includes>
+                        </testGroup>
+                        <testGroup>
+                            <id>bar</id>
+                            <productIds>
+                                <productId>product-1</productId>
+                                <productId>product-2</productId>
+                            </productIds>
+                            <includes>
+                                <include>**/bar/**</include>
+                            </includes>
+                        </testGroup>
+                    </testGroups>
+                    <products>
+                        <product>
+                            <id>${shitty.product}</id>
+                            <instanceId>product-1</instanceId>
+                        </product>
+                        <product>
+                            <id>${shitty.product}</id>
+                            <instanceId>product-2</instanceId>
+                        </product>
+                    </products>
                 </configuration>
             </plugin>
 
@@ -26,7 +62,7 @@
                 <artifactId>gmaven-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
-                    <source>${project.build.directory}/it/debug/webappassertions.groovy</source>
+                    <source>${project.build.directory}/it/runWithTestGroup/webappassertions.groovy</source>
                     <classpath>
                         <element>
                             <groupId>org.codehaus.groovy</groupId>

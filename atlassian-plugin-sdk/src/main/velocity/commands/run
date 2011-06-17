@@ -80,4 +80,14 @@
   'maven' : 'product',
   'description' : 'The product to launch with the plugin.',
   'example' : 'jira'
+},{
+  'name' : 'instanceId',
+  'maven' : 'instanceId',
+  'description' : 'The product instance to launch with the plugin.',
+  'example' : 'confluence-3.5.0'
+},{
+  'name' : 'testGroup',
+  'maven' : 'testGroup',
+  'description' : 'Test group whose products will be launched with the plugin.',
+  'example' : 'confluenceTests'
 }] )

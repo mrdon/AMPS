@@ -1,7 +1,6 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -18,7 +17,7 @@ import java.util.*;
  */
 @MojoGoal("integration-test")
 @MojoRequiresDependencyResolution("test")
-public class IntegrationTestMojo extends AbstractProductHandlerMojo
+public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
 {
     /**
      * Pattern for to use to find integration tests.  Only used if no test groups are defined.
@@ -31,12 +30,6 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
      */
     @MojoParameter(expression = "${project.build.testOutputDirectory}", required = true)
     private File testClassesDirectory;
-
-    /**
-     * The list of specific test groups to execute
-     */
-    @MojoParameter
-    private List<TestGroup> testGroups = new ArrayList<TestGroup>();
 
     /**
      * A comma separated list of test groups to run.  If not specified, all
@@ -60,7 +53,6 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
     @MojoParameter(expression="${skipTests}", defaultValue = "false")
     private boolean skipTests = false;
 
-    private static final String NO_TEST_GROUP = "__no_test_group__";
     protected void doExecute() throws MojoExecutionException
     {
         final MavenProject project = getMavenContext().getProject();
@@ -137,7 +129,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         Set<String> ids = new HashSet<String>();
 
         //ids.addAll(ProductHandlerFactory.getIds());
-        for (TestGroup group : testGroups)
+        for (TestGroup group : getTestGroups())
         {
             ids.add(group.getId());
         }
@@ -145,77 +137,20 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         return ids;
     }
 
-    private List<String> getProductIdsForTestGroup(String testGroupId) throws MojoExecutionException
-    {
-        List<String> productIds = new ArrayList<String>();
-        if (NO_TEST_GROUP.equals(testGroupId))
-        {
-            productIds.add(getProductId());
-        }
 
-        for (TestGroup group : testGroups)
-        {
-            if (group.getId().equals(testGroupId))
-            {
-                productIds.addAll(group.getProductIds());
-            }
-        }
-        if (ProductHandlerFactory.getIds().contains(testGroupId) && !productIds.contains(testGroupId))
-        {
-            productIds.add(testGroupId);
-        }
-
-        if (productIds.isEmpty())
-        {
-            List<String> validTestGroups = new ArrayList<String>();
-            for (TestGroup group: testGroups)
-            {
-                validTestGroups.add(group.getId());
-            }
-            throw new MojoExecutionException("Unknown test group ID: " + testGroupId
-                + " Detected IDs: " + Arrays.toString(validTestGroups.toArray()));
-        }
-
-        return productIds;
-    }
 
     private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Map<String,Object> systemProperties) throws MojoExecutionException
     {
         List<String> includes = getIncludesForTestGroup(testGroupId);
         List<String> excludes = getExcludesForTestGroup(testGroupId);
-        List<String> productIds = getProductIdsForTestGroup(testGroupId);
 
-        // Create a container object to hold product-related stuff
-        List<TestGroupProductExecution> products = new ArrayList<TestGroupProductExecution>();
-        int dupCounter = 0;
-        Set<String> uniqueProductIds = new HashSet<String>();
-        for (String productId : productIds)
-        {
-            Product ctx = getProductContexts(goals).get(productId);
-            if (ctx == null)
-            {
-                throw new MojoExecutionException("The test group '" + testGroupId + "' refers to a product '" + productId
-                    + "' that doesn't have an associated <product> configuration.");
-            }
-            ProductHandler productHandler = ProductHandlerFactory.create(ctx.getId(), getMavenContext().getProject(), goals, getLog());
-
-            // Give unique ids to duplicate product instances
-            if (uniqueProductIds.contains(productId))
-            {
-                ctx.setInstanceId(productId + "-" + dupCounter++);
-            }
-            else
-            {
-                uniqueProductIds.add(productId);
-            }
-            products.add(new TestGroupProductExecution(ctx, productHandler));
-        }
+        List<ProductExecution> productExecutions = getTestGroupProductExecutions(testGroupId);
 
         // Install the plugin in each product and start it
-        for (TestGroupProductExecution testGroupProductExecution : products)
+        for (ProductExecution productExecution : productExecutions)
         {
-            ProductHandler productHandler = testGroupProductExecution.getProductHandler();
-            Product product = testGroupProductExecution.getProduct();
+            ProductHandler productHandler = productExecution.getProductHandler();
+            Product product = productExecution.getProduct();
             product.setInstallPlugin(installPlugin);
 
             int actualHttpPort = 0;
@@ -224,7 +159,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
                 actualHttpPort = productHandler.start(product);
             }
 
-            if (products.size() == 1)
+            if (productExecutions.size() == 1)
             {
                 systemProperties.put("http.port", String.valueOf(actualHttpPort));
                 systemProperties.put("context.path", product.getContextPath());
@@ -260,10 +195,10 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);
 
         // Shut all products down
-        for (TestGroupProductExecution testGroupProductExecution : products)
+        for (ProductExecution productExecution : productExecutions)
         {
-            ProductHandler productHandler = testGroupProductExecution.getProductHandler();
-            Product product = testGroupProductExecution.getProduct();
+            ProductHandler productHandler = productExecution.getProductHandler();
+            Product product = productExecution.getProduct();
             if (!noWebapp)
             {
                 productHandler.stop(product);
@@ -278,7 +213,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             return Collections.emptyMap();
         }
 
-        for (TestGroup group : testGroups)
+        for (TestGroup group : getTestGroups())
         {
             if (group.getId().equals(testGroupId))
             {
@@ -296,7 +231,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         }
         else
         {
-            for (TestGroup group : testGroups)
+            for (TestGroup group : getTestGroups())
             {
                 if (group.getId().equals(testGroupId))
                 {
@@ -316,7 +251,7 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
         }
         else
         {
-            for (TestGroup group : testGroups)
+            for (TestGroup group : getTestGroups())
             {
                 if (group.getId().equals(testGroupId))
                 {
@@ -325,30 +260,5 @@ public class IntegrationTestMojo extends AbstractProductHandlerMojo
             }
         }
         return Collections.emptyList();
-    }
-
-    /**
-     * The execution context for a product in a test group
-     */
-    private static class TestGroupProductExecution
-    {
-        private final Product product;
-        private final ProductHandler productHandler;
-
-        public TestGroupProductExecution(Product product, ProductHandler productHandler)
-        {
-            this.product = product;
-            this.productHandler = productHandler;
-        }
-
-        public ProductHandler getProductHandler()
-        {
-            return productHandler;
-        }
-
-        public Product getProduct()
-        {
-            return product;
-        }
     }
 }

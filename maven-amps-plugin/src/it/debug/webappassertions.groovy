@@ -17,16 +17,15 @@ new HTTPBuilder("http://localhost:${amps['http.port']}${amps['context.path']}").
 
 // Check Debug Port
 
-ServerSocket socket = null;
+Socket socket = null;
+final def debugPort = Integer.valueOf(amps['debug.port'])
 try
 {
-    final def debugPort = Integer.valueOf(amps['debug.port'])
-    socket = new ServerSocket(debugPort);
-    assert socket.getLocalPort() == debugPort, "Was not the debug port specifed in the configuration"
+    socket = new Socket('localhost', debugPort);
 }
 catch (final IOException e)
 {
-    assert false, "We should have been able to open a socket!"
+    assert false, "We should have been able to open a socket to ${debugPort}!"
 }
 finally
 {
