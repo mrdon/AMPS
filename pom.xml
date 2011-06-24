@@ -52,6 +52,7 @@
         <module>maven-amps-dispatcher-plugin</module>
         <module>atlassian-plugin-sdk</module>
         <module>amps-product-plugins</module>
+        <module>plugin-module-codegen-core</module>
         <module>amps-product-archetypes</module>
         <module>standalone</module>
     </modules>
@@ -63,6 +64,11 @@
                 <artifactId>maven-core</artifactId>
                 <version>${maven.version}</version>
             </dependency>
+            <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>2.0.5</version>
+        </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -144,6 +150,7 @@
                             <artifact>com.atlassian.maven.plugins:maven-bamboo-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-fecru-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-crowd-plugin:${project.version}</artifact>
+                            <artifact>com.atlassian.maven.plugins:maven-amps-codegen-plugin:${project.version}</artifact>
 
                             <!-- the archetypes -->
                             <artifact>com.atlassian.maven.archetypes:refapp-plugin-archetype:${project.version}</artifact>

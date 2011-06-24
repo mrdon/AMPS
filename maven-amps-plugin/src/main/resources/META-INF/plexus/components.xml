@@ -50,5 +50,40 @@
                 <addedToClasspath>true</addedToClasspath>
             </configuration>
         </component>
+        <component>
+            <role>com.atlassian.maven.plugins.amps.codegen.PluginModuleSelectionQueryer</role>
+            <role-hint>plugin module selector</role-hint>
+            <implementation>com.atlassian.maven.plugins.amps.codegen.DefaultPluginModuleSelectionQueryer</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.codehaus.plexus.components.interactivity.Prompter</role>
+                    <field-name>prompter</field-name>
+                </requirement>
+            </requirements>
+        </component>
+
+        <component>
+            <role>com.atlassian.maven.plugins.amps.codegen.registry.ProductModuleCreatorRegistry</role>
+            <role-hint>product module creator factory registry</role-hint>
+            <implementation>com.atlassian.maven.plugins.amps.codegen.registry.ProductModuleCreatorRegistryImpl</implementation>
+        </component>
+
+        <component>
+            <role>com.atlassian.maven.plugins.amps.codegen.registry.PluginModuleDependencyRegistry</role>
+            <role-hint>product module dependency registry</role-hint>
+            <implementation>com.atlassian.maven.plugins.amps.codegen.registry.PluginModuleDependencyRegistryImpl</implementation>
+        </component>
+
+        <component>
+            <role>com.atlassian.maven.plugins.amps.codegen.registry.PluginModulePrompterRegistry</role>
+            <role-hint>product module prompter registry</role-hint>
+            <implementation>com.atlassian.maven.plugins.amps.codegen.registry.PluginModulePrompterRegistryImpl</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.codehaus.plexus.components.interactivity.Prompter</role>
+                    <field-name>prompter</field-name>
+                </requirement>
+            </requirements>
+        </component>
     </components>
 </component-set>

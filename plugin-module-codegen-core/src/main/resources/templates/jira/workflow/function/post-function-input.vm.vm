@@ -1,0 +1,8 @@
+<tr>
+    <td class="fieldLabelArea">
+        Message:
+    </td>
+    <td nowrap>
+        <input name="message" id="message" value="$message" />
+    </td>
+</tr>
