@@ -1,5 +1,12 @@
 package com.atlassian.maven.plugins.amps.product;
 
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,14 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 public class CrowdProductHandler extends AbstractWebappProductHandler
 {
@@ -97,7 +96,7 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
         try
         {
             ConfigFileUtils.replaceAll(new File(homeDir, "crowd.cfg.xml"),
-                    "jdbc:hsqldb:.*/crowd-home/database/defaultdb",
+                    "jdbc:hsqldb:.*/(crowd-)?home/database/defaultdb",
                     "jdbc:hsqldb:" + getHomeDirectory(ctx).getCanonicalPath().replace("\\", "/") + "/database/defaultdb");
         }
         catch (final IOException e)
