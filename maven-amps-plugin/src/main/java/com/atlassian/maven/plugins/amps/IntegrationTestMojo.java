@@ -84,18 +84,17 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         {
             String[] testGroupIdsToRun = configuredTestGroupsToRun.split(",");
             
-            // fail fast if one of the test groups does not exist
+            // now run the tests
             for (String testGroupId : testGroupIdsToRun)
             {
                 if (!configuredTestGroupIds.contains(testGroupId))
                 {
-                    throw new MojoExecutionException("Test group " + testGroupId + " does not exist");
+                    getLog().warn("Test group " + testGroupId + " does not exist");
                 }
-            }
-            // now run the tests
-            for (String testGroupId : testGroupIdsToRun)
-            {
-                runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemPropertyVariables));
+                else
+                {
+                    runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemPropertyVariables));
+                }
             }
         }
         else
