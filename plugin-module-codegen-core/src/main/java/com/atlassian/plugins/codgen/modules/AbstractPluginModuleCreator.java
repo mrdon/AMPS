@@ -5,6 +5,7 @@ import com.atlassian.plugins.codgen.util.CodeTemplateHelper;
 import com.atlassian.plugins.codgen.util.PluginXmlHelper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -16,6 +17,10 @@ import java.util.Properties;
  */
 public abstract class AbstractPluginModuleCreator implements PluginModuleCreator {
     public static final String DEFAULT_I18N_NAME = "atlassian-plugin";
+    public static final String FUNC_TEST_PACKAGE = "it";
+    public static final String TEST_SUFFIX = "Test";
+    public static final String FUNCT_TEST_SUFFIX = "FuncTest";
+
     protected CodeTemplateHelper templateHelper;
 
     protected AbstractPluginModuleCreator() {
@@ -58,5 +63,17 @@ public abstract class AbstractPluginModuleCreator implements PluginModuleCreator
             IOUtils.closeQuietly(os);
 
         }
+    }
+
+    protected String testClassname(String classname) {
+        return classname + TEST_SUFFIX;
+    }
+
+    protected String funcTestClassname(String classname) {
+        return classname + FUNCT_TEST_SUFFIX;
+    }
+
+    protected String funcTestPackageName(String basePackage) {
+        return (StringUtils.isBlank(basePackage) ? FUNC_TEST_PACKAGE : FUNC_TEST_PACKAGE + ".") + basePackage;
     }
 }

@@ -1,5 +1,6 @@
 package com.atlassian.plugins.codgen.util;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -9,6 +10,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -50,8 +52,12 @@ public class CodeTemplateHelper {
         return stringWriter.toString();
     }
 
-    public void writeJavaClassFromTemplate(String templatePath, String fileName, File sourceDirectory, String packageName, Properties props) throws Exception {
-        String content = parseTemplate(templatePath, props);
+    public void writeJavaClassFromTemplate(String templatePath, String className, File sourceDirectory, String packageName, Properties props) throws Exception {
+        Properties overrideProps = new Properties(props);
+        overrideProps.setProperty("CLASSNAME",className);
+        overrideProps.setProperty("PACKAGE",packageName);
+
+        String content = parseTemplate(templatePath, overrideProps);
         String packagePath = packageName.length() == 0 ? "" : packageName.replaceAll("\\.", File.separator);
 
         File packageFile = sourceDirectory;
@@ -60,7 +66,7 @@ public class CodeTemplateHelper {
         }
         packageFile.mkdirs();
 
-        File javaFile = new File(packageFile, fileName + ".java");
+        File javaFile = new File(packageFile, className + ".java");
         FileUtils.writeStringToFile(javaFile, content, UTF8);
 
     }

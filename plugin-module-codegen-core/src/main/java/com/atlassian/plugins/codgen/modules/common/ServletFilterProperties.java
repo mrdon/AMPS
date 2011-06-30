@@ -48,6 +48,7 @@ public class ServletFilterProperties extends BasicModuleProperties {
         put(INIT_PARAMS, new HashMap<String, String>());
 
         //sane defaults
+        setUrlPattern("/*");
         setLocation(ALLOWED_LOCATIONS.get(3));
         setWeight(100);
         setDescription("The " + getProperty(MODULE_NAME) + " Servlet Filter");

@@ -25,12 +25,11 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
         String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet");
 
         ServletFilterProperties props = new ServletFilterProperties(packageName + "." + className);
-        props.setUrlPattern(getUrlPatternFromUser());
 
         boolean showAdvanced = promptForBoolean("Show Advanced Setup?","N");
 
         if (showAdvanced) {
-
+            props.setUrlPattern(getUrlPatternFromUser());
             props.setLocation(getLocationFromUser(props.allowedLocations()));
             props.setWeight(Integer.parseInt(getWeightFromUser()));
 
@@ -54,13 +53,13 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
 
 
     private String getUrlPatternFromUser() throws PrompterException {
-        String pattern = promptNotBlank("URL Pattern");
+        String pattern = promptNotBlank("URL Pattern","/*");
 
         return pattern;
     }
 
     private String getWeightFromUser() throws PrompterException {
-        String weight = prompter.prompt("Location Weight:", "100");
+        String weight = prompter.prompt("Location Weight", "100");
         if (StringUtils.isBlank(weight) || !StringUtils.isNumeric(weight)) {
             weight = getWeightFromUser();
         }

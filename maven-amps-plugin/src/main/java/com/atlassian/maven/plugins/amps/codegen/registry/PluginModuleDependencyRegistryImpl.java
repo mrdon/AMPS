@@ -31,7 +31,27 @@ public class PluginModuleDependencyRegistryImpl implements PluginModuleDependenc
         servletApi.setScope("provided");
 
         deps.add(servletApi);
+        initCommonDependencies(deps);
+
         moduleDependencies.put(ServletFilterModuleCreator.class,deps);
+    }
+
+    private void initCommonDependencies(List<Dependency> deps) {
+        Dependency mockito = new Dependency();
+        mockito.setGroupId("org.mockito");
+        mockito.setArtifactId("mockito-all");
+        mockito.setVersion("1.8.5");
+        mockito.setScope("test");
+
+        Dependency httpClient = new Dependency();
+        httpClient.setGroupId("org.apache.httpcomponents");
+        httpClient.setArtifactId("httpclient");
+        httpClient.setVersion("4.1.1");
+        httpClient.setScope("test");
+
+        deps.add(mockito);
+        deps.add(httpClient);
+
     }
 
 

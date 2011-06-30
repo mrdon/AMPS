@@ -8,7 +8,7 @@
 
     <groupId>com.atlassian.amps</groupId>
     <artifactId>atlassian-amps-parent</artifactId>
-    <version>3.5-SNAPSHOT</version>
+    <version>3.5-codegen-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Atlassian Maven Plugin Suite (parent pom)</name>
@@ -48,11 +48,11 @@
     </ciManagement>
 
     <modules>
+        <module>plugin-module-codegen-core</module>
         <module>maven-amps-plugin</module>
         <module>maven-amps-dispatcher-plugin</module>
         <module>atlassian-plugin-sdk</module>
         <module>amps-product-plugins</module>
-        <module>plugin-module-codegen-core</module>
         <module>amps-product-archetypes</module>
         <module>standalone</module>
     </modules>
@@ -150,7 +150,6 @@
                             <artifact>com.atlassian.maven.plugins:maven-bamboo-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-fecru-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-crowd-plugin:${project.version}</artifact>
-                            <artifact>com.atlassian.maven.plugins:maven-amps-codegen-plugin:${project.version}</artifact>
 
                             <!-- the archetypes -->
                             <artifact>com.atlassian.maven.archetypes:refapp-plugin-archetype:${project.version}</artifact>
