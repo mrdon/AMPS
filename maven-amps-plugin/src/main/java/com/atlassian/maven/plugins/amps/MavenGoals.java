@@ -108,28 +108,28 @@ public class MavenGoals
 
         final List<Element> configs = new ArrayList<Element>();
         configs.add(element(name("commands"),
-                element(name("pi"), new StringBuilder()
-                        .append("resources").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:filter-plugin-descriptor").append(" ")
-                        .append("compile").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:copy-bundled-dependencies").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:compress-resources").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:validate-manifest").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:install").toString()),
-                element(name("tpi"), new StringBuilder()
-                        .append("testResources").append(" ")
-                        .append("testCompile").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:test-jar").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:test-install").toString()),
-                element(name("package"), new StringBuilder()
-                        .append("resources").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:filter-plugin-descriptor").append(" ")
-                        .append("compile").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:copy-bundled-dependencies").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ").toString())));
+                element(name("pi"),
+                        "resources" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:filter-plugin-descriptor" + " "
+                        + "compile" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:copy-bundled-dependencies" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:compress-resources" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:generate-manifest" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:validate-manifest" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:jar" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:install"),
+                element(name("tpi"),
+                        "testResources" + " "
+                        + "testCompile" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:test-jar" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:test-install"),
+                element(name("package"),
+                        "resources" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:filter-plugin-descriptor" + " "
+                        + "compile" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:copy-bundled-dependencies" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:generate-manifest" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:jar" + " ")));
         if (port > 0)
         {
             configs.add(element(name("port"), String.valueOf(port)));
