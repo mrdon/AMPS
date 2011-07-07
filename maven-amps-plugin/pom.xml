@@ -74,7 +74,7 @@
 
         <dependency>
             <groupId>com.atlassian.amps</groupId>
-            <artifactId>plugin-module-codegen-core</artifactId>
+            <artifactId>plugin-module-codegen-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         

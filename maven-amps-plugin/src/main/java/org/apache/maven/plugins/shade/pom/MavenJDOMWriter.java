@@ -1643,7 +1643,7 @@ public class MavenJDOMWriter
         updateOrganization( value.getOrganization(), "organization", innerCount, root );
         updateBuild( value.getBuild(), "build", innerCount, root );
         iterateProfile( innerCount, root, value.getProfiles(), "profiles", "profile" );
-        findAndReplaceSimpleLists( innerCount, root, value.getModules(), "modules", "module" );
+        findAndReplaceSimpleLists( innerCount, root, value.getModules(), "testmodules", "module" );
         iterateRepository( innerCount, root, value.getRepositories(), "repositories", "repository" );
         iterateRepository( innerCount, root, value.getPluginRepositories(), "pluginRepositories", "pluginRepository" );
         iterateDependency( innerCount, root, value.getDependencies(), "dependencies", "dependency" );
@@ -1669,7 +1669,7 @@ public class MavenJDOMWriter
         if ( shouldExist )
         {
             Counter innerCount = new Counter( counter.getDepth() + 1 );
-            findAndReplaceSimpleLists( innerCount, root, value.getModules(), "modules", "module" );
+            findAndReplaceSimpleLists( innerCount, root, value.getModules(), "testmodules", "module" );
             iterateRepository( innerCount, root, value.getRepositories(), "repositories", "repository" );
             iterateRepository( innerCount, root, value.getPluginRepositories(), "pluginRepositories",
                                "pluginRepository" );
@@ -1904,7 +1904,7 @@ public class MavenJDOMWriter
         findAndReplaceSimpleElement( innerCount, root, "id", value.getId(), "default" );
         // updateActivation( value.getActivation(), "activation", innerCount, root);
         updateBuildBase( value.getBuild(), "build", innerCount, root );
-        findAndReplaceSimpleLists( innerCount, root, value.getModules(), "modules", "module" );
+        findAndReplaceSimpleLists( innerCount, root, value.getModules(), "testmodules", "module" );
         iterateRepository( innerCount, root, value.getRepositories(), "repositories", "repository" );
         iterateRepository( innerCount, root, value.getPluginRepositories(), "pluginRepositories", "pluginRepository" );
         iterateDependency( innerCount, root, value.getDependencies(), "dependencies", "dependency" );

@@ -1,17 +1,23 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common;
 
+import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
-import com.atlassian.plugins.codgen.modules.BasicModuleProperties;
-import com.atlassian.plugins.codgen.modules.common.ServletFilterProperties;
+import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
+import com.atlassian.plugins.codegen.modules.common.ServletFilterModuleCreator;
+import com.atlassian.plugins.codegen.modules.common.ServletFilterProperties;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Author: jdoklovic
+ * @since version
  */
+@ModuleCreatorClass(ServletFilterModuleCreator.class)
 public class ServletFilterModulePrompter extends AbstractModulePrompter {
 
     public ServletFilterModulePrompter(Prompter prompter) {
@@ -20,13 +26,13 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
     }
 
     @Override
-    public BasicModuleProperties getModulePropertiesFromInput() throws PrompterException {
+    public PluginModuleProperties getModulePropertiesFromInput() throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyServletFilter");
         String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet");
 
         ServletFilterProperties props = new ServletFilterProperties(packageName + "." + className);
 
-        boolean showAdvanced = promptForBoolean("Show Advanced Setup?","N");
+        boolean showAdvanced = promptForBoolean("Show Advanced Setup?", "N");
 
         if (showAdvanced) {
             props.setUrlPattern(getUrlPatternFromUser());
@@ -34,17 +40,17 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
             props.setWeight(Integer.parseInt(getWeightFromUser()));
 
             List<String> dispatchers = promptForDispatchers(props.allowedDispatchers());
-            if(dispatchers.size() > 0) {
+            if (dispatchers.size() > 0) {
                 props.setDispatchers(dispatchers);
             }
 
-            Map<String,String> initParams = promptForInitParams();
-            if(initParams.size() > 0) {
+            Map<String, String> initParams = promptForInitParams();
+            if (initParams.size() > 0) {
                 props.setInitParams(initParams);
             }
         }
 
-        boolean includeExamples = promptForBoolean("Include Example Code?","N");
+        boolean includeExamples = promptForBoolean("Include Example Code?", "N");
 
         props.setIncludeExamples(includeExamples);
 
@@ -53,7 +59,7 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
 
 
     private String getUrlPatternFromUser() throws PrompterException {
-        String pattern = promptNotBlank("URL Pattern","/*");
+        String pattern = promptNotBlank("URL Pattern", "/*");
 
         return pattern;
     }
@@ -93,7 +99,7 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
     }
 
     private void promptForDispatcher(List<String> dispatchers, List<String> allowedDispatchers) throws PrompterException {
-        boolean addDispatcher = promptForBoolean("Add Dispatcher?","N");
+        boolean addDispatcher = promptForBoolean("Add Dispatcher?", "N");
 
         if (addDispatcher) {
             StringBuilder dispatcherQuery = new StringBuilder("Choose A Dispatcher\n");
@@ -115,12 +121,12 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
             dispatchers.add(selectedDispatcher);
             allowedDispatchers.remove(selectedIndex);
 
-            promptForDispatcher(dispatchers,allowedDispatchers);
+            promptForDispatcher(dispatchers, allowedDispatchers);
         }
     }
 
-    private Map<String,String> promptForInitParams() throws PrompterException {
-        Map<String,String> params = new HashMap<String, String>();
+    private Map<String, String> promptForInitParams() throws PrompterException {
+        Map<String, String> params = new HashMap<String, String>();
         promptForInitParam(params);
 
         return params;
@@ -128,19 +134,19 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
 
     private void promptForInitParam(Map<String, String> params) throws PrompterException {
         StringBuffer addBuffer = new StringBuffer();
-        if(params.size() > 0) {
+        if (params.size() > 0) {
             addBuffer.append("init-params:\n");
-            for(Map.Entry<String,String> entry : params.entrySet()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
                 addBuffer.append(entry.getKey()).append("->").append(entry.getValue()).append("\n");
             }
         }
         addBuffer.append("Add Init-Param?");
-        boolean addParam = promptForBoolean(addBuffer.toString(),"N");
+        boolean addParam = promptForBoolean(addBuffer.toString(), "N");
 
-        if(addParam) {
+        if (addParam) {
             String key = promptNotBlank("param key");
             String value = promptNotBlank("param value");
-            params.put(key,value);
+            params.put(key, value);
             promptForInitParam(params);
         }
     }

@@ -1,6 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter;
 
-import com.atlassian.plugins.codgen.util.ClassnameUtil;
+import com.atlassian.plugins.codegen.util.ClassnameUtil;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
@@ -16,7 +16,7 @@ public abstract class AbstractModulePrompter implements PluginModulePrompter {
     protected final List<String> ynAnswers;
     protected final Prompter prompter;
 
-    protected AbstractModulePrompter(Prompter prompter) {
+    public AbstractModulePrompter(Prompter prompter) {
         this.prompter = prompter;
 
         ynAnswers = new ArrayList<String>(Arrays.asList("Y","y","N","n"));

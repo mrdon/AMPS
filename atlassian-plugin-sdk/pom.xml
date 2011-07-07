@@ -26,7 +26,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- The following are necessary to ensure the modules are scheduled before this on in a multi-module build -->
+        <!-- The following are necessary to ensure the testmodules are scheduled before this on in a multi-module build -->
         <dependency>
             <groupId>com.atlassian.maven.plugins</groupId>
             <artifactId>maven-amps-plugin</artifactId>

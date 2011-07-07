@@ -1,6 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter;
 
-import com.atlassian.plugins.codgen.modules.BasicModuleProperties;
+import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
@@ -8,5 +8,5 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
  */
 public interface PluginModulePrompter {
 
-    BasicModuleProperties getModulePropertiesFromInput() throws PrompterException;
+    PluginModuleProperties getModulePropertiesFromInput() throws PrompterException;
 }

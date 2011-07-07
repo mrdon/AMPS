@@ -2,14 +2,12 @@ package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.codegen.PluginModuleSelectionQueryer;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
-import com.atlassian.maven.plugins.amps.codegen.registry.PluginModuleDependencyRegistry;
-import com.atlassian.maven.plugins.amps.codegen.registry.PluginModulePrompterRegistry;
-import com.atlassian.maven.plugins.amps.codegen.registry.ProductModuleCreatorRegistry;
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
-import com.atlassian.plugins.codgen.PluginModuleCreatorFactory;
-import com.atlassian.plugins.codgen.PluginModuleLocation;
-import com.atlassian.plugins.codgen.modules.BasicModuleProperties;
-import com.atlassian.plugins.codgen.modules.PluginModuleCreator;
+import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompterFactory;
+import com.atlassian.plugins.codegen.annotations.DependencyDescriptor;
+import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
+import com.atlassian.plugins.codegen.modules.PluginModuleCreatorFactory;
+import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.IOUtils;
@@ -26,7 +24,6 @@ import org.jfrog.maven.annomojo.annotations.MojoGoal;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 
 @MojoGoal("plugin-module")
@@ -36,24 +33,25 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
     private PluginModuleSelectionQueryer pluginModuleSelectionQueryer;
 
     @MojoComponent
-    private ProductModuleCreatorRegistry productModuleCreatorRegistry;
+    private PluginModulePrompterFactory pluginModulePrompterFactory;
 
     @MojoComponent
-    private PluginModulePrompterRegistry pluginModulePrompterRegistry;
-
-    @MojoComponent
-    private PluginModuleDependencyRegistry pluginModuleDependencyRegistry;
+    private PluginModuleCreatorFactory pluginModuleCreatorFactory;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        //this is here because maven-plexus is lacking constructor injection
-        pluginModulePrompterRegistry.initPrompters();
-
-        String moduleGroup = getProductId();
-        if (ProductHandlerFactory.REFAPP.equals(moduleGroup)) {
-            moduleGroup = PluginModuleCreatorFactory.COMMON;
+        //can't figure out how to get plexus to fire a method after injection, so doing it here
+        pluginModulePrompterFactory.setLog(getLog());
+        try {
+            pluginModulePrompterFactory.scanForPrompters();
+        } catch (Exception e) {
+            String message = "Error initializing Plugin Module PRompters";
+            getLog().error(message);
+            throw new MojoExecutionException(message);
         }
+
+        String productId = getProductId();
 
         MavenProject project = getMavenContext().getProject();
         File javaDir = getJavaSourceRoot(project);
@@ -72,25 +70,18 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
             throw new MojoExecutionException(message);
         }
 
-        PluginModuleCreatorFactory moduleCreatorFactory = productModuleCreatorRegistry.getProductModuleCreatorFactory(moduleGroup);
-        if (moduleCreatorFactory == null) {
-            String message = "Couldn't find a module creator factory for group: " + moduleGroup;
-            getLog().error(message);
-            throw new MojoExecutionException(message);
-        }
-
         PluginModuleCreator creator = null;
         try {
-            creator = pluginModuleSelectionQueryer.selectModule(moduleCreatorFactory.getAllModuleCreators());
+            creator = pluginModuleSelectionQueryer.selectModule(pluginModuleCreatorFactory.getModuleCreatorsForProduct(productId));
 
-            PluginModulePrompter modulePrompter = pluginModulePrompterRegistry.getPrompterForCreatorClass(creator.getClass());
+            PluginModulePrompter modulePrompter = pluginModulePrompterFactory.getPrompterForCreatorClass(creator.getClass());
             if (modulePrompter == null) {
                 String message = "Couldn't find an input prompter for: " + creator.getClass().getName();
                 getLog().error(message);
                 throw new MojoExecutionException(message);
             }
 
-            BasicModuleProperties moduleProps = modulePrompter.getModulePropertiesFromInput();
+            PluginModuleProperties moduleProps = modulePrompter.getModulePropertiesFromInput();
             creator.createModule(moduleLocation, moduleProps);
 
             //edit pom if needed
@@ -98,22 +89,29 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
 
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new MojoExecutionException("Error creating plugin module", e);
         }
 
     }
 
     private void addRequiredModuleDependenciesToPOM(MavenProject project, PluginModuleCreator creator) {
-        List<Dependency> dependencyList = pluginModuleDependencyRegistry.getDependenciesForCreatorClass(creator.getClass());
+        List<DependencyDescriptor> descriptors = pluginModuleCreatorFactory.getDependenciesForCreatorClass(creator.getClass());
         boolean modifyPom = false;
-        if (dependencyList != null && !dependencyList.isEmpty()) {
+        if (descriptors != null && !descriptors.isEmpty()) {
             List<Dependency> originalDependencies = project.getModel().getDependencies();
-            for (Dependency dependency : dependencyList) {
-                Dependency alreadyExisting = (Dependency) CollectionUtils.find(originalDependencies, new DependencyPredicate(dependency));
+            for (DependencyDescriptor descriptor : descriptors) {
+                Dependency alreadyExisting = (Dependency) CollectionUtils.find(originalDependencies, new DependencyPredicate(descriptor));
                 if (null == alreadyExisting) {
                     modifyPom = true;
 
-                    project.getOriginalModel().addDependency(dependency);
+                    Dependency newDependency = new Dependency();
+                    newDependency.setGroupId(descriptor.getGroupId());
+                    newDependency.setArtifactId(descriptor.getArtifactId());
+                    newDependency.setVersion(descriptor.getVersion());
+                    newDependency.setScope(descriptor.getScope());
+
+                    project.getOriginalModel().addDependency(newDependency);
                 }
             }
         }
@@ -154,9 +152,9 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
     }
 
     private class DependencyPredicate implements Predicate {
-        private Dependency depToCheck;
+        private DependencyDescriptor depToCheck;
 
-        private DependencyPredicate(Dependency depToCheck) {
+        private DependencyPredicate(DependencyDescriptor depToCheck) {
             this.depToCheck = depToCheck;
         }
 

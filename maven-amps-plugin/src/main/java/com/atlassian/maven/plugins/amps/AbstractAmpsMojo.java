@@ -18,7 +18,7 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
     private MavenProject project;
 
     /**
-     * The list of modules being built, the reactor
+     * The list of testmodules being built, the reactor
      */
     @MojoParameter (expression = "${reactorProjects}", required = true, readonly = true)
     private List<MavenProject> reactor;

@@ -1,6 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen;
 
-import com.atlassian.plugins.codgen.modules.PluginModuleCreator;
+import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 import java.util.Map;
