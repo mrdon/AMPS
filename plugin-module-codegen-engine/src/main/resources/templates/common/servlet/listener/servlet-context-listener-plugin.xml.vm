@@ -1,0 +1,9 @@
+<servlet-context-listener
+        name="${MODULE_NAME}"
+        i18n-name-key="${NAME_KEY}"
+        key="${MODULE_KEY}"
+        class="${FQ_CLASSNAME}">
+
+    <description key="${DESCRIPTION_KEY}">${DESCRIPTION}</description>
+    
+</servlet-context-listener>

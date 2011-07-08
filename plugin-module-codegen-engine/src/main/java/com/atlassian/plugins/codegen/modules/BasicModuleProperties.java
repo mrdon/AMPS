@@ -43,10 +43,17 @@ public class BasicModuleProperties extends Properties implements PluginModulePro
                 classname = StringUtils.substringAfterLast(fqName, ".");
                 String packageName = StringUtils.substringBeforeLast(fqName, ".");
                 setProperty(CLASSNAME, classname);
+                if(StringUtils.isBlank(getProperty(CLASS_UNDER_TEST))) {
+                    setProperty(CLASS_UNDER_TEST, classname);
+                }
+
                 setProperty(PACKAGE, packageName);
             } else {
                 classname = fqName;
                 setProperty(CLASSNAME, classname);
+                if(StringUtils.isBlank(getProperty(CLASS_UNDER_TEST))) {
+                    setProperty(CLASS_UNDER_TEST, classname);
+                }
                 setProperty(PACKAGE, "");
             }
 

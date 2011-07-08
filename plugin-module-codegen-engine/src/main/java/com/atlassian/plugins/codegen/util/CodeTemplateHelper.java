@@ -53,13 +53,10 @@ public class CodeTemplateHelper {
     }
 
     public void writeJavaClassFromTemplate(String templatePath, String className, File sourceDirectory, String packageName, PluginModuleProperties props) throws Exception {
-        PluginModuleProperties overrideProps;
-        if(props instanceof Properties) {
-            overrideProps = new BasicModuleProperties((Properties)props);
-        } else {
-            overrideProps = new BasicModuleProperties();
-        }
+        String originalClass =  props.getProperty(PluginModuleProperties.FQ_CLASSNAME);
+        PluginModuleProperties overrideProps = new BasicModuleProperties(originalClass);
 
+        overrideProps.putAll(props);
         overrideProps.setProperty("CLASSNAME",className);
         overrideProps.setProperty("PACKAGE",packageName);
 

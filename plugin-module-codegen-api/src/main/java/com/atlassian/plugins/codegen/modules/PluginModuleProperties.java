@@ -10,6 +10,7 @@ import java.util.Properties;
 public interface PluginModuleProperties extends Map<Object,Object> {
     String FQ_CLASSNAME = "FQ_CLASSNAME";
     String CLASSNAME = "CLASSNAME";
+    String CLASS_UNDER_TEST = "CLASS_UNDER_TEST";
     String PACKAGE = "PACKAGE";
     String DESCRIPTION = "DESCRIPTION";
     String DESCRIPTION_KEY = "DESCRIPTION_KEY";

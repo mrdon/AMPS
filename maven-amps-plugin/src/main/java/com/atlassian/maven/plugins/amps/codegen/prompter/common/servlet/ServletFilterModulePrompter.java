@@ -28,7 +28,7 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
     @Override
     public PluginModuleProperties getModulePropertiesFromInput() throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyServletFilter");
-        String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet");
+        String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet.filter");
 
         ServletFilterProperties props = new ServletFilterProperties(packageName + "." + className);
 
