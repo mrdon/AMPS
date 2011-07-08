@@ -1,4 +1,4 @@
-package com.atlassian.plugins.codegen.modules.common;
+package com.atlassian.plugins.codegen.modules.common.servlet;
 
 import com.atlassian.plugins.codegen.modules.BasicModuleProperties;
 

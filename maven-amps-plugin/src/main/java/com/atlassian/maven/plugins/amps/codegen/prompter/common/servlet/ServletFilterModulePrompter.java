@@ -1,10 +1,10 @@
-package com.atlassian.maven.plugins.amps.codegen.prompter.common;
+package com.atlassian.maven.plugins.amps.codegen.prompter.common.servlet;
 
 import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
-import com.atlassian.plugins.codegen.modules.common.ServletFilterModuleCreator;
-import com.atlassian.plugins.codegen.modules.common.ServletFilterProperties;
+import com.atlassian.plugins.codegen.modules.common.servlet.ServletFilterModuleCreator;
+import com.atlassian.plugins.codegen.modules.common.servlet.ServletFilterProperties;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;

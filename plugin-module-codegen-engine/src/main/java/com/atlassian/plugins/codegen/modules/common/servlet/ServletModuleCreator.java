@@ -1,4 +1,4 @@
-package com.atlassian.plugins.codegen.modules.common;
+package com.atlassian.plugins.codegen.modules.common.servlet;
 
 import com.atlassian.plugins.codegen.annotations.*;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
@@ -6,31 +6,33 @@ import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
- * Author: jdoklovic
+ * @since version
  */
 @RefAppPluginModuleCreator
 @JiraPluginModuleCreator
 @ConfluencePluginModuleCreator
 @BambooPluginModuleCreator
+@FeCruPluginModuleCreator
+@CrowdPluginModuleCreator
 @Dependencies({
         @Dependency(groupId = "javax.servlet", artifactId = "servlet-api", version = "2.4", scope = "provided")
         , @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
         , @Dependency(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.1.1", scope = "test")
 })
-public class ServletFilterModuleCreator extends AbstractPluginModuleCreator {
+public class ServletModuleCreator extends AbstractPluginModuleCreator {
 
-    public static final String MODULE_NAME = "Servlet Filter";
-    private static final String TEMPLATE_PREFIX = "templates/common/servlet/filter/";
+    public static final String MODULE_NAME = "Servlet";
+    private static final String TEMPLATE_PREFIX = "templates/common/servlet/";
 
     //stub
-    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "ServletFilter.java.vm";
-    private static final String UNIT_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletFilterTest.java.vm";
-    private static final String FUNC_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletFilterFuncTest.java.vm";
+    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "Servlet.java.vm";
+    private static final String UNIT_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletTest.java.vm";
+    private static final String FUNC_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletFuncTest.java.vm";
 
     //examples
     private static final String EXAMPLE_CLASS_TEMPLATE = TEMPLATE_PREFIX + "Example" + CLASS_TEMPLATE;
 
-    private static final String PLUGIN_MODULE_TEMPLATE = "templates/common/servlet/filter/servlet-filter-plugin.xml.vm";
+    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-plugin.xml.vm";
 
     @Override
     public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {

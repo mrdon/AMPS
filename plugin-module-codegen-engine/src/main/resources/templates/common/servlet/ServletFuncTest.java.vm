@@ -18,11 +18,13 @@ public class ${CLASSNAME} {
 
     HttpClient httpClient;
     String baseUrl;
+    String servletUrl;
 
     @Before
     public void setup() {
         httpClient = new DefaultHttpClient();
         baseUrl = System.getProperty("baseurl");
+        servletUrl = baseUrl + "/plugins/servlet${URL_PATTERN}";
     }
 
     @After
@@ -32,7 +34,7 @@ public class ${CLASSNAME} {
 
     @Test
     public void testSomething() throws IOException {
-        HttpGet httpget = new HttpGet(baseUrl);
+        HttpGet httpget = new HttpGet(servletUrl);
 
         // Create a response handler
         ResponseHandler<String> responseHandler = new BasicResponseHandler();

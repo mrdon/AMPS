@@ -18,6 +18,7 @@ import java.util.UUID;
 public abstract class AbstractCodegenTestCase {
     protected File tempDir;
     protected File srcDir;
+    protected File testDir;
     protected File resourcesDir;
     protected File templateDir;
     protected File pluginXml;
@@ -35,6 +36,7 @@ public abstract class AbstractCodegenTestCase {
         String dirName = UUID.randomUUID().toString();
         tempDir = new File(sysTempDir, dirName);
         srcDir = new File(tempDir, "src");
+        testDir = new File(tempDir, "test-src");
         resourcesDir = new File(tempDir, "resources");
         templateDir = new File(resourcesDir, "templates");
         pluginXml = new File(resourcesDir, "atlassian-plugin.xml");
@@ -51,6 +53,6 @@ public abstract class AbstractCodegenTestCase {
 
     @After
     public void removeTempDir() throws IOException {
-        // FileUtils.deleteDirectory(tempDir);
+        FileUtils.deleteDirectory(tempDir);
     }
 }

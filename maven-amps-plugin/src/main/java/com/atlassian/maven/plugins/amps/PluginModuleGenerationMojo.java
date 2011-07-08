@@ -46,7 +46,7 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
         try {
             pluginModulePrompterFactory.scanForPrompters();
         } catch (Exception e) {
-            String message = "Error initializing Plugin Module PRompters";
+            String message = "Error initializing Plugin Module Prompters";
             getLog().error(message);
             throw new MojoExecutionException(message);
         }
