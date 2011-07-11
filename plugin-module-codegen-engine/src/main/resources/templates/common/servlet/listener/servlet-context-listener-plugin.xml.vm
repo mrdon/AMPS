@@ -5,5 +5,5 @@
         class="${FQ_CLASSNAME}">
 
     <description key="${DESCRIPTION_KEY}">${DESCRIPTION}</description>
-    
+
 </servlet-context-listener>

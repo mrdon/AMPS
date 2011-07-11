@@ -1,13 +1,13 @@
 package com.atlassian.plugins.codegen.modules.common.servlet;
 
-import com.atlassian.plugins.codegen.modules.BasicModuleProperties;
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 
 import java.util.*;
 
 /**
  * Author: jdoklovic
  */
-public class ServletFilterProperties extends BasicModuleProperties {
+public class ServletFilterProperties extends BasicClassModuleProperties {
     private static final String KEY_PREFIX = "jira.servlet.filter.";
     public static final String LOCATION = "LOCATION";
     public static final String WEIGHT = "WEIGHT";

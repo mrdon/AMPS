@@ -1,6 +1,6 @@
 package com.atlassian.plugins.codegen.util;
 
-import com.atlassian.plugins.codegen.modules.BasicModuleProperties;
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -12,7 +12,6 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.Enumeration;
-import java.util.Properties;
 
 /**
  * Author: jdoklovic
@@ -54,7 +53,7 @@ public class CodeTemplateHelper {
 
     public void writeJavaClassFromTemplate(String templatePath, String className, File sourceDirectory, String packageName, PluginModuleProperties props) throws Exception {
         String originalClass =  props.getProperty(PluginModuleProperties.FQ_CLASSNAME);
-        PluginModuleProperties overrideProps = new BasicModuleProperties(originalClass);
+        PluginModuleProperties overrideProps = new BasicClassModuleProperties(originalClass);
 
         overrideProps.putAll(props);
         overrideProps.setProperty("CLASSNAME",className);

@@ -1,6 +1,6 @@
 package com.atlassian.plugins.codegen.modules.common.servlet;
 
-import com.atlassian.plugins.codegen.modules.BasicModuleProperties;
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @since version
  */
-public class ServletProperties extends BasicModuleProperties {
+public class ServletProperties extends BasicClassModuleProperties {
     private static final String KEY_PREFIX = "jira.servlet.";
     public static final String URL_PATTERN = "URL_PATTERN";
     public static final String INIT_PARAMS = "INIT_PARAMS";

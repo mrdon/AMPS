@@ -1,12 +1,12 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.modules.BasicModuleProperties;
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import org.apache.commons.lang.StringUtils;
 
 /**
  * Author: jdoklovic
  */
-public class WorkflowPostFunctionProperties extends BasicModuleProperties {
+public class WorkflowPostFunctionProperties extends BasicClassModuleProperties {
 
     public static final String FQ_FACTORY_NAME = "FQ_FACTORY_NAME";
     public static final String FACTORY_NAME = "FACTORY_NAME";

@@ -26,6 +26,21 @@ public class ClassnameUtil {
         );
     }
 
+    public static String camelCaseOrSpaceToDashed(String s) {
+        String trimmed =  s.replaceAll("[\\s]","");
+
+        String dashed = trimmed.replaceAll(
+                String.format("%s|%s|%s",
+                        "(?<=[A-Z])(?=[A-Z][a-z])",
+                        "(?<=[^A-Z])(?=[A-Z])",
+                        "(?<=[A-Za-z])(?=[^A-Za-z])"
+                ),
+                "-"
+        );
+
+        return dashed;
+    }
+
     public static boolean isValidClassName(String s) {
         if (s.length() < 1) return false;
         if (s.equals("package-info")) return false;

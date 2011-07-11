@@ -8,34 +8,33 @@ import java.util.Properties;
 /**
  * Author: jdoklovic
  */
-public class BasicModuleProperties extends Properties implements PluginModuleProperties {
+public class BasicClassModuleProperties extends Properties implements PluginModuleProperties {
 
     private boolean includeExamples;
     private Properties i18nProperties;
 
-    public BasicModuleProperties() {
+    public BasicClassModuleProperties() {
         this("MyPluginModule");
     }
 
-    public BasicModuleProperties(Properties properties) {
+    public BasicClassModuleProperties(Properties properties) {
         this("MyPluginModule", properties);
     }
 
-    public BasicModuleProperties(String fqClassName, Properties properties) {
+    public BasicClassModuleProperties(String fqClassName, Properties properties) {
         super(properties);
         setFullyQualifiedClassname(fqClassName);
         includeExamples = false;
         i18nProperties = new Properties();
     }
 
-    public BasicModuleProperties(String fqClassName) {
+    public BasicClassModuleProperties(String fqClassName) {
         super();
         setFullyQualifiedClassname(fqClassName);
         includeExamples = false;
         i18nProperties = new Properties();
     }
 
-    @Override
     public void setFullyQualifiedClassname(String fqName) {
         String classname;
         if (StringUtils.isNotBlank(fqName)) {

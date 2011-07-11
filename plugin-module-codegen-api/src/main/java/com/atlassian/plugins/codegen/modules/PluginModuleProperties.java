@@ -24,8 +24,6 @@ public interface PluginModuleProperties extends Map<Object,Object> {
 
     String getProperty(java.lang.String s);
 
-    void setFullyQualifiedClassname(String fqName);
-
     void setDescription(String desc);
 
     void setDescriptionKey(String key);

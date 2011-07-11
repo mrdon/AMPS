@@ -1,14 +1,11 @@
 package com.atlassian.plugins.codegen.modules.common.servlet;
 
-import com.atlassian.plugins.codegen.modules.BasicModuleProperties;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 
 /**
  * @since version
  */
-public class ServletContextListenerProperties extends BasicModuleProperties {
+public class ServletContextListenerProperties extends BasicClassModuleProperties {
     private static final String KEY_PREFIX = "jira.servlet.listener.";
 
     public ServletContextListenerProperties() {
