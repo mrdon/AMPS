@@ -94,6 +94,30 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         return promptJavaPackagename(message, null);
     }
 
+    protected String promptFullyQualifiedJavaClass(String message, String defaultValue) throws PrompterException {
+        String fqName;
+        if (StringUtils.isBlank(defaultValue)) {
+            fqName = prompter.prompt(message);
+        } else {
+            fqName = prompt(message, defaultValue);
+        }
+
+        String packageName = "";
+        String className = "";
+        if(fqName.contains(".")) {
+            packageName = StringUtils.substringBeforeLast(fqName,".");
+            className = StringUtils.substringAfterLast(fqName,".");
+        } else {
+            className = fqName;
+        }
+
+        if (StringUtils.isBlank(fqName) || !ClassnameUtil.isValidPackageName(packageName) || !ClassnameUtil.isValidClassName(className)) {
+            fqName = promptFullyQualifiedJavaClass(message, defaultValue);
+        }
+
+        return fqName;
+    }
+
     protected String promptJavaPackagename(String message, String defaultValue) throws PrompterException {
         String packagename;
 
@@ -152,6 +176,10 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
 
     protected String prompt(String message, String defaultValue) throws PrompterException {
         return prompter.prompt(message, defaultValue);
+    }
+
+    protected String prompt(String message) throws PrompterException {
+        return prompter.prompt(message);
     }
 
     protected String prompt(String message, List possibleValues, String defaultValue) throws PrompterException {
