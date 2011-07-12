@@ -81,7 +81,7 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
                 throw new MojoExecutionException(message);
             }
 
-            PluginModuleProperties moduleProps = modulePrompter.getModulePropertiesFromInput();
+            PluginModuleProperties moduleProps = modulePrompter.getModulePropertiesFromInput(moduleLocation);
             creator.createModule(moduleLocation, moduleProps);
 
             //edit pom if needed

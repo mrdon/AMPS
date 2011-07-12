@@ -22,7 +22,7 @@ public class ServletContextParameterTest extends AbstractCodegenTestCase {
 
     @Before
     public void runGenerator() throws Exception {
-        PluginModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ServletContextParameterModuleCreator.MODULE_NAME);
+        ServletContextParameterModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ServletContextParameterModuleCreator.class);
         moduleLocation = new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)

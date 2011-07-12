@@ -23,7 +23,7 @@ public class ServletContextListenerTest extends AbstractCodegenTestCase {
 
     @Before
     public void runGenerator() throws Exception {
-        PluginModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ServletContextListenerModuleCreator.MODULE_NAME);
+        ServletContextListenerModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ServletContextListenerModuleCreator.class);
         moduleLocation = new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)

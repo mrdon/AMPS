@@ -9,7 +9,6 @@ import java.util.Map;
  * @since version
  */
 public class ServletProperties extends BasicClassModuleProperties {
-    private static final String KEY_PREFIX = "jira.servlet.";
     public static final String URL_PATTERN = "URL_PATTERN";
     public static final String INIT_PARAMS = "INIT_PARAMS";
 
@@ -23,12 +22,6 @@ public class ServletProperties extends BasicClassModuleProperties {
 
         //sane defaults
         setUrlPattern("/" + getProperty(CLASSNAME).toLowerCase());
-        setDescription("The " + getProperty(MODULE_NAME) + " Servlet");
-        setDescriptionKey(KEY_PREFIX + getProperty(MODULE_KEY) + ".description");
-        addI18nProperty(getProperty(DESCRIPTION_KEY), getProperty(DESCRIPTION));
-
-        setNameKey(KEY_PREFIX + getProperty(MODULE_KEY) + ".name");
-        addI18nProperty(getProperty(NAME_KEY), getProperty(MODULE_NAME));
     }
 
     public void setUrlPattern(String pattern) {

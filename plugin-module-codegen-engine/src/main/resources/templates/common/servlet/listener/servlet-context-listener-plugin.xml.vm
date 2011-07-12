@@ -1,9 +1,9 @@
 <servlet-context-listener
         name="${MODULE_NAME}"
-        i18n-name-key="${NAME_KEY}"
+        i18n-name-key="${NAME_I18N_KEY}"
         key="${MODULE_KEY}"
         class="${FQ_CLASSNAME}">
 
-    <description key="${DESCRIPTION_KEY}">${DESCRIPTION}</description>
+    <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
 
 </servlet-context-listener>

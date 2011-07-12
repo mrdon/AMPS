@@ -17,36 +17,34 @@ public class BasicNameModuleProperties extends Properties implements PluginModul
         this("MyPluginModule");
     }
 
-    public BasicNameModuleProperties(Properties properties) {
-        this("MyPluginModule", properties);
-    }
-
-    public BasicNameModuleProperties(String moduleName, Properties properties) {
-        super(properties);
-        setModuleNameAndKey(moduleName);
-        includeExamples = false;
-        i18nProperties = new Properties();
-    }
-
     public BasicNameModuleProperties(String moduleName) {
         super();
+        i18nProperties = new Properties();
         setModuleNameAndKey(moduleName);
         includeExamples = false;
-        i18nProperties = new Properties();
+
     }
 
     public void setModuleNameAndKey(String moduleName) {
         if (StringUtils.isNotBlank(moduleName)) {
-            setProperty(MODULE_NAME, moduleName);
+            setModuleName(moduleName);
             setModuleKey(ClassnameUtil.camelCaseOrSpaceToDashed(moduleName).toLowerCase());
+            setDescription("The " + getProperty(MODULE_NAME) + " Plugin");
+            setNameI18nKey(getProperty(MODULE_KEY) + ".name");
+            setDescriptionI18nKey(getProperty(MODULE_KEY) + ".description");
+
+            addI18nProperty(getProperty(DESCRIPTION_I18N_KEY), getProperty(DESCRIPTION));
+            addI18nProperty(getProperty(NAME_I18N_KEY), getProperty(MODULE_NAME));
         }
     }
 
-    private void setModuleName(String name) {
+    @Override
+    public void setModuleName(String name) {
         setProperty(MODULE_NAME, name);
     }
 
-    private void setModuleKey(String name) {
+    @Override
+    public void setModuleKey(String name) {
         setProperty(MODULE_KEY, name);
     }
 
@@ -56,13 +54,13 @@ public class BasicNameModuleProperties extends Properties implements PluginModul
     }
 
     @Override
-    public void setDescriptionKey(String key) {
-        setProperty(DESCRIPTION_KEY, key);
+    public void setDescriptionI18nKey(String key) {
+        setProperty(DESCRIPTION_I18N_KEY, key);
     }
 
     @Override
-    public void setNameKey(String key) {
-        setProperty(NAME_KEY, key);
+    public void setNameI18nKey(String key) {
+        setProperty(NAME_I18N_KEY, key);
     }
 
     @Override

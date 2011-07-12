@@ -17,7 +17,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
         , @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
         , @Dependency(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.1.1", scope = "test")
 })
-public class ServletContextListenerModuleCreator extends AbstractPluginModuleCreator {
+public class ServletContextListenerModuleCreator extends AbstractPluginModuleCreator<ServletContextListenerProperties> {
 
     public static final String MODULE_NAME = "Servlet Context Listener";
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/listener/";
@@ -32,7 +32,7 @@ public class ServletContextListenerModuleCreator extends AbstractPluginModuleCre
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-context-listener-plugin.xml.vm";
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ServletContextListenerProperties props) throws Exception {
         String packageName = props.getProperty(PluginModuleProperties.PACKAGE);
 
         String classname = props.getProperty(PluginModuleProperties.CLASSNAME);

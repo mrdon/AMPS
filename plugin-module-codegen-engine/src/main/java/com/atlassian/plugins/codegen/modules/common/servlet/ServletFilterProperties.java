@@ -8,7 +8,6 @@ import java.util.*;
  * Author: jdoklovic
  */
 public class ServletFilterProperties extends BasicClassModuleProperties {
-    private static final String KEY_PREFIX = "jira.servlet.filter.";
     public static final String LOCATION = "LOCATION";
     public static final String WEIGHT = "WEIGHT";
     public static final String URL_PATTERN = "URL_PATTERN";
@@ -51,12 +50,6 @@ public class ServletFilterProperties extends BasicClassModuleProperties {
         setUrlPattern("/*");
         setLocation(ALLOWED_LOCATIONS.get(3));
         setWeight(100);
-        setDescription("The " + getProperty(MODULE_NAME) + " Servlet Filter");
-        setDescriptionKey(KEY_PREFIX + getProperty(MODULE_KEY) + ".description");
-        addI18nProperty(getProperty(DESCRIPTION_KEY), getProperty(DESCRIPTION));
-
-        setNameKey(KEY_PREFIX + getProperty(MODULE_KEY) + ".name");
-        addI18nProperty(getProperty(NAME_KEY), getProperty(MODULE_NAME));
     }
 
     public void setLocation(String location) {

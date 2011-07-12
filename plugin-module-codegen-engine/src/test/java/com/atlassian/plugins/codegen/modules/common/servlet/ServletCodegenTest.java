@@ -1,6 +1,7 @@
 package com.atlassian.plugins.codegen.modules.common.servlet;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -23,7 +24,7 @@ public class ServletCodegenTest extends AbstractCodegenTestCase {
 
     @Before
     public void runGenerator() throws Exception {
-        PluginModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ServletModuleCreator.MODULE_NAME);
+        ServletModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ServletModuleCreator.class);
         moduleLocation = new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)
@@ -35,6 +36,7 @@ public class ServletCodegenTest extends AbstractCodegenTestCase {
         props.setIncludeExamples(false);
         props.addInitParam("foo", "bar");
 
+        creator.createModule(moduleLocation,props);
         creator.createModule(moduleLocation,props);
     }
 

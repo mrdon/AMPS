@@ -59,7 +59,7 @@ public class ModulePrompterAnnotationParser extends AbstractAnnotationParser {
 
             if(isModulePrompter && !normalize(superName).equals(AbstractModulePrompter.class.getName())) {
                 isModulePrompter = false;
-                if(null != log) {
+                if(null != log && !AbstractModulePrompter.class.getName().equals(visitedClassname)) {
                     log.warn(visitedClassname + " MUST extend " + AbstractModulePrompter.class.getName() + ". NOT REGISTERED");
                 }
             }

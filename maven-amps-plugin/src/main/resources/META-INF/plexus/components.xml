@@ -39,6 +39,21 @@
             </configuration>
         </component>
         <component>
+            <role>org.codehaus.plexus.components.interactivity.Prompter</role>
+            <role-hint>pretty-prompter</role-hint>
+            <implementation>com.atlassian.maven.plugins.amps.codegen.prompter.PrettyPrompter</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.codehaus.plexus.components.interactivity.OutputHandler</role>
+                    <field-name>outputHandler</field-name>
+                </requirement>
+                <requirement>
+                    <role>org.codehaus.plexus.components.interactivity.InputHandler</role>
+                    <field-name>inputHandler</field-name>
+                </requirement>
+            </requirements>
+        </component>
+        <component>
             <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
             <role-hint>atlassian-plugin</role-hint>
             <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>

@@ -15,7 +15,7 @@ public class DefaultPluginModuleSelectionQueryer extends AbstractLogEnabled impl
     private Prompter prompter;
 
     @Override
-    public PluginModuleCreator selectModule(Map<String, PluginModuleCreator> map) throws PrompterException {
+    public PluginModuleCreator selectModule(Map<Class, PluginModuleCreator> map) throws PrompterException {
         StringBuilder query = new StringBuilder( "Choose Plugin Module:\n" );
 
         List<String> answers = new ArrayList<String>();
@@ -23,13 +23,13 @@ public class DefaultPluginModuleSelectionQueryer extends AbstractLogEnabled impl
 
         int counter = 1;
 
-        for ( Map.Entry<String, PluginModuleCreator> entry : map.entrySet() )
+        for ( Map.Entry<Class, PluginModuleCreator> entry : map.entrySet() )
         {
             PluginModuleCreator moduleCreator = entry.getValue();
 
                 String answer = String.valueOf( counter );
 
-                query.append( answer + ": " + entry.getKey() + "\n" );
+                query.append( answer + ": " + entry.getValue().getModuleName() + "\n" );
 
                 answers.add( answer );
 
@@ -38,7 +38,7 @@ public class DefaultPluginModuleSelectionQueryer extends AbstractLogEnabled impl
                 counter++;
         }
 
-        query.append( "Choose a number: " );
+        query.append( "Choose a number" );
 
         String answer = prompter.prompt( query.toString(), answers );
 

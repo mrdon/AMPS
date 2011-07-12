@@ -19,7 +19,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
         , @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
         , @Dependency(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.1.1", scope = "test")
 })
-public class ServletModuleCreator extends AbstractPluginModuleCreator {
+public class ServletModuleCreator extends AbstractPluginModuleCreator<ServletProperties> {
 
     public static final String MODULE_NAME = "Servlet";
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/";
@@ -35,7 +35,7 @@ public class ServletModuleCreator extends AbstractPluginModuleCreator {
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-plugin.xml.vm";
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ServletProperties props) throws Exception {
         String packageName = props.getProperty(PluginModuleProperties.PACKAGE);
 
         String classname = props.getProperty(PluginModuleProperties.CLASSNAME);

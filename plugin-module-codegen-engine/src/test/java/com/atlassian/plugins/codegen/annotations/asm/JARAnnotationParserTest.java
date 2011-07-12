@@ -41,51 +41,51 @@ public class JARAnnotationParserTest {
 
         parser.parse(MODULES_PACKAGE);
 
-        Map<String, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
+        Map<Class, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
         assertNotNull("module map is null", modules);
         assertTrue("no testmodules registered", modules.size() > 0);
-        assertTrue("jira module not found", modules.containsKey(JARValidJiraModuleCreator.MODULE_NAME));
+        assertTrue("jira module not found", modules.containsKey(JARValidJiraModuleCreator.class));
     }
 
     @Test
     public void annotatedWithoutInterfaceIsNotRegistered() throws Exception {
         parser.parse(MODULES_PACKAGE);
 
-        Map<String, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
+        Map<Class, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
         assertNotNull("module map is null", modules);
         assertTrue("no testmodules registered", modules.size() > 0);
-        assertTrue("non-module found", !modules.containsKey(JARJiraAnnotatedWithoutInterface.MODULE_NAME));
+        assertTrue("non-module found", !modules.containsKey(JARJiraAnnotatedWithoutInterface.class));
     }
 
     @Test
     public void nestedCreatorsAreRegistered() throws Exception {
         parser.parse(MODULES_PACKAGE);
 
-        Map<String, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
+        Map<Class, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
         assertNotNull("module map is null", modules);
         assertTrue("no testmodules registered", modules.size() > 0);
-        assertTrue("nested jira module not found", modules.containsKey(JARNestedValidJira.MODULE_NAME));
+        assertTrue("nested jira module not found", modules.containsKey(JARNestedValidJira.class));
     }
 
     @Test
     public void inheritedCreatorsAreRegistered() throws Exception {
         parser.parse(MODULES_PACKAGE);
 
-        Map<String, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
+        Map<Class, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
         assertNotNull("module map is null", modules);
         assertTrue("no testmodules registered", modules.size() > 0);
-        assertTrue("inherited jira module not found", modules.containsKey(JARInheritedValidJira.MODULE_NAME));
+        assertTrue("inherited jira module not found", modules.containsKey(JARInheritedValidJira.class));
     }
 
     @Test
     public void muiltipleProductsHaveSameCreator() throws Exception {
         parser.parse(MODULES_PACKAGE);
 
-        Map<String, PluginModuleCreator> jiraModules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
-        Map<String, PluginModuleCreator> confluenceModules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.CONFLUENCE);
+        Map<Class, PluginModuleCreator> jiraModules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
+        Map<Class, PluginModuleCreator> confluenceModules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.CONFLUENCE);
 
-        assertTrue("jiraAndConfluence not found for jira", jiraModules.containsKey(JARJiraAndConfluenceCreator.MODULE_NAME));
-        assertTrue("jiraAndConfluence not found for confluence", confluenceModules.containsKey(JARJiraAndConfluenceCreator.MODULE_NAME));
+        assertTrue("jiraAndConfluence not found for jira", jiraModules.containsKey(JARJiraAndConfluenceCreator.class));
+        assertTrue("jiraAndConfluence not found for confluence", confluenceModules.containsKey(JARJiraAndConfluenceCreator.class));
     }
 
     @Test

@@ -29,12 +29,12 @@ public class PluginModuleCreatorFactoryImpl implements PluginModuleCreatorFactor
     }
 
     @Override
-    public PluginModuleCreator getModuleCreator(String productId, String creatorKey) {
-        return creatorRegistry.getModuleCreator(productId, creatorKey);
+    public PluginModuleCreator getModuleCreator(String productId, Class creatorClass) {
+        return creatorRegistry.getModuleCreator(productId, creatorClass);
     }
 
     @Override
-    public Map<String,PluginModuleCreator> getModuleCreatorsForProduct(String productId) {
+    public Map<Class,PluginModuleCreator> getModuleCreatorsForProduct(String productId) {
         return creatorRegistry.getModuleCreatorsForProduct(productId);
     }
 

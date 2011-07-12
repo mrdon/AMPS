@@ -17,7 +17,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
         , @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
         , @Dependency(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.1.1", scope = "test")
 })
-public class ServletFilterModuleCreator extends AbstractPluginModuleCreator {
+public class ServletFilterModuleCreator extends AbstractPluginModuleCreator<ServletFilterProperties> {
 
     public static final String MODULE_NAME = "Servlet Filter";
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/filter/";
@@ -33,7 +33,7 @@ public class ServletFilterModuleCreator extends AbstractPluginModuleCreator {
     private static final String PLUGIN_MODULE_TEMPLATE = "templates/common/servlet/filter/servlet-filter-plugin.xml.vm";
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ServletFilterProperties props) throws Exception {
         String packageName = props.getProperty(PluginModuleProperties.PACKAGE);
 
         String classname = props.getProperty(PluginModuleProperties.CLASSNAME);

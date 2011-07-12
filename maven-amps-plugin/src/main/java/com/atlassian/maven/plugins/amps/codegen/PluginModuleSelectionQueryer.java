@@ -6,8 +6,8 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import java.util.Map;
 
 /**
- * Author: jdoklovic
+ * @since version
  */
 public interface PluginModuleSelectionQueryer {
-    public PluginModuleCreator selectModule(Map<String,PluginModuleCreator> map) throws PrompterException;
+    public PluginModuleCreator selectModule(Map<Class,PluginModuleCreator> map) throws PrompterException;
 }

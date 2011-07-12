@@ -14,11 +14,13 @@ import java.util.Properties;
 /**
  * Author: jdoklovic
  */
-public abstract class AbstractPluginModuleCreator implements PluginModuleCreator {
+public abstract class AbstractPluginModuleCreator<T extends PluginModuleProperties> implements PluginModuleCreator<T> {
     public static final String DEFAULT_I18N_NAME = "atlassian-plugin";
     public static final String FUNC_TEST_PACKAGE = "it";
     public static final String TEST_SUFFIX = "Test";
     public static final String FUNCT_TEST_SUFFIX = "FuncTest";
+    public static final String GENERIC_TEMPLATE_PREFIX = "templates/generic/";
+    public static final String GENERIC_TEST_TEMPLATE = GENERIC_TEMPLATE_PREFIX + "GenericTest.java.vm";
 
     protected CodeTemplateHelper templateHelper;
 
@@ -31,7 +33,9 @@ public abstract class AbstractPluginModuleCreator implements PluginModuleCreator
     }
 
     @Override
-    public abstract void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception;
+    public abstract void createModule(PluginModuleLocation location, T props) throws Exception;
+
+
 
     protected void addModuleToPluginXml(String templatePath, PluginModuleLocation location, PluginModuleProperties props) throws Exception {
         PluginXmlHelper pluginXmlHelper = new PluginXmlHelper(location.getPluginXml());

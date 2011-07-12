@@ -10,13 +10,15 @@ import java.util.Properties;
 public interface PluginModuleProperties extends Map<Object,Object> {
     String FQ_CLASSNAME = "FQ_CLASSNAME";
     String CLASSNAME = "CLASSNAME";
-    String CLASS_UNDER_TEST = "CLASS_UNDER_TEST";
     String PACKAGE = "PACKAGE";
+    String CLASS_UNDER_TEST = "CLASS_UNDER_TEST";
+    String PACKAGE_UNDER_TEST = "PACKAGE_UNDER_TEST";
+    String FQ_CLASS_UNDER_TEST = "FQ_CLASS_UNDER_TEST";
     String DESCRIPTION = "DESCRIPTION";
-    String DESCRIPTION_KEY = "DESCRIPTION_KEY";
+    String DESCRIPTION_I18N_KEY = "DESCRIPTION_I18N_KEY";
     String MODULE_NAME = "MODULE_NAME";
     String MODULE_KEY = "MODULE_KEY";
-    String NAME_KEY = "NAME_KEY";
+    String NAME_I18N_KEY = "NAME_I18N_KEY";
 
     Enumeration<?> propertyNames();
 
@@ -26,9 +28,9 @@ public interface PluginModuleProperties extends Map<Object,Object> {
 
     void setDescription(String desc);
 
-    void setDescriptionKey(String key);
+    void setDescriptionI18nKey(String key);
 
-    void setNameKey(String key);
+    void setNameI18nKey(String key);
 
     void setIncludeExamples(boolean includeExamples);
 
@@ -37,4 +39,8 @@ public interface PluginModuleProperties extends Map<Object,Object> {
     void addI18nProperty(String name, String value);
 
     Properties getI18nProperties();
+
+    void setModuleName(String name);
+
+    void setModuleKey(String name);
 }

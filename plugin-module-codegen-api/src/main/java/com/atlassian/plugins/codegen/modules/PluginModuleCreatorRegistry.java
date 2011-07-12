@@ -19,8 +19,8 @@ public interface PluginModuleCreatorRegistry {
     public static final String CROWD = "crowd";
 
     void registerModuleCreator(String productId, PluginModuleCreator moduleCreator);
-    PluginModuleCreator getModuleCreator(String productId, String creatorKey);
-    Map<String,PluginModuleCreator> getModuleCreatorsForProduct(String productId);
+    <T extends PluginModuleCreator> T getModuleCreator(String productId, Class<T> type);
+    Map<Class,PluginModuleCreator> getModuleCreatorsForProduct(String productId);
 
     void registerModuleCreatorDependencies(Class creatorClass, List<DependencyDescriptor> dependencies);
     List<DependencyDescriptor> getDependenciesForCreatorClass(Class creatorClass);

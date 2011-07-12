@@ -15,7 +15,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "javax.servlet", artifactId = "servlet-api", version = "2.4", scope = "provided")
 })
-public class ServletContextParameterModuleCreator extends AbstractPluginModuleCreator {
+public class ServletContextParameterModuleCreator extends AbstractPluginModuleCreator<ServletContextParameterProperties> {
 
     public static final String MODULE_NAME = "Servlet Context Parameter";
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/parameter/";
@@ -23,7 +23,7 @@ public class ServletContextParameterModuleCreator extends AbstractPluginModuleCr
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-context-parameter-plugin.xml.vm";
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ServletContextParameterProperties props) throws Exception {
 
         addModuleToPluginXml(PLUGIN_MODULE_TEMPLATE, location, props);
     }

@@ -39,12 +39,12 @@ public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreat
             props.setProperty(PluginModuleProperties.DESCRIPTION, "The " + moduleName + " Workflow Post Function");
         }
 
-        if (!props.containsKey(PluginModuleProperties.DESCRIPTION_KEY)) {
-            props.setProperty(PluginModuleProperties.DESCRIPTION_KEY, KEY_PREFIX + moduleKey);
+        if (!props.containsKey(PluginModuleProperties.DESCRIPTION_I18N_KEY)) {
+            props.setProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY, KEY_PREFIX + moduleKey);
         }
 
-        if (!props.containsKey(PluginModuleProperties.NAME_KEY)) {
-            props.setProperty(PluginModuleProperties.NAME_KEY, KEY_PREFIX + moduleKey + ".name");
+        if (!props.containsKey(PluginModuleProperties.NAME_I18N_KEY)) {
+            props.setProperty(PluginModuleProperties.NAME_I18N_KEY, KEY_PREFIX + moduleKey + ".name");
         }
 
         templateHelper.writeJavaClassFromTemplate(FUNCTION_TEMPLATE, functionClass, location.getSourceDirectory(), packageName, props);

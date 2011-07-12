@@ -10,9 +10,9 @@ import java.util.Map;
  * @since version
  */
 public interface PluginModuleCreatorFactory {
-    PluginModuleCreator getModuleCreator(String productId, String creatorKey);
+    PluginModuleCreator getModuleCreator(String productId, Class creatorClass);
 
-    Map<String,PluginModuleCreator> getModuleCreatorsForProduct(String productId);
+    Map<Class,PluginModuleCreator> getModuleCreatorsForProduct(String productId);
 
     List<DependencyDescriptor> getDependenciesForCreatorClass(Class creatorClass);
 }

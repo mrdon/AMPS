@@ -1,5 +1,7 @@
 package com.atlassian.plugins.codegen.util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Author: jdoklovic
  */
@@ -39,6 +41,20 @@ public class ClassnameUtil {
         );
 
         return dashed;
+    }
+
+    public static String fullyQualifiedName(String packageName, String className) {
+        String fqName = "";
+        String packagePrefix = "";
+        if(StringUtils.isNotBlank(packageName)) {
+            packagePrefix = packageName.endsWith(".") ? packageName : packageName + ".";
+        }
+
+        if(StringUtils.isNotBlank(className)) {
+            fqName = packagePrefix + className;
+        }
+
+        return fqName;
     }
 
     public static boolean isValidClassName(String s) {

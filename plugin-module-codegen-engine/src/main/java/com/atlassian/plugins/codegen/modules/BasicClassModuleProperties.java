@@ -17,22 +17,23 @@ public class BasicClassModuleProperties extends Properties implements PluginModu
         this("MyPluginModule");
     }
 
-    public BasicClassModuleProperties(Properties properties) {
-        this("MyPluginModule", properties);
-    }
-
-    public BasicClassModuleProperties(String fqClassName, Properties properties) {
-        super(properties);
-        setFullyQualifiedClassname(fqClassName);
-        includeExamples = false;
-        i18nProperties = new Properties();
-    }
-
     public BasicClassModuleProperties(String fqClassName) {
         super();
-        setFullyQualifiedClassname(fqClassName);
-        includeExamples = false;
         i18nProperties = new Properties();
+
+        setFullyQualifiedClassname(fqClassName);
+
+        String classname = getProperty(CLASSNAME);
+        setModuleName(ClassnameUtil.camelCaseToSpaced(classname));
+        setModuleKey(ClassnameUtil.camelCaseToDashed(classname).toLowerCase());
+        setDescription("The " + getProperty(MODULE_NAME) + " Plugin");
+        setNameI18nKey(getProperty(MODULE_KEY) + ".name");
+        setDescriptionI18nKey(getProperty(MODULE_KEY) + ".description");
+
+        addI18nProperty(getProperty(DESCRIPTION_I18N_KEY), getProperty(DESCRIPTION));
+        addI18nProperty(getProperty(NAME_I18N_KEY), getProperty(MODULE_NAME));
+
+        includeExamples = false;
     }
 
     public void setFullyQualifiedClassname(String fqName) {
@@ -42,32 +43,50 @@ public class BasicClassModuleProperties extends Properties implements PluginModu
                 classname = StringUtils.substringAfterLast(fqName, ".");
                 String packageName = StringUtils.substringBeforeLast(fqName, ".");
                 setProperty(CLASSNAME, classname);
-                if(StringUtils.isBlank(getProperty(CLASS_UNDER_TEST))) {
-                    setProperty(CLASS_UNDER_TEST, classname);
+                if(StringUtils.isBlank(getProperty(FQ_CLASS_UNDER_TEST))) {
+                    setClassUnderTest(fqName);
                 }
 
                 setProperty(PACKAGE, packageName);
             } else {
                 classname = fqName;
                 setProperty(CLASSNAME, classname);
-                if(StringUtils.isBlank(getProperty(CLASS_UNDER_TEST))) {
-                    setProperty(CLASS_UNDER_TEST, classname);
+                if(StringUtils.isBlank(getProperty(FQ_CLASS_UNDER_TEST))) {
+                    setClassUnderTest(fqName);
                 }
                 setProperty(PACKAGE, "");
             }
 
             setProperty(FQ_CLASSNAME, fqName);
-            setModuleName(ClassnameUtil.camelCaseToSpaced(classname).toLowerCase());
-            setModuleKey(ClassnameUtil.camelCaseToDashed(classname).toLowerCase());
         }
 
     }
 
-    private void setModuleName(String name) {
+    public void setClassUnderTest(String fqName) {
+        String classname;
+        if (StringUtils.isNotBlank(fqName)) {
+            if (fqName.lastIndexOf(".") > 0) {
+                classname = StringUtils.substringAfterLast(fqName, ".");
+                String packageName = StringUtils.substringBeforeLast(fqName, ".");
+                setProperty(CLASS_UNDER_TEST, classname);
+                setProperty(PACKAGE_UNDER_TEST, packageName);
+            } else {
+                classname = fqName;
+                setProperty(CLASS_UNDER_TEST, classname);
+                setProperty(PACKAGE_UNDER_TEST, "");
+            }
+
+            setProperty(FQ_CLASS_UNDER_TEST, fqName);
+        }
+    }
+
+    @Override
+    public void setModuleName(String name) {
         setProperty(MODULE_NAME, name);
     }
 
-    private void setModuleKey(String name) {
+    @Override
+    public void setModuleKey(String name) {
         setProperty(MODULE_KEY, name);
     }
 
@@ -77,13 +96,13 @@ public class BasicClassModuleProperties extends Properties implements PluginModu
     }
 
     @Override
-    public void setDescriptionKey(String key) {
-        setProperty(DESCRIPTION_KEY, key);
+    public void setDescriptionI18nKey(String key) {
+        setProperty(DESCRIPTION_I18N_KEY, key);
     }
 
     @Override
-    public void setNameKey(String key) {
-        setProperty(NAME_KEY, key);
+    public void setNameI18nKey(String key) {
+        setProperty(NAME_I18N_KEY, key);
     }
 
     @Override

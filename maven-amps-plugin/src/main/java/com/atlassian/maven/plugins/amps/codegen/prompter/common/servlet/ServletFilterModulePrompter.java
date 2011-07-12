@@ -2,9 +2,10 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common.servlet;
 
 import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
+import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.servlet.ServletFilterModuleCreator;
 import com.atlassian.plugins.codegen.modules.common.servlet.ServletFilterProperties;
+import com.atlassian.plugins.codegen.util.ClassnameUtil;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @since version
  */
 @ModuleCreatorClass(ServletFilterModuleCreator.class)
-public class ServletFilterModulePrompter extends AbstractModulePrompter {
+public class ServletFilterModulePrompter extends AbstractModulePrompter<ServletFilterProperties> {
 
     public ServletFilterModulePrompter(Prompter prompter) {
         super(prompter);
@@ -26,37 +27,29 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
     }
 
     @Override
-    public PluginModuleProperties getModulePropertiesFromInput() throws PrompterException {
+    public ServletFilterProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyServletFilter");
         String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet.filter");
 
-        ServletFilterProperties props = new ServletFilterProperties(packageName + "." + className);
-
-        boolean showAdvanced = promptForBoolean("Show Advanced Setup?", "N");
-
-        if (showAdvanced) {
-            props.setUrlPattern(getUrlPatternFromUser());
-            props.setLocation(getLocationFromUser(props.allowedLocations()));
-            props.setWeight(Integer.parseInt(getWeightFromUser()));
-
-            List<String> dispatchers = promptForDispatchers(props.allowedDispatchers());
-            if (dispatchers.size() > 0) {
-                props.setDispatchers(dispatchers);
-            }
-
-            Map<String, String> initParams = promptForInitParams();
-            if (initParams.size() > 0) {
-                props.setInitParams(initParams);
-            }
-        }
-
-        boolean includeExamples = promptForBoolean("Include Example Code?", "N");
-
-        props.setIncludeExamples(includeExamples);
-
-        return props;
+        return new ServletFilterProperties(ClassnameUtil.fullyQualifiedName(packageName, className));
     }
 
+    @Override
+    public void promptForAdvancedProperties(ServletFilterProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
+        props.setUrlPattern(getUrlPatternFromUser());
+        props.setLocation(getLocationFromUser(props.allowedLocations()));
+        props.setWeight(Integer.parseInt(getWeightFromUser()));
+
+        List<String> dispatchers = promptForDispatchers(props.allowedDispatchers());
+        if (dispatchers.size() > 0) {
+            props.setDispatchers(dispatchers);
+        }
+
+        Map<String, String> initParams = promptForInitParams();
+        if (initParams.size() > 0) {
+            props.setInitParams(initParams);
+        }
+    }
 
     private String getUrlPatternFromUser() throws PrompterException {
         String pattern = promptNotBlank("URL Pattern", "/*");
@@ -65,7 +58,7 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
     }
 
     private String getWeightFromUser() throws PrompterException {
-        String weight = prompter.prompt("Location Weight", "100");
+        String weight = prompt("Location Weight", "100");
         if (StringUtils.isBlank(weight) || !StringUtils.isNumeric(weight)) {
             weight = getWeightFromUser();
         }
@@ -84,7 +77,7 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
         }
 
         locationQuery.append("Choose a number: ");
-        String locationAnswer = prompter.prompt(locationQuery.toString(), indexChoices, "4");
+        String locationAnswer = prompt(locationQuery.toString(), indexChoices, "4");
 
         return allowedLocations.get(Integer.parseInt(locationAnswer) - 1);
     }
@@ -113,7 +106,7 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter {
             }
 
             dispatcherQuery.append("Choose a number: ");
-            String dispatcherAnswer = prompter.prompt(dispatcherQuery.toString(), indexChoices, "1");
+            String dispatcherAnswer = prompt(dispatcherQuery.toString(), indexChoices, "1");
             int selectedIndex = Integer.parseInt(dispatcherAnswer) - 1;
 
             String selectedDispatcher = allowedDispatchers.get(selectedIndex);

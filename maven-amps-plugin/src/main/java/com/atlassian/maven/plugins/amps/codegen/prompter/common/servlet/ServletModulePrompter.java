@@ -2,10 +2,11 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common.servlet;
 
 import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
+import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.servlet.ServletModuleCreator;
 import com.atlassian.plugins.codegen.modules.common.servlet.ServletProperties;
-import org.apache.commons.lang.StringUtils;
+import com.atlassian.plugins.codegen.util.ClassnameUtil;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
@@ -16,7 +17,7 @@ import java.util.Map;
  * @since version
  */
 @ModuleCreatorClass(ServletModuleCreator.class)
-public class ServletModulePrompter extends AbstractModulePrompter {
+public class ServletModulePrompter extends AbstractModulePrompter<ServletProperties> {
 
     public ServletModulePrompter(Prompter prompter) {
         super(prompter);
@@ -24,28 +25,21 @@ public class ServletModulePrompter extends AbstractModulePrompter {
     }
 
     @Override
-    public PluginModuleProperties getModulePropertiesFromInput() throws PrompterException {
+    public ServletProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyServlet");
         String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet");
 
-        ServletProperties props = new ServletProperties(packageName + "." + className);
+        return new ServletProperties(ClassnameUtil.fullyQualifiedName(packageName, className));
+    }
 
-        boolean showAdvanced = promptForBoolean("Show Advanced Setup?", "N");
+    @Override
+    public void promptForAdvancedProperties(ServletProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
+        props.setUrlPattern(getUrlPatternFromUser("/" + props.getProperty(PluginModuleProperties.CLASSNAME).toLowerCase()));
 
-        if (showAdvanced) {
-            props.setUrlPattern(getUrlPatternFromUser("/" + className.toLowerCase()));
-
-            Map<String, String> initParams = promptForInitParams();
-            if (initParams.size() > 0) {
-                props.setInitParams(initParams);
-            }
+        Map<String, String> initParams = promptForInitParams();
+        if (initParams.size() > 0) {
+            props.setInitParams(initParams);
         }
-
-        boolean includeExamples = promptForBoolean("Include Example Code?", "N");
-
-        props.setIncludeExamples(includeExamples);
-
-        return props;
     }
 
     private String getUrlPatternFromUser(String defaultVal) throws PrompterException {
