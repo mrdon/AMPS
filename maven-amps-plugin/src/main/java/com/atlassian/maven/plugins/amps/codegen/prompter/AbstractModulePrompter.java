@@ -7,16 +7,13 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 /**
- * Author: jdoklovic
+ * @since version
  */
 public abstract class AbstractModulePrompter<T extends PluginModuleProperties> implements PluginModulePrompter<T> {
-    protected final List<String> ynAnswers;
     protected final Prompter prompter;
     protected boolean showExamplesPrompt;
     protected boolean showAdvancedPrompt;
@@ -25,12 +22,11 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         this.prompter = prompter;
         this.showExamplesPrompt = true;
         this.showAdvancedPrompt = true;
-        ynAnswers = new ArrayList<String>(Arrays.asList("Y", "y", "N", "n"));
     }
 
     @Override
-    public PluginModuleProperties getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException {
-        T props = (T)promptForBasicProperties(moduleLocation);
+    public <P extends PluginModuleProperties> P getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException {
+        T props = (T) promptForBasicProperties(moduleLocation);
 
         if (showAdvancedPrompt) {
             boolean showAdvanced = promptForBoolean("Show Advanced Setup?", "N");
@@ -45,6 +41,8 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
                 props.setModuleName(moduleName);
                 props.setModuleKey(moduleKey);
                 props.setDescription(moduleDescription);
+                props.setNameI18nKey(moduleI18nNameKey);
+                props.setDescriptionI18nKey(moduleI18nDescriptionKey);
 
                 Properties currentI18n = props.getI18nProperties();
                 currentI18n.remove(PluginModuleProperties.NAME_I18N_KEY);
@@ -61,7 +59,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
             props.setIncludeExamples(promptForBoolean("Include Example Code?", "N"));
         }
 
-        return props;
+        return (P)props;
     }
 
     @Override
@@ -104,9 +102,9 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
 
         String packageName = "";
         String className = "";
-        if(fqName.contains(".")) {
-            packageName = StringUtils.substringBeforeLast(fqName,".");
-            className = StringUtils.substringAfterLast(fqName,".");
+        if (fqName.contains(".")) {
+            packageName = StringUtils.substringBeforeLast(fqName, ".");
+            className = StringUtils.substringAfterLast(fqName, ".");
         } else {
             className = fqName;
         }
@@ -160,9 +158,9 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         String answer;
         boolean bool;
         if (StringUtils.isBlank(defaultValue)) {
-            answer = prompter.prompt(message, ynAnswers);
+            answer = prompter.prompt(message, YN_ANSWERS);
         } else {
-            answer = prompt(message, ynAnswers, defaultValue);
+            answer = prompt(message, YN_ANSWERS, defaultValue);
         }
 
         if ("y".equals(answer.toLowerCase())) {
