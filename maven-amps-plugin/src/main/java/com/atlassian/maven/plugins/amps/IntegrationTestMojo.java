@@ -1,6 +1,19 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import static com.google.common.collect.Iterables.transform;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -9,8 +22,10 @@ import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
-import java.io.File;
-import java.util.*;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.util.concurrent.AsyncCompleter;
+import com.atlassian.util.concurrent.ExceptionPolicy;
+import com.google.common.base.Function;
 
 /**
  * Run the integration tests against the webapp
@@ -136,8 +151,6 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         return ids;
     }
 
-
-
     private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Map<String,Object> systemProperties) throws MojoExecutionException
     {
         List<String> includes = getIncludesForTestGroup(testGroupId);
@@ -145,9 +158,61 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
 
         List<ProductExecution> productExecutions = getTestGroupProductExecutions(testGroupId);
 
+        ExecutorService executor = Executors.newFixedThreadPool(productExecutions.size());
+        AsyncCompleter completer = new AsyncCompleter.Builder(executor).handleExceptions(ExceptionPolicy.Policies.THROW).build();
+        
         // Install the plugin in each product and start it
-        for (ProductExecution productExecution : productExecutions)
+        for (Map<String, Object> productProperties : completer.invokeAll(transform(productExecutions, productStarter(pluginJar))))
         {
+            systemProperties.putAll(productProperties);
+        }
+        if (productExecutions.size() == 1)
+        {
+            Product product = productExecutions.get(0).getProduct();
+            systemProperties.put("http.port", systemProperties.get("http." + product.getInstanceId() + ".port"));
+            systemProperties.put("context.path", product.getContextPath());
+        }
+        systemProperties.put("testGroup", testGroupId);
+        systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
+
+        // Actually run the tests
+        goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);
+
+        // Shut all products down
+        if (!noWebapp)
+        {
+            completer.invokeAll(transform(productExecutions, productStopper()));
+        }
+        executor.shutdown();
+    }
+
+    private Function<ProductExecution, Callable<Map<String, Object>>> productStarter(final String pluginJar)
+    {
+        return new Function<ProductExecution, Callable<Map<String,Object>>>()
+        {
+            @Override
+            public Callable<Map<String, Object>> apply(ProductExecution productExecution)
+            {
+                return new ProductStarter(pluginJar, productExecution);
+            }
+        };
+    }
+    
+    private final class ProductStarter implements Callable<Map<String, Object>>
+    {
+        private final String pluginJar;
+        private final ProductExecution productExecution;
+
+        public ProductStarter(String pluginJar, ProductExecution productExecution)
+        {
+            this.pluginJar = pluginJar;
+            this.productExecution = productExecution;
+        }
+
+        @Override
+        public Map<String, Object> call() throws Exception
+        {
+            Map<String, Object> properties = new HashMap<String, Object>();
             ProductHandler productHandler = productExecution.getProductHandler();
             Product product = productExecution.getProduct();
             product.setInstallPlugin(installPlugin);
@@ -158,50 +223,49 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
                 actualHttpPort = productHandler.start(product);
             }
 
-            if (productExecutions.size() == 1)
-            {
-                systemProperties.put("http.port", String.valueOf(actualHttpPort));
-                systemProperties.put("context.path", product.getContextPath());
-            }
-
             String baseUrl = MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath());
             // hard coded system properties...
-            systemProperties.put("http." + product.getInstanceId() + ".port", String.valueOf(actualHttpPort));
-            systemProperties.put("context." + product.getInstanceId() + ".path", product.getContextPath());
-            systemProperties.put("http." + product.getInstanceId() + ".url", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
+            properties.put("http." + product.getInstanceId() + ".port", String.valueOf(actualHttpPort));
+            properties.put("context." + product.getInstanceId() + ".path", product.getContextPath());
+            properties.put("http." + product.getInstanceId() + ".url", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
 
-            systemProperties.put("baseurl." + product.getInstanceId(), baseUrl);
-            systemProperties.put("plugin.jar", pluginJar);
+            properties.put("baseurl." + product.getInstanceId(), baseUrl);
+            properties.put("plugin.jar", pluginJar);
 
-            // yes, this means you only get one base url if multiple products, but that is what selenium would expect
-            if (!systemProperties.containsKey("baseurl"))
+            properties.put("baseurl", baseUrl);
+            
+            properties.put("homedir." + product.getInstanceId(), productHandler.getHomeDirectory(product).getAbsolutePath());
+            if (!properties.containsKey("homedir"))
             {
-                systemProperties.put("baseurl", baseUrl);
+                properties.put("homedir", productHandler.getHomeDirectory(product).getAbsolutePath());
             }
             
-            systemProperties.put("homedir." + product.getInstanceId(), productHandler.getHomeDirectory(product).getAbsolutePath());
-            if (!systemProperties.containsKey("homedir"))
-            {
-                systemProperties.put("homedir", productHandler.getHomeDirectory(product).getAbsolutePath());
-            }
-            
-            systemProperties.putAll(getProductFunctionalTestProperties(product));
+            properties.putAll(getProductFunctionalTestProperties(product));
+            return properties;
         }
-        systemProperties.put("testGroup", testGroupId);
-        systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
+    }
+    
+    private Function<ProductExecution, Callable<Void>> productStopper()
+    {
+        return ProductStopper.INSTANCE;
+    }
+    
+    enum ProductStopper implements Function<ProductExecution, Callable<Void>>
+    {
+        INSTANCE;
 
-        // Actually run the tests
-        goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);
-
-        // Shut all products down
-        for (ProductExecution productExecution : productExecutions)
+        @Override
+        public Callable<Void> apply(final ProductExecution productExecution)
         {
-            ProductHandler productHandler = productExecution.getProductHandler();
-            Product product = productExecution.getProduct();
-            if (!noWebapp)
+            return new Callable<Void>()
             {
-                productHandler.stop(product);
-            }
+                @Override
+                public Void call() throws Exception
+                {
+                    productExecution.getProductHandler().stop(productExecution.getProduct());
+                    return null;
+                }
+            };
         }
     }
 
