@@ -38,7 +38,7 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter<ServletF
     public void promptForAdvancedProperties(ServletFilterProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
         props.setUrlPattern(getUrlPatternFromUser());
         props.setLocation(getLocationFromUser(props.allowedLocations()));
-        props.setWeight(Integer.parseInt(getWeightFromUser()));
+        props.setWeight(promptForInt("Location Weight", 100));
 
         List<String> dispatchers = promptForDispatchers(props.allowedDispatchers());
         if (dispatchers.size() > 0) {
@@ -55,14 +55,6 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter<ServletF
         String pattern = promptNotBlank("URL Pattern", "/*");
 
         return pattern;
-    }
-
-    private String getWeightFromUser() throws PrompterException {
-        String weight = prompt("Location Weight", "100");
-        if (StringUtils.isBlank(weight) || !StringUtils.isNumeric(weight)) {
-            weight = getWeightFromUser();
-        }
-        return weight;
     }
 
     private String getLocationFromUser(List<String> allowedLocations) throws PrompterException {

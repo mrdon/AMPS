@@ -23,13 +23,13 @@ public class ModuleTypeModuleCreator extends AbstractPluginModuleCreator<ModuleT
     private static final String TEMPLATE_PREFIX = "templates/common/moduletype/";
 
     //stub
-    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "ModuleType.java.vm";
-    private static final String INTERFACE_TEMPLATE = TEMPLATE_PREFIX + "ModuleTypeInterface.java.vm";
+    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "ModuleType.java.vtl";
+    private static final String INTERFACE_TEMPLATE = TEMPLATE_PREFIX + "ModuleTypeInterface.java.vtl";
 
     //examples
     private static final String EXAMPLE_CLASS_TEMPLATE = TEMPLATE_PREFIX + "Example" + CLASS_TEMPLATE;
 
-    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "module-type-plugin.xml.vm";
+    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "module-type-plugin.xml.vtl";
 
     @Override
     public void createModule(PluginModuleLocation location, ModuleTypeProperties props) throws Exception {

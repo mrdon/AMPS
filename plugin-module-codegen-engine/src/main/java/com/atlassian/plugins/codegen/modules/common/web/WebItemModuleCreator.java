@@ -1,9 +1,13 @@
-package com.atlassian.plugins.codegen.modules.common.component;
+package com.atlassian.plugins.codegen.modules.common.web;
 
 import com.atlassian.plugins.codegen.annotations.*;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
+import com.atlassian.plugins.codegen.modules.common.Label;
+import com.atlassian.plugins.codegen.modules.common.Tooltip;
+
+import java.util.Properties;
 
 /**
  * @since version
@@ -17,15 +21,16 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class ComponentImportModuleCreator extends AbstractPluginModuleCreator {
+public class WebItemModuleCreator extends AbstractPluginModuleCreator<WebItemProperties> {
 
-    public static final String MODULE_NAME = "Component Import";
-    private static final String TEMPLATE_PREFIX = "templates/common/component/";
+    public static final String MODULE_NAME = "Web Item";
+    private static final String TEMPLATE_PREFIX = "templates/common/web/webitem/";
 
-    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "component-import-plugin.xml.vtl";
+    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "web-item-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, WebItemProperties props) throws Exception {
+
         addModuleToPluginXml(PLUGIN_MODULE_TEMPLATE, location, props);
     }
 

@@ -57,9 +57,16 @@ public class ModulePrompterAnnotationParser extends AbstractAnnotationParser {
                 this.isModulePrompter = superHasInterface(superName, iface);
             }
 
-            if(isModulePrompter && !normalize(superName).equals(AbstractModulePrompter.class.getName())) {
+            Class modulePrompterClass = null;
+            try {
+                modulePrompterClass = Class.forName(visitedClassname);
+            } catch (ClassNotFoundException e) {
+                //dumb. we're visiting this class so it has to exist!
+            }
+
+            if(isModulePrompter && !AbstractModulePrompter.class.isAssignableFrom(modulePrompterClass)) {
                 isModulePrompter = false;
-                if(null != log && !AbstractModulePrompter.class.getName().equals(visitedClassname)) {
+                if(null != log) {
                     log.warn(visitedClassname + " MUST extend " + AbstractModulePrompter.class.getName() + ". NOT REGISTERED");
                 }
             }

@@ -20,7 +20,7 @@ public abstract class AbstractPluginModuleCreator<T extends PluginModuleProperti
     public static final String TEST_SUFFIX = "Test";
     public static final String FUNCT_TEST_SUFFIX = "FuncTest";
     public static final String GENERIC_TEMPLATE_PREFIX = "templates/generic/";
-    public static final String GENERIC_TEST_TEMPLATE = GENERIC_TEMPLATE_PREFIX + "GenericTest.java.vm";
+    public static final String GENERIC_TEST_TEMPLATE = GENERIC_TEMPLATE_PREFIX + "GenericTest.java.vtl";
 
     protected CodeTemplateHelper templateHelper;
 

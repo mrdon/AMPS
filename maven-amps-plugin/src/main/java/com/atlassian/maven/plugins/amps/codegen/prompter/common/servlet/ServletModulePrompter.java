@@ -36,7 +36,7 @@ public class ServletModulePrompter extends AbstractModulePrompter<ServletPropert
     public void promptForAdvancedProperties(ServletProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
         props.setUrlPattern(getUrlPatternFromUser("/" + props.getProperty(PluginModuleProperties.CLASSNAME).toLowerCase()));
 
-        Map<String, String> initParams = promptForInitParams();
+        Map<String, String> initParams = promptForParams("Add Init-Param?");
         if (initParams.size() > 0) {
             props.setInitParams(initParams);
         }
@@ -48,29 +48,4 @@ public class ServletModulePrompter extends AbstractModulePrompter<ServletPropert
         return pattern;
     }
 
-    private Map<String, String> promptForInitParams() throws PrompterException {
-        Map<String, String> params = new HashMap<String, String>();
-        promptForInitParam(params);
-
-        return params;
-    }
-
-    private void promptForInitParam(Map<String, String> params) throws PrompterException {
-        StringBuffer addBuffer = new StringBuffer();
-        if (params.size() > 0) {
-            addBuffer.append("init-params:\n");
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                addBuffer.append(entry.getKey()).append("->").append(entry.getValue()).append("\n");
-            }
-        }
-        addBuffer.append("Add Init-Param?");
-        boolean addParam = promptForBoolean(addBuffer.toString(), "N");
-
-        if (addParam) {
-            String key = promptNotBlank("param key");
-            String value = promptNotBlank("param value");
-            params.put(key, value);
-            promptForInitParam(params);
-        }
-    }
 }

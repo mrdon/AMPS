@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
-
+//TODO: update test to use Dom4J
 /**
  * @since version
  */

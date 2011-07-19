@@ -1,0 +1,101 @@
+#macro(conditions $condition)
+#if($condition.class.simpleName.equals("Condition"))
+    <condition class="${condition.fullyQualifiedClassName}"#if($condition.invert) invert="true"#end
+    #if(!$condition.paramsEmpty)
+        >
+        #params($condition.params)
+    </condition>
+    #else
+        />
+    #end
+
+    #elseif($condition.class.simpleName.equals("Conditions") && !$condition.isEmpty())
+    <conditions type="${condition.type}">
+        #foreach($conditional in $condition.conditions)
+            #conditions($conditional)
+        #end
+    </conditions>
+    #end
+#end
+
+#macro(params $map)
+    #if($map && !$map.isEmpty())
+        #foreach($entry in $map.entrySet())
+            <param name="$entry.key" value="$entry.value" />
+        #end
+    #end
+#end
+
+#macro(contextprovider $classname)
+    #if($classname && !$classname.equals(""))
+        <context-provider class="$classname" />
+    #end
+#end
+
+#macro(resource $resource)
+    #if($resource)
+        <resource
+        #if($resource.name && !$resource.name.equals(""))
+            name="$resource.name"
+        #elseif($resource.namePattern && !$resource.namePattern.equals(""))
+            namePattern="$resource.namePattern"
+        #end
+        type="$resource.type"
+        location="$resource.location"
+
+        #if($resource.params && !$resource.params.isEmpty())
+            >
+            #params($resource.params)
+            </resource>
+        #else
+            />
+        #end
+    #end
+#end
+
+#macro(resources $resourceList)
+    #foreach($resource in $resourceList)
+        #resource($resource)
+    #end
+#end
+
+#macro(icon $icon)
+    #if($icon)
+        <icon
+            #if($icon.width)
+                width="$icon.width"
+            #end
+            #if($icon.height)
+                height="$icon.height"
+            #end
+            >
+            #link($icon.link)
+        </icon>
+    #end
+#end
+
+#macro(link $link)
+    #if($link)
+        <link
+            #if($link.linkId)
+                linkId="$link.linkId"
+            #end
+        >$link.value</link>
+    #end
+#end
+
+#macro(label $label)
+    #if($label)
+        <label key="$label.key">
+            #params($label.params)
+        </label>
+    #end
+#end
+
+#macro(tooltip $tooltip)
+    #if($tooltip)
+        <tooltip key="$tooltip.key">
+            #params($tooltip.params)
+        </tooltip>
+    #end
+#end

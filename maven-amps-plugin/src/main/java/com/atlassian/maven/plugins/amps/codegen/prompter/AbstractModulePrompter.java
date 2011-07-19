@@ -7,8 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @since version
@@ -17,11 +16,13 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     protected final Prompter prompter;
     protected boolean showExamplesPrompt;
     protected boolean showAdvancedPrompt;
+    protected boolean showAdvancedNamePrompt;
 
     public AbstractModulePrompter(Prompter prompter) {
         this.prompter = prompter;
         this.showExamplesPrompt = true;
         this.showAdvancedPrompt = true;
+        this.showAdvancedNamePrompt = true;
     }
 
     @Override
@@ -30,9 +31,14 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
 
         if (showAdvancedPrompt) {
             boolean showAdvanced = promptForBoolean("Show Advanced Setup?", "N");
+            String moduleName;
 
             if (showAdvanced) {
-                String moduleName = promptNotBlank("Plugin Name", props.getProperty(PluginModuleProperties.MODULE_NAME));
+                if(showAdvancedNamePrompt) {
+                    moduleName = promptNotBlank("Plugin Name", props.getProperty(PluginModuleProperties.MODULE_NAME));
+                } else {
+                    moduleName = props.getProperty(PluginModuleProperties.MODULE_NAME);
+                }
                 String moduleKey = promptNotBlank("Plugin Key", props.getProperty(PluginModuleProperties.MODULE_KEY));
                 String moduleDescription = promptNotBlank("Plugin Description", props.getProperty(PluginModuleProperties.DESCRIPTION));
                 String moduleI18nNameKey = promptNotBlank("i18n Name Key", props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
@@ -172,6 +178,68 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         return bool;
     }
 
+    protected Map<String, String> promptForParams(String message) throws PrompterException {
+        Map<String, String> params = new HashMap<String, String>();
+        promptForParam(message, params);
+
+        return params;
+    }
+
+    protected void promptForParam(String message, Map<String, String> params) throws PrompterException {
+        StringBuffer addBuffer = new StringBuffer();
+        if (params.size() > 0) {
+            addBuffer.append("params:\n");
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                addBuffer.append(entry.getKey()).append("->").append(entry.getValue()).append("\n");
+            }
+        }
+        addBuffer.append(message);
+        boolean addParam = promptForBoolean(addBuffer.toString(), "N");
+
+        if (addParam) {
+            String key = promptNotBlank("param name");
+            String value = promptNotBlank("param value");
+            params.put(key, value);
+            promptForParam(message, params);
+        }
+    }
+
+    protected List<String> promptForList(String message) throws PrompterException {
+        List<String> vals = new ArrayList<String>();
+        promptForListValue(message, vals);
+
+        return vals;
+    }
+
+    protected void promptForListValue(String message, List<String> vals) throws PrompterException {
+        StringBuffer addBuffer = new StringBuffer();
+        if (vals.size() > 0) {
+            addBuffer.append("values:\n");
+            for (String val : vals) {
+                addBuffer.append(val).append("\n");
+            }
+        }
+        addBuffer.append(message);
+        boolean addValue = promptForBoolean(addBuffer.toString(), "N");
+
+        if (addValue) {
+            String value = promptNotBlank("value");
+            vals.add(value);
+            promptForListValue(message, vals);
+        }
+    }
+
+    protected int promptForInt(String message, int defaultInt) throws PrompterException {
+        String userVal = promptNotBlank(message, Integer.toString(defaultInt));
+        int userInt;
+        if (!StringUtils.isNumeric(userVal)) {
+            userInt = promptForInt(message,defaultInt);
+        } else {
+            userInt = Integer.parseInt(userVal);
+        }
+        return userInt;
+    }
+
     protected String prompt(String message, String defaultValue) throws PrompterException {
         return prompter.prompt(message, defaultValue);
     }
@@ -190,5 +258,9 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
 
     protected void suppressAdvancedPrompt() {
         this.showAdvancedPrompt = false;
+    }
+
+    protected void suppressAdvancedNamePrompt() {
+        this.showAdvancedNamePrompt = false;
     }
 }

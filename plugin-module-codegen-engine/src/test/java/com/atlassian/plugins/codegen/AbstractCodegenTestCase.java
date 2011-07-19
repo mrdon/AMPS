@@ -1,15 +1,21 @@
 package com.atlassian.plugins.codegen;
 
 import com.atlassian.plugins.codegen.annotations.asm.ModuleCreatorAnnotationParser;
+import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
 import org.junit.After;
 import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -54,5 +60,26 @@ public abstract class AbstractCodegenTestCase {
     @After
     public void removeTempDir() throws IOException {
         FileUtils.deleteDirectory(tempDir);
+    }
+
+    protected Document getXmlDocument(File xmlFile) throws MalformedURLException, DocumentException {
+        SAXReader reader = new SAXReader();
+        return reader.read(xmlFile);
+    }
+
+    protected Properties loadI18nProperties() throws IOException {
+        File i18nFile = new File(resourcesDir, AbstractPluginModuleCreator.DEFAULT_I18N_NAME + ".properties");
+        Properties props = new Properties();
+
+        InputStream is = null;
+        try {
+             is = FileUtils.openInputStream(i18nFile);
+            props.load(is);
+
+        }finally {
+            IOUtils.closeQuietly(is);
+        }
+
+        return props;
     }
 }

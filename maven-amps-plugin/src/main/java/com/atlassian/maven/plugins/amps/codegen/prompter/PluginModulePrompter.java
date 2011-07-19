@@ -14,6 +14,7 @@ import java.util.List;
 public interface PluginModulePrompter<T extends PluginModuleProperties> {
 
     public static final List<String> YN_ANSWERS = new ArrayList<String>(Arrays.asList("Y", "y", "N", "n"));
+    public static final List<String> ANDOR_ANSWERS = new ArrayList<String>(Arrays.asList("AND", "and", "OR", "or"));
     
     <T extends PluginModuleProperties> T getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException;
     <T extends PluginModuleProperties> T  promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException;

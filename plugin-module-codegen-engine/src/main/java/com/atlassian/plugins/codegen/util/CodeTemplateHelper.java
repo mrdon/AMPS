@@ -26,7 +26,7 @@ public class CodeTemplateHelper {
         Velocity.setProperty(RuntimeConstants.PARSER_POOL_SIZE, 3);
         Velocity.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         Velocity.setProperty("classpath." + RuntimeConstants.RESOURCE_LOADER + ".class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-
+        Velocity.setProperty(Velocity.VM_LIBRARY,"templates/macros.vm");
         try {
             Velocity.init();
         } catch (Exception e) {

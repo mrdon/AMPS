@@ -23,13 +23,13 @@ public class ServletContextListenerModuleCreator extends AbstractPluginModuleCre
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/listener/";
 
     //stub
-    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "ServletContextListener.java.vm";
-    private static final String UNIT_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletContextListenerTest.java.vm";
+    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "ServletContextListener.java.vtl";
+    private static final String UNIT_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletContextListenerTest.java.vtl";
 
     //examples
     private static final String EXAMPLE_CLASS_TEMPLATE = TEMPLATE_PREFIX + "Example" + CLASS_TEMPLATE;
 
-    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-context-listener-plugin.xml.vm";
+    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-context-listener-plugin.xml.vtl";
 
     @Override
     public void createModule(PluginModuleLocation location, ServletContextListenerProperties props) throws Exception {

@@ -23,13 +23,13 @@ public class ComponentModuleCreator extends AbstractPluginModuleCreator<Componen
     private static final String TEMPLATE_PREFIX = "templates/common/component/";
 
     //stub
-    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "Component.java.vm";
-    private static final String INTERFACE_TEMPLATE = TEMPLATE_PREFIX + "ComponentInterface.java.vm";
+    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "Component.java.vtl";
+    private static final String INTERFACE_TEMPLATE = TEMPLATE_PREFIX + "ComponentInterface.java.vtl";
 
     //examples
     private static final String EXAMPLE_CLASS_TEMPLATE = TEMPLATE_PREFIX + "Example" + CLASS_TEMPLATE;
 
-    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "component-plugin.xml.vm";
+    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "component-plugin.xml.vtl";
 
     @Override
     public void createModule(PluginModuleLocation location, ComponentProperties props) throws Exception {

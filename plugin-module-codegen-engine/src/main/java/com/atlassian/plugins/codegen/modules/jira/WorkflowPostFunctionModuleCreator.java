@@ -12,11 +12,11 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreator {
     public static final String MODULE_NAME = "Workflow Post Function";
 
-    private static final String FUNCTION_TEMPLATE = "templates/jira/workflow/function/PostFunction.java.vm";
-    private static final String FACTORY_TEMPLATE = "templates/jira/workflow/function/PostFunctionFactory.java.vm";
-    private static final String VIEW_TEMPLATE = "templates/jira/workflow/function/post-function.vm.vm";
-    private static final String INPUT_TEMPLATE = "templates/jira/workflow/function/post-function-input.vm.vm";
-    private static final String PLUGIN_MODULE_TEMPLATE = "templates/jira/workflow/function/post-function-plugin.xml.vm";
+    private static final String FUNCTION_TEMPLATE = "templates/jira/workflow/function/PostFunction.java.vtl";
+    private static final String FACTORY_TEMPLATE = "templates/jira/workflow/function/PostFunctionFactory.java.vtl";
+    private static final String VIEW_TEMPLATE = "templates/jira/workflow/function/post-function.vm.vtl";
+    private static final String INPUT_TEMPLATE = "templates/jira/workflow/function/post-function-input.vm.vtl";
+    private static final String PLUGIN_MODULE_TEMPLATE = "templates/jira/workflow/function/post-function-plugin.xml.vtl";
 
     private static final String KEY_PREFIX = "admin.workflow.function.";
 

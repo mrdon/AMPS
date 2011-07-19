@@ -19,7 +19,7 @@ public class TestTemplateUtil {
         String expected = "i.work";
         props.setProperty("PACKAGE_NAME", expected);
         CodeTemplateHelper templateHelper = new CodeTemplateHelper();
-        String parsedTemplate = templateHelper.parseTemplate("templates/simple/Simple.java.vm", props);
+        String parsedTemplate = templateHelper.parseTemplate("templates/simple/Simple.java.vtl", props);
 
         assertEquals(expected, parsedTemplate);
     }
@@ -31,7 +31,7 @@ public class TestTemplateUtil {
         props.setProperty("PACKAGE_NAME", expected);
 
         CodeTemplateHelper templateHelper = new CodeTemplateHelper();
-        String parsedTemplate = templateHelper.parseTemplate("/junk/simple/Simple.java.vm", props);
+        String parsedTemplate = templateHelper.parseTemplate("/junk/simple/Simple.java.vtl", props);
 
         assertEquals(expected, parsedTemplate);
     }

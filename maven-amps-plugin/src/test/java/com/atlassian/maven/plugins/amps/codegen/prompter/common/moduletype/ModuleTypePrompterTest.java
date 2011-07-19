@@ -32,13 +32,6 @@ public class ModuleTypePrompterTest extends AbstractPrompterTest {
     public static final String ADV_I18N_NAME_KEY = "awesome-plugin.name";
     public static final String ADV_I18N_DESCRIPTION_KEY = "pluginus-awesomeous.description";
 
-    Prompter prompter;
-
-    @Before
-    public void setup() {
-        prompter = mock(Prompter.class);
-    }
-
     @Test
     public void basicPropertiesAreValid() throws PrompterException {
         when(prompter.prompt("Enter Interface name", "MYModule")).thenReturn(INTERFACE_CLASS);

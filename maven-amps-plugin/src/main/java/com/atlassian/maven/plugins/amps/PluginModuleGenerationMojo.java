@@ -1,5 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
+import com.atlassian.maven.plugins.amps.codegen.ConditionFactory;
+import com.atlassian.maven.plugins.amps.codegen.ContextProviderFactory;
 import com.atlassian.maven.plugins.amps.codegen.PluginModuleSelectionQueryer;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompterFactory;
@@ -21,11 +23,14 @@ import org.apache.maven.plugins.shade.pom.PomWriter;
 import org.apache.maven.project.MavenProject;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
+import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
+@MojoRequiresDependencyResolution("compile")
 @MojoGoal("plugin-module")
 public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
 
@@ -57,6 +62,25 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
         File javaDir = getJavaSourceRoot(project);
         File testDir = getJavaTestRoot(project);
         File resourcesDir = getResourcesRoot(project);
+
+        try {
+            ConditionFactory.locateAvailableConditions(productId,project.getCompileClasspathElements());
+        } catch (Exception e) {
+            String message = "Error initializing Plugin Module Conditions";
+            getLog().error(message);
+            //keep going, doesn't matter
+        }
+
+        try {
+            ContextProviderFactory.locateAvailableContextProviders(productId, project.getCompileClasspathElements());
+        } catch (Exception e) {
+            String message = "Error initializing Plugin Module Context Providers";
+            getLog().error(message);
+            //keep going, doesn't matter
+        }
+
+        Map<String,String> conditions = ConditionFactory.getAvailableConditions();
+        Map<String,String> providers = ContextProviderFactory.getAvailableContextProviders();
 
         PluginModuleLocation moduleLocation = new PluginModuleLocation.Builder(javaDir)
                 .resourcesDirectory(resourcesDir)

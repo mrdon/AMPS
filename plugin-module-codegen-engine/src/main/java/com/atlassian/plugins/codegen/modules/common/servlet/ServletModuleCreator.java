@@ -25,14 +25,14 @@ public class ServletModuleCreator extends AbstractPluginModuleCreator<ServletPro
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/";
 
     //stub
-    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "Servlet.java.vm";
-    private static final String UNIT_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletTest.java.vm";
-    private static final String FUNC_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletFuncTest.java.vm";
+    private static final String CLASS_TEMPLATE = TEMPLATE_PREFIX + "Servlet.java.vtl";
+    private static final String UNIT_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletTest.java.vtl";
+    private static final String FUNC_TEST_TEMPLATE = TEMPLATE_PREFIX + "ServletFuncTest.java.vtl";
 
     //examples
     private static final String EXAMPLE_CLASS_TEMPLATE = TEMPLATE_PREFIX + "Example" + CLASS_TEMPLATE;
 
-    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-plugin.xml.vm";
+    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-plugin.xml.vtl";
 
     @Override
     public void createModule(PluginModuleLocation location, ServletProperties props) throws Exception {

@@ -20,7 +20,7 @@ public class ServletContextParameterModuleCreator extends AbstractPluginModuleCr
     public static final String MODULE_NAME = "Servlet Context Parameter";
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/parameter/";
 
-    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-context-parameter-plugin.xml.vm";
+    private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-context-parameter-plugin.xml.vtl";
 
     @Override
     public void createModule(PluginModuleLocation location, ServletContextParameterProperties props) throws Exception {
