@@ -68,7 +68,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     }
 
     @Override
-    protected final void extractProductHomeZip(File productHomeZip, File homeDir, Product ctx)
+    protected final void extractProductHomeData(File productHomeZip, File homeDir, Product ctx)
             throws MojoExecutionException
     {
         try

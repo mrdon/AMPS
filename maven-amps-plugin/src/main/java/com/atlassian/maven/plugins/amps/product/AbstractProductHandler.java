@@ -48,8 +48,8 @@ public abstract class AbstractProductHandler implements ProductHandler
 
     protected final File extractAndProcessHomeDirectory(final Product ctx) throws MojoExecutionException
     {
-        final File productHomeZip = getProductHomeZip(ctx);
-        if (productHomeZip != null)
+        final File productHomeData = getProductHomeData(ctx);
+        if (productHomeData != null)
         {
             final File homeDir = getHomeDirectory(ctx);
 
@@ -57,7 +57,7 @@ public abstract class AbstractProductHandler implements ProductHandler
             if (!homeDir.exists())
             {
                 //find and extract productHomeZip
-                extractProductHomeZip(productHomeZip, homeDir, ctx);
+                extractProductHomeData(productHomeData, homeDir, ctx);
 
                 // just in case
                 homeDir.mkdir();
@@ -82,7 +82,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
     }
 
-    private File getProductHomeZip(final Product ctx) throws MojoExecutionException
+    private File getProductHomeData(final Product ctx) throws MojoExecutionException
     {
         File productHomeZip = null;
         String dpath = ctx.getDataPath();
@@ -117,7 +117,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         return productHomeZip;
     }
 
-    protected void extractProductHomeZip(File productHomeZip, File homeDir, Product ctx)
+    protected void extractProductHomeData(File productHomeData, File homeDir, Product ctx)
             throws MojoExecutionException
     {
         final File tmpDir = new File(getBaseDirectory(ctx), "tmp-resources");
@@ -125,10 +125,18 @@ public abstract class AbstractProductHandler implements ProductHandler
 
         try
         {
-            unzip(productHomeZip, tmpDir.getPath());
-            copyDirectory(tmpDir.listFiles()[0], getBaseDirectory(ctx), true);
             File tmp = new File(getBaseDirectory(ctx), ctx.getId() + "-home");
-            moveDirectory(tmp, homeDir);
+            
+            if (productHomeData.isFile())
+            {
+                unzip(productHomeData, tmpDir.getPath());
+                copyDirectory(tmpDir.listFiles()[0], getBaseDirectory(ctx), true);
+                moveDirectory(tmp, homeDir);
+            }
+            else if (productHomeData.isDirectory())
+            {
+                copyDirectory(productHomeData, homeDir);
+            }
         }
         catch (final IOException ex)
         {
