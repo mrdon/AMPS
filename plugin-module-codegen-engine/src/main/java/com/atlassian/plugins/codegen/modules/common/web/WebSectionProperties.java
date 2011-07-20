@@ -1,8 +1,7 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
-import com.atlassian.plugins.codegen.modules.common.Icon;
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Label;
-import com.atlassian.plugins.codegen.modules.common.Link;
 import com.atlassian.plugins.codegen.modules.common.Tooltip;
 
 import java.util.HashMap;
@@ -11,55 +10,29 @@ import java.util.Map;
 /**
  * @since version
  */
-public class WebItemProperties extends AbstractWebFragmentProperties {
+public class WebSectionProperties extends AbstractWebFragmentProperties {
 
-    public static final String SECTION = "SECTION";
-    public static final String ICON = "ICON";
-    public static final String LINK = "LINK";
+    public static final String LOCATION = "LOCATION";
     public static final String LABEL = "LABEL";
     public static final String PARAMS = "PARAMS";
     public static final String TOOLTIP = "TOOLTIP";
 
-    public WebItemProperties() {
-        this("My Web Item");
+    public WebSectionProperties() {
+        this("My Web Section");
     }
 
-    public WebItemProperties(String moduleName) {
+    public WebSectionProperties(String moduleName) {
         super(moduleName);
         setParams(new HashMap<String, String>());
     }
 
-    public WebItemProperties(String moduleName, String section) {
+    public WebSectionProperties(String moduleName, String location) {
         this(moduleName);
-        setSection(section);
+        setLocation(location);
     }
 
-    public void setSection(String section) {
-        setProperty(SECTION,section);
-    }
-
-    public void setLink(Link link) {
-        put(LINK,link);
-    }
-
-    public Link getLink() {
-        Link link = null;
-        if(keySet().contains(LINK)) {
-            link = (Link)get(LINK);
-        }
-        return link;
-    }
-
-    public void setIcon(Icon icon) {
-        put(ICON,icon);
-    }
-
-    public Icon getIcon() {
-        Icon icon = null;
-        if(keySet().contains(ICON)) {
-            icon = (Icon)get(ICON);
-        }
-        return icon;
+    public void setLocation(String location) {
+        setProperty(LOCATION,location);
     }
 
     public void setLabel(Label label) {
@@ -99,5 +72,4 @@ public class WebItemProperties extends AbstractWebFragmentProperties {
     public void addParam(String name, String value) {
         ((Map<String,String>)get(PARAMS)).put(name,value);
     }
-
 }
