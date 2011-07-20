@@ -464,7 +464,8 @@ public class MavenGoals
                                 element(name("home"), container.getInstallDirectory(getBuildDirectory())),
                                 element(name("output"), webappContext.getOutput()),
                                 element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
-                                element(name("dependencies"), deps.toArray(new Element[deps.size()]))
+                                element(name("dependencies"), deps.toArray(new Element[deps.size()])),
+                                element(name("timeout"), String.valueOf(webappContext.getStartupTimeout()))
                         ),
                         element(name("configuration"),
                                 element(name("home"), container.getConfigDirectory(getBuildDirectory(), productInstanceId)),
@@ -614,7 +615,8 @@ public class MavenGoals
         }
     }
 
-    public void stopWebapp(final String productId, final String containerId) throws MojoExecutionException
+    public void stopWebapp(final String productId, final String containerId,
+                           final Product webappContext) throws MojoExecutionException
     {
         final Container container = findContainer(containerId);
         executeMojo(
@@ -627,7 +629,8 @@ public class MavenGoals
                 configuration(
                         element(name("container"),
                                 element(name("containerId"), container.getId()),
-                                element(name("type"), container.getType())
+                                element(name("type"), container.getType()),
+                                element(name("timeout"), String.valueOf(webappContext.getShutdownTimeout()))
                         ),
                         element(name("configuration"),
                                 element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId))

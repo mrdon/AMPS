@@ -26,9 +26,8 @@ import com.atlassian.maven.plugins.amps.util.ant.AntJavaExecutorThread;
 import com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory;
 
 public class FeCruProductHandler extends AbstractProductHandler
-{
+{ 	
     private static final int STARTUP_CHECK_DELAY = 1000;
-    private static final int STARTUP_CHECK_MAX = 1000 * 60 * 3; //todo is 3 mins enough?
     private static final String FISHEYE_INST = "fisheye.inst";
     
     private final Log log;
@@ -221,9 +220,9 @@ public class FeCruProductHandler extends AbstractProductHandler
                 throw new MojoExecutionException("Fisheye failed to start.", thread.getBuildException());
             }
             
-            if (waited++ * STARTUP_CHECK_DELAY > STARTUP_CHECK_MAX)
+            if (waited++ * STARTUP_CHECK_DELAY > ctx.getStartupTimeout())
             {
-                throw new MojoExecutionException("FishEye took longer than " + STARTUP_CHECK_MAX + "ms to start!");
+                throw new MojoExecutionException("FishEye took longer than " + ctx.getStartupTimeout() + "ms to start!");
             }
         }
     }
@@ -251,9 +250,9 @@ public class FeCruProductHandler extends AbstractProductHandler
                 connected = false;
             }
 
-            if (waited++ * STARTUP_CHECK_DELAY > STARTUP_CHECK_MAX)
+            if (waited++ * STARTUP_CHECK_DELAY > ctx.getShutdownTimeout())
             {
-                throw new MojoExecutionException("FishEye took longer than " + STARTUP_CHECK_MAX + "ms to stop!");
+                throw new MojoExecutionException("FishEye took longer than " + ctx.getShutdownTimeout() + "ms to stop!");
             }
         }
     }

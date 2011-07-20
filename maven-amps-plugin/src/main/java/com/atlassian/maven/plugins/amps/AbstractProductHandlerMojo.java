@@ -25,6 +25,7 @@ import java.util.Properties;
  * Base class for webapp mojos
  */
 public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerAwareMojo {
+
     // ------ start inline product context
 
     private static final String DEFAULT_CONTAINER = "tomcat6x";
@@ -32,6 +33,16 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";
     private static final String DEFAULT_PDK_VERSION = "0.4";
     private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
+
+    /**
+      * Default product startup timeout: three minutes
+     */
+    private static final int DEFAULT_PRODUCT_STARTUP_TIMEOUT = 1000 * 60 * 3;
+
+    /**
+      * Default product shutdown timeout: three minutes
+      */
+    private static final int DEFAULT_PRODUCT_SHUTDOWN_TIMEOUT = 1000 * 60 * 3;
 
     /**
      * Container to run in
@@ -69,6 +80,17 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     @MojoParameter(expression = "${jvmargs}")
     protected String jvmArgs;
 
+    /**
+     * Product startup timeout in milliseconds
+     */
+    @MojoParameter(expression = "${product.start.timeout}")
+    private int startupTimeout;
+
+    /**
+     * Product shutdown timeout in milliseconds
+     */
+    @MojoParameter(expression = "${product.stop.timeout}")
+    private int shutdownTimeout;
 
     /**
      * System systemProperties to pass to cargo
@@ -252,6 +274,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setServer(server);
         ctx.setContextPath(contextPath);
         ctx.setJvmArgs(jvmArgs);
+        ctx.setStartupTimeout(startupTimeout);
+        ctx.setShutdownTimeout(shutdownTimeout);
 
         setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
         setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
@@ -360,9 +384,19 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         
         if (product.getOutput() == null)
         {
-        	product.setOutput(output);
+            product.setOutput(output);
         }
 
+        if (product.getStartupTimeout() <= 0)
+        {
+            product.setStartupTimeout(DEFAULT_PRODUCT_STARTUP_TIMEOUT);
+        }
+        
+        if (product.getShutdownTimeout() <= 0)
+        {
+            product.setShutdownTimeout(DEFAULT_PRODUCT_SHUTDOWN_TIMEOUT);
+        }
+        
         product.setInstanceId(getProductInstanceId(product));
     }
 

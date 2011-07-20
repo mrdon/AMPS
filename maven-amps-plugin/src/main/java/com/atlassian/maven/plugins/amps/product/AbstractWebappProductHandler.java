@@ -20,7 +20,7 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
 
     public final void stop(final Product ctx) throws MojoExecutionException
     {
-        goals.stopWebapp(ctx.getInstanceId(), ctx.getContainerId());
+        goals.stopWebapp(ctx.getInstanceId(), ctx.getContainerId(), ctx);
     }
 
     @Override
