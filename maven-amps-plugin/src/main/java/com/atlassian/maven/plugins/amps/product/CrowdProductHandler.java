@@ -62,8 +62,6 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
             {
                 contextPath = contextPath + "/";
             }
-
-            put("crowd.property.crowd.server.url", "http://" +  ctx.getServer() + ":" + ctx.getHttpPort() + contextPath + "services/");
         }};
     }
 
