@@ -181,7 +181,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         // Shut all products down
         if (!noWebapp)
         {
-            completer.invokeAll(transform(productExecutions, productStopper()));
+            for (Void _ : completer.invokeAll(transform(productExecutions, productStopper()))) {}
         }
         executor.shutdown();
     }
