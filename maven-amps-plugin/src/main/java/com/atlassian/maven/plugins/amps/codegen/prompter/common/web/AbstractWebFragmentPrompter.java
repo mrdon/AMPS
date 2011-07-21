@@ -3,6 +3,7 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 import com.atlassian.maven.plugins.amps.codegen.ConditionFactory;
 import com.atlassian.maven.plugins.amps.codegen.ContextProviderFactory;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
+import com.atlassian.maven.plugins.amps.codegen.prompter.common.AbstractResourcePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Condition;
 import com.atlassian.plugins.codegen.modules.common.Conditional;
@@ -20,52 +21,13 @@ import java.util.Map;
 /**
  * @since version
  */
-public abstract class AbstractWebFragmentPrompter<T extends PluginModuleProperties> extends AbstractModulePrompter<T> {
+public abstract class AbstractWebFragmentPrompter<T extends PluginModuleProperties> extends AbstractResourcePrompter<T> {
 
     public static final String CUSTOM_CONDITION = "Custom Condition";
     public static final String CUSTOM_PROVIDER = "Custom Context Provider";
 
     public AbstractWebFragmentPrompter(Prompter prompter) {
         super(prompter);
-    }
-
-    protected List<Resource> promptForResources() throws PrompterException {
-        List<Resource> resources = new ArrayList<Resource>();
-        promptForResources(resources);
-        return resources;
-    }
-
-    private void promptForResources(List<Resource> resources) throws PrompterException {
-        if(promptForBoolean("Add Resource", "N")) {
-            resources.add(promptForResource());
-            promptForResources(resources);
-        }
-    }
-
-    protected Resource promptForResource() throws PrompterException {
-        Resource resource = new Resource();
-        promptForResourceNameOrPattern(resource);
-
-        resource.setType(promptNotBlank("Enter Resource Type","download"));
-        resource.setLocation(promptNotBlank("Enter Location (path to resource file)"));
-
-        resource.setParams(promptForParams("Add Resource Parameter?"));
-
-        return resource;
-    }
-
-    protected void promptForResourceNameOrPattern(Resource resource) throws PrompterException {
-        String name = prompt("Enter Name (leave blank to use namePattern)");
-        if(StringUtils.isNotBlank(name)) {
-            resource.setName(name);
-        } else {
-            String namePattern = prompt("Enter Name Pattern");
-            if(StringUtils.isNotBlank(namePattern)) {
-                resource.setNamePattern(namePattern);
-            } else {
-                promptForResourceNameOrPattern(resource);
-            }
-        }
     }
 
     protected String promptForContextProvider() throws PrompterException {
