@@ -56,7 +56,6 @@ public abstract class AbstractProductHandler implements ProductHandler
             // Only create the home dir if it doesn't exist
             if (!homeDir.exists())
             {
-                //find and extract productHomeZip
                 extractProductHomeData(productHomeData, homeDir, ctx);
 
                 // just in case
@@ -125,10 +124,10 @@ public abstract class AbstractProductHandler implements ProductHandler
 
         try
         {
-            File tmp = new File(getBaseDirectory(ctx), ctx.getId() + "-home");
-            
             if (productHomeData.isFile())
             {
+                File tmp = new File(getBaseDirectory(ctx), ctx.getId() + "-home");
+                
                 unzip(productHomeData, tmpDir.getPath());
                 copyDirectory(tmpDir.listFiles()[0], getBaseDirectory(ctx), true);
                 moveDirectory(tmp, homeDir);
