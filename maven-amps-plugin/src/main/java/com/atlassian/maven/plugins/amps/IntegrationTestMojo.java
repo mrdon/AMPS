@@ -67,6 +67,12 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
 
     @MojoParameter(expression="${skipTests}", defaultValue = "false")
     private boolean skipTests = false;
+    
+    /**
+     * Skip the integration tests along with any product startups
+     */
+    @MojoParameter(expression="${skipITs}", defaultValue = "false")
+    private boolean skipITs = false;
 
     protected void doExecute() throws MojoExecutionException
     {
@@ -81,7 +87,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
             return;
         }
 
-        if (skipTests || testsSkip)
+        if (skipTests || testsSkip || skipITs)
         {
             getLog().info("Integration tests skipped");
             return;
