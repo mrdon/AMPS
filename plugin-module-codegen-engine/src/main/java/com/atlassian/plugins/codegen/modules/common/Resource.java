@@ -12,9 +12,11 @@ public class Resource {
     private String namePattern;
     private String location;
     private Map<String, String> params;
+    private boolean batch;
 
     public Resource() {
         this.params = new HashMap<String, String>();
+        this.batch = true;
     }
 
     public String getName() {
@@ -59,5 +61,13 @@ public class Resource {
 
     public void addParam(String name, String value) {
         params.put(name,value);
+    }
+
+    public boolean isBatch() {
+        return batch;
+    }
+
+    public void setBatch(boolean batch) {
+        this.batch = batch;
     }
 }

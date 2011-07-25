@@ -1,8 +1,8 @@
 package com.atlassian.plugins.codegen;
 
 import com.atlassian.plugins.codegen.annotations.asm.ModuleCreatorAnnotationParser;
-import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
+import com.atlassian.plugins.codegen.modules.*;
+import com.atlassian.plugins.codegen.modules.common.web.AbstractWebFragmentProperties;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Author: jdoklovic
  */
-public abstract class AbstractCodegenTestCase {
+public abstract class AbstractCodegenTestCase<T extends PluginModuleProperties> {
     protected File tempDir;
     protected File srcDir;
     protected File testDir;
@@ -30,6 +30,22 @@ public abstract class AbstractCodegenTestCase {
     protected File pluginXml;
     protected PluginModuleCreatorRegistry pluginModuleCreatorRegistry;
     protected ModuleCreatorAnnotationParser parser;
+
+    protected PluginModuleLocation moduleLocation;
+    protected T props;
+    protected PluginModuleCreator creator;
+
+    public void setProps(T props) {
+        this.props = props;
+    }
+
+    public void setCreator(PluginModuleCreator creator) {
+        this.creator = creator;
+    }
+
+    public void setModuleLocation(PluginModuleLocation moduleLocation) {
+        this.moduleLocation = moduleLocation;
+    }
 
     @Before
     public void setup() throws Exception {

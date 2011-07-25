@@ -1,6 +1,8 @@
 package com.atlassian.plugins.codegen.modules.common.servlet;
 
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
+import org.apache.commons.collections.CollectionUtils;
+
 
 import java.util.*;
 

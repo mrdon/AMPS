@@ -31,7 +31,7 @@ public class DownloadablePluginResourcePrompterTest extends AbstractPrompterTest
 
     @Test
     public void resourceWithNameIsValid() throws PrompterException {
-        when(prompter.prompt("Enter Name (leave blank to use namePattern)")).thenReturn(RESOURCE_NAME);
+        when(prompter.prompt("Enter Resource Name (leave blank to use namePattern)")).thenReturn(RESOURCE_NAME);
         when(prompter.prompt("Enter Resource Type", "download")).thenReturn(DOWNLOAD_TYPE);
         when(prompter.prompt("Enter Location (path to resource file)")).thenReturn(RESOURCE_CSS_PATH);
         when(prompter.prompt("Add Resource Parameter?",PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
@@ -56,8 +56,8 @@ public class DownloadablePluginResourcePrompterTest extends AbstractPrompterTest
 
     @Test
     public void resourceWithNamePatternIsValid() throws PrompterException {
-        when(prompter.prompt("Enter Name (leave blank to use namePattern)")).thenReturn("");
-        when(prompter.prompt("Enter Name Pattern")).thenReturn(RESOURCE_NAME_PATTERN);
+        when(prompter.prompt("Enter Resource Name (leave blank to use namePattern)")).thenReturn("");
+        when(prompter.prompt("Enter Resource Name Pattern")).thenReturn(RESOURCE_NAME_PATTERN);
         when(prompter.prompt("Enter Resource Type", "download")).thenReturn(VELOCITY_TYPE);
         when(prompter.prompt("Enter Location (path to resource file)")).thenReturn(RESOURCE_VM_PATH);
         when(prompter.prompt("Add Resource Parameter?",PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");

@@ -16,20 +16,18 @@ import static org.junit.Assert.*;
 /**
  * @since version
  */
-public class ServletContextParameterTest extends AbstractCodegenTestCase {
-    private PluginModuleLocation moduleLocation;
-    private ServletContextParameterProperties props;
+public class ServletContextParameterTest extends AbstractCodegenTestCase<ServletContextParameterProperties> {
 
     @Before
     public void runGenerator() throws Exception {
-        ServletContextParameterModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ServletContextParameterModuleCreator.class);
-        moduleLocation = new PluginModuleLocation.Builder(srcDir)
+        setCreator(new ServletContextParameterModuleCreator());
+        setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)
                 .templateDirectory(templateDir)
-                .build();
+                .build());
 
-        props = new ServletContextParameterProperties("MY Param Name");
+        setProps(new ServletContextParameterProperties("MY Param Name"));
 
         creator.createModule(moduleLocation, props);
     }

@@ -17,21 +17,20 @@ import static org.junit.Assert.*;
 /**
  * @since version
  */
-public class ModuleTypeTest extends AbstractCodegenTestCase {
+public class ModuleTypeTest extends AbstractCodegenTestCase<ModuleTypeProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.modules";
-    private PluginModuleLocation moduleLocation;
-    private ModuleTypeProperties props;
 
     @Before
     public void runGenerator() throws Exception {
-        ModuleTypeModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ModuleTypeModuleCreator.class);
-        moduleLocation = new PluginModuleLocation.Builder(srcDir)
+        setCreator(new ModuleTypeModuleCreator());
+        setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)
                 .templateDirectory(templateDir)
-                .build();
+                .build());
 
-        props = new ModuleTypeProperties(PACKAGE_NAME + ".DictionaryModuleDescriptor");
+        setProps(new ModuleTypeProperties(PACKAGE_NAME + ".DictionaryModuleDescriptor"));
+
         props.setFullyQualifiedInterface(PACKAGE_NAME + ".Dictionary");
         props.setIncludeExamples(false);
 

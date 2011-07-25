@@ -16,22 +16,20 @@ import static org.junit.Assert.*;
 /**
  * @since version
  */
-public class ComponentTest extends AbstractCodegenTestCase {
+public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.component";
-    private PluginModuleLocation moduleLocation;
-    private ComponentProperties props;
-    ComponentModuleCreator creator;
 
     @Before
     public void runGenerator() throws Exception {
-        creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ComponentModuleCreator.class);
-        moduleLocation = new PluginModuleLocation.Builder(srcDir)
+        setCreator(new ComponentModuleCreator());
+        setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)
                 .templateDirectory(templateDir)
-                .build();
+                .build());
 
-        props = new ComponentProperties(PACKAGE_NAME + ".CustomComponent");
+        setProps(new ComponentProperties(PACKAGE_NAME + ".CustomComponent"));
+
         props.setIncludeExamples(false);
 
     }

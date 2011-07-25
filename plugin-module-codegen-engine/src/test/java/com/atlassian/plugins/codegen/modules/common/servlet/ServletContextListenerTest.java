@@ -16,21 +16,20 @@ import static org.junit.Assert.*;
 /**
  * @since version
  */
-public class ServletContextListenerTest extends AbstractCodegenTestCase {
+public class ServletContextListenerTest extends AbstractCodegenTestCase<ServletContextListenerProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.servlet.listener";
-    private PluginModuleLocation moduleLocation;
-    private ServletContextListenerProperties props;
 
     @Before
     public void runGenerator() throws Exception {
-        ServletContextListenerModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ServletContextListenerModuleCreator.class);
-        moduleLocation = new PluginModuleLocation.Builder(srcDir)
+        setCreator(new ServletContextListenerModuleCreator());
+        setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)
                 .templateDirectory(templateDir)
-                .build();
+                .build());
 
-        props = new ServletContextListenerProperties(PACKAGE_NAME + ".MyServletContextListener");
+        setProps(new ServletContextListenerProperties(PACKAGE_NAME + ".MyServletContextListener"));
+
         props.setIncludeExamples(false);
 
         creator.createModule(moduleLocation, props);

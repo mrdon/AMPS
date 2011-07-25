@@ -25,7 +25,7 @@ public abstract class AbstractResourcePrompter<T extends PluginModuleProperties>
         return resources;
     }
 
-    private void promptForResources(List<Resource> resources) throws PrompterException {
+    protected void promptForResources(List<Resource> resources) throws PrompterException {
         if(promptForBoolean("Add Resource", "N")) {
             resources.add(promptForResource());
             promptForResources(resources);
@@ -45,11 +45,11 @@ public abstract class AbstractResourcePrompter<T extends PluginModuleProperties>
     }
 
     protected void promptForResourceNameOrPattern(Resource resource) throws PrompterException {
-        String name = prompt("Enter Name (leave blank to use namePattern)");
+        String name = prompt("Enter Resource Name (leave blank to use namePattern)");
         if(StringUtils.isNotBlank(name)) {
             resource.setName(name);
         } else {
-            String namePattern = prompt("Enter Name Pattern");
+            String namePattern = prompt("Enter Resource Name Pattern");
             if(StringUtils.isNotBlank(namePattern)) {
                 resource.setNamePattern(namePattern);
             } else {

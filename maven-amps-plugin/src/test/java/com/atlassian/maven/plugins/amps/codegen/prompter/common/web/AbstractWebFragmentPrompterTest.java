@@ -45,8 +45,8 @@ public abstract class AbstractWebFragmentPrompterTest<T extends AbstractWebFragm
 
         //resources
         when(prompter.prompt("Add Resource", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("Y").thenReturn("N");
-        when(prompter.prompt("Enter Name (leave blank to use namePattern)")).thenReturn(RESOURCE_NAME).thenReturn("");
-        when(prompter.prompt("Enter Name Pattern")).thenReturn(RESOURCE_NAME_PATTERN);
+        when(prompter.prompt("Enter Resource Name (leave blank to use namePattern)")).thenReturn(RESOURCE_NAME).thenReturn("");
+        when(prompter.prompt("Enter Resource Name Pattern")).thenReturn(RESOURCE_NAME_PATTERN);
         when(prompter.prompt("Enter Resource Type", "download")).thenReturn(DOWNLOAD_TYPE).thenReturn(VELOCITY_TYPE).thenReturn(DOWNLOAD_TYPE);
         when(prompter.prompt("Enter Location (path to resource file)")).thenReturn(RESOURCE_CSS_PATH).thenReturn(RESOURCE_VM_PATH);
         when(prompter.prompt("Add Resource Parameter?",PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");

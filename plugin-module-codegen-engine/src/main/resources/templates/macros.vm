@@ -43,9 +43,15 @@
         type="$resource.type"
         location="$resource.location"
 
-        #if($resource.params && !$resource.params.isEmpty())
+        #if(($resource.params && !$resource.params.isEmpty()) || !$resource.batch)
             >
-            #params($resource.params)
+            #if(!$resource.batch)
+                <param name="batch" value="false" />
+            #end
+
+            #if($resource.params && !$resource.params.isEmpty())
+                #params($resource.params)
+            #end
             </resource>
         #else
             />
@@ -97,5 +103,47 @@
         <tooltip key="$tooltip.key">
             #params($tooltip.params)
         </tooltip>
+    #end
+#end
+
+#macro(dependencies $dependencies)
+    #if($dependencies)
+        #foreach($dependency in $dependencies)
+            #dependency($dependency)
+        #end
+    #end
+#end
+
+#macro(dependency $dependency)
+    <dependency>$dependency</dependency>
+#end
+
+#macro(contexts $contexts)
+    #if($contexts)
+        #foreach($resourceContext in $contexts)
+            #resourcecontext($resourceContext)
+        #end
+    #end
+#end
+
+#macro(resourcecontext $resourceContext)
+    <context>$resourceContext</context>
+#end
+
+#macro(transformations $transformations)
+    #if($transformations)
+        #foreach($transformation in $transformations)
+            #transformation($transformation)
+        #end
+    #end
+#end
+
+#macro(transformation $transformation)
+    #if($transformation)
+        <transformation extension="$transformation.extension">
+            #foreach($transformerKey in $transformation.transformerKeys)
+            <transformer key="$transformerKey" />
+            #end
+        </transformation>
     #end
 #end

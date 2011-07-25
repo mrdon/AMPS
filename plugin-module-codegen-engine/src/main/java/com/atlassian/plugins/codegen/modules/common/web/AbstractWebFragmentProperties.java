@@ -10,9 +10,8 @@ import java.util.List;
 /**
  * @since version
  */
-public abstract class AbstractWebFragmentProperties extends BasicNameModuleProperties {
+public abstract class AbstractWebFragmentProperties extends AbstractConditionsProperties {
 
-    public static final String CONDITIONS = "CONDITIONS";
     public static final String CONTEXT_PROVIDER = "CONTEXT_PROVIDER";
     public static final String RESOURCES = "RESOURCES";
     public static final String WEIGHT = "WEIGHT";
@@ -23,17 +22,8 @@ public abstract class AbstractWebFragmentProperties extends BasicNameModulePrope
 
     public AbstractWebFragmentProperties(String moduleName) {
         super(moduleName);
-        setConditions(new ArrayList<Conditional>());
         setResources(new ArrayList<Resource>());
         setWeight(1000);
-    }
-
-    public void setConditions(List<Conditional> conditions) {
-        put(CONDITIONS,conditions);
-    }
-
-    public List<Conditional> getConditions() {
-        return (List<Conditional>)get(CONDITIONS);
     }
 
     public void setContextProvider(String fqClassname) {

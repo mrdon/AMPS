@@ -16,20 +16,18 @@ import static org.junit.Assert.*;
 /**
  * @since version
  */
-public class ComponentImportTest extends AbstractCodegenTestCase {
-    private PluginModuleLocation moduleLocation;
-    private ComponentImportProperties props;
+public class ComponentImportTest extends AbstractCodegenTestCase<ComponentImportProperties> {
 
     @Before
     public void runGenerator() throws Exception {
-        ComponentImportModuleCreator creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, ComponentImportModuleCreator.class);
-        moduleLocation = new PluginModuleLocation.Builder(srcDir)
+        setCreator(new ComponentImportModuleCreator());
+        setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)
                 .templateDirectory(templateDir)
-                .build();
+                .build());
 
-        props = new ComponentImportProperties("com.atlassian.SomeInterface");
+        setProps(new ComponentImportProperties("com.atlassian.SomeInterface"));
         props.setIncludeExamples(false);
 
         creator.createModule(moduleLocation, props);

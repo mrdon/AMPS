@@ -20,10 +20,8 @@ import static org.junit.Assert.assertEquals;
 /**
  * @since version
  */
-public class DownloadablePluginResourceTest extends AbstractCodegenTestCase {
-    private PluginModuleLocation moduleLocation;
-    private DownloadablePluginResourceProperties props;
-    private DownloadablePluginResourceModuleCreator creator;
+public class DownloadablePluginResourceTest extends AbstractCodegenTestCase<DownloadablePluginResourceProperties> {
+
     public static final String XPATH_RESOURCE = "/atlassian-plugin/resource";
     public static final String XPATH_PARAM_RELATIVE = "param";
 
@@ -33,12 +31,12 @@ public class DownloadablePluginResourceTest extends AbstractCodegenTestCase {
 
     @Before
     public void setupCreator() throws Exception {
-        creator = pluginModuleCreatorRegistry.getModuleCreator(PluginModuleCreatorRegistry.JIRA, DownloadablePluginResourceModuleCreator.class);
-        moduleLocation = new PluginModuleLocation.Builder(srcDir)
+        setCreator(new DownloadablePluginResourceModuleCreator());
+        setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
                 .testDirectory(testDir)
                 .templateDirectory(templateDir)
-                .build();
+                .build());
     }
 
     @Test
@@ -48,7 +46,7 @@ public class DownloadablePluginResourceTest extends AbstractCodegenTestCase {
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props = new DownloadablePluginResourceProperties(resource);
+        setProps(new DownloadablePluginResourceProperties(resource));
         creator.createModule(moduleLocation, props);
 
         Document pluginDoc = getXmlDocument(pluginXml);
@@ -68,7 +66,7 @@ public class DownloadablePluginResourceTest extends AbstractCodegenTestCase {
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props = new DownloadablePluginResourceProperties(resource);
+        setProps(new DownloadablePluginResourceProperties(resource));
         creator.createModule(moduleLocation, props);
 
         Document pluginDoc = getXmlDocument(pluginXml);
@@ -89,7 +87,7 @@ public class DownloadablePluginResourceTest extends AbstractCodegenTestCase {
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props = new DownloadablePluginResourceProperties(resource);
+        setProps(new DownloadablePluginResourceProperties(resource));
         creator.createModule(moduleLocation, props);
 
         Document pluginDoc = getXmlDocument(pluginXml);
@@ -111,7 +109,7 @@ public class DownloadablePluginResourceTest extends AbstractCodegenTestCase {
         resource.getParams().put("content-type","text/css");
         resource.getParams().put("awesome","me");
 
-        props = new DownloadablePluginResourceProperties(resource);
+        setProps(new DownloadablePluginResourceProperties(resource));
         creator.createModule(moduleLocation, props);
 
         Document pluginDoc = getXmlDocument(pluginXml);
