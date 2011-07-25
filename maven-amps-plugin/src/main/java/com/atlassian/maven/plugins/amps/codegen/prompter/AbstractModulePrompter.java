@@ -122,6 +122,32 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         return fqName;
     }
 
+    protected String promptFullyQualifiedJavaClassBlankOK(String message, String defaultValue) throws PrompterException {
+        String fqName;
+        if (StringUtils.isBlank(defaultValue)) {
+            fqName = prompter.prompt(message);
+        } else {
+            fqName = prompt(message, defaultValue);
+        }
+
+        if (StringUtils.isNotBlank(fqName)){
+            String packageName = "";
+            String className = "";
+            if (fqName.contains(".")) {
+                packageName = StringUtils.substringBeforeLast(fqName, ".");
+                className = StringUtils.substringAfterLast(fqName, ".");
+            } else {
+                className = fqName;
+            }
+
+             if(!ClassnameUtil.isValidPackageName(packageName) || !ClassnameUtil.isValidClassName(className)) {
+                fqName = promptFullyQualifiedJavaClass(message, defaultValue);
+            }
+        }
+
+        return fqName;
+    }
+
     protected String promptJavaPackagename(String message, String defaultValue) throws PrompterException {
         String packagename;
 
