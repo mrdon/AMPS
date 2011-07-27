@@ -17,7 +17,6 @@
         </init-param>
     #end
 
-    #foreach($dispatcher in $DISPATCHERS)
-        <dispatcher>$dispatcher</dispatcher>
-    #end
+    #dispatchers($DISPATCHERS)
+
 </servlet-filter>

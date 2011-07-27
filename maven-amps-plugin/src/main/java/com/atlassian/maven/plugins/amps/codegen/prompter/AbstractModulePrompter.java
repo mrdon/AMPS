@@ -230,14 +230,14 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         }
     }
 
-    protected List<String> promptForList(String message) throws PrompterException {
+    protected List<String> promptForList(String addMessage, String enterMessage) throws PrompterException {
         List<String> vals = new ArrayList<String>();
-        promptForListValue(message, vals);
+        promptForListValue(addMessage, enterMessage, vals);
 
         return vals;
     }
 
-    protected void promptForListValue(String message, List<String> vals) throws PrompterException {
+    protected void promptForListValue(String addMessage, String enterMessage, List<String> vals) throws PrompterException {
         StringBuffer addBuffer = new StringBuffer();
         if (vals.size() > 0) {
             addBuffer.append("values:\n");
@@ -245,13 +245,13 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
                 addBuffer.append(val).append("\n");
             }
         }
-        addBuffer.append(message);
+        addBuffer.append(addMessage);
         boolean addValue = promptForBoolean(addBuffer.toString(), "N");
 
         if (addValue) {
-            String value = promptNotBlank("value");
+            String value = promptNotBlank(enterMessage);
             vals.add(value);
-            promptForListValue(message, vals);
+            promptForListValue(addMessage, enterMessage, vals);
         }
     }
 

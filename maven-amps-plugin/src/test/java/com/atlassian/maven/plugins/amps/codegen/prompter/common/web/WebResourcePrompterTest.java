@@ -112,7 +112,7 @@ public class WebResourcePrompterTest extends AbstractPrompterTest {
         when(prompter.prompt("i18n Description Key", I18N_DESCRIPTION_KEY)).thenReturn(ADV_I18N_DESCRIPTION_KEY);
 
         when(prompter.prompt("Add Dependency?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
-        when(prompter.prompt("value")).thenReturn(DEPENDENCY);
+        when(prompter.prompt("Enter Dependency")).thenReturn(DEPENDENCY);
         when(prompter.prompt("values:\nweb.resources:ajs\nAdd Dependency?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         when(prompter.prompt("Add Web Resource Context?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("Y").thenReturn("N");

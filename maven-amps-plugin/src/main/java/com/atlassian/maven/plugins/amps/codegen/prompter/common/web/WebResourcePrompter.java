@@ -51,7 +51,7 @@ public class WebResourcePrompter extends AbstractWebFragmentPrompter<WebResource
 
     @Override
     public void promptForAdvancedProperties(WebResourceProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
-        props.setDependencies(promptForList("Add Dependency?"));
+        props.setDependencies(promptForList("Add Dependency?","Enter Dependency"));
         props.setContexts(promptForContexts(props.knownContexts()));
         props.setTransformations(promptForTransformations());
         props.setConditions(promptForConditions());

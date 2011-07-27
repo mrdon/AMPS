@@ -75,7 +75,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         when(prompter.prompt("Enter Label Value", "My Web Section")).thenReturn(LABEL_VALUE);
         when(prompter.prompt("Add Label Param?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("values:\nlabel param\nAdd Label Param?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
-        when(prompter.prompt("value")).thenReturn(LABEL_PARAM);
+        when(prompter.prompt("Enter Param Value")).thenReturn(LABEL_PARAM);
         when(prompter.prompt("Add Tooltip?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("Enter Tooltip Key", "awesome-module.tooltip")).thenReturn(TOOLTIP_KEY);
         when(prompter.prompt("Enter Tooltip Value", "My Web Section Tooltip")).thenReturn(TOOLTIP_VALUE);
@@ -128,7 +128,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         when(prompter.prompt("Enter Label Value", "My Web Section")).thenReturn(LABEL_VALUE);
         when(prompter.prompt("Add Label Param?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("values:\nlabel param\nAdd Label Param?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
-        when(prompter.prompt("value")).thenReturn(LABEL_PARAM);
+        when(prompter.prompt("Enter Param Value")).thenReturn(LABEL_PARAM);
         when(prompter.prompt("Add Tooltip?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("Enter Tooltip Key", "awesome-module.tooltip")).thenReturn(TOOLTIP_KEY);
         when(prompter.prompt("Enter Tooltip Value", "My Web Section Tooltip")).thenReturn(TOOLTIP_VALUE);
@@ -169,7 +169,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         when(prompter.prompt("Enter Label Value", "My Web Section")).thenReturn(LABEL_VALUE);
         when(prompter.prompt("Add Label Param?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("values:\nlabel param\nAdd Label Param?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
-        when(prompter.prompt("value")).thenReturn(LABEL_PARAM);
+        when(prompter.prompt("Enter Param Value")).thenReturn(LABEL_PARAM);
         when(prompter.prompt("Add Tooltip?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("Enter Tooltip Key", "awesome-module.tooltip")).thenReturn(TOOLTIP_KEY);
         when(prompter.prompt("Enter Tooltip Value", "My Web Section Tooltip")).thenReturn(TOOLTIP_VALUE);

@@ -147,3 +147,31 @@
         </transformation>
     #end
 #end
+
+#macro(dispatchers $dispatchers)
+    #if($dispatchers)
+        #foreach($dispatcher in $dispatchers)
+            #dispatcher($dispatcher)
+        #end
+    #end
+#end
+
+#macro(dispatcher $dispatcher)
+    #if($dispatcher)
+        <dispatcher>$dispatcher</dispatcher>
+    #end
+#end
+
+#macro(packages $packages)
+    #if($packages)
+        #foreach($package in $packages)
+            #package($package)
+        #end
+    #end
+#end
+
+#macro(package $package)
+    #if($package)
+        <package>$package</package>
+    #end
+#end

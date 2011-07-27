@@ -62,7 +62,7 @@ public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperti
 
         props.addI18nProperty(labelKey,labelValue);
 
-        List<String> labelParamVals = promptForList("Add Label Param?");
+        List<String> labelParamVals = promptForList("Add Label Param?","Enter Param Value");
         if (!labelParamVals.isEmpty()) {
             for (String labelVal : labelParamVals) {
                 label.addParam(labelVal);
@@ -90,7 +90,7 @@ public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperti
             String tooltipValue = promptNotBlank("Enter Tooltip Value", props.get(PluginModuleProperties.MODULE_NAME) + " Tooltip");
             Tooltip tooltip = new Tooltip(tooltipKey,tooltipValue);
 
-            List<String> tooltipParamVals = promptForList("Add Tooltip Param?");
+            List<String> tooltipParamVals = promptForList("Add Tooltip Param?","Enter Param Value");
             if (!tooltipParamVals.isEmpty()) {
                 for (String tipVal : tooltipParamVals) {
                     tooltip.addParam(tipVal);

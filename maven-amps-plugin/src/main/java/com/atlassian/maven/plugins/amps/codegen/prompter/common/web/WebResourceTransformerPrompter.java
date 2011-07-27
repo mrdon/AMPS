@@ -26,7 +26,7 @@ public class WebResourceTransformerPrompter extends AbstractModulePrompter<WebRe
     public WebResourceTransformerProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyWebResourceTransformer");
 
-        /* Due to PLUG-xx the package MUST be com.atlassian.plugin.webresource for the tests to work! */
+        /* Due to PLUG-779 the package MUST be com.atlassian.plugin.webresource for the tests to work! */
         //String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.webresource");
 
         String packageName = "com.atlassian.plugin.webresource";

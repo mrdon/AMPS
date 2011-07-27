@@ -90,7 +90,7 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Enter Label Value","My Web Item")).thenReturn(LABEL_VALUE);
         when(prompter.prompt("Add Label Param?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("values:\nlabel param\nAdd Label Param?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("N");
-        when(prompter.prompt("value")).thenReturn(LABEL_PARAM);
+        when(prompter.prompt("Enter Param Value")).thenReturn(LABEL_PARAM);
         when(prompter.prompt("Add Icon?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("Icon Location (e.g. /images/icons/print.gif)")).thenReturn(ICON_PATH);
         when(prompter.prompt("Icon Width", "16")).thenReturn(ICON_WIDTH);
@@ -150,7 +150,7 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Enter Label Value","My Web Item")).thenReturn(LABEL_VALUE);
         when(prompter.prompt("Add Label Param?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("values:\nlabel param\nAdd Label Param?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("N");
-        when(prompter.prompt("value")).thenReturn(LABEL_PARAM);
+        when(prompter.prompt("Enter Param Value")).thenReturn(LABEL_PARAM);
         when(prompter.prompt("Add Icon?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("Icon Location (e.g. /images/icons/print.gif)")).thenReturn(ICON_PATH);
         when(prompter.prompt("Icon Width", "16")).thenReturn(ICON_WIDTH);
@@ -197,7 +197,7 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Enter Label Value","My Web Item")).thenReturn(LABEL_VALUE);
         when(prompter.prompt("Add Label Param?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("values:\nlabel param\nAdd Label Param?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("N");
-        when(prompter.prompt("value")).thenReturn(LABEL_PARAM);
+        when(prompter.prompt("Enter Param Value")).thenReturn(LABEL_PARAM);
         when(prompter.prompt("Add Icon?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("Icon Location (e.g. /images/icons/print.gif)")).thenReturn(ICON_PATH);
         when(prompter.prompt("Icon Width", "16")).thenReturn(ICON_WIDTH);
