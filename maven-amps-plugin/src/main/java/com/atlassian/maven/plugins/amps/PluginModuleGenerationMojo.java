@@ -5,6 +5,7 @@ import com.atlassian.maven.plugins.amps.codegen.ContextProviderFactory;
 import com.atlassian.maven.plugins.amps.codegen.PluginModuleSelectionQueryer;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompterFactory;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.plugins.codegen.annotations.DependencyDescriptor;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreatorFactory;
@@ -106,6 +107,8 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
             }
 
             PluginModuleProperties moduleProps = modulePrompter.getModulePropertiesFromInput(moduleLocation);
+            moduleProps.setProductId(getGadgetCompatibleProductId(productId));
+
             creator.createModule(moduleLocation, moduleProps);
 
             //edit pom if needed
@@ -154,6 +157,26 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
                 }
             }
         }
+    }
+
+    private String getGadgetCompatibleProductId(String pid) {
+        String productId = pid;
+        if(ProductHandlerFactory.JIRA.equals(pid)) {
+            productId = "JIRA";
+        } else if(ProductHandlerFactory.CONFLUENCE.equals(pid)) {
+            productId = "Confluence";
+        } else if(ProductHandlerFactory.BAMBOO.equals(pid)) {
+            productId = "Bamboo";
+        } else if(ProductHandlerFactory.CROWD.equals(pid)) {
+            productId = "Crowd";
+        } else if(ProductHandlerFactory.FECRU.equals(pid)) {
+            productId = "FishEye";
+        } else{
+            productId = "Other";
+        }
+
+        return productId;
+
     }
 
     private File getJavaSourceRoot(MavenProject project) {

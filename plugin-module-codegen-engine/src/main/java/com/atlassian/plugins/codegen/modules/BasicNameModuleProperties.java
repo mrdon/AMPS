@@ -22,7 +22,7 @@ public class BasicNameModuleProperties extends Properties implements PluginModul
         i18nProperties = new Properties();
         setModuleNameAndKey(moduleName);
         includeExamples = false;
-
+        setProductId("Other");
     }
 
     public void setModuleNameAndKey(String moduleName) {
@@ -46,6 +46,16 @@ public class BasicNameModuleProperties extends Properties implements PluginModul
     @Override
     public void setModuleKey(String name) {
         setProperty(MODULE_KEY, name);
+    }
+
+    @Override
+    public void setProductId(String id) {
+        setProperty(PRODUCT_ID,id);
+    }
+
+    @Override
+    public String getProductId() {
+        return getProperty(PRODUCT_ID);
     }
 
     @Override

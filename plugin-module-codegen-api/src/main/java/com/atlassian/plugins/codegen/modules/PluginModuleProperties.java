@@ -19,6 +19,7 @@ public interface PluginModuleProperties extends Map<Object,Object> {
     String MODULE_NAME = "MODULE_NAME";
     String MODULE_KEY = "MODULE_KEY";
     String NAME_I18N_KEY = "NAME_I18N_KEY";
+    String PRODUCT_ID = "PRODUCT_ID";
 
     Enumeration<?> propertyNames();
 
@@ -43,4 +44,8 @@ public interface PluginModuleProperties extends Map<Object,Object> {
     void setModuleName(String name);
 
     void setModuleKey(String name);
+
+    void setProductId(String id);
+
+    String getProductId();
 }

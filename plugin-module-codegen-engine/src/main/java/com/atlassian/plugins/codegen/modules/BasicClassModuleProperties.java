@@ -33,6 +33,8 @@ public class BasicClassModuleProperties extends Properties implements PluginModu
         addI18nProperty(getProperty(DESCRIPTION_I18N_KEY), getProperty(DESCRIPTION));
         addI18nProperty(getProperty(NAME_I18N_KEY), getProperty(MODULE_NAME));
 
+        setProductId("Other");
+
         includeExamples = false;
     }
 
@@ -88,6 +90,16 @@ public class BasicClassModuleProperties extends Properties implements PluginModu
     @Override
     public void setModuleKey(String name) {
         setProperty(MODULE_KEY, name);
+    }
+
+    @Override
+    public void setProductId(String id) {
+        setProperty(PRODUCT_ID,id);
+    }
+
+    @Override
+    public String getProductId() {
+        return getProperty(PRODUCT_ID);
     }
 
     @Override

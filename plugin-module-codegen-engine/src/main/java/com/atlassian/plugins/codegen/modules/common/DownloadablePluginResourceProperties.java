@@ -26,6 +26,16 @@ public class DownloadablePluginResourceProperties extends Properties implements 
     }
 
     @Override
+    public void setProductId(String id) {
+        setProperty(PRODUCT_ID,id);
+    }
+
+    @Override
+    public String getProductId() {
+        return getProperty(PRODUCT_ID);
+    }
+    
+    @Override
     public void setDescription(String desc) {}
 
     @Override
