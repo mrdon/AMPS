@@ -28,7 +28,7 @@ public class RESTPrompter extends AbstractModulePrompter<RESTProperties> {
     @Override
     public RESTProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyRestResource");
-        String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.rest");
+        String packageName = promptJavaPackagename("Enter Package Name", getDefaultBasePackage() + ".rest");
 
         String fqClass = ClassnameUtil.fullyQualifiedName(packageName, className);
 

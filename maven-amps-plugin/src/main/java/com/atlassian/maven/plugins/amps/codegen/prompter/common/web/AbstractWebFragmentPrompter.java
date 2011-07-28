@@ -36,7 +36,7 @@ public abstract class AbstractWebFragmentPrompter<T extends NameBasedModulePrope
         if (promptForBoolean("Add Velocity Context Provider", "N")) {
             Map<String, String> productProviders = ContextProviderFactory.getAvailableContextProviders();
             if (productProviders.isEmpty()) {
-                fqProvider = promptFullyQualifiedJavaClass("Enter Fully Qualified Context Provider Class", "com.atlassian.plugins.web.contextproviders.MyContextProvider");
+                fqProvider = promptFullyQualifiedJavaClass("Enter Fully Qualified Context Provider Class", getDefaultBasePackage() + ".web.contextproviders.MyContextProvider");
             } else {
 
                 StringBuilder contextQuery = new StringBuilder("Choose A Context Provider\n");
@@ -64,7 +64,7 @@ public abstract class AbstractWebFragmentPrompter<T extends NameBasedModulePrope
                 if (answerInt < (productProviders.size())) {
                     fqProvider = indexedValues.get(contextAnswer);
                 } else {
-                    fqProvider = promptFullyQualifiedJavaClass("Enter Fully Qualified Context Provider Class", "com.atlassian.plugins.web.contextproviders.MyContextProvider");
+                    fqProvider = promptFullyQualifiedJavaClass("Enter Fully Qualified Context Provider Class", getDefaultBasePackage() + ".web.contextproviders.MyContextProvider");
                 }
             }
         }
@@ -102,7 +102,7 @@ public abstract class AbstractWebFragmentPrompter<T extends NameBasedModulePrope
         Map<String, String> productConditions = ConditionFactory.getAvailableConditions();
         String fqCondition;
         if (productConditions.isEmpty()) {
-            fqCondition = promptFullyQualifiedJavaClass("Enter Fully Qualified Condition Class", "com.atlassian.plugins.web.condition.MyCondition");
+            fqCondition = promptFullyQualifiedJavaClass("Enter Fully Qualified Condition Class", getDefaultBasePackage() + ".web.condition.MyCondition");
         } else {
 
             StringBuilder conditionQuery = new StringBuilder("Choose A Condition\n");
@@ -130,7 +130,7 @@ public abstract class AbstractWebFragmentPrompter<T extends NameBasedModulePrope
             if (answerInt < (productConditions.size())) {
                 fqCondition = indexedValues.get(conditionAnswer);
             } else {
-                fqCondition = promptFullyQualifiedJavaClass("Enter Fully Qualified Condition Class", "com.atlassian.plugins.web.condition.MyCondition");
+                fqCondition = promptFullyQualifiedJavaClass("Enter Fully Qualified Condition Class", getDefaultBasePackage() + ".web.condition.MyCondition");
             }
         }
 

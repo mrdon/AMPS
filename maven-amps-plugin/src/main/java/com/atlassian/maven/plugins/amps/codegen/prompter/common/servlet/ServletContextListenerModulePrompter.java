@@ -24,7 +24,7 @@ public class ServletContextListenerModulePrompter extends AbstractModulePrompter
     @Override
     public ServletContextListenerProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyServletContextListener");
-        String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet.listener");
+        String packageName = promptJavaPackagename("Enter Package Name", getDefaultBasePackage() + ".servlet.listener");
 
         return new ServletContextListenerProperties(ClassnameUtil.fullyQualifiedName(packageName, className));
     }

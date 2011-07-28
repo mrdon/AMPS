@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common.moduletype;
 
+import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
@@ -35,7 +36,7 @@ public class ModuleTypePrompterTest extends AbstractPrompterTest {
     @Test
     public void basicPropertiesAreValid() throws PrompterException {
         when(prompter.prompt("Enter Interface name", "MYModule")).thenReturn(INTERFACE_CLASS);
-        when(prompter.prompt("Enter Interface package", "com.atlassian.plugins.modules")).thenReturn(PACKAGE);
+        when(prompter.prompt("Enter Interface package", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".modules")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter Class name", CLASSNAME)).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", PACKAGE)).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -58,7 +59,7 @@ public class ModuleTypePrompterTest extends AbstractPrompterTest {
     @Test
     public void advancedPropertiesAreValid() throws PrompterException {
         when(prompter.prompt("Enter Interface name", "MYModule")).thenReturn(INTERFACE_CLASS);
-        when(prompter.prompt("Enter Interface package", "com.atlassian.plugins.modules")).thenReturn(PACKAGE);
+        when(prompter.prompt("Enter Interface package", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".modules")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter Class name", CLASSNAME)).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", PACKAGE)).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");

@@ -14,10 +14,13 @@ import java.util.*;
  * @since version
  */
 public abstract class AbstractModulePrompter<T extends PluginModuleProperties> implements PluginModulePrompter<T> {
+    public static final String DEFAULT_BASE_PACKAGE = "com.example";
+
     protected final Prompter prompter;
     protected boolean showExamplesPrompt;
     protected boolean showAdvancedPrompt;
     protected boolean showAdvancedNamePrompt;
+    protected String defaultBasePackage;
 
     public AbstractModulePrompter(Prompter prompter) {
         this.prompter = prompter;
@@ -293,5 +296,21 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
 
     protected void suppressAdvancedNamePrompt() {
         this.showAdvancedNamePrompt = false;
+    }
+
+    @Override
+    public void setDefaultBasePackage(String basePackage) {
+        if(StringUtils.isNotBlank(basePackage)) {
+            this.defaultBasePackage = basePackage;
+        }
+    }
+
+    @Override
+    public String getDefaultBasePackage() {
+        if(StringUtils.isNotBlank(defaultBasePackage)) {
+            return defaultBasePackage;
+        } else {
+            return DEFAULT_BASE_PACKAGE;
+        }
     }
 }

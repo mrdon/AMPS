@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 
+import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
@@ -127,7 +128,7 @@ public class WebResourcePrompterTest extends AbstractPrompterTest {
 
         when(prompter.prompt("Add Conditions?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("Condition Type", PluginModulePrompter.ANDOR_ANSWERS, "AND")).thenReturn(CONDITIONS_TYPE);
-        when(prompter.prompt("Enter Fully Qualified Condition Class", "com.atlassian.plugins.web.condition.MyCondition")).thenReturn(CUSTOM_CONDITION);
+        when(prompter.prompt("Enter Fully Qualified Condition Class", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".web.condition.MyCondition")).thenReturn(CUSTOM_CONDITION);
         when(prompter.prompt("Add Condition?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
         when(prompter.prompt("Add Condition Parameter?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("params:\nparamKey->paramVal\nAdd Condition Parameter?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("N");

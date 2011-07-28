@@ -29,7 +29,7 @@ public class ComponentModulePrompter extends AbstractModulePrompter<ComponentPro
     @Override
     public ComponentProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String interfaceName = promptJavaClassname("Enter Interface name", "MYComponent");
-        String interfacePackage = promptJavaPackagename("Enter Interface package", "com.atlassian.plugins.components");
+        String interfacePackage = promptJavaPackagename("Enter Interface package", getDefaultBasePackage() + ".components");
 
         String className = promptJavaClassname("Enter Class name", interfaceName + "Impl");
         String packageName = promptJavaPackagename("Enter Package Name", interfacePackage);

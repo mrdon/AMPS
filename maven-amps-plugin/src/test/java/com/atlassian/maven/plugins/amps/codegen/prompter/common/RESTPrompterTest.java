@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common;
 
+import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.common.RESTProperties;
@@ -47,7 +48,7 @@ public class RESTPrompterTest extends AbstractPrompterTest {
     @Test
     public void basicPropertiesAreValid() throws PrompterException {
         when(prompter.prompt("Enter New Classname", "MyRestResource")).thenReturn(CLASSNAME);
-        when(prompter.prompt("Enter Package Name", "com.atlassian.plugins.rest")).thenReturn(PACKAGE);
+        when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".rest")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter REST Path","/myrestresource")).thenReturn(PATH);
         when(prompter.prompt("Enter Version","1.0")).thenReturn(VERSION);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -72,7 +73,7 @@ public class RESTPrompterTest extends AbstractPrompterTest {
         String packageToScan = "com.atlassian.plugins.rest.helloworld";
 
         when(prompter.prompt("Enter New Classname", "MyRestResource")).thenReturn(CLASSNAME);
-        when(prompter.prompt("Enter Package Name", "com.atlassian.plugins.rest")).thenReturn(PACKAGE);
+        when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".rest")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter REST Path","/myrestresource")).thenReturn(PATH);
         when(prompter.prompt("Enter Version","1.0")).thenReturn(VERSION);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");

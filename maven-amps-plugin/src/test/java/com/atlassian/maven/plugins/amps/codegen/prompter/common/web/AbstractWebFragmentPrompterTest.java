@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 
+import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.common.Condition;
@@ -56,12 +57,12 @@ public abstract class AbstractWebFragmentPrompterTest<T extends AbstractWebFragm
 
         //context provider
         when(prompter.prompt("Add Velocity Context Provider", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
-        when(prompter.prompt("Enter Fully Qualified Context Provider Class", "com.atlassian.plugins.web.contextproviders.MyContextProvider")).thenReturn(CUSTOM_CONTEXT_PROVIDER);
+        when(prompter.prompt("Enter Fully Qualified Context Provider Class", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".web.contextproviders.MyContextProvider")).thenReturn(CUSTOM_CONTEXT_PROVIDER);
 
         //conditions
         when(prompter.prompt("Add Conditions?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("Condition Type", PluginModulePrompter.ANDOR_ANSWERS, "AND")).thenReturn(CONDITIONS_TYPE);
-        when(prompter.prompt("Enter Fully Qualified Condition Class", "com.atlassian.plugins.web.condition.MyCondition")).thenReturn(CUSTOM_CONDITION);
+        when(prompter.prompt("Enter Fully Qualified Condition Class", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".web.condition.MyCondition")).thenReturn(CUSTOM_CONDITION);
         when(prompter.prompt("Add Condition?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
         when(prompter.prompt("Add Condition Parameter?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
         when(prompter.prompt("params:\nparamKey->paramVal\nAdd Condition Parameter?",PluginModulePrompter.YN_ANSWERS,"N")).thenReturn("N");

@@ -25,7 +25,7 @@ public class WebPanelRendererPrompter extends AbstractModulePrompter<WebPanelRen
     @Override
     public WebPanelRendererProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyWebPanelRenderer");
-        String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.web");
+        String packageName = promptJavaPackagename("Enter Package Name", getDefaultBasePackage() + ".web");
 
         String fqClass = ClassnameUtil.fullyQualifiedName(packageName, className);
 

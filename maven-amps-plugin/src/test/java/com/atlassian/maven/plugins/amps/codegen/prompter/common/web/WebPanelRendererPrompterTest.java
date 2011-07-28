@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 
+import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
@@ -41,7 +42,7 @@ public class WebPanelRendererPrompterTest extends AbstractPrompterTest {
     @Test
     public void basicPropertiesAreValid() throws PrompterException {
         when(prompter.prompt("Enter New Classname", "MyWebPanelRenderer")).thenReturn(CLASSNAME);
-        when(prompter.prompt("Enter Package Name", "com.atlassian.plugins.web")).thenReturn(PACKAGE);
+        when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".web")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
@@ -60,7 +61,7 @@ public class WebPanelRendererPrompterTest extends AbstractPrompterTest {
     @Test
     public void advancedPropertiesAreValid() throws PrompterException {
         when(prompter.prompt("Enter New Classname", "MyWebPanelRenderer")).thenReturn(CLASSNAME);
-        when(prompter.prompt("Enter Package Name", "com.atlassian.plugins.web")).thenReturn(PACKAGE);
+        when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".web")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
 
         when(prompter.prompt("Plugin Name", MODULE_NAME)).thenReturn(ADV_MODULE_NAME);

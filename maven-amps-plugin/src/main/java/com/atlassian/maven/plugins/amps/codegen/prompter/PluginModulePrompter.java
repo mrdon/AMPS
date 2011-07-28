@@ -19,4 +19,8 @@ public interface PluginModulePrompter<T extends PluginModuleProperties> {
     <T extends PluginModuleProperties> T getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException;
     <T extends PluginModuleProperties> T  promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException;
     void promptForAdvancedProperties(T props, PluginModuleLocation moduleLocation) throws PrompterException;
+
+    void setDefaultBasePackage(String basePackage);
+    String getDefaultBasePackage();
+
 }

@@ -29,7 +29,7 @@ public class ServletFilterModulePrompter extends AbstractModulePrompter<ServletF
     @Override
     public ServletFilterProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyServletFilter");
-        String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet.filter");
+        String packageName = promptJavaPackagename("Enter Package Name", getDefaultBasePackage() + ".servlet.filter");
 
         return new ServletFilterProperties(ClassnameUtil.fullyQualifiedName(packageName, className));
     }

@@ -27,7 +27,7 @@ public class ServletModulePrompter extends AbstractModulePrompter<ServletPropert
     @Override
     public ServletProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
         String className = promptJavaClassname("Enter New Classname", "MyServlet");
-        String packageName = promptJavaPackagename("Enter Package Name", "com.atlassian.plugins.servlet");
+        String packageName = promptJavaPackagename("Enter Package Name", getDefaultBasePackage() + ".servlet");
 
         return new ServletProperties(ClassnameUtil.fullyQualifiedName(packageName, className));
     }
