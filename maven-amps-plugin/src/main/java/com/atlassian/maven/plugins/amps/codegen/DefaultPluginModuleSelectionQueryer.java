@@ -28,8 +28,12 @@ public class DefaultPluginModuleSelectionQueryer extends AbstractLogEnabled impl
             PluginModuleCreator moduleCreator = entry.getValue();
 
                 String answer = String.valueOf( counter );
-
-                query.append( answer + ": " + entry.getValue().getModuleName() + "\n" );
+                if(counter < 10) {
+                    query.append( answer + ":  ");
+                } else {
+                    query.append( answer + ": ");
+                }
+                 query.append(entry.getValue().getModuleName() + "\n" );
 
                 answers.add( answer );
 
