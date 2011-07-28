@@ -64,12 +64,12 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         WebItemPrompter modulePrompter = new WebItemPrompter(prompter);
         setProps((WebItemProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
-        assertEquals("wrong module name", MODULE_NAME, props.getProperty(PluginModuleProperties.MODULE_NAME));
-        assertEquals("wrong module key", MODULE_KEY, props.getProperty(PluginModuleProperties.MODULE_KEY));
-        assertEquals("wrong description", DESCRIPTION, props.getProperty(PluginModuleProperties.DESCRIPTION));
-        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
-        assertEquals("wrong section", SYSTEM_ADMIN_SETTINGS, props.getProperty(WebItemProperties.SECTION));
+        assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
+        assertEquals("wrong module key", MODULE_KEY, props.getModuleKey());
+        assertEquals("wrong description", DESCRIPTION, props.getDescription());
+        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
+        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
+        assertEquals("wrong section", SYSTEM_ADMIN_SETTINGS, props.getSection());
         assertEquals("wrong link", LINK_URL, props.getLink().getValue());
     }
 
@@ -108,19 +108,19 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         WebItemPrompter modulePrompter = new WebItemPrompter(prompter);
         setProps((WebItemProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
-        assertEquals("wrong module name", MODULE_NAME, props.getProperty(PluginModuleProperties.MODULE_NAME));
-        assertEquals("wrong module key", ADV_MODULE_KEY, props.getProperty(PluginModuleProperties.MODULE_KEY));
-        assertEquals("wrong description", ADV_DESCRIPTION, props.getProperty(PluginModuleProperties.DESCRIPTION));
-        assertEquals("wrong i18n name key", ADV_I18N_NAME_KEY, props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-        assertEquals("wrong i18n desc key", ADV_I18N_DESCRIPTION_KEY, props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
-        assertEquals("wrong section", SYSTEM_ADMIN_SETTINGS, props.getProperty(WebItemProperties.SECTION));
+        assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
+        assertEquals("wrong module key", ADV_MODULE_KEY, props.getModuleKey());
+        assertEquals("wrong description", ADV_DESCRIPTION, props.getDescription());
+        assertEquals("wrong i18n name key", ADV_I18N_NAME_KEY, props.getNameI18nKey());
+        assertEquals("wrong i18n desc key", ADV_I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
+        assertEquals("wrong section", SYSTEM_ADMIN_SETTINGS, props.getSection());
         assertEquals("wrong link", LINK_URL, props.getLink().getValue());
-        assertEquals("wrong weight",WEIGHT,props.getProperty(AbstractWebFragmentProperties.WEIGHT));
+        assertEquals("wrong weight",WEIGHT,props.getWeight());
 
         assertAdvancedCommonProps();
 
         //custom context-provider name check
-        assertEquals("wrong context provider", CUSTOM_CONTEXT_PROVIDER, props.getProperty(WebItemProperties.CONTEXT_PROVIDER));
+        assertEquals("wrong context provider", CUSTOM_CONTEXT_PROVIDER, props.getContextProvider());
 
         //custom condition name check
         Condition condition = (Condition) ((Conditions)props.getConditions().get(0)).getConditions().get(0);
@@ -169,7 +169,7 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         WebItemPrompter modulePrompter = new WebItemPrompter(prompter);
         setProps((WebItemProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
-        assertEquals("wrong context provider", "com.atlassian.test.WidthContextProvider", props.getProperty(WebItemProperties.CONTEXT_PROVIDER));
+        assertEquals("wrong context provider", "com.atlassian.test.WidthContextProvider", props.getContextProvider());
 
         ContextProviderFactory.setProvidersMapForTesting(MapUtils.EMPTY_SORTED_MAP);
     }

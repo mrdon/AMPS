@@ -28,4 +28,8 @@ public class WebPanelProperties extends AbstractWebFragmentProperties {
     public void setLocation(String location) {
         setProperty(LOCATION,location);
     }
+
+    public String getLocation() {
+        return getProperty(LOCATION);
+    }
 }

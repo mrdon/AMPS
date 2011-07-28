@@ -1,5 +1,6 @@
 package com.atlassian.plugins.codegen.modules.common;
 
+import com.atlassian.plugins.codegen.modules.AbstractClassBasedModuleProperties;
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
 import org.apache.commons.lang.StringUtils;
@@ -10,7 +11,7 @@ import java.util.Map;
 /**
  * @since version
  */
-public class TemplateContextItemProperties extends BasicNameModuleProperties {
+public class TemplateContextItemProperties extends AbstractClassBasedModuleProperties {
     public static final String CONTEXT_KEY = "CONTEXT_KEY";
     public static final String COMPONENT_REF = "COMPONENT_REF";
     public static final String GLOBAL = "GLOBAL";
@@ -20,7 +21,8 @@ public class TemplateContextItemProperties extends BasicNameModuleProperties {
     }
 
     public TemplateContextItemProperties(String moduleName) {
-        super(moduleName);
+        super();
+        setModuleNameAndKey(moduleName);
         setGlobal(false);
     }
 
@@ -52,27 +54,4 @@ public class TemplateContextItemProperties extends BasicNameModuleProperties {
     public boolean isGlobal() {
         return Boolean.valueOf(getProperty(GLOBAL));
     }
-
-    public void setFullyQualifiedClassname(String fqName) {
-        String classname;
-        if (StringUtils.isNotBlank(fqName)) {
-            if (fqName.lastIndexOf(".") > 0) {
-                classname = StringUtils.substringAfterLast(fqName, ".");
-                String packageName = StringUtils.substringBeforeLast(fqName, ".");
-                setProperty(CLASSNAME, classname);
-                setProperty(PACKAGE, packageName);
-            } else {
-                classname = fqName;
-                setProperty(CLASSNAME, classname);
-                setProperty(PACKAGE, "");
-            }
-            setProperty(FQ_CLASSNAME, fqName);
-        }
-
-    }
-
-    public String getFullyQualifiedClassname() {
-        return getProperty(FQ_CLASSNAME);
-    }
-
 }

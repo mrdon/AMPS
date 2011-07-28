@@ -30,6 +30,10 @@ public abstract class AbstractWebFragmentProperties extends AbstractConditionsPr
         setProperty(CONTEXT_PROVIDER,fqClassname);
     }
 
+    public String getContextProvider() {
+        return getProperty(CONTEXT_PROVIDER);
+    }
+
     public void setResources(List<Resource> resources) {
         put(RESOURCES,resources);
     }
@@ -40,6 +44,14 @@ public abstract class AbstractWebFragmentProperties extends AbstractConditionsPr
 
     public void setWeight(int weight) {
         setProperty(WEIGHT, Integer.toString(weight));
+    }
+
+    public String getWeight() {
+        return getProperty(WEIGHT);
+    }
+
+    public int getWeightAsInt() {
+        return Integer.parseInt(getProperty(WEIGHT));
     }
 
 }

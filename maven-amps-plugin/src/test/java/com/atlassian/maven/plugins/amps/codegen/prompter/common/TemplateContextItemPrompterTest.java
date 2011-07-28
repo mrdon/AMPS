@@ -48,11 +48,11 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
         TemplateContextItemPrompter modulePrompter = new TemplateContextItemPrompter(prompter);
         TemplateContextItemProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
-        assertEquals("wrong module name", MODULE_NAME, props.getProperty(PluginModuleProperties.MODULE_NAME));
-        assertEquals("wrong module key", MODULE_KEY, props.getProperty(PluginModuleProperties.MODULE_KEY));
-        assertEquals("wrong description", DESCRIPTION, props.getProperty(PluginModuleProperties.DESCRIPTION));
-        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
+        assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
+        assertEquals("wrong module key", MODULE_KEY, props.getModuleKey());
+        assertEquals("wrong description", DESCRIPTION, props.getDescription());
+        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
+        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
         assertEquals("wrong context key",CONTEXT_KEY,props.getContextKey());
         assertEquals("wrong component-ref",COMPONENT_REF,props.getComponentRef());
@@ -71,11 +71,11 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
         TemplateContextItemPrompter modulePrompter = new TemplateContextItemPrompter(prompter);
         TemplateContextItemProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
-        assertEquals("wrong module name", MODULE_NAME, props.getProperty(PluginModuleProperties.MODULE_NAME));
-        assertEquals("wrong module key", MODULE_KEY, props.getProperty(PluginModuleProperties.MODULE_KEY));
-        assertEquals("wrong description", DESCRIPTION, props.getProperty(PluginModuleProperties.DESCRIPTION));
-        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
+        assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
+        assertEquals("wrong module key", MODULE_KEY, props.getModuleKey());
+        assertEquals("wrong description", DESCRIPTION, props.getDescription());
+        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
+        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
         assertEquals("wrong context key",CONTEXT_KEY,props.getContextKey());
         assertEquals("wrong component-ref",COMPONENT_REF,props.getComponentRef());
@@ -95,11 +95,11 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
         TemplateContextItemPrompter modulePrompter = new TemplateContextItemPrompter(prompter);
         TemplateContextItemProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
-        assertEquals("wrong module name", MODULE_NAME, props.getProperty(PluginModuleProperties.MODULE_NAME));
-        assertEquals("wrong module key", MODULE_KEY, props.getProperty(PluginModuleProperties.MODULE_KEY));
-        assertEquals("wrong description", DESCRIPTION, props.getProperty(PluginModuleProperties.DESCRIPTION));
-        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
+        assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
+        assertEquals("wrong module key", MODULE_KEY, props.getModuleKey());
+        assertEquals("wrong description", DESCRIPTION, props.getDescription());
+        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
+        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
         assertEquals("wrong context key",CONTEXT_KEY,props.getContextKey());
         assertEquals("wrong class",CLASSNAME,props.getFullyQualifiedClassname());
@@ -119,11 +119,11 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
         TemplateContextItemPrompter modulePrompter = new TemplateContextItemPrompter(prompter);
         TemplateContextItemProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
-        assertEquals("wrong module name", MODULE_NAME, props.getProperty(PluginModuleProperties.MODULE_NAME));
-        assertEquals("wrong module key", MODULE_KEY, props.getProperty(PluginModuleProperties.MODULE_KEY));
-        assertEquals("wrong description", DESCRIPTION, props.getProperty(PluginModuleProperties.DESCRIPTION));
-        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
+        assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
+        assertEquals("wrong module key", MODULE_KEY, props.getModuleKey());
+        assertEquals("wrong description", DESCRIPTION, props.getDescription());
+        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
+        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
         assertEquals("wrong context key",CONTEXT_KEY,props.getContextKey());
         assertEquals("wrong class",CLASSNAME,props.getFullyQualifiedClassname());

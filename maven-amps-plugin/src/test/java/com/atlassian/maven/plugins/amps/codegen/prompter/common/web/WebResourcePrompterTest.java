@@ -83,11 +83,11 @@ public class WebResourcePrompterTest extends AbstractPrompterTest {
         WebResourcePrompter modulePrompter = new WebResourcePrompter(prompter);
         WebResourceProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
-        assertEquals("wrong module name", MODULE_NAME, props.getProperty(PluginModuleProperties.MODULE_NAME));
-        assertEquals("wrong module key", MODULE_KEY, props.getProperty(PluginModuleProperties.MODULE_KEY));
-        assertEquals("wrong description", DESCRIPTION, props.getProperty(PluginModuleProperties.DESCRIPTION));
-        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
+        assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
+        assertEquals("wrong module key", MODULE_KEY, props.getModuleKey());
+        assertEquals("wrong description", DESCRIPTION, props.getDescription());
+        assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
+        assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
     }
 
     @Test
@@ -138,11 +138,11 @@ public class WebResourcePrompterTest extends AbstractPrompterTest {
         WebResourcePrompter modulePrompter = new WebResourcePrompter(prompter);
         WebResourceProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
-        assertEquals("wrong adv module name", MODULE_NAME, props.getProperty(PluginModuleProperties.MODULE_NAME));
-        assertEquals("wrong adv module key", ADV_MODULE_KEY, props.getProperty(PluginModuleProperties.MODULE_KEY));
-        assertEquals("wrong adv description", ADV_DESCRIPTION, props.getProperty(PluginModuleProperties.DESCRIPTION));
-        assertEquals("wrong adv i18n name key", ADV_I18N_NAME_KEY, props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-        assertEquals("wrong adv i18n desc key", ADV_I18N_DESCRIPTION_KEY, props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
+        assertEquals("wrong adv module name", MODULE_NAME, props.getModuleName());
+        assertEquals("wrong adv module key", ADV_MODULE_KEY, props.getModuleKey());
+        assertEquals("wrong adv description", ADV_DESCRIPTION, props.getDescription());
+        assertEquals("wrong adv i18n name key", ADV_I18N_NAME_KEY, props.getNameI18nKey());
+        assertEquals("wrong adv i18n desc key", ADV_I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
         //resources
         List<Resource> resources = props.getResources();

@@ -1,6 +1,7 @@
 package com.atlassian.plugins.codegen.util;
 
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
+import com.atlassian.plugins.codegen.modules.ClassBasedModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -51,8 +52,8 @@ public class CodeTemplateHelper {
         return stringWriter.toString();
     }
 
-    public void writeJavaClassFromTemplate(String templatePath, String className, File sourceDirectory, String packageName, PluginModuleProperties props) throws Exception {
-        String originalClass =  props.getProperty(PluginModuleProperties.FQ_CLASSNAME);
+    public void writeJavaClassFromTemplate(String templatePath, String className, File sourceDirectory, String packageName, ClassBasedModuleProperties props) throws Exception {
+        String originalClass =  props.getFullyQualifiedClassname();
         PluginModuleProperties overrideProps = new BasicClassModuleProperties(originalClass);
 
         overrideProps.putAll(props);

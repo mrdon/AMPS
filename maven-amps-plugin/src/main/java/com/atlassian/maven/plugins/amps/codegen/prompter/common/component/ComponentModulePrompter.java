@@ -40,8 +40,8 @@ public class ComponentModulePrompter extends AbstractModulePrompter<ComponentPro
         ComponentProperties props = new ComponentProperties(fqClass);
         props.setFullyQualifiedInterface(fqInterface);
 
-        props.setGenerateClass(!javaFileExists(props.getProperty(ComponentProperties.FQ_CLASSNAME), moduleLocation));
-        props.setGenerateInterface(!javaFileExists(props.getProperty(ComponentProperties.FQ_INTERFACE), moduleLocation));
+        props.setGenerateClass(!javaFileExists(props.getFullyQualifiedClassname(), moduleLocation));
+        props.setGenerateInterface(!javaFileExists(props.getFullyQualifiedInterface(), moduleLocation));
 
         suppressExamplesPrompt();
 

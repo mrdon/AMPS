@@ -35,6 +35,10 @@ public class WebSectionProperties extends AbstractWebFragmentProperties {
         setProperty(LOCATION,location);
     }
 
+    public String getLocation() {
+        return getProperty(LOCATION);
+    }
+
     public void setLabel(Label label) {
         put(LABEL,label);
         if(!getI18nProperties().containsKey(label.getKey())) {

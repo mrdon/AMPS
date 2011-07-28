@@ -4,6 +4,7 @@ import com.atlassian.maven.plugins.amps.codegen.ConditionFactory;
 import com.atlassian.maven.plugins.amps.codegen.ContextProviderFactory;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.common.AbstractResourcePrompter;
+import com.atlassian.plugins.codegen.modules.NameBasedModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Condition;
 import com.atlassian.plugins.codegen.modules.common.Conditional;
@@ -21,7 +22,7 @@ import java.util.Map;
 /**
  * @since version
  */
-public abstract class AbstractWebFragmentPrompter<T extends PluginModuleProperties> extends AbstractResourcePrompter<T> {
+public abstract class AbstractWebFragmentPrompter<T extends NameBasedModuleProperties> extends AbstractResourcePrompter<T> {
 
     public static final String CUSTOM_CONDITION = "Custom Condition";
     public static final String CUSTOM_PROVIDER = "Custom Context Provider";

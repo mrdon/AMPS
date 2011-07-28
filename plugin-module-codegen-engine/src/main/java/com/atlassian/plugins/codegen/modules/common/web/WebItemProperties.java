@@ -38,6 +38,10 @@ public class WebItemProperties extends AbstractWebFragmentProperties {
         setProperty(SECTION,section);
     }
 
+    public String getSection() {
+        return getProperty(SECTION);
+    }
+
     public void setLink(Link link) {
         put(LINK,link);
     }

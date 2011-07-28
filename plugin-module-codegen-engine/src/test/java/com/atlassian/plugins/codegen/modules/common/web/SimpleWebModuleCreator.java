@@ -21,10 +21,6 @@ public class SimpleWebModuleCreator extends AbstractPluginModuleCreator<SimpleWe
 
     @Override
     public void createModule(PluginModuleLocation location, SimpleWebProperties props) throws Exception {
-        String packageName = props.getProperty(PluginModuleProperties.PACKAGE);
-
-        String classname = props.getProperty(PluginModuleProperties.CLASSNAME);
-
         addModuleToPluginXml(PLUGIN_MODULE_TEMPLATE, location, props);
     }
 

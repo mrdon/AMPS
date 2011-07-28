@@ -34,7 +34,7 @@ public class ServletModulePrompter extends AbstractModulePrompter<ServletPropert
 
     @Override
     public void promptForAdvancedProperties(ServletProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
-        props.setUrlPattern(getUrlPatternFromUser("/" + props.getProperty(PluginModuleProperties.CLASSNAME).toLowerCase()));
+        props.setUrlPattern(getUrlPatternFromUser("/" + props.getClassname().toLowerCase()));
 
         Map<String, String> initParams = promptForParams("Add Init-Param?");
         if (initParams.size() > 0) {

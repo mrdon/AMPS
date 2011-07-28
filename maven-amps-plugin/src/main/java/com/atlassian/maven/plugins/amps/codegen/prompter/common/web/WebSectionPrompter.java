@@ -31,7 +31,7 @@ public class WebSectionPrompter extends AbstractWebFragmentPrompter<WebSectionPr
 
         WebSectionProperties props = new WebSectionProperties(moduleName, location);
 
-        Label label = new Label(props.get(PluginModuleProperties.MODULE_KEY) + ".label", props.getProperty(PluginModuleProperties.MODULE_NAME));
+        Label label = new Label(props.getModuleKey() + ".label", props.getModuleName());
         props.setLabel(label);
 
         suppressAdvancedNamePrompt();
@@ -63,8 +63,8 @@ public class WebSectionPrompter extends AbstractWebFragmentPrompter<WebSectionPr
 
         //TOOLTIP
         if (promptForBoolean("Add Tooltip?", "N")) {
-            String tooltipKey = promptNotBlank("Enter Tooltip Key", props.get(PluginModuleProperties.MODULE_KEY) + ".tooltip");
-            String tooltipValue = promptNotBlank("Enter Tooltip Value", props.get(PluginModuleProperties.MODULE_NAME) + " Tooltip");
+            String tooltipKey = promptNotBlank("Enter Tooltip Key", props.getModuleKey() + ".tooltip");
+            String tooltipValue = promptNotBlank("Enter Tooltip Value", props.getModuleName() + " Tooltip");
             Tooltip tooltip = new Tooltip(tooltipKey, tooltipValue);
 
             List<String> tooltipParamVals = promptForList("Add Tooltip Param?","Enter Param Value");

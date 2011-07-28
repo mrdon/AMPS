@@ -33,9 +33,9 @@ public class ServletContextListenerModuleCreator extends AbstractPluginModuleCre
 
     @Override
     public void createModule(PluginModuleLocation location, ServletContextListenerProperties props) throws Exception {
-        String packageName = props.getProperty(PluginModuleProperties.PACKAGE);
+        String packageName = props.getPackage();
 
-        String classname = props.getProperty(PluginModuleProperties.CLASSNAME);
+        String classname = props.getClassname();
 
         if (props.includeExamples()) {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);

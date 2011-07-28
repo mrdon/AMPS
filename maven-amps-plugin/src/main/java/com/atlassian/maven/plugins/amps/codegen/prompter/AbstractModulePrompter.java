@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter;
 
+import com.atlassian.plugins.codegen.modules.NameBasedModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.util.ClassnameUtil;
@@ -34,28 +35,32 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
             String moduleName;
 
             if (showAdvanced) {
-                if(showAdvancedNamePrompt) {
-                    moduleName = promptNotBlank("Plugin Name", props.getProperty(PluginModuleProperties.MODULE_NAME));
-                } else {
-                    moduleName = props.getProperty(PluginModuleProperties.MODULE_NAME);
+                if(props instanceof NameBasedModuleProperties) {
+                    NameBasedModuleProperties namedProps = (NameBasedModuleProperties) props;
+
+                    if(showAdvancedNamePrompt) {
+                        moduleName = promptNotBlank("Plugin Name", namedProps.getModuleName());
+                    } else {
+                        moduleName = namedProps.getModuleName();
+                    }
+                    String moduleKey = promptNotBlank("Plugin Key", namedProps.getModuleKey());
+                    String moduleDescription = promptNotBlank("Plugin Description", namedProps.getDescription());
+                    String moduleI18nNameKey = promptNotBlank("i18n Name Key", namedProps.getNameI18nKey());
+                    String moduleI18nDescriptionKey = promptNotBlank("i18n Description Key", namedProps.getDescriptionI18nKey());
+
+                    namedProps.setModuleName(moduleName);
+                    namedProps.setModuleKey(moduleKey);
+                    namedProps.setDescription(moduleDescription);
+                    namedProps.setNameI18nKey(moduleI18nNameKey);
+                    namedProps.setDescriptionI18nKey(moduleI18nDescriptionKey);
+
+                    Properties currentI18n = props.getI18nProperties();
+                    currentI18n.remove(NameBasedModuleProperties.NAME_I18N_KEY);
+                    currentI18n.remove(NameBasedModuleProperties.DESCRIPTION_I18N_KEY);
+
+                    currentI18n.setProperty(moduleI18nNameKey, moduleName);
+                    currentI18n.setProperty(moduleI18nDescriptionKey, moduleDescription);
                 }
-                String moduleKey = promptNotBlank("Plugin Key", props.getProperty(PluginModuleProperties.MODULE_KEY));
-                String moduleDescription = promptNotBlank("Plugin Description", props.getProperty(PluginModuleProperties.DESCRIPTION));
-                String moduleI18nNameKey = promptNotBlank("i18n Name Key", props.getProperty(PluginModuleProperties.NAME_I18N_KEY));
-                String moduleI18nDescriptionKey = promptNotBlank("i18n Description Key", props.getProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY));
-
-                props.setModuleName(moduleName);
-                props.setModuleKey(moduleKey);
-                props.setDescription(moduleDescription);
-                props.setNameI18nKey(moduleI18nNameKey);
-                props.setDescriptionI18nKey(moduleI18nDescriptionKey);
-
-                Properties currentI18n = props.getI18nProperties();
-                currentI18n.remove(PluginModuleProperties.NAME_I18N_KEY);
-                currentI18n.remove(PluginModuleProperties.DESCRIPTION_I18N_KEY);
-
-                currentI18n.setProperty(moduleI18nNameKey, moduleName);
-                currentI18n.setProperty(moduleI18nDescriptionKey, moduleDescription);
 
                 promptForAdvancedProperties(props, moduleLocation);
             }

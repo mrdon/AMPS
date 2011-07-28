@@ -33,10 +33,10 @@ public class ModuleTypeModuleCreator extends AbstractPluginModuleCreator<ModuleT
 
     @Override
     public void createModule(PluginModuleLocation location, ModuleTypeProperties props) throws Exception {
-        String packageName = props.getProperty(PluginModuleProperties.PACKAGE);
-        String classname = props.getProperty(PluginModuleProperties.CLASSNAME);
-        String iClassname = props.getProperty(ModuleTypeProperties.INTERFACE_CLASS);
-        String iPackage = props.getProperty(ModuleTypeProperties.INTERFACE_PACKAGE);
+        String packageName = props.getPackage();
+        String classname = props.getClassname();
+        String iClassname = props.getInterfaceClass();
+        String iPackage = props.getInterfacePackage();
 
         if (props.includeExamples()) {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);

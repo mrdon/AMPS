@@ -37,6 +37,14 @@ public class WorkflowPostFunctionProperties extends BasicClassModuleProperties {
         setProperty(FACTORY_NAME, classname);
     }
 
+    public String getFullyQualifiedFactoryName() {
+        return getProperty(FQ_FACTORY_NAME);
+    }
+
+    public String getFactoryName() {
+        return getProperty(FACTORY_NAME);
+    }
+
     public void setOrderable(boolean orderable) {
         setProperty(ORDERABLE, Boolean.toString(orderable));
     }

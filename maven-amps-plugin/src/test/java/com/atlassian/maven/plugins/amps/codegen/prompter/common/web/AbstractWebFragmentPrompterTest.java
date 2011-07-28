@@ -93,7 +93,7 @@ public abstract class AbstractWebFragmentPrompterTest<T extends AbstractWebFragm
         assertEquals("wrong number of vm resource params",0,vmResource.getParams().size());
 
         //context provider (subclasses should check for actual value)
-        assertTrue("context provider is blank", StringUtils.isNotBlank(props.getProperty(WebItemProperties.CONTEXT_PROVIDER)));
+        assertTrue("context provider is blank", StringUtils.isNotBlank(props.getContextProvider()));
 
         //conditions
         List<Conditional> conditionals = props.getConditions();

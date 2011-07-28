@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common;
 
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
+import com.atlassian.plugins.codegen.modules.NameBasedModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Resource;
 import org.apache.commons.lang.StringUtils;

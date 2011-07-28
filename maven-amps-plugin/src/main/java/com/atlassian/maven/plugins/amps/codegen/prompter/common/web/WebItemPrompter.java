@@ -33,10 +33,10 @@ public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperti
 
         String linkPath = promptNotBlank("Enter Link URL (e.g. /secure/CreateIssue!default.jspa)");
         Link link = new Link(linkPath);
-        link.setLinkId(props.get(PluginModuleProperties.MODULE_KEY) + "-link");
+        link.setLinkId(props.getModuleKey() + "-link");
         props.setLink(link);
 
-        Label label = new Label(props.get(PluginModuleProperties.MODULE_KEY) + ".label",props.getProperty(PluginModuleProperties.MODULE_NAME));
+        Label label = new Label(props.getModuleKey() + ".label",props.getModuleName());
         props.setLabel(label);
 
         suppressAdvancedNamePrompt();
@@ -76,7 +76,7 @@ public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperti
             int height = promptForInt("Icon Height", 16);
 
             Link iconLink = new Link(iconPath);
-            iconLink.setLinkId(props.get(PluginModuleProperties.MODULE_KEY) + "-icon");
+            iconLink.setLinkId(props.getModuleKey() + "-icon");
 
             Icon icon = new Icon(width, height);
             icon.setLink(iconLink);
@@ -86,8 +86,8 @@ public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperti
 
         //TOOLTIP
         if (promptForBoolean("Add Tooltip?", "N")) {
-            String tooltipKey = promptNotBlank("Enter Tooltip Key", props.get(PluginModuleProperties.MODULE_KEY) + ".tooltip");
-            String tooltipValue = promptNotBlank("Enter Tooltip Value", props.get(PluginModuleProperties.MODULE_NAME) + " Tooltip");
+            String tooltipKey = promptNotBlank("Enter Tooltip Key", props.getModuleKey() + ".tooltip");
+            String tooltipValue = promptNotBlank("Enter Tooltip Value", props.getModuleName() + " Tooltip");
             Tooltip tooltip = new Tooltip(tooltipKey,tooltipValue);
 
             List<String> tooltipParamVals = promptForList("Add Tooltip Param?","Enter Param Value");

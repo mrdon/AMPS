@@ -26,7 +26,7 @@ public class GadgetPrompter extends AbstractModulePrompter<GadgetProperties> {
         String moduleName = promptNotBlank("Enter Gadget Name", "My Gadget");
 
         GadgetProperties props = new GadgetProperties(moduleName);
-        String gadgetLocation = promptNotBlank("Enter Gadget XML location", "gadgets/" + props.getProperty(GadgetProperties.MODULE_KEY) + "/gadget.xml");
+        String gadgetLocation = promptNotBlank("Enter Gadget XML location", "gadgets/" + props.getModuleKey() + "/gadget.xml");
 
         props.setLocation(gadgetLocation);
 

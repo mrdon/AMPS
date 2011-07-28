@@ -9,7 +9,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
  * Author: jdoklovic
  */
 @JiraPluginModuleCreator
-public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreator {
+public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreator<WorkflowPostFunctionProperties> {
     public static final String MODULE_NAME = "Workflow Post Function";
 
     private static final String FUNCTION_TEMPLATE = "templates/jira/workflow/function/PostFunction.java.vtl";
@@ -26,26 +26,15 @@ public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreat
     }
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
-        String moduleKey = props.getProperty(PluginModuleProperties.MODULE_KEY);
-        String moduleName = props.getProperty(PluginModuleProperties.MODULE_NAME);
+    public void createModule(PluginModuleLocation location, WorkflowPostFunctionProperties props) throws Exception {
+        String moduleKey = props.getModuleKey();
+        String moduleName = props.getModuleName();
         String viewFileName = moduleKey + ".vm";
         String inputFileName = moduleKey + "-input.vm";
-        String packageName = props.getProperty(PluginModuleProperties.PACKAGE);
-        String functionClass = props.getProperty(PluginModuleProperties.CLASSNAME);
-        String factoryClass = props.getProperty(WorkflowPostFunctionProperties.FACTORY_NAME);
+        String packageName = props.getPackage();
+        String functionClass = props.getClassname();
+        String factoryClass = props.getFactoryName();
 
-        if (!props.containsKey(PluginModuleProperties.DESCRIPTION)) {
-            props.setProperty(PluginModuleProperties.DESCRIPTION, "The " + moduleName + " Workflow Post Function");
-        }
-
-        if (!props.containsKey(PluginModuleProperties.DESCRIPTION_I18N_KEY)) {
-            props.setProperty(PluginModuleProperties.DESCRIPTION_I18N_KEY, KEY_PREFIX + moduleKey);
-        }
-
-        if (!props.containsKey(PluginModuleProperties.NAME_I18N_KEY)) {
-            props.setProperty(PluginModuleProperties.NAME_I18N_KEY, KEY_PREFIX + moduleKey + ".name");
-        }
 
         templateHelper.writeJavaClassFromTemplate(FUNCTION_TEMPLATE, functionClass, location.getSourceDirectory(), packageName, props);
         templateHelper.writeJavaClassFromTemplate(FACTORY_TEMPLATE, factoryClass, location.getSourceDirectory(), packageName, props);

@@ -40,9 +40,9 @@ public class RESTModuleCreator extends AbstractPluginModuleCreator<RESTPropertie
 
     @Override
     public void createModule(PluginModuleLocation location, RESTProperties props) throws Exception {
-        String packageName = props.getProperty(PluginModuleProperties.PACKAGE);
+        String packageName = props.getPackage();
 
-        String classname = props.getProperty(PluginModuleProperties.CLASSNAME);
+        String classname = props.getClassname();
         String modelClassname = classname + "Model";
 
         if (props.includeExamples()) {
