@@ -1,5 +1,7 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 
+import com.atlassian.maven.plugins.amps.codegen.ConditionFactory;
+import com.atlassian.maven.plugins.amps.codegen.ContextProviderFactory;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
@@ -9,11 +11,14 @@ import com.atlassian.plugins.codegen.modules.common.Conditions;
 import com.atlassian.plugins.codegen.modules.common.Resource;
 import com.atlassian.plugins.codegen.modules.common.web.AbstractWebFragmentProperties;
 import com.atlassian.plugins.codegen.modules.common.web.WebItemProperties;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.PrompterException;
+import org.junit.After;
 import org.junit.Before;
 
 import java.util.List;
+import java.util.SortedMap;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -35,10 +40,24 @@ public abstract class AbstractWebFragmentPrompterTest<T extends AbstractWebFragm
     public static final String CONDITIONS_TYPE = "AND";
     public static final String CUSTOM_CONDITION = "com.atlassian.plugins.web.CustomCondition";
 
+    protected TestingContextProviderFactory contextProviderFactory;
+    protected TestingConditionFactory conditionFactory;
     protected T props;
 
     public void setProps(T props) {
         this.props = props;
+    }
+
+    @Before
+    public void setupProviders() {
+        contextProviderFactory = new TestingContextProviderFactory();
+        conditionFactory = new TestingConditionFactory();
+    }
+
+    @After
+    public void resetProviders() {
+        contextProviderFactory.setProvidersMap(MapUtils.EMPTY_SORTED_MAP);
+        conditionFactory.setConditions(MapUtils.EMPTY_SORTED_MAP);
     }
 
     @Before
@@ -120,5 +139,17 @@ public abstract class AbstractWebFragmentPrompterTest<T extends AbstractWebFragm
         assertEquals("wrong condition param value", PARAM_VAL, condition.getParams().get(PARAM_KEY));
 
         assertTrue("condition should be inverted",condition.isInvert());
+    }
+
+    protected class TestingContextProviderFactory extends ContextProviderFactory {
+        public void setProvidersMap(SortedMap<String, String> map) {
+            providers = map;
+        }
+    }
+
+    protected class TestingConditionFactory extends ConditionFactory {
+        public void setConditions(SortedMap<String,String> map) {
+            conditions = map;
+        }
     }
 }

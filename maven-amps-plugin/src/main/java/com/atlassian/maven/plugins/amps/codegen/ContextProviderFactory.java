@@ -33,8 +33,4 @@ public class ContextProviderFactory {
     public static Map<String,String> getAvailableContextProviders() {
         return providers;
     }
-
-    public static void setProvidersMapForTesting(SortedMap<String,String> map) {
-        providers = map;
-    }
 }

@@ -13,8 +13,9 @@ public class WorkflowPostFunctionProperties extends BasicClassModuleProperties {
     public static final String ORDERABLE = "ORDERABLE";
     public static final String UNIQUE = "UNIQUE";
     public static final String DELETABLE = "DELETABLE";
+    public static final String ADDABLE = "ADDABLE";
 
-    private WorkflowPostFunctionProperties(String fqClassName) {
+    public WorkflowPostFunctionProperties(String fqClassName) {
         super(fqClassName);
     }
 
@@ -49,11 +50,31 @@ public class WorkflowPostFunctionProperties extends BasicClassModuleProperties {
         setProperty(ORDERABLE, Boolean.toString(orderable));
     }
 
+    public String getOrderable() {
+        return getProperty(ORDERABLE);
+    }
+
     public void setUnique(boolean unique) {
         setProperty(UNIQUE, Boolean.toString(unique));
     }
 
+    public String getUnique() {
+        return getProperty(UNIQUE);
+    }
+
     public void setDeletable(boolean deletable) {
         setProperty(DELETABLE, Boolean.toString(deletable));
+    }
+
+    public String getDeletable() {
+        return getProperty(DELETABLE);
+    }
+
+    public void setAddable(String addable) {
+        setProperty(ADDABLE, addable);
+    }
+
+    public String getAddable() {
+        return getProperty(ADDABLE);
     }
 }

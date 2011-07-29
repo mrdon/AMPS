@@ -113,7 +113,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         providersMap.put("HeightContextProvider", "com.atlassian.test.HeightContextProvider");
         providersMap.put("WidthContextProvider", "com.atlassian.test.WidthContextProvider");
 
-        ContextProviderFactory.setProvidersMapForTesting(providersMap);
+        contextProviderFactory.setProvidersMap(providersMap);
 
         when(prompter.prompt("Enter Plugin Module Name", "My Web Section")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Location (e.g. system.admin/mynewsection)")).thenReturn(CUSTOM_SECTION);
@@ -145,7 +145,6 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
 
         assertEquals("wrong context provider", "com.atlassian.test.WidthContextProvider", props.getContextProvider());
 
-        ContextProviderFactory.setProvidersMapForTesting(MapUtils.EMPTY_SORTED_MAP);
     }
 
     @Test
@@ -154,7 +153,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         conditionMap.put("NoFacialHairCondition", "com.atlassian.test.NoFacialHairCondition");
         conditionMap.put("HasGlobalAdminPermissionCondition", "com.atlassian.test.HasGlobalAdminPermissionCondition");
 
-        ConditionFactory.setConditionsMapForTesting(conditionMap);
+        conditionFactory.setConditions(conditionMap);
 
         when(prompter.prompt("Enter Plugin Module Name", "My Web Section")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Location (e.g. system.admin/mynewsection)")).thenReturn(CUSTOM_SECTION);
@@ -187,6 +186,5 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         Condition condition = (Condition) ((Conditions) props.getConditions().get(0)).getConditions().get(0);
         assertEquals("wrong condition name", "com.atlassian.test.NoFacialHairCondition", condition.getFullyQualifiedClassName());
 
-        ConditionFactory.setConditionsMapForTesting(MapUtils.EMPTY_SORTED_MAP);
     }
 }

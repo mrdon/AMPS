@@ -32,10 +32,6 @@ public class ConditionFactory {
         Thread.currentThread().setContextClassLoader(oldLoader);
     }
     public static Map<String,String> getAvailableConditions() {
-        return conditions;
-    }
-
-    public static void setConditionsMapForTesting(SortedMap<String,String> map) {
-        conditions = map;
+        return Collections.unmodifiableMap(conditions);
     }
 }

@@ -3,6 +3,7 @@ package com.atlassian.maven.plugins.amps;
 import com.atlassian.maven.plugins.amps.codegen.ConditionFactory;
 import com.atlassian.maven.plugins.amps.codegen.ContextProviderFactory;
 import com.atlassian.maven.plugins.amps.codegen.PluginModuleSelectionQueryer;
+import com.atlassian.maven.plugins.amps.codegen.jira.ActionTypeFactory;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompterFactory;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
@@ -16,6 +17,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.XmlStreamWriter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -64,24 +66,7 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
         File testDir = getJavaTestRoot(project);
         File resourcesDir = getResourcesRoot(project);
 
-        try {
-            ConditionFactory.locateAvailableConditions(productId,project.getCompileClasspathElements());
-        } catch (Exception e) {
-            String message = "Error initializing Plugin Module Conditions";
-            getLog().error(message);
-            //keep going, doesn't matter
-        }
-
-        try {
-            ContextProviderFactory.locateAvailableContextProviders(productId, project.getCompileClasspathElements());
-        } catch (Exception e) {
-            String message = "Error initializing Plugin Module Context Providers";
-            getLog().error(message);
-            //keep going, doesn't matter
-        }
-
-        Map<String,String> conditions = ConditionFactory.getAvailableConditions();
-        Map<String,String> providers = ContextProviderFactory.getAvailableContextProviders();
+        initHelperFactories(productId,project);
 
         PluginModuleLocation moduleLocation = new PluginModuleLocation.Builder(javaDir)
                 .resourcesDirectory(resourcesDir)
@@ -211,6 +196,41 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
             Dependency d = (Dependency) o;
             return (depToCheck.getGroupId().equals(d.getGroupId())
                     && depToCheck.getArtifactId().equals(d.getArtifactId()));
+        }
+    }
+
+    private void initHelperFactories(String productId,MavenProject project) throws MojoExecutionException {
+        List<String> pluginClasspath;
+        try {
+            pluginClasspath = project.getCompileClasspathElements();
+        } catch (DependencyResolutionRequiredException e) {
+            throw new MojoExecutionException("Dependencies MUST be resolved", e);
+        }
+
+        try {
+            ConditionFactory.locateAvailableConditions(productId,pluginClasspath);
+        } catch (Exception e) {
+            String message = "Error initializing Plugin Module Conditions";
+            getLog().error(message);
+            //keep going, doesn't matter
+        }
+
+        try {
+            ContextProviderFactory.locateAvailableContextProviders(productId, pluginClasspath);
+        } catch (Exception e) {
+            String message = "Error initializing Plugin Module Context Providers";
+            getLog().error(message);
+            //keep going, doesn't matter
+        }
+
+        if(ProductHandlerFactory.JIRA.equals(productId)) {
+            try {
+                ActionTypeFactory.locateAvailableActionTypes(pluginClasspath);
+            } catch (Exception e) {
+                String message = "Error initializing JIRA Action Types";
+                getLog().error(message);
+                //keep going, doesn't matter
+            }
         }
     }
 }
