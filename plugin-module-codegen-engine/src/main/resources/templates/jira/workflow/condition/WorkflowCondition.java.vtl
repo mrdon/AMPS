@@ -1,5 +1,7 @@
 package ${PACKAGE};
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.workflow.condition.AbstractJiraCondition;
 import com.opensymphony.module.propertyset.PropertySet;
@@ -8,6 +10,7 @@ import java.util.Map;
 
 public class ${CLASSNAME} extends AbstractJiraCondition
 {
+    private static final Logger log = LoggerFactory.getLogger(${CLASSNAME}.class);
     public static final String FIELD_WORD="word";
 
     public boolean passesCondition(Map transientVars, Map args, PropertySet ps)
