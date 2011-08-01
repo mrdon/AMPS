@@ -1,0 +1,21 @@
+package ${PACKAGE};
+
+import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.workflow.condition.AbstractJiraCondition;
+import com.opensymphony.module.propertyset.PropertySet;
+
+import java.util.Map;
+
+public class ${CLASSNAME} extends AbstractJiraCondition
+{
+    public static final String FIELD_WORD="word";
+
+    public boolean passesCondition(Map transientVars, Map args, PropertySet ps)
+    {
+        String word = (String) transientVars.get(FIELD_WORD);
+
+        Issue issue = getIssue(transientVars);
+
+        return issue.getDescription().contains(word);
+    }
+}

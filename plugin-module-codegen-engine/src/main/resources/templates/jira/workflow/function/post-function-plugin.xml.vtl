@@ -12,8 +12,8 @@
     #if(${DELETABLE})<deletable>${DELETABLE}</deletable>#end
     #if(${ADDABLE} && ${ADDABLE} != "")<addable>${ADDABLE}</addable>#end
 
-    <resource type="velocity" name="view" location="templates/function/${MODULE_KEY}.vm"/>
-    <resource type="velocity" name="input-parameters" location="templates/function/${MODULE_KEY}-input.vm"/>
-    <resource type="velocity" name="edit-parameters" location="templates/function/${MODULE_KEY}-input.vm"/>
+    <resource type="velocity" name="view" location="templates/postfunctions/${MODULE_KEY}.vm"/>
+    <resource type="velocity" name="input-parameters" location="templates/postfunctions/${MODULE_KEY}-input.vm"/>
+    <resource type="velocity" name="edit-parameters" location="templates/postfunctions/${MODULE_KEY}-input.vm"/>
 
 </workflow-function>

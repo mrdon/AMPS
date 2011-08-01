@@ -42,9 +42,8 @@ public class ${FACTORY_NAME} extends AbstractWorkflowPluginFactory implements Wo
     @Override
     protected void getVelocityParamsForEdit(Map<String, Object>velocityParams,AbstractDescriptor descriptor){
 
-        // Get the current values
-        FunctionDescriptor functionDescriptor=(FunctionDescriptor)descriptor;
-        velocityParams.put(FIELD_MESSAGE,functionDescriptor.getArgs().get(FIELD_MESSAGE));
+        getVelocityParamsForInput(velocityParams);
+        getVelocityParamsForView(velocityParams, descriptor);
 
     }
 

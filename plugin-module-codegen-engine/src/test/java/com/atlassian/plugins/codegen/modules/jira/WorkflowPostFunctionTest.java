@@ -17,6 +17,9 @@ import static org.junit.Assert.*;
 public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPostFunctionProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.workflow";
     public static final String XPATH = "/atlassian-plugin/workflow-function[@name='My Post Function' and @key='my-post-function' and @i18n-name-key='my-post-function.name' and @class='" + PACKAGE_NAME + ".MyPostFunctionFactory']";
+
+    protected File templatePath;
+
     @Before
     public void runGenerator() throws Exception {
         setCreator(new WorkflowPostFunctionModuleCreator());
@@ -30,6 +33,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
 
         props.setIncludeExamples(false);
 
+        templatePath = new File(templateDir,"postfunctions");
+
     }
 
     @Test
@@ -42,8 +47,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyPostFunction.java").exists());
         assertTrue("factory class not generated", new File(srcDir, packagePath + File.separator + "MyPostFunctionFactory.java").exists());
         assertTrue("test class not generated", new File(testDir, packagePath + File.separator + "MyPostFunctionTest.java").exists());
-        assertTrue("view template not generated", new File(templateDir, "my-post-function.vm").exists());
-        assertTrue("input template not generated", new File(templateDir, "my-post-function-input.vm").exists());
+        assertTrue("view template not generated", new File(templatePath, "my-post-function.vm").exists());
+        assertTrue("input template not generated", new File(templatePath, "my-post-function-input.vm").exists());
         assertTrue("plugin.xml not generated", new File(resourcesDir, "atlassian-plugin.xml").exists());
 
     }
