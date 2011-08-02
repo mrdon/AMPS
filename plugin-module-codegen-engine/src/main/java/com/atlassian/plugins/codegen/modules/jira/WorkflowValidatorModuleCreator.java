@@ -1,9 +1,10 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.annotations.*;
+import com.atlassian.plugins.codegen.annotations.Dependencies;
+import com.atlassian.plugins.codegen.annotations.Dependency;
+import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 import java.io.File;
 
@@ -42,17 +43,17 @@ public class WorkflowValidatorModuleCreator extends AbstractPluginModuleCreator<
         String functionClass = props.getClassname();
         String factoryClass = props.getFactoryName();
 
-        File templatesDir = new File(location.getTemplateDirectory(),"validators");
+        File templatesDir = new File(location.getTemplateDirectory(), "validators");
 
         if (props.includeExamples()) {
         } else {
             templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, functionClass, location.getSourceDirectory(), packageName, props);
-        templateHelper.writeJavaClassFromTemplate(FACTORY_TEMPLATE, factoryClass, location.getSourceDirectory(), packageName, props);
+            templateHelper.writeJavaClassFromTemplate(FACTORY_TEMPLATE, factoryClass, location.getSourceDirectory(), packageName, props);
 
-        //unit test
-        templateHelper.writeJavaClassFromTemplate(UNIT_TEST_TEMPLATE, testClassname(functionClass), location.getTestDirectory(), packageName, props);
-        templateHelper.writeFileFromTemplate(VIEW_TEMPLATE, viewFileName, templatesDir, props);
-        templateHelper.writeFileFromTemplate(INPUT_TEMPLATE, inputFileName, templatesDir, props);
+            //unit test
+            templateHelper.writeJavaClassFromTemplate(UNIT_TEST_TEMPLATE, testClassname(functionClass), location.getTestDirectory(), packageName, props);
+            templateHelper.writeFileFromTemplate(VIEW_TEMPLATE, viewFileName, templatesDir, props);
+            templateHelper.writeFileFromTemplate(INPUT_TEMPLATE, inputFileName, templatesDir, props);
         }
 
 
