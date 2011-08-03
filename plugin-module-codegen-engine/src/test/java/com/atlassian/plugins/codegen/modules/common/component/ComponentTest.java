@@ -5,6 +5,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import org.apache.commons.io.FileUtils;
+import org.dom4j.Document;
+import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
-//TODO: update test to use Dom4J
 /**
  * @since version
  */
@@ -52,15 +53,20 @@ public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties> 
     }
 
     @Test
-    public void pluginXmlContainsModule() throws Exception {
+    public void componentAdded() throws Exception {
         props.setFullyQualifiedInterface(PACKAGE_NAME + ".CustomInterface");
         props.setGenerateClass(true);
         props.setGenerateInterface(true);
         creator.createModule(moduleLocation, props);
-        String pluginXmlContent = FileUtils.readFileToString(pluginXml);
+        Document pluginDoc = getXmlDocument(pluginXml);
 
-        assertTrue("module not found in plugin xml", pluginXmlContent.contains("<component"));
-        assertTrue("module class not found in plugin xml", pluginXmlContent.contains("class=\"" + PACKAGE_NAME + ".CustomComponent\""));
+        String compXPath = "/atlassian-plugin/component[@name='Custom Component' and @key='custom-component' and @i18n-name-key='custom-component.name' and @class='" + PACKAGE_NAME + ".CustomComponent']";
+        String compIfaceXPath = "interface[text() = '" + PACKAGE_NAME + ".CustomInterface']";
+
+        Node compNode = pluginDoc.selectSingleNode(compXPath);
+        assertNotNull("component not found",compNode);
+        assertNotNull("interface not found",compNode.selectSingleNode(compIfaceXPath));
+
     }
 
 }

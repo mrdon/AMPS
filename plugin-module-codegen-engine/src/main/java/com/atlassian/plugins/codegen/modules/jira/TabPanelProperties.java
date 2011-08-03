@@ -35,17 +35,12 @@ public class TabPanelProperties extends BasicClassModuleProperties {
             setDescription("The " + getProperty(MODULE_NAME) + " Plugin");
             setNameI18nKey(getProperty(MODULE_KEY) + ".name");
             setDescriptionI18nKey(getProperty(MODULE_KEY) + ".description");
-
-            addI18nProperty(getProperty(DESCRIPTION_I18N_KEY), getProperty(DESCRIPTION));
-            addI18nProperty(getProperty(NAME_I18N_KEY), getProperty(MODULE_NAME));
         }
     }
 
     public void setLabel(Label label) {
         put(LABEL,label);
-        if(!getI18nProperties().containsKey(label.getKey())) {
-            getI18nProperties().setProperty(label.getKey(),label.getValue());
-        }
+        addI18nProperty(label.getKey(),label.getValue());
     }
 
     public Label getLabel() {

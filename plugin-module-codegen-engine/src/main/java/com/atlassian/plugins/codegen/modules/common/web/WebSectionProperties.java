@@ -41,9 +41,7 @@ public class WebSectionProperties extends AbstractWebFragmentProperties {
 
     public void setLabel(Label label) {
         put(LABEL,label);
-        if(!getI18nProperties().containsKey(label.getKey())) {
-            getI18nProperties().setProperty(label.getKey(),label.getValue());
-        }
+        addI18nProperty(label.getKey(),label.getValue());
     }
 
     public Label getLabel() {
@@ -56,9 +54,7 @@ public class WebSectionProperties extends AbstractWebFragmentProperties {
 
     public void setTooltip(Tooltip tooltip) {
         put(TOOLTIP,tooltip);
-        if(!getI18nProperties().containsKey(tooltip.getKey())) {
-            getI18nProperties().setProperty(tooltip.getKey(),tooltip.getValue());
-        }
+        addI18nProperty(tooltip.getKey(),tooltip.getValue());
     }
 
     public Tooltip getTooltip() {

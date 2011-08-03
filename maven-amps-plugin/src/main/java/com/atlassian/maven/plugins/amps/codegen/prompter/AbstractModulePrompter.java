@@ -56,13 +56,6 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
                     namedProps.setDescription(moduleDescription);
                     namedProps.setNameI18nKey(moduleI18nNameKey);
                     namedProps.setDescriptionI18nKey(moduleI18nDescriptionKey);
-
-                    Properties currentI18n = props.getI18nProperties();
-                    currentI18n.remove(NameBasedModuleProperties.NAME_I18N_KEY);
-                    currentI18n.remove(NameBasedModuleProperties.DESCRIPTION_I18N_KEY);
-
-                    currentI18n.setProperty(moduleI18nNameKey, moduleName);
-                    currentI18n.setProperty(moduleI18nDescriptionKey, moduleDescription);
                 }
 
                 promptForAdvancedProperties(props, moduleLocation);

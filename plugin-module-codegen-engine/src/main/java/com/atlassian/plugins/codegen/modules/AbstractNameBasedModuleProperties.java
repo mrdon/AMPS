@@ -21,9 +21,6 @@ public abstract class AbstractNameBasedModuleProperties extends AbstractPluginMo
             setDescription("The " + getProperty(MODULE_NAME) + " Plugin");
             setNameI18nKey(getProperty(MODULE_KEY) + ".name");
             setDescriptionI18nKey(getProperty(MODULE_KEY) + ".description");
-
-            addI18nProperty(getProperty(DESCRIPTION_I18N_KEY), getProperty(DESCRIPTION));
-            addI18nProperty(getProperty(NAME_I18N_KEY), getProperty(MODULE_NAME));
         }
     }
 
@@ -77,4 +74,12 @@ public abstract class AbstractNameBasedModuleProperties extends AbstractPluginMo
         return getProperty(NAME_I18N_KEY);
     }
 
+    @Override
+    public Properties getI18nProperties() {
+        Properties props = super.getI18nProperties();
+        props.setProperty(getProperty(NAME_I18N_KEY),getProperty(MODULE_NAME));
+        props.setProperty(getProperty(DESCRIPTION_I18N_KEY),getProperty(DESCRIPTION));
+
+        return props;
+    }
 }

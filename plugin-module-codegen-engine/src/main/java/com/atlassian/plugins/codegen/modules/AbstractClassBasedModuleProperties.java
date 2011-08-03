@@ -18,17 +18,13 @@ public abstract class AbstractClassBasedModuleProperties extends AbstractNameBas
                 classname = StringUtils.substringAfterLast(fqName, ".");
                 String packageName = StringUtils.substringBeforeLast(fqName, ".");
                 setProperty(CLASSNAME, classname);
-                if (StringUtils.isBlank(getProperty(FQ_CLASS_UNDER_TEST))) {
-                    setClassUnderTest(fqName);
-                }
+                setClassUnderTest(fqName);
 
                 setProperty(PACKAGE, packageName);
             } else {
                 classname = fqName;
                 setProperty(CLASSNAME, classname);
-                if (StringUtils.isBlank(getProperty(FQ_CLASS_UNDER_TEST))) {
-                    setClassUnderTest(fqName);
-                }
+                setClassUnderTest(fqName);
                 setProperty(PACKAGE, "");
             }
 
