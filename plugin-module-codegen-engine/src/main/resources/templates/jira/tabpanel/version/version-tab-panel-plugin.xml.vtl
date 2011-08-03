@@ -1,0 +1,13 @@
+<version-tabpanel key="${MODULE_KEY}"
+                   name="${MODULE_NAME}"
+                   i18n-name-key="${NAME_I18N_KEY}"
+                   class="${FQ_CLASSNAME}">
+
+    <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
+
+    #label($LABEL)
+    <order>${ORDER}</order>
+
+    <resource type="velocity" name="view" location="templates/tabpanels/${MODULE_KEY}.vm"/>
+
+</version-tabpanel>
