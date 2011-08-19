@@ -221,7 +221,10 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
             Map<String, Object> properties = new HashMap<String, Object>();
             ProductHandler productHandler = productExecution.getProductHandler();
             Product product = productExecution.getProduct();
-            product.setInstallPlugin(installPlugin);
+            if (product.isInstallPlugin() == null)
+            {
+                product.setInstallPlugin(installPlugin);
+            }
 
             int actualHttpPort = 0;
             if (!noWebapp)
