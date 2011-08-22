@@ -76,6 +76,18 @@ public class BambooProductHandler extends AbstractWebappProductHandler
         // The regex in the following search text is used to match IPv4 ([^:]+) or IPv6 (\[.+]) addresses.
         ConfigFileUtils.replaceAll(new File(homeDir, "/xml-data/configuration/administration.xml"),
                 "http://(?:[^:]+|\\[.+]):8085", "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", ""));
+
+        File dbLog = new File(homeDir, "database/defaultdb.log");
+        if (dbLog.exists())
+        {
+            ConfigFileUtils.replace(dbLog, "${bambooHome}", homeDir.getAbsolutePath());
+        }
+        File dbScript = new File(homeDir, "database/defaultdb.script");
+        if (dbScript.exists())
+        {
+            ConfigFileUtils.replace(dbScript, "${bambooHome}", homeDir.getAbsolutePath());
+        }
+
     }
 
     public List<ProductArtifact> getDefaultLibPlugins()
