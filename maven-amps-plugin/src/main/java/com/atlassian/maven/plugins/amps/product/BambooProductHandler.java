@@ -1,20 +1,22 @@
 package com.atlassian.maven.plugins.amps.product;
 
+import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.util.*;
 
+import static com.atlassian.maven.plugins.amps.util.FileUtils.deleteDir;
+
 public class BambooProductHandler extends AbstractWebappProductHandler
 {
-    public BambooProductHandler(MavenProject project, MavenGoals goals)
+    public BambooProductHandler(MavenContext context, MavenGoals goals)
     {
-        super(project, goals, new BambooPluginProvider());
+        super(context, goals, new BambooPluginProvider());
     }
 
     public String getId()
@@ -77,17 +79,8 @@ public class BambooProductHandler extends AbstractWebappProductHandler
         ConfigFileUtils.replaceAll(new File(homeDir, "/xml-data/configuration/administration.xml"),
                 "http://(?:[^:]+|\\[.+]):8085", "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", ""));
 
-        File dbLog = new File(homeDir, "database/defaultdb.log");
-        if (dbLog.exists())
-        {
-            ConfigFileUtils.replace(dbLog, "${bambooHome}", homeDir.getAbsolutePath());
-        }
-        File dbScript = new File(homeDir, "database/defaultdb.script");
-        if (dbScript.exists())
-        {
-            ConfigFileUtils.replace(dbScript, "${bambooHome}", homeDir.getAbsolutePath());
-        }
-
+        ConfigFileUtils.replace(new File(homeDir, "database/defaultdb.log"), "${bambooHome}", homeDir.getAbsolutePath());
+        ConfigFileUtils.replace(new File(homeDir, "database/defaultdb.script"), "${bambooHome}", homeDir.getAbsolutePath());
     }
 
     public List<ProductArtifact> getDefaultLibPlugins()
@@ -98,6 +91,20 @@ public class BambooProductHandler extends AbstractWebappProductHandler
     public List<ProductArtifact> getDefaultBundledPlugins()
     {
         return Collections.emptyList();
+    }
+
+    @Override
+    protected void cleanupProductHomeForZip(File homeDirectory, File genDir) throws MojoExecutionException
+    {
+        deleteDir(new File(genDir, "jms-store"));
+        deleteDir(new File(genDir, "caches"));
+        deleteDir(new File(genDir, "logs"));
+
+        ConfigFileUtils.replace(new File(genDir, "database/defaultdb.script"), homeDirectory.getAbsolutePath(), "${bambooHome}");
+        ConfigFileUtils.replace(new File(genDir, "database/defaultdb.log"), homeDirectory.getAbsolutePath(), "${bambooHome}");
+
+        ConfigFileUtils.replace(new File(genDir, "bamboo.cfg.xml"), homeDirectory.getAbsolutePath(), "${bambooHome}");
+
     }
 
     private static class BambooPluginProvider extends AbstractPluginProvider

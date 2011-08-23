@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.product;
 
+import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
@@ -19,9 +20,9 @@ import java.util.Map;
 
 public class CrowdProductHandler extends AbstractWebappProductHandler
 {
-    public CrowdProductHandler(final MavenProject project, final MavenGoals goals)
+    public CrowdProductHandler(final MavenContext context, final MavenGoals goals)
     {
-        super(project, goals, new CrowdPluginProvider());
+        super(context, goals, new CrowdPluginProvider());
     }
 
     public String getId()

@@ -823,66 +823,6 @@ public class MavenGoals
         );
     }
 
-    /**
-     * Copies and creates a zip file of the previous run's home directory minus any installed plugins.
-     *
-     * @param homeDirectory The path to the previous run's home directory.
-     * @param targetZip     The path to the final zip file.
-     * @param productId     The name of the product.
-     *
-     * @since 3.1-m3
-     */
-    public void createHomeResourcesZip(final File homeDirectory, final File targetZip, final String productId)
-    {
-        if (homeDirectory == null || !homeDirectory.exists())
-        {
-            String homePath = "null";
-            if(homeDirectory != null) {
-                homePath = homeDirectory.getAbsolutePath();
-            }
-            log.info("home directory doesn't exist, skipping. [" + homePath + "]");
-            return;
-        }
-
-        final File appDir = new File(project.getBuild().getDirectory(), productId);
-        final File tmpDir = new File(appDir, "tmp-resources");
-        final File genDir = new File(tmpDir, "generated-home");
-        final String entryBase = "generated-resources/" + productId + "-home";
-
-        if (genDir.exists())
-        {
-            FileUtils.deleteDir(genDir);
-        }
-
-        genDir.mkdirs();
-
-        try
-        {
-            FileUtils.copyDirectory(homeDirectory, genDir, true);
-
-            //we want to get rid of the plugins folders.
-            File homePlugins = new File(genDir, "plugins");
-            File bundledPlugins = new File(genDir, "bundled-plugins");
-
-            if (homePlugins.exists())
-            {
-                FileUtils.deleteDir(homePlugins);
-            }
-
-            if (bundledPlugins.exists())
-            {
-                FileUtils.deleteDir(bundledPlugins);
-            }
-
-            ZipUtils.zipDir(targetZip, genDir, entryBase);
-        } catch (IOException e)
-        {
-            throw new RuntimeException("Error zipping home directory", e);
-        }
-
-
-    }
-
     private static class Container extends ProductArtifact
     {
         private final String id;

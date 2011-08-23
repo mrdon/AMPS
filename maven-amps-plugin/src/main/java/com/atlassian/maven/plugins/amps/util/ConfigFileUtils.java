@@ -10,6 +10,10 @@ public class ConfigFileUtils
 {
     public static void replace(File cfgFile, String pattern, String replacement) throws MojoExecutionException
     {
+        if (!cfgFile.exists())
+        {
+            return;
+        }
         try
         {
             String config = FileUtils.readFileToString(cfgFile);

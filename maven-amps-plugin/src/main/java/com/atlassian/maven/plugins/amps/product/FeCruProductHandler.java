@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.atlassian.maven.plugins.amps.MavenContext;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
@@ -33,9 +34,9 @@ public class FeCruProductHandler extends AbstractProductHandler
     private final Log log;
     private final JavaTaskFactory javaTaskFactory;
     
-    public FeCruProductHandler(MavenProject project, MavenGoals goals, Log log)
+    public FeCruProductHandler(MavenContext context, MavenGoals goals, Log log)
     {
-        super(project, goals, new FeCruPluginProvider());
+        super(context, goals, new FeCruPluginProvider());
         this.log = log;
         this.javaTaskFactory = new JavaTaskFactory(log);
     }

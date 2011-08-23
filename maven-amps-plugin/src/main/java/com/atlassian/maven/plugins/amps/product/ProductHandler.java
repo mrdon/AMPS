@@ -20,4 +20,6 @@ public interface ProductHandler
     int getDefaultHttpPort();
 
     File getHomeDirectory(Product product);
+
+    void createHomeZip(File homeDir, File homeZipFile, String productId) throws MojoExecutionException;
 }
