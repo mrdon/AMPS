@@ -1,7 +1,11 @@
 package com.atlassian.maven.plugins.amps;
 
+import com.atlassian.maven.plugins.amps.product.AbstractProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Build;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.apache.maven.project.MavenProject;
@@ -30,8 +34,8 @@ public class TestMavenGoalsHomeZip
     public static final String BUNDLED_PLUGINS = "bundled-plugins";
     public static final String ZIP_PREFIX = "generated-resources/" + PROJECT_ID + "-home";
 
+    private ProductHandler productHandler;
     private MavenContext ctx;
-    private MavenGoals goals;
     private File tempDir;
     private File productDir;
     private File tempResourcesDir;
@@ -73,7 +77,7 @@ public class TestMavenGoalsHomeZip
         when(ctx.getSession()).thenReturn(null);
         when(ctx.getPluginManager()).thenReturn(pluginManager);
 
-        goals = new MavenGoals(ctx);
+        productHandler = new RefappProductHandler(ctx, null);
     }
 
     @After
@@ -92,26 +96,28 @@ public class TestMavenGoalsHomeZip
     }
 
     @Test
-    public void skipNullHomeDir(){
+    public void skipNullHomeDir() throws MojoExecutionException
+    {
         File zip = new File(tempDir,"nullHomeZip.zip");
 
-        goals.createHomeResourcesZip(null,zip,PROJECT_ID);
+        productHandler.createHomeZip(null, zip, PROJECT_ID);
 
         assertFalse("zip for null home should not exist", zip.exists());
     }
 
     @Test
-    public void skipNonExistentHomeDir(){
+    public void skipNonExistentHomeDir() throws MojoExecutionException
+    {
         File zip = new File(tempDir,"noExistHomeZip.zip");
         File fakeHomeDir = new File(tempDir,"this-folder-does-not-exist");
 
-        goals.createHomeResourcesZip(fakeHomeDir,zip,PROJECT_ID);
+        productHandler.createHomeZip(fakeHomeDir, zip, PROJECT_ID);
 
         assertFalse("zip for non-existent home should not exist", zip.exists());
     }
 
     @Test
-    public void existingGeneratedDirGetsDeleted() throws IOException
+    public void existingGeneratedDirGetsDeleted() throws IOException, MojoExecutionException
     {        
         generatedHomeDir.mkdirs();
         File deletedFile = new File(generatedHomeDir,"should-be-deleted.txt");
@@ -121,13 +127,13 @@ public class TestMavenGoalsHomeZip
         File homeDir = new File(tempDir,"deleteGenHomeDir");
         homeDir.mkdirs();
 
-        goals.createHomeResourcesZip(homeDir,zip,PROJECT_ID);
+        productHandler.createHomeZip(homeDir, zip, PROJECT_ID);
 
         assertFalse("generated text file should have been deleted",deletedFile.exists());
     }
 
     @Test
-    public void pluginsNotIncluded() throws IOException
+    public void pluginsNotIncluded() throws IOException, MojoExecutionException
     {
         pluginsDir.mkdirs();
 
@@ -138,13 +144,13 @@ public class TestMavenGoalsHomeZip
         File homeDir = new File(tempDir,"deletePluginsHomeDir");
         homeDir.mkdirs();
 
-        goals.createHomeResourcesZip(homeDir,zip,PROJECT_ID);
+        productHandler.createHomeZip(homeDir, zip, PROJECT_ID);
 
         assertFalse("plugins file should have been deleted",pluginFile.exists());
     }
 
     @Test
-    public void bundledPluginsNotIncluded() throws IOException
+    public void bundledPluginsNotIncluded() throws IOException, MojoExecutionException
     {
         bundledPluginsDir.mkdirs();
 
@@ -155,13 +161,13 @@ public class TestMavenGoalsHomeZip
         File homeDir = new File(tempDir,"deleteBundledPluginsHomeDir");
         homeDir.mkdirs();
 
-        goals.createHomeResourcesZip(homeDir,zip,PROJECT_ID);
+        productHandler.createHomeZip(homeDir, zip, PROJECT_ID);
 
         assertFalse("bundled-plugins file should have been deleted",pluginFile.exists());
     }
 
     @Test
-    public void zipContainsProperPrefix() throws IOException
+    public void zipContainsProperPrefix() throws IOException, MojoExecutionException
     {
         File zipFile = new File(tempDir,"prefixedHomeZip.zip");
         File homeDir = new File(tempDir,"prefixedHomeDir");
@@ -169,7 +175,7 @@ public class TestMavenGoalsHomeZip
 
         dataDir.mkdirs();
 
-        goals.createHomeResourcesZip(homeDir,zipFile,PROJECT_ID);
+        productHandler.createHomeZip(homeDir, zipFile, PROJECT_ID);
 
         zip = new ZipFile(zipFile);
         final Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -188,7 +194,7 @@ public class TestMavenGoalsHomeZip
     }
 
     @Test
-    public void zipContainsTestFile() throws IOException
+    public void zipContainsTestFile() throws IOException, MojoExecutionException
     {
         File zipFile = new File(tempDir,"fileHomeZip.zip");
         File homeDir = new File(tempDir,"fileHomeDir");
@@ -198,7 +204,7 @@ public class TestMavenGoalsHomeZip
         dataDir.mkdirs();
         FileUtils.writeStringToFile(dataFile,"This is some data.");
 
-        goals.createHomeResourcesZip(homeDir,zipFile,PROJECT_ID);
+        productHandler.createHomeZip(homeDir, zipFile, PROJECT_ID);
 
         boolean dataFileFound = false;
         zip = new ZipFile(zipFile);
