@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
@@ -10,6 +11,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.ProjectBuilderConfiguration;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresProject;
@@ -68,8 +70,25 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
 
             // horrible hack #3: we need to create a base directory from scratch, and convince the project to like it
             final String baseDir = System.getProperty("user.dir") + "/amps-standalone/";
-            newProject.setBasedir(new File(baseDir));
-            projectBuilder.calculateConcreteState(newProject, newSession.getProjectBuilderConfiguration());
+            newProject.setFile(new File(baseDir, "pom.xml"));
+
+            ProjectBuilderConfiguration projectBuilderConfiguration;
+
+            /**
+             * newSession.getProjectBuilderConfiguration() works at runtime with Maven 2 but isn't
+             * available at compile time when we build with Maven 3 artifacts.
+             */
+            try
+            {
+                Method m = newSession.getClass().getMethod("getProjectBuilderConfiguration");
+                projectBuilderConfiguration = (ProjectBuilderConfiguration) m.invoke(newSession);
+            }
+            catch (NoSuchMethodException e)
+            {
+                throw new MojoExecutionException("Maven 3 is not supported for run-standalone", e);
+            }
+
+            projectBuilder.calculateConcreteState(newProject, projectBuilderConfiguration);
 
             // finally, execute run goal against standalone project
             final MavenContext newContext = new MavenContext(
