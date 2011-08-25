@@ -28,6 +28,10 @@ public class ClassnameUtil {
         );
     }
 
+    public static String removeSpaces(String s) {
+        return s.replaceAll("[\\s]","");
+    }
+
     public static String camelCaseOrSpaceToDashed(String s) {
         String trimmed =  s.replaceAll("[\\s]","");
 

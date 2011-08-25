@@ -175,3 +175,35 @@
         <package>$package</package>
     #end
 #end
+
+#macro(actions $actions)
+    #if($actions)
+        <actions>
+        #foreach($action in $actions)
+            #action($action)
+        #end
+        </actions>
+    #end
+#end
+
+#macro(action $action)
+    #if($action)
+        <action name="$action.fullyQualifiedClassname" alias="$action.classname">
+            #views($action.views)
+        </action>
+    #end
+#end
+
+#macro(views $views)
+    #if($views)
+        #foreach($view in $views)
+            #view($view)
+        #end
+    #end
+#end
+
+#macro(view $view)
+    #if($view)
+        <view name="$view.name">$view.path</view>
+    #end
+#end
