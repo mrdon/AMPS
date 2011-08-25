@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
@@ -61,7 +63,18 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
     {
         if (mavenContext == null)
         {
-            mavenContext = new MavenContext(project, reactor, session, pluginManager, getLog());
+            try
+            {
+                Object buildPluginManager = (BuildPluginManager) session.lookup("org.apache.maven.plugin.BuildPluginManager");
+
+                /* Maven 3 */
+                mavenContext = new MavenContext(project, reactor, session, (BuildPluginManager) buildPluginManager, getLog());
+            }
+            catch (ComponentLookupException e)
+            {
+                /* Maven 2 */
+                mavenContext = new MavenContext(project, reactor, session, pluginManager, getLog());
+            }
         }
         return mavenContext;
     }

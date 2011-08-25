@@ -80,7 +80,7 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
              */
             try
             {
-                Method m = newSession.getClass().getMethod("getProjectBuilderConfiguration");
+                Method m = MavenSession.class.getMethod("getProjectBuilderConfiguration");
                 projectBuilderConfiguration = (ProjectBuilderConfiguration) m.invoke(newSession);
             }
             catch (NoSuchMethodException e)

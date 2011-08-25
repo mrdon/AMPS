@@ -4,11 +4,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
+import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
 /**
  * Copies bundled dependencies into META-INF/lib
  */
 @MojoGoal("copy-bundled-dependencies")
+@MojoRequiresDependencyResolution
 public class CopyBundledDependenciesMojo extends AbstractAmpsMojo
 {
     @MojoParameter(expression = "extractDependencies", defaultValue = "false")
