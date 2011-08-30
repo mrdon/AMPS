@@ -4,6 +4,7 @@ import com.atlassian.maven.plugins.amps.codegen.ConditionFactory;
 import com.atlassian.maven.plugins.amps.codegen.ContextProviderFactory;
 import com.atlassian.maven.plugins.amps.codegen.PluginModuleSelectionQueryer;
 import com.atlassian.maven.plugins.amps.codegen.jira.ActionTypeFactory;
+import com.atlassian.maven.plugins.amps.codegen.jira.CustomFieldTypeFactory;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompterFactory;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
@@ -228,6 +229,14 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
                 ActionTypeFactory.locateAvailableActionTypes(pluginClasspath);
             } catch (Exception e) {
                 String message = "Error initializing JIRA Action Types";
+                getLog().error(message);
+                //keep going, doesn't matter
+            }
+
+            try {
+                CustomFieldTypeFactory.locateAvailableCustomFieldTypes(pluginClasspath);
+            } catch (Exception e) {
+                String message = "Error initializing JIRA Custom Field Types";
                 getLog().error(message);
                 //keep going, doesn't matter
             }

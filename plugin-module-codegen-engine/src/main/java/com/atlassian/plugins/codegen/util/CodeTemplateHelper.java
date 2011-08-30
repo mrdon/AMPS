@@ -9,9 +9,11 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.Enumeration;
 
 /**
@@ -37,6 +39,7 @@ public class CodeTemplateHelper {
 
     public String parseTemplate(String templatePath, PluginModuleProperties props) throws Exception {
         VelocityContext ctx = new VelocityContext();
+        ctx.put("parseCheck",new TemplateChecker());
 
         Enumeration<?> names = props.propertyNames();
         while (names.hasMoreElements()) {
@@ -84,5 +87,14 @@ public class CodeTemplateHelper {
 
     public String getStringFromTemplate(String templatePath, PluginModuleProperties props) throws Exception {
         return parseTemplate(templatePath, props);
+    }
+
+    public class TemplateChecker {
+        public synchronized boolean templateExists(String templatePath) {
+            System.out.println("templatePath = " + templatePath);
+            URL resourceUrl = ClasspathResourceLoader.class.getResource(templatePath);
+
+            return resourceUrl != null;
+        }
     }
 }
