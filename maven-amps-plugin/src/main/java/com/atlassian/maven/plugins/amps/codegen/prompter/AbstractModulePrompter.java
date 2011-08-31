@@ -31,6 +31,9 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
 
     @Override
     public <P extends PluginModuleProperties> P getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException {
+        //!!! REMOVE THIS WHEN WE SUPPORT EXAMPLE CODE
+        suppressExamplesPrompt();
+
         T props = (T) promptForBasicProperties(moduleLocation);
 
         if (showAdvancedPrompt) {
