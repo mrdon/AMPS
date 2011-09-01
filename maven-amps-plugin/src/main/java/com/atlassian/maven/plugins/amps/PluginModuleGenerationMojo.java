@@ -82,6 +82,12 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
             throw new MojoExecutionException(message);
         }
 
+        runGeneration(productId,project,moduleLocation);
+
+
+    }
+
+    private void runGeneration(String productId, MavenProject project, PluginModuleLocation moduleLocation) throws MojoExecutionException {
         PluginModuleCreator creator = null;
         try {
             creator = pluginModuleSelectionQueryer.selectModule(pluginModuleCreatorFactory.getModuleCreatorsForProduct(productId));
@@ -102,6 +108,9 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo {
             //edit pom if needed
             addRequiredModuleDependenciesToPOM(project, creator);
 
+            if(pluginModuleSelectionQueryer.addAnotherModule()){
+                runGeneration(productId,project,moduleLocation);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -10,4 +10,5 @@ import java.util.Map;
  */
 public interface PluginModuleSelectionQueryer {
     public PluginModuleCreator selectModule(Map<Class,PluginModuleCreator> map) throws PrompterException;
+    public boolean addAnotherModule() throws PrompterException;
 }
