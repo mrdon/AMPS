@@ -1,22 +1,23 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import com.atlassian.maven.plugins.amps.MavenContext;
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.atlassian.maven.plugins.amps.MavenContext;
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+
+import com.google.common.collect.ImmutableMap;
+
+import org.apache.maven.plugin.MojoExecutionException;
 
 public class CrowdProductHandler extends AbstractWebappProductHandler
 {
@@ -50,20 +51,17 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     @Override
     public Map<String, String> getSystemProperties(final Product ctx)
     {
-        return new HashMap<String, String>()
-        {{
-            put("crowd.home", getHomeDirectory(ctx).getPath());
+        return ImmutableMap.of("crowd.home", getHomeDirectory(ctx).getPath());
+    }
 
-            String contextPath = ctx.getContextPath();
-            if (!contextPath.startsWith("/"))
-            {
-                contextPath = "/" + contextPath;
-            }
-            if (!contextPath.endsWith("/"))
-            {
-                contextPath = contextPath + "/";
-            }
-        }};
+    private static String slashPrefixed(String contextPath)
+    {
+        if (!contextPath.startsWith("/"))
+        {
+            contextPath = "/" + contextPath;
+        }
+
+        return contextPath;
     }
 
     @Override
@@ -92,11 +90,19 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     @Override
     public void processHomeDirectory(final Product ctx, final File homeDir) throws MojoExecutionException
     {
+        String baseUrl = MavenGoals.getBaseUrl(ctx.getServer(), ctx.getHttpPort(), slashPrefixed(ctx.getContextPath()));
+
         try
         {
             ConfigFileUtils.replaceAll(new File(homeDir, "crowd.cfg.xml"),
                     "jdbc:hsqldb:.*/(crowd-)?home/database/defaultdb",
                     "jdbc:hsqldb:" + getHomeDirectory(ctx).getCanonicalPath().replace("\\", "/") + "/database/defaultdb");
+
+            Map<String, String> newProperties = ImmutableMap.of(
+                    "crowd.server.url", baseUrl + "/services",
+                    "application.login.url", baseUrl
+            );
+            ConfigFileUtils.setProperties(new File(homeDir, "crowd.properties"), newProperties);
         }
         catch (final IOException e)
         {

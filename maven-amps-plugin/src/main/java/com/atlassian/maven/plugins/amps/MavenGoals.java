@@ -501,7 +501,7 @@ public class MavenGoals
         return actualHttpPort;
     }
 
-    static String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
+    public static String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
     {
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
