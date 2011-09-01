@@ -1,5 +1,29 @@
 package com.atlassian.maven.plugins.amps.product;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import com.atlassian.core.util.FileUtils;
+import com.atlassian.maven.plugins.amps.MavenContext;
+import com.atlassian.maven.plugins.amps.MavenGoals;
+import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ZipUtils;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+
 import static com.atlassian.maven.plugins.amps.util.FileUtils.deleteDir;
 import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
@@ -9,25 +33,6 @@ import static org.apache.commons.io.FileUtils.iterateFiles;
 import static org.apache.commons.io.FileUtils.moveDirectory;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import com.atlassian.core.util.FileUtils;
-import com.atlassian.maven.plugins.amps.MavenContext;
-import com.atlassian.maven.plugins.amps.util.ZipUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-
-import com.atlassian.maven.plugins.amps.MavenGoals;
-import com.atlassian.maven.plugins.amps.Product;
-import com.atlassian.maven.plugins.amps.ProductArtifact;
 
 public abstract class AbstractProductHandler implements ProductHandler
 {
@@ -43,7 +48,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         this.goals = goals;
         this.pluginProvider = pluginProvider;
     }
-    
+
     public final int start(final Product ctx) throws MojoExecutionException
     {
         final File homeDir = extractAndProcessHomeDirectory(ctx);
@@ -184,9 +189,24 @@ public abstract class AbstractProductHandler implements ProductHandler
             if (productHomeData.isFile())
             {
                 File tmp = new File(getBaseDirectory(ctx), ctx.getId() + "-home");
-                
+
                 unzip(productHomeData, tmpDir.getPath());
-                copyDirectory(tmpDir.listFiles()[0], getBaseDirectory(ctx), true);
+
+                File[] topLevelFiles = tmpDir.listFiles();
+                if (topLevelFiles.length != 1)
+                {
+                    Iterable<String> filenames = Iterables.transform(Arrays.asList(topLevelFiles), new Function<File, String>(){
+                        @Override
+                        public String apply(File from)
+                        {
+                            return from.getName();
+                        }
+                    });
+                    throw new MojoExecutionException("Expected a single top-level directory in test resources. Got: "
+                            + Joiner.on(", ").join(filenames));
+                }
+
+                copyDirectory(topLevelFiles[0], getBaseDirectory(ctx), true);
                 moveDirectory(tmp, homeDir);
             }
             else if (productHomeData.isDirectory())
@@ -263,7 +283,7 @@ public abstract class AbstractProductHandler implements ProductHandler
     {
         File pluginsDir = getUserInstalledPluginsDirectory(appDir, homeDir);
         final File bundledPluginsDir = new File(getBaseDirectory(ctx), "bundled-plugins");
-        
+
         bundledPluginsDir.mkdir();
         // add bundled plugins
         final File bundledPluginsZip = new File(appDir, getBundledPluginPath(ctx));
@@ -271,7 +291,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         {
             unzip(bundledPluginsZip, bundledPluginsDir.getPath());
         }
-        
+
         if (isStaticPlugin())
         {
             if (!supportsStaticPlugins())
@@ -282,50 +302,50 @@ public abstract class AbstractProductHandler implements ProductHandler
             }
             pluginsDir = new File(appDir, "WEB-INF/lib");
         }
-        
+
         if (pluginsDir == null)
         {
             pluginsDir = bundledPluginsDir;
         }
-        
+
         createDirectory(pluginsDir);
-        
+
         // add this plugin itself if enabled
         if (ctx.isInstallPlugin())
         {
             addThisPluginToDirectory(pluginsDir);
             addTestPluginToDirectory(pluginsDir);
         }
-        
+
         // add plugins2 plugins if necessary
         if (!isStaticPlugin())
         {
             addArtifactsToDirectory(pluginProvider.provide(ctx), pluginsDir);
         }
-        
+
         // add plugins1 plugins
         List<ProductArtifact> artifacts = new ArrayList<ProductArtifact>();
         artifacts.addAll(getDefaultLibPlugins());
         artifacts.addAll(ctx.getLibArtifacts());
         addArtifactsToDirectory(artifacts, new File(appDir, "WEB-INF/lib"));
-        
+
         artifacts = new ArrayList<ProductArtifact>();
         artifacts.addAll(getDefaultBundledPlugins());
         artifacts.addAll(ctx.getBundledArtifacts());
-        
+
         addArtifactsToDirectory(artifacts, bundledPluginsDir);
-        
+
         if (bundledPluginsDir.list().length > 0)
         {
             com.atlassian.core.util.FileUtils.createZipFile(bundledPluginsDir, bundledPluginsZip);
         }
-        
+
         if (ctx.getLog4jProperties() != null && getLog4jPropertiesPath() != null)
         {
             copyFile(ctx.getLog4jProperties(), new File(appDir, getLog4jPropertiesPath()));
         }
     }
-    
+
     abstract protected void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException;
     abstract protected ProductArtifact getTestResourcesArtifact();
     abstract protected File extractApplication(Product ctx, File homeDir) throws MojoExecutionException;
@@ -337,7 +357,7 @@ public abstract class AbstractProductHandler implements ProductHandler
     abstract protected File getUserInstalledPluginsDirectory(File webappDir, File homeDir);
     protected void cleanupProductHomeForZip(File homeDirectory, File genDir) throws MojoExecutionException
     {}
-    
+
     protected String getLog4jPropertiesPath()
     {
         return null;
@@ -429,7 +449,7 @@ public abstract class AbstractProductHandler implements ProductHandler
             copyDirectory(srcDir, appDir);
         }
     }
-    
+
     public final File getBaseDirectory(Product ctx)
     {
         return createDirectory(new File(project.getBuild().getDirectory(), ctx.getInstanceId()));
@@ -439,7 +459,7 @@ public abstract class AbstractProductHandler implements ProductHandler
     {
         return new File(getBaseDirectory(ctx), "home");
     }
-    
+
     protected final File createHomeDirectory(Product ctx)
     {
         return createDirectory(getHomeDirectory(ctx));
