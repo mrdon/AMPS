@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -72,21 +73,8 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
             final String baseDir = System.getProperty("user.dir") + "/amps-standalone/";
             newProject.setFile(new File(baseDir, "pom.xml"));
 
-            ProjectBuilderConfiguration projectBuilderConfiguration;
-
-            /**
-             * newSession.getProjectBuilderConfiguration() works at runtime with Maven 2 but isn't
-             * available at compile time when we build with Maven 3 artifacts.
-             */
-            try
-            {
-                Method m = MavenSession.class.getMethod("getProjectBuilderConfiguration");
-                projectBuilderConfiguration = (ProjectBuilderConfiguration) m.invoke(newSession);
-            }
-            catch (NoSuchMethodException e)
-            {
-                throw new MojoExecutionException("Maven 3 is not supported for run-standalone", e);
-            }
+            ProjectBuilderConfiguration projectBuilderConfiguration =
+                    getProjectBuilderConfigurationFromMavenSession(newSession);
 
             projectBuilder.calculateConcreteState(newProject, projectBuilderConfiguration);
 
@@ -100,6 +88,24 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
         catch (Exception e)
         {
             throw new MojoExecutionException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * MavenSession.getProjectBuilderConfiguration() works at runtime with Maven 2 but isn't
+     * available at compile time when we build with Maven 3 artifacts.
+     */
+    private static ProjectBuilderConfiguration getProjectBuilderConfigurationFromMavenSession(MavenSession session)
+        throws MojoExecutionException, InvocationTargetException, IllegalAccessException
+    {
+        try
+        {
+            Method m = MavenSession.class.getMethod("getProjectBuilderConfiguration");
+            return (ProjectBuilderConfiguration) m.invoke(session);
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new MojoExecutionException("Maven 3 is not supported for run-standalone", e);
         }
     }
 }
