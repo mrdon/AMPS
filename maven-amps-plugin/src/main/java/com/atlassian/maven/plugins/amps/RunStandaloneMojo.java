@@ -91,12 +91,10 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
             projectBuilder.calculateConcreteState(newProject, projectBuilderConfiguration);
 
             // finally, execute run goal against standalone project
-            final MavenContext newContext = new MavenContext(
+            final MavenContext newContext = oldContext.with(
                 newProject,
                 newReactor,
-                newSession,
-                oldContext.getPluginManager(),
-                oldContext.getLog());
+                newSession);
             new MavenGoals(newContext).executeAmpsRecursively(version, "run");
         }
         catch (Exception e)

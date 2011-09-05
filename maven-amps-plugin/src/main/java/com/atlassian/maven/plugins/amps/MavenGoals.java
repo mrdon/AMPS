@@ -15,7 +15,6 @@ import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.twdata.maven.mojoexecutor.MojoExecutor;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
@@ -85,16 +84,7 @@ public class MavenGoals
 
     private ExecutionEnvironment executionEnvironment()
     {
-        if (ctx.getBuildPluginManager() != null)
-        {
-            /* Maven 3 */
-            return MojoExecutor.executionEnvironment(ctx.getProject(), ctx.getSession(), ctx.getBuildPluginManager());
-        }
-        else
-        {
-            /* Maven 2 */
-            return MojoExecutor.executionEnvironment(ctx.getProject(), ctx.getSession(), ctx.getPluginManager());
-        }
+        return ctx.getExecutionEnvironment();
     }
 
     public void executeAmpsRecursively(final String ampsVersion, final String ampsGoal) throws MojoExecutionException
