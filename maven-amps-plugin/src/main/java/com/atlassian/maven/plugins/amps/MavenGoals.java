@@ -15,7 +15,6 @@ import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.twdata.maven.mojoexecutor.MojoExecutor;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
@@ -38,10 +37,6 @@ public class MavenGoals
 
     private final Log log;
     private final Map<String, String> pluginArtifactIdToVersionMap;
-
-    // maven-dependency-plugin makes mistakes when called in parallel, at least for
-    // the copy goal. See AMPS-535. We need to synchronise calls to this plugin.
-    private final static Object mavenDependencyPluginLock = new Object();
 
     private final Map<String, Container> idToContainerMap = new HashMap<String, Container>()
     {{
@@ -167,48 +162,43 @@ public class MavenGoals
 
     public void copyBundledDependencies() throws MojoExecutionException
     {
-        synchronized (mavenDependencyPluginLock)
-        {
-            executeMojo(
-                    plugin(
-                            groupId("org.apache.maven.plugins"),
-                            artifactId("maven-dependency-plugin"),
-                            version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
-                    ),
-                    goal("copy-dependencies"),
-                    configuration(
-                            element(name("includeScope"), "runtime"),
-                            element(name("excludeScope"), "provided"),
-                            element(name("excludeScope"), "test"),
-                            element(name("includeTypes"), "jar"),
-                            element(name("outputDirectory"), "${project.build.outputDirectory}/META-INF/lib")
-                    ),
-                    executionEnvironment()
-            );
-        }
+        executeMojo(
+                plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+                ),
+                goal("copy-dependencies"),
+                configuration(
+                        element(name("includeScope"), "runtime"),
+                        element(name("excludeScope"), "provided"),
+                        element(name("excludeScope"), "test"),
+                        element(name("includeTypes"), "jar"),
+                        element(name("outputDirectory"), "${project.build.outputDirectory}/META-INF/lib")
+                ),
+                executionEnvironment()
+        );
     }
 
     public void extractBundledDependencies() throws MojoExecutionException
     {
-        synchronized (mavenDependencyPluginLock)
-        {
-            executeMojo(
-                    plugin(
-                            groupId("org.apache.maven.plugins"),
-                            artifactId("maven-dependency-plugin"),
-                            version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
-                    ),
-                    goal("unpack-dependencies"),
-                    configuration(
-                            element(name("includeScope"), "runtime"),
-                            element(name("excludeScope"), "provided"),
-                            element(name("excludeScope"), "test"),
-                            element(name("includeTypes"), "jar"),
-                            element(name("excludes"), "META-INF/MANIFEST.MF, META-INF/*.DSA, META-INF/*.SF"),
-                            element(name("outputDirectory"), "${project.build.outputDirectory}")
-                    ),
-                    executionEnvironment());
-        }
+         executeMojo(
+                 plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+                ),
+                goal("unpack-dependencies"),
+                configuration(
+                        element(name("includeScope"), "runtime"),
+                        element(name("excludeScope"), "provided"),
+                        element(name("excludeScope"), "test"),
+                        element(name("includeTypes"), "jar"),
+                        element(name("excludes"), "META-INF/MANIFEST.MF, META-INF/*.DSA, META-INF/*.SF"),
+                        element(name("outputDirectory"), "${project.build.outputDirectory}")
+                ),
+                executionEnvironment()
+        );
     }
 
     public void compressResources() throws MojoExecutionException
@@ -278,28 +268,25 @@ public class MavenGoals
             throws MojoExecutionException
     {
         final File webappWarFile = new File(targetDirectory, productId + "-original.war");
-
-        synchronized (mavenDependencyPluginLock)
-        {
-            executeMojo(
-                    plugin(
-                            groupId("org.apache.maven.plugins"),
-                            artifactId("maven-dependency-plugin"),
-                            version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
-                    ),
-                    goal("copy"),
-                    configuration(
-                            element(name("artifactItems"),
-                                    element(name("artifactItem"),
-                                            element(name("groupId"), artifact.getGroupId()),
-                                            element(name("artifactId"), artifact.getArtifactId()),
-                                            element(name("type"), "war"),
-                                            element(name("version"), artifact.getVersion()),
-                                            element(name("destFileName"), webappWarFile.getName()))),
-                            element(name("outputDirectory"), targetDirectory.getPath())
-                    ),
-                    executionEnvironment());
-        }
+        executeMojo(
+                plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+                ),
+                goal("copy"),
+                configuration(
+                        element(name("artifactItems"),
+                                element(name("artifactItem"),
+                                        element(name("groupId"), artifact.getGroupId()),
+                                        element(name("artifactId"), artifact.getArtifactId()),
+                                        element(name("type"), "war"),
+                                        element(name("version"), artifact.getVersion()),
+                                        element(name("destFileName"), webappWarFile.getName()))),
+                        element(name("outputDirectory"), targetDirectory.getPath())
+                ),
+                executionEnvironment()
+        );
         return webappWarFile;
     }
 
@@ -343,25 +330,22 @@ public class MavenGoals
             }
             else
             {
-                synchronized (mavenDependencyPluginLock)
-                {
-                    executeMojo(
-                            plugin(
-                                    groupId("org.apache.maven.plugins"),
-                                    artifactId("maven-dependency-plugin"),
-                                    version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
-                            ),
-                            goal("copy"),
-                            configuration(
-                                    element(name("artifactItems"),
-                                            element(name("artifactItem"),
-                                                    element(name("groupId"), artifact.getGroupId()),
-                                                    element(name("artifactId"), artifact.getArtifactId()),
-                                                    element(name("version"), artifact.getVersion()))),
-                                    element(name("outputDirectory"), outputDirectory.getPath())
-                            ),
-                            executionEnvironment());
-                }
+                executeMojo(
+                        plugin(
+                                groupId("org.apache.maven.plugins"),
+                                artifactId("maven-dependency-plugin"),
+                                version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+                        ),
+                        goal("copy"),
+                        configuration(
+                                element(name("artifactItems"),
+                                        element(name("artifactItem"),
+                                                element(name("groupId"), artifact.getGroupId()),
+                                                element(name("artifactId"), artifact.getArtifactId()),
+                                                element(name("version"), artifact.getVersion()))),
+                                element(name("outputDirectory"), outputDirectory.getPath())
+                        ),
+                        executionEnvironment());
             }
         }
     }
@@ -382,26 +366,23 @@ public class MavenGoals
 
     private void unpackContainer(final Container container) throws MojoExecutionException
     {
-        synchronized (mavenDependencyPluginLock)
-        {
-            executeMojo(
-                    plugin(
-                            groupId("org.apache.maven.plugins"),
-                            artifactId("maven-dependency-plugin"),
-                            version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
-                    ),
-                    goal("unpack"),
-                    configuration(
-                            element(name("artifactItems"),
-                                    element(name("artifactItem"),
-                                            element(name("groupId"), container.getGroupId()),
-                                            element(name("artifactId"), container.getArtifactId()),
-                                            element(name("version"), container.getVersion()),
-                                            element(name("type"), "zip"))),
-                            element(name("outputDirectory"), container.getRootDirectory(getBuildDirectory()))
-                    ),
-                    executionEnvironment());
-        }
+        executeMojo(
+                plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-dependency-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-dependency-plugin"))
+                ),
+                goal("unpack"),
+                configuration(
+                        element(name("artifactItems"),
+                                element(name("artifactItem"),
+                                        element(name("groupId"), container.getGroupId()),
+                                        element(name("artifactId"), container.getArtifactId()),
+                                        element(name("version"), container.getVersion()),
+                                        element(name("type"), "zip"))),
+                        element(name("outputDirectory"), container.getRootDirectory(getBuildDirectory()))
+                ),
+                executionEnvironment());
     }
 
     private String getBuildDirectory()
