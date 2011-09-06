@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WorkflowElementProperties extends BasicClassModuleProperties {
     public static final String FQ_FACTORY_NAME = "FQ_FACTORY_NAME";

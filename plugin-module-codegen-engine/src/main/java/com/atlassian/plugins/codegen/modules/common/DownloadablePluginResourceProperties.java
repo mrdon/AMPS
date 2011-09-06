@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class DownloadablePluginResourceProperties extends AbstractPluginModuleProperties {
     private boolean includeExamples;

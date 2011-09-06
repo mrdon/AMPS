@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractConditionsProperties extends BasicNameModuleProperties {
     public static final String CONDITIONS = "CONDITIONS";

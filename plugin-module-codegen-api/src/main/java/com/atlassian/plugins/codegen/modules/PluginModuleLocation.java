@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.modules;
 import java.io.File;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class PluginModuleLocation {
     private final File sourceDirectory;

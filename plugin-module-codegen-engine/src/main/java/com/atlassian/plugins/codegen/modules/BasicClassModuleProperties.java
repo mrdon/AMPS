@@ -6,7 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.Properties;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class BasicClassModuleProperties extends AbstractClassBasedModuleProperties {
 

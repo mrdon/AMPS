@@ -10,7 +10,7 @@ import com.atlassian.plugins.codegen.modules.common.Tooltip;
 import java.util.Properties;
 
 /**
- * @since version
+ * @since 3.5
  */
 @RefAppPluginModuleCreator
 @JiraPluginModuleCreator

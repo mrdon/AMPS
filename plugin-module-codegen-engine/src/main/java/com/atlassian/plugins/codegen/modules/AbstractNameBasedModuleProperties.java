@@ -6,7 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.Properties;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractNameBasedModuleProperties extends AbstractPluginModuleProperties implements NameBasedModuleProperties {
 

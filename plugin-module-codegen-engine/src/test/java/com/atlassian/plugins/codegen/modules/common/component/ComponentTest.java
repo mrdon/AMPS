@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.*;
 /**
- * @since version
+ * @since 3.5
  */
 public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.component";

@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class CustomFieldSearcherLocator  extends AbstractAnnotationParser {
     public static final String JIRA_SEARCHERS_PACKAGE = "com.atlassian.jira.issue.customfields.searchers";

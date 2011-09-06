@@ -3,7 +3,7 @@ package com.atlassian.maven.plugins.amps.codegen.annotations;
 import java.lang.annotation.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 @Documented
 @Target(ElementType.TYPE)

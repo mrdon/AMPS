@@ -3,7 +3,7 @@ package fake.annotation.parser.modules;
 import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 
 /**
- * @since version
+ * @since 3.5
  */
 @JiraPluginModuleCreator
 public class JiraAnnotatedWithoutInterface {

@@ -13,7 +13,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(IssueTabPanelModuleCreator.class)
 public class IssueTabPanelPrompter extends AbstractModulePrompter<TabPanelProperties> {

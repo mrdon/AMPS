@@ -14,7 +14,7 @@ import java.util.Properties;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.tabpanels";

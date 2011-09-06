@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(WebworkModuleCreator.class)
 public class WebworkPrompter extends AbstractModulePrompter<WebworkProperties> {

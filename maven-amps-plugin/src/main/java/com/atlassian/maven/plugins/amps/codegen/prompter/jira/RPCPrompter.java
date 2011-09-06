@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(RPCModuleCreator.class)
 public class RPCPrompter extends AbstractModulePrompter<RPCProperties> {

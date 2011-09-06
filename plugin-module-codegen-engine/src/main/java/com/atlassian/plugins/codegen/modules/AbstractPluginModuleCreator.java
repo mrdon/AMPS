@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 /**
- * Author: jdoklovic
+ *
  */
 public abstract class AbstractPluginModuleCreator<T extends PluginModuleProperties> implements PluginModuleCreator<T> {
     public static final String DEFAULT_I18N_NAME = "atlassian-plugin";

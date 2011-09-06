@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class TestTemplateUtil {
 

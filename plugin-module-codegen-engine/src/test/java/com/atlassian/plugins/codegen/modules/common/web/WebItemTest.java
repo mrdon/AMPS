@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
     public static final String MODULE_NAME = "My Web Item";

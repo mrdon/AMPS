@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WebPanelPrompterTest extends AbstractWebFragmentPrompterTest<WebPanelProperties> {
     public static final String MODULE_NAME = "My Web Panel";

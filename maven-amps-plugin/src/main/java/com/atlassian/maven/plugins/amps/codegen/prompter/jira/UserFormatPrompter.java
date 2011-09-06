@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(UserFormatModuleCreator.class)
 public class UserFormatPrompter extends AbstractResourcePrompter<UserFormatProperties> {

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractWebFragmentPrompter<T extends NameBasedModuleProperties> extends AbstractResourcePrompter<T> {
 

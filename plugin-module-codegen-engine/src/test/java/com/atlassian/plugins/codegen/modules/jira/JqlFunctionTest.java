@@ -11,7 +11,7 @@ import java.io.File;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class JqlFunctionTest extends AbstractCodegenTestCase<JqlFunctionProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.jql";

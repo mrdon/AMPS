@@ -12,7 +12,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(WorkflowValidatorModuleCreator.class)
 public class WorkflowValidatorPrompter extends AbstractModulePrompter<WorkflowElementProperties> {

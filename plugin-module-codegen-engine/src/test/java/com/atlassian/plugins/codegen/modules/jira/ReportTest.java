@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.reports";

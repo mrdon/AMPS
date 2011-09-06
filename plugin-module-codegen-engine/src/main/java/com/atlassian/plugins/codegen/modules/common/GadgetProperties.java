@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.modules.common;
 import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class GadgetProperties extends BasicNameModuleProperties {
 

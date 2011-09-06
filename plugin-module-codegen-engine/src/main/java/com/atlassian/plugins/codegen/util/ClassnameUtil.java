@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.util;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class ClassnameUtil {
     public static String camelCaseToSpaced(String s) {

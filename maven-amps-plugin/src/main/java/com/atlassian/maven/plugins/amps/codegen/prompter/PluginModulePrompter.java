@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Author: jdoklovic
+ *
  */
 public interface PluginModulePrompter<T extends PluginModuleProperties> {
 

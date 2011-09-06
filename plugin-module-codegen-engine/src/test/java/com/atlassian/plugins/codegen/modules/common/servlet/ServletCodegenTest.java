@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 //TODO: update test to use Dom4J
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ServletCodegenTest extends AbstractCodegenTestCase<ServletProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.servlet";

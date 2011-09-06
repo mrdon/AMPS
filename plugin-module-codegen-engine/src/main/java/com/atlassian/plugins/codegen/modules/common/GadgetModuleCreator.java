@@ -11,7 +11,7 @@ import org.jaxen.function.StringFunction;
 import java.io.File;
 
 /**
- * @since version
+ * @since 3.5
  */
 @RefAppPluginModuleCreator
 @JiraPluginModuleCreator

@@ -12,7 +12,7 @@ import java.io.File;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPostFunctionProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.workflow";

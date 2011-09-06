@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractConditionTest<T extends AbstractConditionsProperties> extends AbstractCodegenTestCase<T> {
     public static final String XPATH_ALL_CONDITIONS = "//conditions";

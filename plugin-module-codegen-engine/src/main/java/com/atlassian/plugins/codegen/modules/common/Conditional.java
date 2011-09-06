@@ -1,7 +1,7 @@
 package com.atlassian.plugins.codegen.modules.common;
 
 /**
- * @since version
+ * @since 3.5
  */
 public interface Conditional {
 }

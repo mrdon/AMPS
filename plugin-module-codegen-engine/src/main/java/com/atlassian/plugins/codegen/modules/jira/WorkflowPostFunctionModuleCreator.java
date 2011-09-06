@@ -9,7 +9,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import java.io.File;
 
 /**
- * Author: jdoklovic
+ *
  */
 @JiraPluginModuleCreator
 @Dependencies({

@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class DownloadablePluginResourceTest extends AbstractCodegenTestCase<DownloadablePluginResourceProperties> {
 

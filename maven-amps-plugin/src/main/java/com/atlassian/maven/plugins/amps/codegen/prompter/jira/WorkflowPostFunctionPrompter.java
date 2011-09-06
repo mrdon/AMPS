@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(WorkflowPostFunctionModuleCreator.class)
 public class WorkflowPostFunctionPrompter extends AbstractModulePrompter<WorkflowPostFunctionProperties> {

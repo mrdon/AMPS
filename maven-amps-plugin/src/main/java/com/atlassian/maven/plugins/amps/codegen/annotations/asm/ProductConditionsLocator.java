@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ProductConditionsLocator extends AbstractAnnotationParser {
     public static final String JIRA_CONDITIONS_PACKAGE = "com.atlassian.jira.plugin.webfragment.conditions";

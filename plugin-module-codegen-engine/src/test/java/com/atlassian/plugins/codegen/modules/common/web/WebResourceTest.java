@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WebResourceTest extends AbstractConditionTest<WebResourceProperties> {
     public static final String MODULE_NAME = "Awesome Web Resource";

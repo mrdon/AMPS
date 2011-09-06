@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(RESTModuleCreator.class)
 public class RESTPrompter extends AbstractModulePrompter<RESTProperties> {

@@ -19,7 +19,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 /**
- * Author: jdoklovic
+ *
  */
 public abstract class AbstractCodegenTestCase<T extends PluginModuleProperties> {
     protected File tempDir;

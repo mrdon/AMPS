@@ -12,7 +12,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(WebPanelRendererModuleCreator.class)
 public class WebPanelRendererPrompter extends AbstractModulePrompter<WebPanelRendererProperties> {

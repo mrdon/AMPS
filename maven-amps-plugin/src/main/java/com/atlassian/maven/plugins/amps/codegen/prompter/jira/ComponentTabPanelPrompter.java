@@ -11,7 +11,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(ComponentTabPanelModuleCreator.class)
 public class ComponentTabPanelPrompter extends AbstractModulePrompter<TabPanelProperties> {

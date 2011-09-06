@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class CodeTemplateHelper {
 

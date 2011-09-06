@@ -4,7 +4,7 @@ import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class WorkflowPostFunctionProperties extends WorkflowElementProperties {
 

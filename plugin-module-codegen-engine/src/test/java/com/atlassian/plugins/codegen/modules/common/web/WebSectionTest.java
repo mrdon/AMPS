@@ -13,7 +13,7 @@ import java.util.Properties;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WebSectionTest extends AbstractWebFragmentTest<WebSectionProperties> {
     public static final String MODULE_NAME = "Awesome Web Section";

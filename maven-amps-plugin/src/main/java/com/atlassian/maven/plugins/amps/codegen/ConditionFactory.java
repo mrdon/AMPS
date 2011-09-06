@@ -10,7 +10,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ConditionFactory {
     protected static Map<String, String> conditions = new TreeMap<String, String>();

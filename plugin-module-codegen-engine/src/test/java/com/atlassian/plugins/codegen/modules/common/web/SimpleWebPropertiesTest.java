@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class SimpleWebPropertiesTest extends AbstractWebFragmentTest<SimpleWebProperties> {
     public static final String MODULE_NAME = "Simple Web Module";

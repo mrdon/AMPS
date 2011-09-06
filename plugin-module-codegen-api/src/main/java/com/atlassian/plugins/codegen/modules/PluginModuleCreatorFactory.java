@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public interface PluginModuleCreatorFactory {
     PluginModuleCreator getModuleCreator(String productId, Class creatorClass);

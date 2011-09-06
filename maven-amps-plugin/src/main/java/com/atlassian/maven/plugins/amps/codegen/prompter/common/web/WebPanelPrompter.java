@@ -8,7 +8,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(WebPanelModuleCreator.class)
 public class WebPanelPrompter extends AbstractWebFragmentPrompter<WebPanelProperties> {

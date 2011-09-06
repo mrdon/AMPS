@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WebPanelRendererTest extends AbstractCodegenTestCase<WebPanelRendererProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.web";

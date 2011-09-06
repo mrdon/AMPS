@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(KeyboardShortcutModuleCreator.class)
 public class KeyboardShortcutPrompter extends AbstractModulePrompter<KeyboardShortcutProperties> {

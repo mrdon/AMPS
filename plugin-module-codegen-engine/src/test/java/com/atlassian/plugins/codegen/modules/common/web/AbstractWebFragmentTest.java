@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * @since version
+ * @since 3.5
  */
 
 public abstract class AbstractWebFragmentTest<T extends AbstractWebFragmentProperties> extends AbstractConditionTest<T> {

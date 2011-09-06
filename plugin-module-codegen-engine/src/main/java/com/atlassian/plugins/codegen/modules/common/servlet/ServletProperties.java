@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ServletProperties extends BasicClassModuleProperties {
     public static final String URL_PATTERN = "URL_PATTERN";

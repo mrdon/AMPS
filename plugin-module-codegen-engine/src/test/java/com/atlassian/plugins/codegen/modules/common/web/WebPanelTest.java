@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WebPanelTest extends AbstractWebFragmentTest<WebPanelProperties> {
     public static final String MODULE_NAME = "Awesome Web Panel";

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class JARAnnotationParserTest {
     private static final String MODULES_PACKAGE = "fake.jar.annotation.parser.modules";

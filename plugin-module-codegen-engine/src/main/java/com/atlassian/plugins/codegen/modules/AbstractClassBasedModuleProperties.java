@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.modules;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractClassBasedModuleProperties extends AbstractNameBasedModuleProperties implements ClassBasedModuleProperties {
 

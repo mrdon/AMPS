@@ -35,7 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class PrettyPrompter implements Prompter {
 

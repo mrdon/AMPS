@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class PluginModulePrompterRegistryImpl implements PluginModulePrompterRegistry {
 

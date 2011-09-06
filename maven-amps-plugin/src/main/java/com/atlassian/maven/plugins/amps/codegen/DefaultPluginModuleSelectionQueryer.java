@@ -9,7 +9,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import java.util.*;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class DefaultPluginModuleSelectionQueryer extends AbstractLogEnabled implements PluginModuleSelectionQueryer {
     public static final List<String> YN_ANSWERS = new ArrayList<String>(Arrays.asList("Y", "y", "N", "n"));

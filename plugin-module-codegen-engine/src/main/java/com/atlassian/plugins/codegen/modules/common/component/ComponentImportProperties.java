@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ComponentImportProperties extends ClassWithInterfaceProperties {
     public static final String FILTER = "FILTER";

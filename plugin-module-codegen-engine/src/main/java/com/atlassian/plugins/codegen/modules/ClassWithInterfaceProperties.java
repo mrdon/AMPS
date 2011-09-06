@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.modules;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ClassWithInterfaceProperties extends BasicClassModuleProperties  {
     public static final String INTERFACE_CLASS = "INTERFACE_CLASS";

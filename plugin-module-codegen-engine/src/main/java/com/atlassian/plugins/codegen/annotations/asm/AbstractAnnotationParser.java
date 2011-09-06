@@ -16,7 +16,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractAnnotationParser {
 

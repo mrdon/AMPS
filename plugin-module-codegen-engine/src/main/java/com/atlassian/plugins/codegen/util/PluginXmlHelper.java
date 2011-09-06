@@ -9,7 +9,7 @@ import org.dom4j.io.XMLWriter;
 import java.io.*;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class PluginXmlHelper {
 

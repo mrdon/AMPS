@@ -10,7 +10,7 @@ import java.util.Set;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class BasicModuleGeneratorTest extends AbstractCodegenTestCase {
 

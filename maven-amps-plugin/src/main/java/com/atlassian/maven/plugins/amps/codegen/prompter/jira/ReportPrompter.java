@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(ReportModuleCreator.class)
 public class ReportPrompter extends AbstractResourcePrompter<ReportProperties> {

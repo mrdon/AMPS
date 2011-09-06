@@ -1,7 +1,7 @@
 package com.atlassian.plugins.codegen.annotations;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class DependencyDescriptor {
     private String groupId;

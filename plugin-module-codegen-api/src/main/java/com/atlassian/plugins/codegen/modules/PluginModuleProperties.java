@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @since version
+ * @since 3.5
  */
 public interface PluginModuleProperties extends Map<Object,Object> {
 

@@ -7,7 +7,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
 import java.util.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class PluginModuleCreatorRegistryImpl implements PluginModuleCreatorRegistry {
 

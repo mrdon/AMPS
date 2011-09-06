@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class DownloadablePluginResourcePrompterTest extends AbstractPrompterTest {
     public static final String RESOURCE_NAME = "resourceCSS";

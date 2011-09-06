@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 //TODO: update test to use Dom4J
 /**
- * @since version
+ * @since 3.5
  */
 public class ModuleTypeTest extends AbstractCodegenTestCase<ModuleTypeProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.modules";

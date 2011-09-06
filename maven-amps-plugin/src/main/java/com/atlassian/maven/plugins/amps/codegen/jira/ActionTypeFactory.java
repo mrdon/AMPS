@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ActionTypeFactory {
     protected static List<String> availableActionTypes;

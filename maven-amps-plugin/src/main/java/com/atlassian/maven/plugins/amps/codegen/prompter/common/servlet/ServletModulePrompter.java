@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(ServletModuleCreator.class)
 public class ServletModulePrompter extends AbstractModulePrompter<ServletProperties> {

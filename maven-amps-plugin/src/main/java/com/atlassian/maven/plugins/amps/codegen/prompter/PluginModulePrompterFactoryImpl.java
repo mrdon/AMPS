@@ -7,7 +7,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class PluginModulePrompterFactoryImpl implements PluginModulePrompterFactory {
     private final PluginModulePrompterRegistry prompterRegistry;

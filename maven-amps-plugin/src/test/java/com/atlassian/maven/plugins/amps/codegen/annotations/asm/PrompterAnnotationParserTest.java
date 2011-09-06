@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * @since version
+ * @since 3.5
  */
 public class PrompterAnnotationParserTest {
     private static final String PROMPTERS_PACKAGE = "fake.annotation.parser.prompters";

@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractWebFragmentPrompterTest<T extends AbstractWebFragmentProperties> extends AbstractPrompterTest {
 

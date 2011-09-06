@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ReportProperties extends BasicClassModuleProperties {
     public static final String LABEL = "LABEL";

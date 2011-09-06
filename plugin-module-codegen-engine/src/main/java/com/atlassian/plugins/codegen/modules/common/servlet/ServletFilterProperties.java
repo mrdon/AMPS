@@ -7,7 +7,7 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.*;
 
 /**
- * Author: jdoklovic
+ *
  */
 public class ServletFilterProperties extends BasicClassModuleProperties {
     public static final String LOCATION = "LOCATION";

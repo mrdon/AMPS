@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WebItemProperties extends AbstractWebFragmentProperties {
 

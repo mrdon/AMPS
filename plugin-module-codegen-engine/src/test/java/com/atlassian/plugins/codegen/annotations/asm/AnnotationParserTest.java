@@ -21,7 +21,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class AnnotationParserTest {
 

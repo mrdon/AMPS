@@ -4,7 +4,7 @@ package com.atlassian.plugins.codegen.modules.common.servlet;
 import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ServletContextParameterProperties extends BasicNameModuleProperties {
     public static final String PARAM_NAME = "PARAM_NAME";

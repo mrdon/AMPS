@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(WebItemModuleCreator.class)
 public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperties> {

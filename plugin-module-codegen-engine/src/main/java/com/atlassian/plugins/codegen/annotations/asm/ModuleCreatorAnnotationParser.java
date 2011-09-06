@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ModuleCreatorAnnotationParser extends AbstractAnnotationParser {
 

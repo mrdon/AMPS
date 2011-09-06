@@ -8,7 +8,7 @@ import com.atlassian.plugins.codegen.modules.common.Resource;
 import java.util.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class WebResourceProperties extends AbstractConditionsProperties {
     public static final String RESOURCES = "RESOURCES";

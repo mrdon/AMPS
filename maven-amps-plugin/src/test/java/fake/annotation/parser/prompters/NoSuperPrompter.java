@@ -10,7 +10,7 @@ import fake.annotation.parser.creators.NoSuperFakeCreator;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(NoSuperFakeCreator.class)
 public class NoSuperPrompter implements PluginModulePrompter<BasicClassModuleProperties> {

@@ -1,7 +1,7 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class SimpleWebProperties extends AbstractWebFragmentProperties {
     public SimpleWebProperties() {

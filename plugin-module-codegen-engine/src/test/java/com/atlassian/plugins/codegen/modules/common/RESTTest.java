@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class RESTTest extends AbstractCodegenTestCase<RESTProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.rest";

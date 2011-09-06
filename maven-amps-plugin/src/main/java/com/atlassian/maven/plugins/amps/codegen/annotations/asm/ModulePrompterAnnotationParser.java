@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ModulePrompterAnnotationParser extends AbstractAnnotationParser {
     public static final String PROMPTER_PACKAGE = "com.atlassian.maven.plugins.amps.codegen.prompter";

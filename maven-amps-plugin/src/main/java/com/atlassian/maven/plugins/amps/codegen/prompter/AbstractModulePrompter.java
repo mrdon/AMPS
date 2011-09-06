@@ -11,7 +11,7 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import java.util.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractModulePrompter<T extends PluginModuleProperties> implements PluginModulePrompter<T> {
     public static final String DEFAULT_BASE_PACKAGE = "com.example";

@@ -14,7 +14,7 @@ import java.io.IOException;
 import static org.junit.Assert.*;
 //TODO: update test to use Dom4J
 /**
- * @since version
+ * @since 3.5
  */
 public class ServletContextListenerTest extends AbstractCodegenTestCase<ServletContextListenerProperties> {
     public static final String PACKAGE_NAME = "com.atlassian.plugins.servlet.listener";

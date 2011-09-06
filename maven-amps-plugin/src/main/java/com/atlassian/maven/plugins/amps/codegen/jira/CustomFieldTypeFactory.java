@@ -9,7 +9,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class CustomFieldTypeFactory {
     protected static Map<String, String> fields = new TreeMap<String, String>();

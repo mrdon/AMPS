@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ModuleTypePrompterTest extends AbstractPrompterTest {
     public static final String INTERFACE_CLASS = "Dictionary";

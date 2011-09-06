@@ -6,7 +6,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
- * @since version
+ * @since 3.5
  */
 @RefAppPluginModuleCreator
 @JiraPluginModuleCreator

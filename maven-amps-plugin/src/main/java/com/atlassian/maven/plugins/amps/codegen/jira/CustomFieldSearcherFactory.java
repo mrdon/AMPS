@@ -8,7 +8,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class CustomFieldSearcherFactory {
     protected static Map<String, String> searchers = new TreeMap<String, String>();

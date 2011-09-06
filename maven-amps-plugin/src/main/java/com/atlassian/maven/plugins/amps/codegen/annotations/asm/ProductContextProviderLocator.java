@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class ProductContextProviderLocator extends AbstractAnnotationParser {
     protected static final Map<String, String> productContextPackages = new HashMap<String, String>();

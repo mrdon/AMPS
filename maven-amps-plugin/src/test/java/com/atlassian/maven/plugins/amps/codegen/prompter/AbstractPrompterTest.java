@@ -15,7 +15,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.mock;
 
 /**
- * @since version
+ * @since 3.5
  */
 public abstract class AbstractPrompterTest {
     protected File tempDir;

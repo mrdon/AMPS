@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * @since version
+ * @since 3.5
  */
 public class RESTPrompterTest extends AbstractPrompterTest {
     public static final String PACKAGE = "com.atlassian.plugins.rest";

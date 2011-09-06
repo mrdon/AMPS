@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since version
+ * @since 3.5
  */
 @ModuleCreatorClass(WebResourceModuleCreator.class)
 public class WebResourcePrompter extends AbstractWebFragmentPrompter<WebResourceProperties> {
