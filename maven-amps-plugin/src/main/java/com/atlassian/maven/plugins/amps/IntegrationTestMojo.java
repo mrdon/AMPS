@@ -1,7 +1,5 @@
 package com.atlassian.maven.plugins.amps;
 
-import static com.google.common.collect.Iterables.transform;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,10 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -23,9 +17,6 @@ import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
-import com.atlassian.util.concurrent.AsyncCompleter;
-import com.atlassian.util.concurrent.ExceptionPolicy;
-import com.google.common.base.Function;
 
 /**
  * Run the integration tests against the webapp
@@ -52,7 +43,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
      */
     @MojoParameter(expression = "${testGroups}")
     private String configuredTestGroupsToRun;
-    
+
     /**
      * Whether the reference application will not be started or not
      */
@@ -67,7 +58,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
 
     @MojoParameter(expression="${skipTests}", defaultValue = "false")
     private boolean skipTests = false;
-    
+
     /**
      * Skip the integration tests along with any product startups
      */
@@ -104,7 +95,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         else if (configuredTestGroupsToRun != null)
         {
             String[] testGroupIdsToRun = configuredTestGroupsToRun.split(",");
-            
+
             // now run the tests
             for (String testGroupId : testGroupIdsToRun)
             {
@@ -157,6 +148,8 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         return ids;
     }
 
+
+
     private void runTestsForTestGroup(String testGroupId, MavenGoals goals, String pluginJar, Map<String,Object> systemProperties) throws MojoExecutionException
     {
         List<String> includes = getIncludesForTestGroup(testGroupId);
@@ -164,61 +157,9 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
 
         List<ProductExecution> productExecutions = getTestGroupProductExecutions(testGroupId);
 
-        ExecutorService executor = Executors.newFixedThreadPool(productExecutions.size());
-        AsyncCompleter completer = new AsyncCompleter.Builder(executor).handleExceptions(ExceptionPolicy.Policies.THROW).build();
-        
         // Install the plugin in each product and start it
-        for (Map<String, Object> productProperties : completer.invokeAll(transform(productExecutions, productStarter(pluginJar))))
+        for (ProductExecution productExecution : productExecutions)
         {
-            systemProperties.putAll(productProperties);
-        }
-        if (productExecutions.size() == 1)
-        {
-            Product product = productExecutions.get(0).getProduct();
-            systemProperties.put("http.port", systemProperties.get("http." + product.getInstanceId() + ".port"));
-            systemProperties.put("context.path", product.getContextPath());
-        }
-        systemProperties.put("testGroup", testGroupId);
-        systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
-
-        // Actually run the tests
-        goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);
-
-        // Shut all products down
-        if (!noWebapp)
-        {
-            for (Void _ : completer.invokeAll(transform(productExecutions, productStopper()))) {}
-        }
-        executor.shutdown();
-    }
-
-    private Function<ProductExecution, Callable<Map<String, Object>>> productStarter(final String pluginJar)
-    {
-        return new Function<ProductExecution, Callable<Map<String,Object>>>()
-        {
-            @Override
-            public Callable<Map<String, Object>> apply(ProductExecution productExecution)
-            {
-                return new ProductStarter(pluginJar, productExecution);
-            }
-        };
-    }
-    
-    private final class ProductStarter implements Callable<Map<String, Object>>
-    {
-        private final String pluginJar;
-        private final ProductExecution productExecution;
-
-        public ProductStarter(String pluginJar, ProductExecution productExecution)
-        {
-            this.pluginJar = pluginJar;
-            this.productExecution = productExecution;
-        }
-
-        @Override
-        public Map<String, Object> call() throws Exception
-        {
-            Map<String, Object> properties = new HashMap<String, Object>();
             ProductHandler productHandler = productExecution.getProductHandler();
             Product product = productExecution.getProduct();
             if (product.isInstallPlugin() == null)
@@ -232,49 +173,50 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
                 actualHttpPort = productHandler.start(product);
             }
 
+            if (productExecutions.size() == 1)
+            {
+                systemProperties.put("http.port", String.valueOf(actualHttpPort));
+                systemProperties.put("context.path", product.getContextPath());
+            }
+
             String baseUrl = MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath());
             // hard coded system properties...
-            properties.put("http." + product.getInstanceId() + ".port", String.valueOf(actualHttpPort));
-            properties.put("context." + product.getInstanceId() + ".path", product.getContextPath());
-            properties.put("http." + product.getInstanceId() + ".url", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
+            systemProperties.put("http." + product.getInstanceId() + ".port", String.valueOf(actualHttpPort));
+            systemProperties.put("context." + product.getInstanceId() + ".path", product.getContextPath());
+            systemProperties.put("http." + product.getInstanceId() + ".url", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
 
-            properties.put("baseurl." + product.getInstanceId(), baseUrl);
-            properties.put("plugin.jar", pluginJar);
+            systemProperties.put("baseurl." + product.getInstanceId(), baseUrl);
+            systemProperties.put("plugin.jar", pluginJar);
 
-            properties.put("baseurl", baseUrl);
-            
-            properties.put("homedir." + product.getInstanceId(), productHandler.getHomeDirectory(product).getAbsolutePath());
-            if (!properties.containsKey("homedir"))
+            // yes, this means you only get one base url if multiple products, but that is what selenium would expect
+            if (!systemProperties.containsKey("baseurl"))
             {
-                properties.put("homedir", productHandler.getHomeDirectory(product).getAbsolutePath());
+                systemProperties.put("baseurl", baseUrl);
             }
-            
-            properties.putAll(getProductFunctionalTestProperties(product));
-            return properties;
-        }
-    }
-    
-    private Function<ProductExecution, Callable<Void>> productStopper()
-    {
-        return ProductStopper.INSTANCE;
-    }
-    
-    enum ProductStopper implements Function<ProductExecution, Callable<Void>>
-    {
-        INSTANCE;
 
-        @Override
-        public Callable<Void> apply(final ProductExecution productExecution)
-        {
-            return new Callable<Void>()
+            systemProperties.put("homedir." + product.getInstanceId(), productHandler.getHomeDirectory(product).getAbsolutePath());
+            if (!systemProperties.containsKey("homedir"))
             {
-                @Override
-                public Void call() throws Exception
-                {
-                    productExecution.getProductHandler().stop(productExecution.getProduct());
-                    return null;
-                }
-            };
+                systemProperties.put("homedir", productHandler.getHomeDirectory(product).getAbsolutePath());
+            }
+
+            systemProperties.putAll(getProductFunctionalTestProperties(product));
+        }
+        systemProperties.put("testGroup", testGroupId);
+        systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
+
+        // Actually run the tests
+        goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);
+
+        // Shut all products down
+        for (ProductExecution productExecution : productExecutions)
+        {
+            ProductHandler productHandler = productExecution.getProductHandler();
+            Product product = productExecution.getProduct();
+            if (!noWebapp)
+            {
+                productHandler.stop(product);
+            }
         }
     }
 
