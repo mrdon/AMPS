@@ -1,6 +1,5 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.product.AbstractProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.RefappProductHandler;
 import org.apache.commons.io.FileUtils;
@@ -75,7 +74,6 @@ public class TestMavenGoalsHomeZip
         when(ctx.getLog()).thenReturn(new SystemStreamLog());
         when(ctx.getReactor()).thenReturn(reactor);
         when(ctx.getSession()).thenReturn(null);
-        when(ctx.getPluginManager()).thenReturn(pluginManager);
 
         productHandler = new RefappProductHandler(ctx, null);
     }
@@ -118,7 +116,7 @@ public class TestMavenGoalsHomeZip
 
     @Test
     public void existingGeneratedDirGetsDeleted() throws IOException, MojoExecutionException
-    {        
+    {
         generatedHomeDir.mkdirs();
         File deletedFile = new File(generatedHomeDir,"should-be-deleted.txt");
         FileUtils.writeStringToFile(deletedFile,"This file should have been deleted!");
