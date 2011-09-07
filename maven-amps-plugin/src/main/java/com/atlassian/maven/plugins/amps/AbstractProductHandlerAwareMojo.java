@@ -8,6 +8,6 @@ public abstract class AbstractProductHandlerAwareMojo extends AbstractProductAwa
 {
     protected ProductHandler createProductHandler(String productId) throws MojoExecutionException
     {
-        return ProductHandlerFactory.create(productId, getMavenContext(), getMavenGoals(), getLog());
+        return ProductHandlerFactory.create(productId, getMavenContext().getProject(), getMavenGoals(), getLog());
     }
 }

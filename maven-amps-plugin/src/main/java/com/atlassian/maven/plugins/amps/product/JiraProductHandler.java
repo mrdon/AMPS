@@ -1,6 +1,5 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
@@ -23,9 +22,9 @@ public class JiraProductHandler extends AbstractWebappProductHandler
 {
     private final Log log;
 
-    public JiraProductHandler(final MavenContext context, final MavenGoals goals, Log log)
+    public JiraProductHandler(final MavenProject project, final MavenGoals goals, Log log)
     {
-        super(context, goals, new JiraPluginProvider());
+        super(project, goals, new JiraPluginProvider());
         this.log = log;
     }
 

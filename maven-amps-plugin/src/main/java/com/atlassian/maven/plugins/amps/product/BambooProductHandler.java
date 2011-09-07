@@ -1,22 +1,20 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.util.*;
 
-import static com.atlassian.maven.plugins.amps.util.FileUtils.deleteDir;
-
 public class BambooProductHandler extends AbstractWebappProductHandler
 {
-    public BambooProductHandler(MavenContext context, MavenGoals goals)
+    public BambooProductHandler(MavenProject project, MavenGoals goals)
     {
-        super(context, goals, new BambooPluginProvider());
+        super(project, goals, new BambooPluginProvider());
     }
 
     public String getId()
@@ -78,9 +76,6 @@ public class BambooProductHandler extends AbstractWebappProductHandler
         // The regex in the following search text is used to match IPv4 ([^:]+) or IPv6 (\[.+]) addresses.
         ConfigFileUtils.replaceAll(new File(homeDir, "/xml-data/configuration/administration.xml"),
                 "http://(?:[^:]+|\\[.+]):8085", "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", ""));
-
-        ConfigFileUtils.replace(new File(homeDir, "database/defaultdb.log"), "${bambooHome}", homeDir.getAbsolutePath());
-        ConfigFileUtils.replace(new File(homeDir, "database/defaultdb.script"), "${bambooHome}", homeDir.getAbsolutePath());
     }
 
     public List<ProductArtifact> getDefaultLibPlugins()
@@ -91,20 +86,6 @@ public class BambooProductHandler extends AbstractWebappProductHandler
     public List<ProductArtifact> getDefaultBundledPlugins()
     {
         return Collections.emptyList();
-    }
-
-    @Override
-    protected void cleanupProductHomeForZip(File homeDirectory, File genDir) throws MojoExecutionException
-    {
-        deleteDir(new File(genDir, "jms-store"));
-        deleteDir(new File(genDir, "caches"));
-        deleteDir(new File(genDir, "logs"));
-
-        ConfigFileUtils.replace(new File(genDir, "database/defaultdb.script"), homeDirectory.getAbsolutePath(), "${bambooHome}");
-        ConfigFileUtils.replace(new File(genDir, "database/defaultdb.log"), homeDirectory.getAbsolutePath(), "${bambooHome}");
-
-        ConfigFileUtils.replace(new File(genDir, "bamboo.cfg.xml"), homeDirectory.getAbsolutePath(), "${bambooHome}");
-
     }
 
     private static class BambooPluginProvider extends AbstractPluginProvider

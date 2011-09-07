@@ -5,8 +5,6 @@ import junit.framework.TestCase;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import org.apache.maven.plugin.PluginManager;
-
 /**
  *
  */
@@ -14,7 +12,7 @@ public class TestMavenGoals extends TestCase
 {
     public void testPickFreePort() throws IOException
     {
-        MavenContext ctx = new MavenContext(null, null, null, (PluginManager) null, null);
+        MavenContext ctx = new MavenContext(null, null, null, null, null);
         MavenGoals goals = new MavenGoals(ctx);
         ServerSocket socket = null;
         try

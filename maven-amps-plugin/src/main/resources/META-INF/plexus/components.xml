@@ -39,6 +39,21 @@
             </configuration>
         </component>
         <component>
+            <role>org.codehaus.plexus.components.interactivity.Prompter</role>
+            <role-hint>pretty-prompter</role-hint>
+            <implementation>com.atlassian.maven.plugins.amps.codegen.prompter.PrettyPrompter</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.codehaus.plexus.components.interactivity.OutputHandler</role>
+                    <field-name>outputHandler</field-name>
+                </requirement>
+                <requirement>
+                    <role>org.codehaus.plexus.components.interactivity.InputHandler</role>
+                    <field-name>inputHandler</field-name>
+                </requirement>
+            </requirements>
+        </component>
+        <component>
             <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
             <role-hint>atlassian-plugin</role-hint>
             <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
@@ -49,6 +64,35 @@
                 <extension>jar</extension>
                 <addedToClasspath>true</addedToClasspath>
             </configuration>
+        </component>
+        <component>
+            <role>com.atlassian.maven.plugins.amps.codegen.PluginModuleSelectionQueryer</role>
+            <role-hint>plugin module selector</role-hint>
+            <implementation>com.atlassian.maven.plugins.amps.codegen.DefaultPluginModuleSelectionQueryer</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.codehaus.plexus.components.interactivity.Prompter</role>
+                    <field-name>prompter</field-name>
+                </requirement>
+            </requirements>
+        </component>
+
+        <component>
+            <role>com.atlassian.plugins.codegen.modules.PluginModuleCreatorFactory</role>
+            <role-hint>plugin module creator factory</role-hint>
+            <implementation>com.atlassian.plugins.codegen.PluginModuleCreatorFactoryImpl</implementation>
+        </component>
+
+        <component>
+            <role>com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompterFactory</role>
+            <role-hint>product module prompter factory</role-hint>
+            <implementation>com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompterFactoryImpl</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.codehaus.plexus.components.interactivity.Prompter</role>
+                    <field-name>prompter</field-name>
+                </requirement>
+            </requirements>
         </component>
     </components>
 </component-set>

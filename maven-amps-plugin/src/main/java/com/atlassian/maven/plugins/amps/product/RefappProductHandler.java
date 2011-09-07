@@ -1,6 +1,5 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
@@ -13,9 +12,9 @@ import java.util.*;
 
 public class RefappProductHandler extends AbstractWebappProductHandler
 {
-    public RefappProductHandler(MavenContext context, MavenGoals goals)
+    public RefappProductHandler(MavenProject project, MavenGoals goals)
     {
-        super(context, goals, new RefappPluginProvider());
+        super(project, goals, new RefappPluginProvider());
     }
 
     public String getId()

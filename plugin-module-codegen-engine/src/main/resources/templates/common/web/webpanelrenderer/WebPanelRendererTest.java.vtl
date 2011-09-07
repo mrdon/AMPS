@@ -1,0 +1,68 @@
+package ${PACKAGE};
+
+import org.junit.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.mockito.Mockito;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import ${FQ_CLASS_UNDER_TEST};
+import com.atlassian.plugin.Plugin;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ${CLASSNAME} {
+
+    @Before
+    public void setup() {
+
+    }
+
+    @After
+    public void tearDown() {
+
+    }
+
+    @Test(expected=AssertionError.class)
+    public void testResourceType() {
+        ${CLASS_UNDER_TEST} renderer = new ${CLASS_UNDER_TEST}();
+        String expected = "test";
+        String actual = renderer.getResourceType();
+        assertEquals("wrong resource type",expected,actual);
+
+    }
+
+    @Test(expected=AssertionError.class)
+    public void testRender() throws IOException {
+        ${CLASS_UNDER_TEST} renderer = new ${CLASS_UNDER_TEST}();
+        String expected = "test";
+
+        Plugin plugin = mock(Plugin.class);
+        Map<String,Object> context = new HashMap<String, Object>();
+        StringWriter writer = new StringWriter();
+
+        renderer.render("myTemplate",plugin,context,writer);
+
+        String actual = writer.toString();
+        assertEquals("wrong content",expected,actual);
+    }
+
+    @Test(expected=AssertionError.class)
+    public void testRenderFragment() {
+
+        ${CLASS_UNDER_TEST} renderer = new ${CLASS_UNDER_TEST}();
+        String expected = "test";
+
+        Plugin plugin = mock(Plugin.class);
+        String fragment = "<some-fragment />";
+        Map<String,Object> context = new HashMap<String, Object>();
+        StringWriter writer = new StringWriter();
+
+        String actual = renderer.renderFragment(fragment,plugin,context);
+
+        assertEquals("wrong content",expected,actual);
+
+    }
+}

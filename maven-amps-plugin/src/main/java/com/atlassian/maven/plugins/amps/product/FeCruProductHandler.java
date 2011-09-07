@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.atlassian.maven.plugins.amps.MavenContext;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
@@ -27,16 +26,17 @@ import com.atlassian.maven.plugins.amps.util.ant.AntJavaExecutorThread;
 import com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory;
 
 public class FeCruProductHandler extends AbstractProductHandler
-{ 	
+{
     private static final int STARTUP_CHECK_DELAY = 1000;
+    private static final int STARTUP_CHECK_MAX = 1000 * 60 * 3; //todo is 3 mins enough?
     private static final String FISHEYE_INST = "fisheye.inst";
     
     private final Log log;
     private final JavaTaskFactory javaTaskFactory;
     
-    public FeCruProductHandler(MavenContext context, MavenGoals goals, Log log)
+    public FeCruProductHandler(MavenProject project, MavenGoals goals, Log log)
     {
-        super(context, goals, new FeCruPluginProvider());
+        super(project, goals, new FeCruPluginProvider());
         this.log = log;
         this.javaTaskFactory = new JavaTaskFactory(log);
     }
@@ -68,7 +68,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     }
 
     @Override
-    protected final void extractProductHomeData(File productHomeZip, File homeDir, Product ctx)
+    protected final void extractProductHomeZip(File productHomeZip, File homeDir, Product ctx)
             throws MojoExecutionException
     {
         try
@@ -221,9 +221,9 @@ public class FeCruProductHandler extends AbstractProductHandler
                 throw new MojoExecutionException("Fisheye failed to start.", thread.getBuildException());
             }
             
-            if (waited++ * STARTUP_CHECK_DELAY > ctx.getStartupTimeout())
+            if (waited++ * STARTUP_CHECK_DELAY > STARTUP_CHECK_MAX)
             {
-                throw new MojoExecutionException("FishEye took longer than " + ctx.getStartupTimeout() + "ms to start!");
+                throw new MojoExecutionException("FishEye took longer than " + STARTUP_CHECK_MAX + "ms to start!");
             }
         }
     }
@@ -251,9 +251,9 @@ public class FeCruProductHandler extends AbstractProductHandler
                 connected = false;
             }
 
-            if (waited++ * STARTUP_CHECK_DELAY > ctx.getShutdownTimeout())
+            if (waited++ * STARTUP_CHECK_DELAY > STARTUP_CHECK_MAX)
             {
-                throw new MojoExecutionException("FishEye took longer than " + ctx.getShutdownTimeout() + "ms to stop!");
+                throw new MojoExecutionException("FishEye took longer than " + STARTUP_CHECK_MAX + "ms to stop!");
             }
         }
     }

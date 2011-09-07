@@ -25,13 +25,4 @@ public class FileUtils
         String pattern = "^" + artifactId + "-\\d.*$";
         return fileName.matches(pattern);
     }
-
-    public static void deleteDir(File dir)
-    {
-        if (dir.exists())
-        {
-            com.atlassian.core.util.FileUtils.deleteDir(dir);
-        }
-    }
-
 }
