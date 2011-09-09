@@ -277,6 +277,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setStartupTimeout(startupTimeout);
         ctx.setShutdownTimeout(shutdownTimeout);
 
+        // If they aren't defined, define those system properties. They will override the product
+        // handler's properties.
         setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
         setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
         setDefaultSystemProperty(systemPropertyVariables, "plugin.resource.directories", buildResourcesList());
@@ -345,9 +347,15 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         }
     }
 
-    private void postProcessProduct(Product product)
-    {
-
+    /**
+     * Set the default values for the product
+     * @param product the product
+     * @param handler the product handler associated to the product
+     */
+    protected void setDefaultValues(Product product, ProductHandler handler)
+    {   
+        product.setInstanceId(getProductInstanceId(product));
+        
         String dversion = System.getProperty("product.data.version", product.getDataVersion());
         String pversion = System.getProperty("product.version", product.getVersion());
         String dpath = System.getProperty("product.data.path", product.getDataPath());
@@ -397,7 +405,20 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             product.setShutdownTimeout(DEFAULT_PRODUCT_SHUTDOWN_TIMEOUT);
         }
         
-        product.setInstanceId(getProductInstanceId(product));
+        if (product.getHttpPort() == 0)
+        {
+            product.setHttpPort(handler.getDefaultHttpPort());
+        }
+        
+        if (product.getVersion() == null)
+        {
+            product.setVersion("RELEASE");
+        }
+        
+        if (product.getContextPath() == null)
+        {
+            product.setContextPath("/" + handler.getId());
+        }
     }
 
     private List<ProductArtifact> stringToArtifactList(String val, List<ProductArtifact> artifacts)
@@ -447,24 +468,36 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         }
     }
 
+    /**
+     * Returns the Product objects that are defined in our maven-amps-plugins object:
+     * <ul>
+     * <li>Reads the {@literal <products>} tag</li>
+     * <li>Defaults the values</li>
+     * </ul>
+     * So the method looks short but it's quite central in the initialisation of products.
+     */
     protected Map<String, Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
     {
         Map<String, Product> productMap = new HashMap<String, Product>();
 
-
+        // Products in the <products> tag inherit from the upper settings, e.g. when there's a <httpPort> tag for for all products
         makeProductsInheritDefaultConfiguration(products, productMap);
 
         for (Product ctx : productMap.values())
         {
-            postProcessProduct(ctx);
             ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext(), goals, getLog());
-            ctx.setHttpPort(ctx.getHttpPort() == 0 ? handler.getDefaultHttpPort() : ctx.getHttpPort());
-            ctx.setVersion(ctx.getVersion() == null ? "RELEASE" : ctx.getVersion());
-            ctx.setContextPath(ctx.getContextPath() == null ? "/" + handler.getId() : ctx.getContextPath());
+            setDefaultValues(ctx, handler);
         }
         return productMap;
     }
 
+    /**
+     * Puts the list of {@literal <products>} in productMap:
+     * <ul>
+     * <li>The {@literal <product>} from the maven-amps-plugin configuration (if missing, RefApp is used)</li>
+     * <li>The {@literal <products>} from the maven-amps-plugin configuration</li>
+     * </ul>
+     */
     void makeProductsInheritDefaultConfiguration(List<Product> products, Map<String, Product> productMap) throws MojoExecutionException
     {
         productMap.put(getProductId(), createDefaultProductContext());
@@ -474,8 +507,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             for (Product product : products)
             {
                 Product processedProduct = product.merge(defaultProduct);
-                String id = getProductInstanceId(processedProduct);
-                productMap.put(id, processedProduct);
+                String instanceId = getProductInstanceId(processedProduct);
+                productMap.put(instanceId, processedProduct);
             }
         }
     }

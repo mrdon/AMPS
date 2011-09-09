@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps.product;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +35,9 @@ import static org.apache.commons.io.FileUtils.moveDirectory;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
+import static com.atlassian.maven.plugins.amps.util.ProjectUtils.createDirectory;
+import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getBaseDirectory;
+
 public abstract class AbstractProductHandler implements ProductHandler
 {
     protected final MavenGoals goals;
@@ -49,12 +53,25 @@ public abstract class AbstractProductHandler implements ProductHandler
         this.pluginProvider = pluginProvider;
     }
 
+    /**
+     * Extracts the product and its home, prepares both and starts the product
+     * @return the port
+     */
     public final int start(final Product ctx) throws MojoExecutionException
     {
+        // Extract the home directory
         final File homeDir = extractAndProcessHomeDirectory(ctx);
+        
+        // Extract the application
         final File extractedApp = extractApplication(ctx, homeDir);
+        
+        // Modifies the application 
         final File finalApp = addArtifactsAndOverrides(ctx, homeDir, extractedApp);
-        return startApplication(ctx, finalApp, homeDir, mergeSystemProperties(ctx));
+        
+        // Ask for the system properties (from the ProductHandler and from the pom.xml) 
+        Map<String, String> systemProperties = mergeSystemProperties(ctx);
+        
+        return startApplication(ctx, finalApp, homeDir, systemProperties);
     }
 
     /**
@@ -171,7 +188,7 @@ public abstract class AbstractProductHandler implements ProductHandler
                 getTestResourcesArtifact().getGroupId(), getTestResourcesArtifact().getArtifactId(), ctx.getDataVersion());
             if (artifact != null)
             {
-                productHomeZip = goals.copyHome(getBaseDirectory(ctx), artifact);
+                productHomeZip = goals.copyHome(getBaseDirectory(project, ctx), artifact);
             }
         }
 
@@ -181,14 +198,14 @@ public abstract class AbstractProductHandler implements ProductHandler
     protected void extractProductHomeData(File productHomeData, File homeDir, Product ctx)
             throws MojoExecutionException
     {
-        final File tmpDir = new File(getBaseDirectory(ctx), "tmp-resources");
+        final File tmpDir = new File(getBaseDirectory(project, ctx), "tmp-resources");
         tmpDir.mkdir();
 
         try
         {
             if (productHomeData.isFile())
             {
-                File tmp = new File(getBaseDirectory(ctx), ctx.getId() + "-home");
+                File tmp = new File(getBaseDirectory(project, ctx), ctx.getId() + "-home");
 
                 unzip(productHomeData, tmpDir.getPath());
 
@@ -206,7 +223,7 @@ public abstract class AbstractProductHandler implements ProductHandler
                             + Joiner.on(", ").join(filenames));
                 }
 
-                copyDirectory(topLevelFiles[0], getBaseDirectory(ctx), true);
+                copyDirectory(topLevelFiles[0], getBaseDirectory(project, ctx), true);
                 moveDirectory(tmp, homeDir);
             }
             else if (productHomeData.isDirectory())
@@ -229,6 +246,11 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
     }
 
+    /**
+     * Takes 'app' (the file of the application - either .war or the exploded directory),
+     * adds the artifacts, then returns the 'app'.
+     * @return if {@literal app} was a dir, returns a dir; if {@literal app} was a war, returns a war.
+     */
     private final File addArtifactsAndOverrides(final Product ctx, final File homeDir, final File app) throws MojoExecutionException
     {
         try
@@ -236,7 +258,7 @@ public abstract class AbstractProductHandler implements ProductHandler
             final File appDir;
             if (app.isFile())
             {
-                appDir = new File(getBaseDirectory(ctx), "webapp");
+                appDir = new File(getBaseDirectory(project, ctx), "webapp");
                 if (!appDir.exists())
                 {
                     unzip(app, appDir.getAbsolutePath());
@@ -253,6 +275,7 @@ public abstract class AbstractProductHandler implements ProductHandler
             try
             {
                 addOverrides(appDir, ctx);
+                addProductHandlerOverrides(ctx, homeDir, appDir);
             }
             catch (IOException e)
             {
@@ -278,11 +301,26 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
     }
 
+    /**
+     * Each product handler can add specific operations on the application's home and war.
+     * By default no operation is performed in this hook.
+     *
+     * <p>Example: StudioXXXProductHandlers can change the webapp to be studio-ready.</p>
+     * @param ctx the product's details
+     * @param homeDir the home directory
+     * @param explodedWarDir the directory containing the exploded WAR of the application
+     * @throws MojoExecutionException 
+     */
+    protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
+    {
+        // No operation by default
+    }
+
     private void addArtifacts(final Product ctx, final File homeDir, final File appDir)
             throws IOException, MojoExecutionException, Exception
     {
         File pluginsDir = getUserInstalledPluginsDirectory(appDir, homeDir);
-        final File bundledPluginsDir = new File(getBaseDirectory(ctx), "bundled-plugins");
+        final File bundledPluginsDir = new File(getBaseDirectory(project, ctx), "bundled-plugins");
 
         bundledPluginsDir.mkdir();
         // add bundled plugins
@@ -419,24 +457,24 @@ public abstract class AbstractProductHandler implements ProductHandler
 
     protected final void addArtifactsToDirectory(final List<ProductArtifact> artifacts, final File pluginsDir) throws MojoExecutionException
     {
-        // first remove plugins from the webapp that we want to update
-        if (pluginsDir.isDirectory() && pluginsDir.exists())
-        {
-            for (final Iterator<?> iterateFiles = iterateFiles(pluginsDir, null, false); iterateFiles.hasNext();)
-            {
-                final File file = (File) iterateFiles.next();
-                for (final ProductArtifact webappArtifact : artifacts)
-                {
-                    if (!file.isDirectory() && doesFileNameMatchArtifact(file.getName(), webappArtifact.getArtifactId()))
-                    {
-                        file.delete();
-                    }
-                }
-            }
-        }
         // copy the all the plugins we want in the webapp
         if (!artifacts.isEmpty())
         {
+            // first remove plugins from the webapp that we want to update
+            if (pluginsDir.isDirectory() && pluginsDir.exists())
+            {
+                for (final Iterator<?> iterateFiles = iterateFiles(pluginsDir, null, false); iterateFiles.hasNext();)
+                {
+                    final File file = (File) iterateFiles.next();
+                    for (final ProductArtifact webappArtifact : artifacts)
+                    {
+                        if (!file.isDirectory() && doesFileNameMatchArtifact(file.getName(), webappArtifact.getArtifactId()))
+                        {
+                            file.delete();
+                        }
+                    }
+                }
+            }
             goals.copyPlugins(pluginsDir, artifacts);
         }
     }
@@ -450,30 +488,17 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
     }
 
-    public final File getBaseDirectory(Product ctx)
-    {
-        return createDirectory(new File(project.getBuild().getDirectory(), ctx.getInstanceId()));
-    }
 
     public final File getHomeDirectory(Product ctx)
     {
-        return new File(getBaseDirectory(ctx), "home");
+        return new File(getBaseDirectory(project, ctx), "home");
     }
 
-    protected final File createHomeDirectory(Product ctx)
-    {
-        return createDirectory(getHomeDirectory(ctx));
-    }
-
-    protected final File createDirectory(File dir)
-    {
-        if (!dir.exists() && !dir.mkdirs())
-        {
-            throw new RuntimeException("Failed to create directory " + dir.getAbsolutePath());
-        }
-        return dir;
-    }
-
+    /**
+     * Merges the properties: pom.xml overrides those of the Product Handler.
+     * @param ctx the Product
+     * @return the complete list of system properties
+     */
     protected final Map<String, String> mergeSystemProperties(Product ctx)
     {
         final Map<String, String> properties = new HashMap<String, String>();
@@ -486,6 +511,9 @@ public abstract class AbstractProductHandler implements ProductHandler
         return properties;
     }
 
+    /**
+     * System properties which are specific to the Product Handler
+     */
     protected abstract Map<String, String> getSystemProperties(Product ctx);
 
 }

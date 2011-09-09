@@ -9,10 +9,15 @@ import com.atlassian.maven.plugins.amps.Product;
 public interface ProductHandler
 {
     /**
-     * @return the webapp id
+     * @return a convenient string to identify this application, especially for the context path.
+     * No further restriction is defined on this ID.
      */
     String getId();
 
+    /**
+     * Extracts the product and its home, prepares them and starts the product.
+     * @return the port on which the product is accessible
+     */
     int start(Product ctx) throws MojoExecutionException;
 
     void stop(Product ctx) throws MojoExecutionException;

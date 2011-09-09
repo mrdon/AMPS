@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps.product;
 
 import static com.atlassian.maven.plugins.amps.util.ConfigFileUtils.replace;
+
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import static com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory.output;
 
@@ -26,12 +27,16 @@ import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ant.AntJavaExecutorThread;
 import com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory;
 
+import static com.atlassian.maven.plugins.amps.util.ProjectUtils.createDirectory;
+import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getBaseDirectory;
+import static com.atlassian.maven.plugins.amps.util.ProjectUtils.firstNotNull;
+
 public class FeCruProductHandler extends AbstractProductHandler
 { 	
     private static final int STARTUP_CHECK_DELAY = 1000;
     private static final String FISHEYE_INST = "fisheye.inst";
     
-    private final Log log;
+    protected final Log log;
     private final JavaTaskFactory javaTaskFactory;
     
     public FeCruProductHandler(MavenContext context, MavenGoals goals, Log log)
@@ -44,6 +49,11 @@ public class FeCruProductHandler extends AbstractProductHandler
     public String getId()
     {
         return ProductHandlerFactory.FECRU;
+    }
+
+    protected ProductArtifact getArtifact(Product ctx)
+    {
+        return new ProductArtifact("com.atlassian.crucible", "atlassian-crucible", "RELEASE");
     }
 
     public int getDefaultHttpPort()
@@ -68,7 +78,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     }
 
     @Override
-    protected final void extractProductHomeData(File productHomeZip, File homeDir, Product ctx)
+    protected void extractProductHomeData(File productHomeZip, File homeDir, Product ctx)
             throws MojoExecutionException
     {
         try
@@ -98,11 +108,12 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         File appDir = createDirectory(getAppDirectory(ctx));
         
-        final File cruDistZip = goals.copyDist(getBuildDirectory(),
-                new ProductArtifact(
-                        "com.atlassian.crucible",
-                        "atlassian-crucible",
-                        ctx.getVersion()));
+        ProductArtifact artifact = new ProductArtifact(
+                firstNotNull(ctx.getGroupId(), "com.atlassian.crucible"),
+                firstNotNull(ctx.getArtifactId(), "atlassian-crucible"),
+                firstNotNull(ctx.getVersion(), "RELEASE"));
+        
+        final File cruDistZip = goals.copyDist(getBuildDirectory(), artifact);
         
         try
         {
@@ -116,9 +127,9 @@ public class FeCruProductHandler extends AbstractProductHandler
         return appDir;
     }
 
-    private File getAppDirectory(Product ctx)
+    protected File getAppDirectory(Product ctx)
     {
-        return new File(getBaseDirectory(ctx), ctx.getId() + "-" + ctx.getVersion());
+        return new File(getBaseDirectory(project, ctx), ctx.getId() + "-" + ctx.getVersion());
     }
     
     @Override
@@ -128,7 +139,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     }
     
     @Override
-    protected final Map<String, String> getSystemProperties(final Product ctx)
+    protected Map<String, String> getSystemProperties(final Product ctx)
     {
         return new HashMap<String, String>()
         {{
@@ -266,6 +277,8 @@ public class FeCruProductHandler extends AbstractProductHandler
                 output(ctx.getOutput()).
                 systemProperties(properties).
                 jvmArgs(ctx.getJvmArgs()));
+        
+        addOverridesToJavaTask(ctx, java);
 
         Path classpath = java.createClasspath();
         classpath.createPathElement().setLocation(new File(getAppDirectory(ctx), "fisheyeboot.jar"));
@@ -280,7 +293,19 @@ public class FeCruProductHandler extends AbstractProductHandler
         return javaThread;
     }
     
-    private File getBuildDirectory()
+    /**
+     * Add overrides to the Java task before it gets launched. The Studio version of FishEye-Crucible
+     * needs to fork the process here.
+     * 
+     * @param ctx
+     * @param java
+     */
+    protected void addOverridesToJavaTask(final Product ctx, Java java)
+    {
+        // No override necessary
+    }
+
+    protected File getBuildDirectory()
     {
         return new File(project.getBuild().getDirectory());
     }
@@ -293,7 +318,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     /**
      * The control port is the httpPort with a "1" appended to it //todo doc this
      */
-    private int controlPort(int httpPort)
+    protected int controlPort(int httpPort)
     {
         return httpPort * 10 + 1;
     }

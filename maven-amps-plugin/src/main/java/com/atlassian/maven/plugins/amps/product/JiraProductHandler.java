@@ -123,7 +123,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
         try
         {
             long major = Long.parseLong(version[0]);
-            long minor = Long.parseLong(version[1]);
+            long minor = (version.length > 1) ? Long.parseLong(version[1]) : 0;
 
             if (major < 4 || major == 4 && minor == 0)
             {

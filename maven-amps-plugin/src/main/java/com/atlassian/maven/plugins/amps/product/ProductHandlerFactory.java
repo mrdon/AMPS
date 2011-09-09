@@ -25,7 +25,7 @@ public class ProductHandlerFactory
         }
         else if (CONFLUENCE.equals(id))
         {
-            return new ConfluenceProductHandler(context, goals);
+            return new ConfluenceProductHandler(context, goals, log);
         }
         else if (JIRA.equals(id))
         {

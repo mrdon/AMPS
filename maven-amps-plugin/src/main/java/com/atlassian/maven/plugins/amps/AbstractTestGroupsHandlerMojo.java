@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractTestGroupsHandlerMojo extends AbstractProductHandlerMojo
@@ -32,9 +33,10 @@ public abstract class AbstractTestGroupsHandlerMojo extends AbstractProductHandl
         List<ProductExecution> products = new ArrayList<ProductExecution>();
         int dupCounter = 0;
         Set<String> uniqueProductIds = new HashSet<String>();
+        Map<String, Product> productContexts = getProductContexts(getMavenGoals());
         for (String productId : getTestGroupProductIds(testGroupId))
         {
-            Product ctx = getProductContexts(getMavenGoals()).get(productId);
+            Product ctx = productContexts.get(productId);
             if (ctx == null)
             {
                 throw new MojoExecutionException("The test group '" + testGroupId + "' refers to a product '" + productId
@@ -57,6 +59,14 @@ public abstract class AbstractTestGroupsHandlerMojo extends AbstractProductHandl
         return products;
     }
 
+    /**
+     * Returns the products in the test group:
+     * <ul>
+     * <li>If a {@literal <testGroup>} is defined, all the products of this test group</li>
+     * <li>If testGroupId is __no_test_group__, adds it</li>
+     * <li>If testGroupId is a product instanceId, adds it</li>
+     * </ul>
+     */
     private List<String> getTestGroupProductIds(String testGroupId) throws MojoExecutionException
     {
         List<String> productIds = new ArrayList<String>();

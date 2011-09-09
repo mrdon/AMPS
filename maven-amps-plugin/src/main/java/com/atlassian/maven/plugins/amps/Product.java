@@ -131,6 +131,16 @@ public class Product
     private int shutdownTimeout = 0;
     
     /**
+     * An optional override of the webapp's groupId
+     */
+    private String groupId;
+    
+    /**
+     * An optional override of the webapp's artifactId
+     */
+    private String artifactId;
+    
+    /**
      * Creates a new product that is merged with this one, where the properties in this one override the passed
      * in product.
      * @param product The product to merge with
@@ -163,6 +173,8 @@ public class Product
         prod.setDataVersion(productDataVersion == null ? product.getDataVersion() : productDataVersion);
         prod.setLog4jProperties(log4jProperties == null ? product.getLog4jProperties() : log4jProperties);
         prod.setJvmArgs(jvmArgs == null ? product.getJvmArgs() : jvmArgs);
+        prod.setVersion(groupId == null ? product.getGroupId() : groupId);
+        prod.setVersion(artifactId == null ? product.getArtifactId() : artifactId);
         prod.setVersion(version == null ? product.getVersion() : version);
 
         prod.setServer(server == null ? product.getServer() : server);
@@ -476,4 +488,25 @@ public class Product
     {
         this.shutdownTimeout = shutdownTimeout;
     }
+
+    public String getGroupId()
+    {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId)
+    {
+        this.groupId = groupId;
+    }
+
+    public String getArtifactId()
+    {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId)
+    {
+        this.artifactId = artifactId;
+    }
+    
 }
