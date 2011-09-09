@@ -87,9 +87,13 @@ public class MavenGoals
         return ctx.getExecutionEnvironment();
     }
 
-    public void executeAmpsRecursively(final String ampsVersion, final String ampsGoal) throws MojoExecutionException
+    public MavenProject getContextProject()
     {
-        Xpp3Dom cfg = configuration();
+        return ctx.getProject();
+    }
+
+    public void executeAmpsRecursively(final String ampsVersion, final String ampsGoal, Xpp3Dom cfg) throws MojoExecutionException
+    {
         executeMojo(
             plugin(
                 groupId("com.atlassian.maven.plugins"),
