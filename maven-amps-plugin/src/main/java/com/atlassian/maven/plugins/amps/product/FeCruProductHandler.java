@@ -51,7 +51,7 @@ public class FeCruProductHandler extends AbstractProductHandler
         return ProductHandlerFactory.FECRU;
     }
 
-    protected ProductArtifact getArtifact(Product ctx)
+    protected ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.crucible", "atlassian-crucible", "RELEASE");
     }
@@ -108,16 +108,17 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         File appDir = createDirectory(getAppDirectory(ctx));
         
+        ProductArtifact defaults = getArtifact();
         ProductArtifact artifact = new ProductArtifact(
-                firstNotNull(ctx.getGroupId(), "com.atlassian.crucible"),
-                firstNotNull(ctx.getArtifactId(), "atlassian-crucible"),
-                firstNotNull(ctx.getVersion(), "RELEASE"));
+                firstNotNull(ctx.getGroupId(), defaults.getGroupId()),
+                firstNotNull(ctx.getArtifactId(), defaults.getArtifactId()),
+                firstNotNull(ctx.getVersion(), defaults.getVersion()));
         
         final File cruDistZip = goals.copyDist(getBuildDirectory(), artifact);
         
         try
         {
-            unzip(cruDistZip, appDir.getPath(), 1);
+            unzip(cruDistZip, appDir.getPath(), true);
         }
         catch (final IOException ex)
         {

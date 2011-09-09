@@ -515,5 +515,10 @@ public abstract class AbstractProductHandler implements ProductHandler
      * System properties which are specific to the Product Handler
      */
     protected abstract Map<String, String> getSystemProperties(Product ctx);
+    
+    /**
+     * The artifact of the product (a war, a jar, a binary...)
+     */
+    protected abstract ProductArtifact getArtifact();
 
 }

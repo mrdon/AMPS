@@ -61,5 +61,4 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     }
     
     protected abstract List<ProductArtifact> getExtraContainerDependencies();
-    protected abstract ProductArtifact getArtifact();
 }
