@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.product;
 
+import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.plugin.logging.Log;
@@ -16,31 +17,31 @@ public class ProductHandlerFactory
     public static final String FECRU = "fecru";
     public static final String CROWD = "crowd";
 
-    public static ProductHandler create(String id, MavenProject project, MavenGoals goals, Log log)
+    public static ProductHandler create(String id, MavenContext context, MavenGoals goals, Log log)
     {
         if (REFAPP.equals(id))
         {
-            return new RefappProductHandler(project, goals);
+            return new RefappProductHandler(context, goals);
         }
         else if (CONFLUENCE.equals(id))
         {
-            return new ConfluenceProductHandler(project, goals);
+            return new ConfluenceProductHandler(context, goals);
         }
         else if (JIRA.equals(id))
         {
-            return new JiraProductHandler(project, goals, log);
+            return new JiraProductHandler(context, goals, log);
         }
         else if (BAMBOO.equals(id))
         {
-            return new BambooProductHandler(project, goals);
+            return new BambooProductHandler(context, goals);
         }
         else if (FECRU.equals(id))
         {
-            return new FeCruProductHandler(project, goals, log);
+            return new FeCruProductHandler(context, goals, log);
         }
         else if (CROWD.equals(id))
         {
-            return new CrowdProductHandler(project, goals);
+            return new CrowdProductHandler(context, goals);
         }
 
         throw new IllegalArgumentException("Unknown product id: '" + id + "' Valid values: "

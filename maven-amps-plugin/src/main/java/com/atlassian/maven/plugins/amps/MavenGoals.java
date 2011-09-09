@@ -11,20 +11,17 @@ import java.util.Map;
 
 import com.atlassian.core.util.FileUtils;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
-import com.atlassian.maven.plugins.amps.util.ZipUtils;
 
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
+import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
@@ -36,10 +33,8 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
  */
 public class MavenGoals
 {
-    private final MavenProject project;
-    private final List<MavenProject> reactor;
-    private final MavenSession session;
-    private final PluginManager pluginManager;
+    private final MavenContext ctx;
+
     private final Log log;
     private final Map<String, String> pluginArtifactIdToVersionMap;
 
@@ -77,16 +72,19 @@ public class MavenGoals
 
     public MavenGoals(final MavenContext ctx, final Map<String, String> pluginToVersionMap)
     {
-        this.project = ctx.getProject();
-        this.reactor = ctx.getReactor();
-        this.session = ctx.getSession();
-        this.pluginManager = ctx.getPluginManager();
+        this.ctx = ctx;
+
         this.log = ctx.getLog();
 
         final Map<String, String> map = new HashMap<String, String>(defaultArtifactIdToVersionMap);
         map.putAll(pluginToVersionMap);
         this.pluginArtifactIdToVersionMap = Collections.unmodifiableMap(map);
 
+    }
+
+    private ExecutionEnvironment executionEnvironment()
+    {
+        return ctx.getExecutionEnvironment();
     }
 
     public void executeAmpsRecursively(final String ampsVersion, final String ampsGoal) throws MojoExecutionException
@@ -99,7 +97,7 @@ public class MavenGoals
             ),
             goal(ampsGoal),
             configuration(),
-            executionEnvironment(project, session, pluginManager));
+            executionEnvironment());
     }
 
     public void startCli(final PluginInformation pluginInformation, final int port) throws MojoExecutionException
@@ -108,28 +106,28 @@ public class MavenGoals
 
         final List<Element> configs = new ArrayList<Element>();
         configs.add(element(name("commands"),
-                element(name("pi"), new StringBuilder()
-                        .append("resources").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:filter-plugin-descriptor").append(" ")
-                        .append("compile").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:copy-bundled-dependencies").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:compress-resources").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:validate-manifest").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:install").toString()),
-                element(name("tpi"), new StringBuilder()
-                        .append("testResources").append(" ")
-                        .append("testCompile").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:test-jar").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:test-install").toString()),
-                element(name("package"), new StringBuilder()
-                        .append("resources").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:filter-plugin-descriptor").append(" ")
-                        .append("compile").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:copy-bundled-dependencies").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:generate-manifest").append(" ")
-                        .append("com.atlassian.maven.plugins:maven-").append(pluginId).append("-plugin:jar").append(" ").toString())));
+                element(name("pi"),
+                        "resources" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:filter-plugin-descriptor" + " "
+                        + "compile" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:copy-bundled-dependencies" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:compress-resources" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:generate-manifest" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:validate-manifest" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:jar" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:install"),
+                element(name("tpi"),
+                        "testResources" + " "
+                        + "testCompile" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:test-jar" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:test-install"),
+                element(name("package"),
+                        "resources" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:filter-plugin-descriptor" + " "
+                        + "compile" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:copy-bundled-dependencies" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:generate-manifest" + " "
+                        + "com.atlassian.maven.plugins:maven-" + pluginId + "-plugin:jar" + " ")));
         if (port > 0)
         {
             configs.add(element(name("port"), String.valueOf(port)));
@@ -142,7 +140,7 @@ public class MavenGoals
                 ),
                 goal("execute"),
                 configuration(configs.toArray(new Element[0])),
-                executionEnvironment(project, session, pluginManager));
+                executionEnvironment());
     }
 
     public void createPlugin(final String productId) throws MojoExecutionException
@@ -159,7 +157,7 @@ public class MavenGoals
                         element(name("archetypeArtifactId"), productId + "-plugin-archetype"),
                         element(name("archetypeVersion"), VersionUtils.getVersion())
                 ),
-                executionEnvironment(project, session, pluginManager));
+                executionEnvironment());
     }
 
     public void copyBundledDependencies() throws MojoExecutionException
@@ -178,7 +176,7 @@ public class MavenGoals
                         element(name("includeTypes"), "jar"),
                         element(name("outputDirectory"), "${project.build.outputDirectory}/META-INF/lib")
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -199,7 +197,7 @@ public class MavenGoals
                         element(name("excludes"), "META-INF/MANIFEST.MF, META-INF/*.DSA, META-INF/*.SF"),
                         element(name("outputDirectory"), "${project.build.outputDirectory}")
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -216,7 +214,7 @@ public class MavenGoals
                         element(name("suffix"), "-min"),
                         element(name("jswarn"), "false")
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -241,7 +239,7 @@ public class MavenGoals
                         ),
                         element(name("outputDirectory"), "${project.build.outputDirectory}")
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -262,7 +260,7 @@ public class MavenGoals
                                 element(name("exclude"), "it/**"),
                                 element(name("exclude"), "**/*$*"))
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -287,7 +285,7 @@ public class MavenGoals
                                         element(name("destFileName"), webappWarFile.getName()))),
                         element(name("outputDirectory"), targetDirectory.getPath())
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
         return webappWarFile;
     }
@@ -347,14 +345,14 @@ public class MavenGoals
                                                 element(name("version"), artifact.getVersion()))),
                                 element(name("outputDirectory"), outputDirectory.getPath())
                         ),
-                        executionEnvironment(project, session, pluginManager));
+                        executionEnvironment());
             }
         }
     }
 
     private MavenProject getReactorProjectForArtifact(ProductArtifact artifact)
     {
-        for (final MavenProject project : reactor)
+        for (final MavenProject project : ctx.getReactor())
         {
             if (project.getGroupId().equals(artifact.getGroupId())
                     && project.getArtifactId().equals(artifact.getArtifactId())
@@ -384,12 +382,12 @@ public class MavenGoals
                                         element(name("type"), "zip"))),
                         element(name("outputDirectory"), container.getRootDirectory(getBuildDirectory()))
                 ),
-                executionEnvironment(project, session, pluginManager));
+                executionEnvironment());
     }
 
     private String getBuildDirectory()
     {
-        return project.getBuild().getDirectory();
+        return ctx.getProject().getBuild().getDirectory();
     }
 
     public int startWebapp(final String productInstanceId, final File war, final Map<String, String> systemProperties, final List<ProductArtifact> extraContainerDependencies,
@@ -464,7 +462,8 @@ public class MavenGoals
                                 element(name("home"), container.getInstallDirectory(getBuildDirectory())),
                                 element(name("output"), webappContext.getOutput()),
                                 element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
-                                element(name("dependencies"), deps.toArray(new Element[deps.size()]))
+                                element(name("dependencies"), deps.toArray(new Element[deps.size()])),
+                                element(name("timeout"), String.valueOf(webappContext.getStartupTimeout()))
                         ),
                         element(name("configuration"),
                                 element(name("home"), container.getConfigDirectory(getBuildDirectory(), productInstanceId)),
@@ -483,12 +482,12 @@ public class MavenGoals
                                 )
                         )
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
         return actualHttpPort;
     }
 
-    static String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
+    public static String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
     {
         return "http://" + server + ":" + actualHttpPort + contextPath;
     }
@@ -534,7 +533,7 @@ public class MavenGoals
                         systemProps,
                         element(name(reportsDirectory), testOutputDir)
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
 	}
 
@@ -614,7 +613,8 @@ public class MavenGoals
         }
     }
 
-    public void stopWebapp(final String productId, final String containerId) throws MojoExecutionException
+    public void stopWebapp(final String productId, final String containerId,
+                           final Product webappContext) throws MojoExecutionException
     {
         final Container container = findContainer(containerId);
         executeMojo(
@@ -627,13 +627,14 @@ public class MavenGoals
                 configuration(
                         element(name("container"),
                                 element(name("containerId"), container.getId()),
-                                element(name("type"), container.getType())
+                                element(name("type"), container.getType()),
+                                element(name("timeout"), String.valueOf(webappContext.getShutdownTimeout()))
                         ),
                         element(name("configuration"),
                                 element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId))
                         )
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -655,7 +656,7 @@ public class MavenGoals
                         element(name("serverUrl"), baseUrl),
                         element(name("pluginKey"), pdkParams.getPluginKey())
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -676,7 +677,7 @@ public class MavenGoals
                         element(name("serverUrl"), baseUrl),
                         element(name("pluginKey"), pluginKey)
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -690,7 +691,7 @@ public class MavenGoals
                 ),
                 goal("idea"),
                 configuration(),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -724,7 +725,7 @@ public class MavenGoals
                                         element(name("destFileName"), artifactZip.getName()))),
                         element(name("outputDirectory"), artifactZip.getParent())
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
         return artifactZip;
     }
@@ -751,7 +752,7 @@ public class MavenGoals
                                 element(name("supportedProjectType"), "atlassian-plugin")),
                         element(name("instructions"), instlist.toArray(new Element[instlist.size()]))
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -773,7 +774,7 @@ public class MavenGoals
                 configuration(
                         element(name("archive"), archive)
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -791,7 +792,7 @@ public class MavenGoals
                         element(name("archive"),
                             element(name("manifestFile"), "${project.build.testOutputDirectory}/META-INF/MANIFEST.MF"))
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
     }
 
@@ -816,68 +817,8 @@ public class MavenGoals
                         element(name("file"), dep.getPath())
 
                 ),
-                executionEnvironment(project, session, pluginManager)
+                executionEnvironment()
         );
-    }
-
-    /**
-     * Copies and creates a zip file of the previous run's home directory minus any installed plugins.
-     *
-     * @param homeDirectory The path to the previous run's home directory.
-     * @param targetZip     The path to the final zip file.
-     * @param productId     The name of the product.
-     *
-     * @since 3.1-m3
-     */
-    public void createHomeResourcesZip(final File homeDirectory, final File targetZip, final String productId)
-    {
-        if (homeDirectory == null || !homeDirectory.exists())
-        {
-            String homePath = "null";
-            if(homeDirectory != null) {
-                homePath = homeDirectory.getAbsolutePath();
-            }
-            log.info("home directory doesn't exist, skipping. [" + homePath + "]");
-            return;
-        }
-
-        final File appDir = new File(project.getBuild().getDirectory(), productId);
-        final File tmpDir = new File(appDir, "tmp-resources");
-        final File genDir = new File(tmpDir, "generated-home");
-        final String entryBase = "generated-resources/" + productId + "-home";
-
-        if (genDir.exists())
-        {
-            FileUtils.deleteDir(genDir);
-        }
-
-        genDir.mkdirs();
-
-        try
-        {
-            FileUtils.copyDirectory(homeDirectory, genDir, true);
-
-            //we want to get rid of the plugins folders.
-            File homePlugins = new File(genDir, "plugins");
-            File bundledPlugins = new File(genDir, "bundled-plugins");
-
-            if (homePlugins.exists())
-            {
-                FileUtils.deleteDir(homePlugins);
-            }
-
-            if (bundledPlugins.exists())
-            {
-                FileUtils.deleteDir(bundledPlugins);
-            }
-
-            ZipUtils.zipDir(targetZip, genDir, entryBase);
-        } catch (IOException e)
-        {
-            throw new RuntimeException("Error zipping home directory", e);
-        }
-
-
     }
 
     private static class Container extends ProductArtifact

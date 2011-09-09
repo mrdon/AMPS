@@ -71,7 +71,10 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         {
             final ProductHandler productHandler = productExecution.getProductHandler();
             final Product product = productExecution.getProduct();
-            product.setInstallPlugin(shouldInstallPlugin());
+            if (product.isInstallPlugin() == null)
+            {
+                product.setInstallPlugin(shouldInstallPlugin());
+            }
 
             int actualHttpPort = productHandler.start(product);
 

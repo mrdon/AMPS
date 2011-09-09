@@ -121,6 +121,16 @@ public class Product
     private int jvmDebugPort;
 
     /**
+     * How long to wait for product startup, in milliseconds; if not specified, default is determined by AbstractProductHandlerMojo
+     */
+    private int startupTimeout = 0;
+
+    /**
+     * How long to wait for product shutdown, in milliseconds; if not specified, default is determined by AbstractProductHandlerMojo
+     */
+    private int shutdownTimeout = 0;
+    
+    /**
      * Creates a new product that is merged with this one, where the properties in this one override the passed
      * in product.
      * @param product The product to merge with
@@ -160,6 +170,9 @@ public class Product
         prod.setContainerId(containerId == null ? product.getContainerId() : containerId);
         prod.setHttpPort(httpPort == 0 ? product.getHttpPort() : httpPort);
         prod.setJvmDebugPort(jvmDebugPort == 0 ? product.getJvmDebugPort() : jvmDebugPort);
+
+        prod.setStartupTimeout(startupTimeout == 0 ? product.getStartupTimeout() : startupTimeout);
+        prod.setShutdownTimeout(shutdownTimeout == 0 ? product.getShutdownTimeout() : shutdownTimeout);
 
         return prod;
     }
@@ -424,15 +437,15 @@ public class Product
         return systemProperties;
     }
 
-	public String getOutput()
-	{
-		return output;
-	}
-	
-	public void setOutput(String output)
-	{
-		this.output = output;
-	}
+    public String getOutput()
+    {
+        return output;
+    }
+    
+    public void setOutput(String output)
+    {
+        this.output = output;
+    }
 
     public int getJvmDebugPort()
     {
@@ -442,5 +455,25 @@ public class Product
     public void setJvmDebugPort(int jvmDebugPort)
     {
         this.jvmDebugPort = jvmDebugPort;
+    }
+    
+    public int getStartupTimeout()
+    {
+        return startupTimeout;
+    }
+    
+    public void setStartupTimeout(int startupTimeout)
+    {
+        this.startupTimeout = startupTimeout;
+    }
+    
+    public int getShutdownTimeout()
+    {
+        return shutdownTimeout;
+    }
+    
+    public void setShutdownTimeout(int shutdownTimeout)
+    {
+        this.shutdownTimeout = shutdownTimeout;
     }
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import com.atlassian.maven.plugins.amps.MavenContext;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
@@ -13,14 +14,14 @@ import com.atlassian.maven.plugins.amps.ProductArtifact;
 
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
-    public AbstractWebappProductHandler(final MavenProject project, final MavenGoals goals, PluginProvider pluginProvider)
+    public AbstractWebappProductHandler(final MavenContext context, final MavenGoals goals, PluginProvider pluginProvider)
     {
-        super(project, goals, pluginProvider);
+        super(context, goals, pluginProvider);
     }
 
     public final void stop(final Product ctx) throws MojoExecutionException
     {
-        goals.stopWebapp(ctx.getInstanceId(), ctx.getContainerId());
+        goals.stopWebapp(ctx.getInstanceId(), ctx.getContainerId(), ctx);
     }
 
     @Override

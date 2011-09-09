@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps.product;
 
+import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
@@ -12,9 +13,9 @@ import java.util.*;
 
 public class ConfluenceProductHandler extends AbstractWebappProductHandler
 {
-    public ConfluenceProductHandler(MavenProject project, MavenGoals goals)
+    public ConfluenceProductHandler(MavenContext context, MavenGoals goals)
     {
-        super(project, goals, new ConfluencePluginProvider());
+        super(context, goals, new ConfluencePluginProvider());
     }
 
     public String getId()
