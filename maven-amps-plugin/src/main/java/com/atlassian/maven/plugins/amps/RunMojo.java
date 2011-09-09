@@ -1,6 +1,8 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.google.inject.internal.util.Lists;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -67,6 +69,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
     protected void startProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
     {
+        List<String> successMessages = Lists.newArrayList();
         for (ProductExecution productExecution : productExecutions)
         {
             final ProductHandler productHandler = productExecution.getProductHandler();
@@ -78,7 +81,14 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
             int actualHttpPort = productHandler.start(product);
 
-            getLog().info(product.getInstanceId() + " started successfully and available at http://localhost:" + actualHttpPort + product.getContextPath());
+            String successMessage = product.getInstanceId() + " started successfully";
+            if (actualHttpPort != 0)
+            {
+                successMessage += " and available at http://localhost:" + actualHttpPort + product.getContextPath();
+            }
+            getLog().info(successMessage);
+
+            successMessages.add(successMessage);
 
             if (writePropertiesToFile)
             {
@@ -96,6 +106,16 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         if (writePropertiesToFile)
         {
             writePropertiesFile();
+        }
+        
+        // Repeat the messages at the end, because we're developer-friendly
+        if (successMessages.size() > 1)
+        {
+            getLog().info("Summary:");
+            for (String message : successMessages)
+            {
+                getLog().info(message);
+            }
         }
 
         if (wait)
@@ -138,7 +158,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             ProductHandler product = createProductHandler(ctx.getId());
             productExecutions = Collections.singletonList(new ProductExecution(ctx, product));
         }
-        return productExecutions;
+        return includeStudioDependentProducts(productExecutions, goals);
     }
 
     /**

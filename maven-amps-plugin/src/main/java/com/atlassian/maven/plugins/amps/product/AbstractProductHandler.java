@@ -296,8 +296,7 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
-            throw new MojoExecutionException(e.getMessage());
+            throw new MojoExecutionException(e.getMessage(), e);
         }
     }
 

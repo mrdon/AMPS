@@ -2,6 +2,7 @@ package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -266,7 +267,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private String output;
 
 
-    private Product createDefaultProductContext() throws MojoExecutionException
+    protected Product createDefaultProductContext() throws MojoExecutionException
     {
         Product ctx = new Product();
         ctx.setId(getProductId());
@@ -356,6 +357,11 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     {   
         product.setInstanceId(getProductInstanceId(product));
         
+        // If it's a Studio product, some defaults are different (ex: context path for Confluence is /wiki)
+        StudioProductHandler.setDefaultValues(product);
+        
+        //Apply the common default values
+
         String dversion = System.getProperty("product.data.version", product.getDataVersion());
         String pversion = System.getProperty("product.version", product.getVersion());
         String dpath = System.getProperty("product.data.path", product.getDataPath());

@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps;
 
+import com.atlassian.maven.plugins.amps.product.studio.StudioProperties;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 
 import java.io.File;
@@ -89,7 +90,7 @@ public class Product
     private String webConsoleVersion;
 
     /**
-     * Product id
+     * Product id - nickname of the product to run
      */
     private String id;
 
@@ -140,6 +141,57 @@ public class Product
      */
     private String artifactId;
     
+
+    
+    /**
+     * The studio configuration which is shared for all products in the same
+     * studio instance. Null if products are not studio or not yet configured.
+     * <p>
+     * {@link StudioProductHandler#configure(Product, List)} will set this value.
+     * It must be called before Studio products are launched.  
+     */
+    protected StudioProperties studioProperties;
+
+
+    /**
+     * Only applies to Studio
+     * List of 'sub'-products that are managed by this Studio instance.
+     * Optional. Default value is: studio-crowd, studio-confluence, studio-fecru, studio-bamboo, studio-jira.
+     */
+    protected List<String> instanceIds = new ArrayList<String>();
+
+    /**
+     * Only applies to Studio.
+     * The data to use to initialize Studio Home. Folder or zip.
+     */
+    protected String studioHomeData;
+
+    /**
+     * Only applies to Studio.
+     * The data to use to initialize the svn root. Folder or zip.
+     */
+    protected String svnRootData;
+
+    /**
+     * Only applies to Studio.
+     * The data to use to initialize the webdav home. Folder or zip.
+     */
+    protected String webDavData;
+    
+    /**
+     * Only applies to Studio
+     * Set 'true' if GApps is enabled. Default is 'false'
+     */
+    protected String gappsEnabled;
+
+    /**
+     * Only applies to Studio
+     * The GApps domain, if GApps is enabled
+     */
+    protected String gappsDomain;
+
+
+    
     /**
      * Creates a new product that is merged with this one, where the properties in this one override the passed
      * in product.
@@ -185,7 +237,15 @@ public class Product
 
         prod.setStartupTimeout(startupTimeout == 0 ? product.getStartupTimeout() : startupTimeout);
         prod.setShutdownTimeout(shutdownTimeout == 0 ? product.getShutdownTimeout() : shutdownTimeout);
+        
+        // Studio-related properties
+        prod.setStudioProperties(studioProperties == null ? product.getStudioProperties() : studioProperties);
+        prod.setInstanceIds(instanceIds == null ? product.getInstanceIds() : instanceIds);
 
+        prod.setSvnRootData(svnRootData == null ? product.getSvnRootData() : svnRootData);
+        prod.setWebDavData(webDavData == null ? product.getWebDavData() : webDavData);
+        prod.setStudioHomeData(studioHomeData == null ? product.getStudioHomeData() : studioHomeData);
+        
         return prod;
     }
 
@@ -507,6 +567,87 @@ public class Product
     public void setArtifactId(String artifactId)
     {
         this.artifactId = artifactId;
+    }
+
+    public StudioProperties getStudioProperties()
+    {
+        return studioProperties;
+    }
+
+    public void setStudioProperties(StudioProperties studioProperties)
+    {
+        this.studioProperties = studioProperties;
+    }
+
+    public List<String> getInstanceIds()
+    {
+        return instanceIds;
+    }
+
+    public void setInstanceIds(List<String> instanceIds)
+    {
+        this.instanceIds = instanceIds;
+    }
+
+    public String getStudioHomeData()
+    {
+        return studioHomeData;
+    }
+
+    public void setStudioHomeData(String studioHomeData)
+    {
+        this.studioHomeData = studioHomeData;
+    }
+
+    public String getSvnRootData()
+    {
+        return svnRootData;
+    }
+
+    public void setSvnRootData(String svnRootData)
+    {
+        this.svnRootData = svnRootData;
+    }
+
+    public String getWebDavData()
+    {
+        return webDavData;
+    }
+
+    public void setWebDavData(String webDavData)
+    {
+        this.webDavData = webDavData;
+    }
+
+    public String getGappsEnabled()
+    {
+        return gappsEnabled;
+    }
+
+    public void setGappsEnabled(String gappsEnabled)
+    {
+        this.gappsEnabled = gappsEnabled;
+    }
+
+    public String getGappsDomain()
+    {
+        return gappsDomain;
+    }
+
+    public void setGappsDomain(String gappsDomain)
+    {
+        this.gappsDomain = gappsDomain;
+    }
+
+    public void setSystemProperties(Map<String, Object> systemProperties)
+    {
+        this.systemProperties = systemProperties;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Product " + id + " [instanceId=" + instanceId + ", localhost:" + httpPort + "/" + contextPath + "]";
     }
     
 }
