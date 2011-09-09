@@ -1,6 +1,13 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -9,8 +16,7 @@ import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
-import java.io.File;
-import java.util.*;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
 
 /**
  * Run the integration tests against the webapp
@@ -37,7 +43,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
      */
     @MojoParameter(expression = "${testGroups}")
     private String configuredTestGroupsToRun;
-    
+
     /**
      * Whether the reference application will not be started or not
      */
@@ -53,6 +59,12 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
     @MojoParameter(expression="${skipTests}", defaultValue = "false")
     private boolean skipTests = false;
 
+    /**
+     * Skip the integration tests along with any product startups
+     */
+    @MojoParameter(expression="${skipITs}", defaultValue = "false")
+    private boolean skipITs = false;
+
     protected void doExecute() throws MojoExecutionException
     {
         final MavenProject project = getMavenContext().getProject();
@@ -66,7 +78,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
             return;
         }
 
-        if (skipTests || testsSkip)
+        if (skipTests || testsSkip || skipITs)
         {
             getLog().info("Integration tests skipped");
             return;
@@ -83,19 +95,18 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         else if (configuredTestGroupsToRun != null)
         {
             String[] testGroupIdsToRun = configuredTestGroupsToRun.split(",");
-            
-            // fail fast if one of the test groups does not exist
+
+            // now run the tests
             for (String testGroupId : testGroupIdsToRun)
             {
                 if (!configuredTestGroupIds.contains(testGroupId))
                 {
-                    throw new MojoExecutionException("Test group " + testGroupId + " does not exist");
+                    getLog().warn("Test group " + testGroupId + " does not exist");
                 }
-            }
-            // now run the tests
-            for (String testGroupId : testGroupIdsToRun)
-            {
-                runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemPropertyVariables));
+                else
+                {
+                    runTestsForTestGroup(testGroupId, goals, pluginJar, copy(systemPropertyVariables));
+                }
             }
         }
         else
@@ -151,7 +162,10 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         {
             ProductHandler productHandler = productExecution.getProductHandler();
             Product product = productExecution.getProduct();
-            product.setInstallPlugin(installPlugin);
+            if (product.isInstallPlugin() == null)
+            {
+                product.setInstallPlugin(installPlugin);
+            }
 
             int actualHttpPort = 0;
             if (!noWebapp)
@@ -179,13 +193,13 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
             {
                 systemProperties.put("baseurl", baseUrl);
             }
-            
+
             systemProperties.put("homedir." + product.getInstanceId(), productHandler.getHomeDirectory(product).getAbsolutePath());
             if (!systemProperties.containsKey("homedir"))
             {
                 systemProperties.put("homedir", productHandler.getHomeDirectory(product).getAbsolutePath());
             }
-            
+
             systemProperties.putAll(getProductFunctionalTestProperties(product));
         }
         systemProperties.put("testGroup", testGroupId);

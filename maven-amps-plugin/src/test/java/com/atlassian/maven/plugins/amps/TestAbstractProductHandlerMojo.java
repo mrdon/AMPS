@@ -5,6 +5,7 @@ import org.apache.maven.model.Build;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
@@ -103,7 +104,7 @@ public class TestAbstractProductHandlerMojo extends TestCase
             Build build = mock(Build.class);
             when(build.getTestOutputDirectory()).thenReturn(".");
             when(project.getBuild()).thenReturn(build);
-            MavenContext ctx = new MavenContext(project, null, null, null, null);
+            MavenContext ctx = new MavenContext(project, null, null, (PluginManager) null, null);
             return ctx;
         }
     }
