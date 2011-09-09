@@ -64,7 +64,6 @@ public class TestMavenGoalsHomeZip
         //when mocking the session
         //MavenSession session = mock(MavenSession.class);
 
-        PluginManager pluginManager = mock(PluginManager.class);
         List<MavenProject> reactor = Collections.<MavenProject>emptyList();
         ctx = mock(MavenContext.class);
 
@@ -90,7 +89,10 @@ public class TestMavenGoalsHomeZip
             }
             zip = null;
         }
-        FileUtils.deleteDirectory(tempDir);
+        if (tempDir != null)
+        {
+            FileUtils.deleteDirectory(tempDir);
+        }
     }
 
     @Test
