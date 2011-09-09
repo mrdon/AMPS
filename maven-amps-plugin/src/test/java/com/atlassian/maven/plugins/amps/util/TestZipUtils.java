@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -330,13 +332,13 @@ public class TestZipUtils
     }
 
     @Test
-    public void unzipSinglePrefixTrimmed() throws IOException
+    public void unzipDetectPrefix() throws IOException
     {
         File zipFile = new File(tempDir,"zip-single-prefix.zip");
         ZipUtils.zipDir(zipFile,sourceZipDir,FIRST_PREFIX);
 
         File unzipDir = new File(tempDir,"unzip-single-prefix");
-        ZipUtils.unzip(zipFile,unzipDir.getAbsolutePath(),1);
+        ZipUtils.unzip(zipFile,unzipDir.getAbsolutePath(), true);
 
         File rootUnzip = new File(unzipDir,FIRST_PREFIX);
 
@@ -344,16 +346,20 @@ public class TestZipUtils
     }
 
     @Test
-    public void unzipNestedPrefixTrimmed() throws IOException
+    public void unzipDetectNoPrefix() throws IOException, URISyntaxException
     {
-        File zipFile = new File(tempDir,"zip-nested-prefix.zip");
-        ZipUtils.zipDir(zipFile,sourceZipDir,NESTED_PREFIX);
+        // zip-no-root.zip is a zip with no root folder.
+        // We can't use ZipUtils#zipDir() to create it (zipDir() always puts a root folder),
+        // so we need to provide one in src/test/resources.
+        URL zipPath = TestZipUtils.class.getResource("zip-no-root.zip");
+        File zipFile = new File(zipPath.toURI());
 
-        File unzipDir = new File(tempDir,"unzip-nested-prefix");
-        ZipUtils.unzip(zipFile,unzipDir.getAbsolutePath(),2);
+        File unzipDir = new File(tempDir, "unzip-no-root");
+        ZipUtils.unzip(zipFile, unzipDir.getAbsolutePath(), true);
 
-        File nestedUnzip = new File(unzipDir,SECOND_PREFIX);
+        File level2sub1Folder = new File(unzipDir, "level2sub1");
 
-        assertTrue("nested prefix folder in zip should have been trimmed",!nestedUnzip.exists());
+        assertTrue("root folder in zip was not unzipped", (unzipDir.exists() && unzipDir.isDirectory()));
+        assertTrue("level2sub1 folder in zip was not unzipped", (level2sub1Folder.exists() && level2sub1Folder.isDirectory()));
     }
 }

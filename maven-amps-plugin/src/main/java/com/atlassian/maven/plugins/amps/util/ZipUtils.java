@@ -16,17 +16,35 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipUtils
 {
-
     public static void unzip(final File zipFile, final String destDir) throws IOException
     {
-        unzip(zipFile, destDir, 0);
+        unzip(zipFile, destDir, false);
     }
 
-    public static void unzip(final File zipFile, final String destDir, int leadingPathSegmentsToTrim) throws IOException
+    /**
+     * Unzips a file
+     * 
+     * @param zipFile
+     *            the Zip file
+     * @param destDir
+     *            the destination folder
+     * @param skipRootFolderIfPresent
+     *            true to test whether all files belong to a root folder; in which case
+     *            skips this folder when expanding the files. Example: If all files are in fecru-2.5.4/, expands the
+     *            files into the destination folder. Other example: the studio-fisheye artifact doesn't have this root folder,
+     *            so it will not stash the files.
+     * @throws IOException
+     */
+    public static void unzip(final File zipFile, final String destDir, boolean skipRootFolderIfPresent) throws IOException
     {
         final ZipFile zip = new ZipFile(zipFile);
         try
         {
+            int leadingPathSegmentsToTrim = 0;
+            if (skipRootFolderIfPresent)
+            {
+                leadingPathSegmentsToTrim = hasRootFolder(zip) ? 1 : 0;
+            }
             final Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements())
             {
@@ -71,6 +89,30 @@ public class ZipUtils
                 // ignore
             }
         }
+    }
+
+    private static boolean hasRootFolder(ZipFile zip)
+    {
+        // Name of the root folder that all files are assumed to have
+        String rootFolder = null;
+
+        final Enumeration<? extends ZipEntry> entries = zip.entries();
+        while (entries.hasMoreElements())
+        {
+            final ZipEntry zipEntry = entries.nextElement();
+            String[] filePath = zipEntry.getName().split("/");
+            if (rootFolder == null)
+            {
+                rootFolder = filePath[0];
+            }
+            else if (!rootFolder.equals(filePath[0]))
+            {
+                // The root folder if this file is different from the root
+                // folder of the original file
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void zipDir(final File zipFile, final File srcDir, final String prefix) throws IOException
