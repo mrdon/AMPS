@@ -43,11 +43,7 @@ public class StudioBambooProductHandler extends BambooProductHandler
     public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
         // Don't do anything, StudioBamboo starts with empty home
-
-        // What about:
-        // replace @project-dir@ token with ${project.build.directory}
-        // ant.replace(file:"${bambooHome}/bamboo.cfg.xml", token: "@project-dir@", value: homeDirectory)
-
+        
         StudioProductHandler.processProductsHomeDirectory(log, ctx, homeDir);
     }
 

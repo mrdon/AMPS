@@ -81,28 +81,6 @@ public class StudioFeCruProductHandler extends FeCruProductHandler implements St
     @Override
     protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {
-
-        /*
-         * String license = new File("${studioHomeData}/studio.license").getText()
-         * // Replace tokens in fisheye config
-         * ant.replace(file: "${fisheyeHome}/config.xml") {
-         * replacefilter(token:"%TEST-CONTROL-BIND%", value: fisheyeControlPort)
-         * replacefilter(token:"%TEST-HTTP-BIND%", value: fisheyeHttpPort)
-         * }
-         * // copy test files to fisheye webapp
-         * String fisheyeWar = "${explodedDirectory}/${fisheyeExplodedDirectory}"
-         * ant.copyWithPerms(todir: fisheyeWar, overwrite: true) {
-         * fileset(dir: "${project.basedir}/${fisheyeWebAppData}")
-         * }
-         * 
-         * processGappsBundledPlugins(fisheyeWar, "plugins/bundled-plugins.zip")
-         * 
-         * if (BuildUtils.isStudioBuild(project))
-         * {
-         * parametiseCrowdFile("${fisheyeWar}/config.xml")
-         * }
-         */
-        
         // Note: this config.xml is in the War.
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir, "config.xml");
     }

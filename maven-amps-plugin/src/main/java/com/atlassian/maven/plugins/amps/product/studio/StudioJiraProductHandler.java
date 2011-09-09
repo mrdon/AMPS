@@ -60,18 +60,6 @@ public class StudioJiraProductHandler extends JiraProductHandler implements Stud
             // Since the patch from JRA-21004 has been applied, we need to set jira.paths.set.allowed to true so that xml
             // restore is enabled.
             // TODO should check to see if the property exists and replace if it does
-
-            /*
-             * ArtifactVersion jiraArtifactVersion = new DefaultArtifactVersion(jiraVersion);
-             * if (jiraArtifactVersion.compareTo(JIRA_4_1) < 0)
-             * {
-             * processGappsBundledPlugins(jiraWar, "WEB-INF/classes/com/atlassian/jira/plugin/atlassian-bundled-plugins.zip")
-             * }
-             * else
-             * {
-             * processGappsBundledPlugins(jiraWar, "WEB-INF/classes/atlassian-bundled-plugins.zip")
-             * }
-             */
         }
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir);
     }

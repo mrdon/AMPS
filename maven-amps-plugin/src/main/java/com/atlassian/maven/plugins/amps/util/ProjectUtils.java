@@ -50,21 +50,10 @@ public class ProjectUtils
         return dir;
     }
 
-/*
-    public final File getBaseDirectory(Product ctx)
-    {
-        return getBaseDirectory(project, ctx);
-    }*/
-
     public final static File getBaseDirectory(MavenProject project, Product ctx)
     {
         return createDirectory(new File(project.getBuild().getDirectory(), ctx.getInstanceId()));
     }
-/*
-    public final static File getHomeDirectory(Product ctx)
-    {
-        return getHomeDirectory(project, ctx);
-    }*/
 
     public final static File getHomeDirectory(MavenProject project, Product ctx)
     {

@@ -16,6 +16,7 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.atlassian.maven.plugins.amps.util.ZipUtils;
 
 import com.google.common.base.Function;
@@ -37,6 +38,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.createDirectory;
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getBaseDirectory;
+import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getHomeDirectory;
 
 public abstract class AbstractProductHandler implements ProductHandler
 {
@@ -490,7 +492,7 @@ public abstract class AbstractProductHandler implements ProductHandler
 
     public final File getHomeDirectory(Product ctx)
     {
-        return new File(getBaseDirectory(project, ctx), "home");
+        return ProjectUtils.getHomeDirectory(project, ctx);
     }
 
     /**

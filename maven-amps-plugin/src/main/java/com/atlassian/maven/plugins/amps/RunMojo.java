@@ -1,7 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
-import com.google.inject.internal.util.Lists;
+import com.google.common.collect.Lists;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
