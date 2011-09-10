@@ -283,6 +283,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
         setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
         setDefaultSystemProperty(systemPropertyVariables, "plugin.resource.directories", buildResourcesList());
+        setDefaultSystemProperty(systemPropertyVariables, "plugin.root.directories", buildRootProperty());
 
         ctx.setSystemPropertyVariables(systemPropertyVariables);
         ctx.setBundledArtifacts(bundledArtifacts);
@@ -338,6 +339,17 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             }
         }
         return resourceProp.toString();
+    }
+    
+    /**
+     * @return the path of the project root, for the <tt>plugin.root.directories</tt> system property.
+     *
+     * @since 3.6
+     */
+    private String buildRootProperty()
+    {
+        MavenProject mavenProject = getMavenContext().getProject();
+        return mavenProject.getBasedir().getPath();
     }
 
     private static void setDefaultSystemProperty(final Map<String,Object> props, final String key, final String value)
