@@ -2,20 +2,17 @@ package com.atlassian.maven.plugins.amps;
 
 import junit.framework.TestCase;
 import org.apache.maven.model.Build;
-import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -104,6 +101,7 @@ public class TestAbstractProductHandlerMojo extends TestCase
             Build build = mock(Build.class);
             when(build.getTestOutputDirectory()).thenReturn(".");
             when(project.getBuild()).thenReturn(build);
+            when(project.getBasedir()).thenReturn(new File("."));
             MavenContext ctx = new MavenContext(project, null, null, (PluginManager) null, null);
             return ctx;
         }
