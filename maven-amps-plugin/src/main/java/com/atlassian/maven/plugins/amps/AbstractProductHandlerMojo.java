@@ -307,7 +307,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     }
 
     /**
-     * @return a comma-separated list of resource directories.  If a test plugin is detected, the 
+     * @return a comma-separated list of resource directories.  If a test plugin is detected, the
      * test resources directories are included as well.
      */
     private String buildResourcesList()
@@ -373,7 +373,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         StudioProductHandler.setDefaultValues(product);
         
         //Apply the common default values
-
         String dversion = System.getProperty("product.data.version", product.getDataVersion());
         String pversion = System.getProperty("product.version", product.getVersion());
         String dpath = System.getProperty("product.data.path", product.getDataPath());
@@ -407,7 +406,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         {
             product.setWebConsoleVersion(DEFAULT_WEB_CONSOLE_VERSION);
         }
-        
+
         if (product.getOutput() == null)
         {
             product.setOutput(output);
@@ -417,12 +416,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         {
             product.setStartupTimeout(DEFAULT_PRODUCT_STARTUP_TIMEOUT);
         }
-        
+
         if (product.getShutdownTimeout() <= 0)
         {
             product.setShutdownTimeout(DEFAULT_PRODUCT_SHUTDOWN_TIMEOUT);
         }
-        
+
         if (product.getHttpPort() == 0)
         {
             product.setHttpPort(handler.getDefaultHttpPort());

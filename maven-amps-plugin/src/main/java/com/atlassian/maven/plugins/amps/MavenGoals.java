@@ -15,6 +15,7 @@ import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
@@ -79,7 +80,6 @@ public class MavenGoals
         final Map<String, String> map = new HashMap<String, String>(defaultArtifactIdToVersionMap);
         map.putAll(pluginToVersionMap);
         this.pluginArtifactIdToVersionMap = Collections.unmodifiableMap(map);
-
     }
 
     private ExecutionEnvironment executionEnvironment()
@@ -87,7 +87,12 @@ public class MavenGoals
         return ctx.getExecutionEnvironment();
     }
 
-    public void executeAmpsRecursively(final String ampsVersion, final String ampsGoal) throws MojoExecutionException
+    public MavenProject getContextProject()
+    {
+        return ctx.getProject();
+    }
+
+    public void executeAmpsRecursively(final String ampsVersion, final String ampsGoal, Xpp3Dom cfg) throws MojoExecutionException
     {
         executeMojo(
             plugin(
@@ -96,7 +101,7 @@ public class MavenGoals
                 version(ampsVersion)
             ),
             goal(ampsGoal),
-            configuration(),
+            cfg,
             executionEnvironment());
     }
 
