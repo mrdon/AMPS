@@ -4,7 +4,7 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -135,16 +135,34 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     @Override
     public void processHomeDirectory(final Product ctx, final File homeDir) throws MojoExecutionException
     {
+        super.processHomeDirectory(ctx, homeDir);
+        createDbConfigXmlIfNecessary(homeDir);
+    }
+
+    @Override
+    public List<Replacement> getReplacements(Product ctx)
+    {
         String contextPath = ctx.getContextPath();
         if (!contextPath.startsWith("/"))
         {
             contextPath = "/" + contextPath;
         }
-        ConfigFileUtils.replace(new File(homeDir, "database.script"), "@project-dir@", homeDir.getParent());
-        ConfigFileUtils.replace(new File(homeDir, "database.script"), "/jira-home/", "/home/");
-        ConfigFileUtils.replace(new File(homeDir, "database.script"), "@base-url@",
-                "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + contextPath);
-        createDbConfigXmlIfNecessary(homeDir);
+
+        List<Replacement> replacements = super.getReplacements(ctx);
+        File homeDir = getHomeDirectory(ctx);
+        replacements.add(new Replacement("@project-dir@", homeDir.getParent()));
+        replacements.add(new Replacement("/jira-home/", "/home/"));
+        replacements.add(new Replacement("@base-url@",
+                "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + contextPath));
+        return replacements;
+    }
+
+    @Override
+    public List<File> getConfigFiles(Product product, File homeDir)
+    {
+        List<File> configFiles = super.getConfigFiles(product, homeDir);
+        configFiles.add(new File(homeDir, "database.script"));
+        return configFiles;
     }
 
     static void createDbConfigXmlIfNecessary(File homeDir) throws MojoExecutionException

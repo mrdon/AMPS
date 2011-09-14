@@ -15,6 +15,7 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -321,7 +322,14 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
         }
     }
 
-    abstract protected void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException;
+    /**
+     * Processes standard replacement of configuration placeholders in the home directory.
+     */
+    protected void processHomeDirectory(Product ctx, File snapshotDir) throws MojoExecutionException
+    {
+        ConfigFileUtils.replace(getConfigFiles(ctx, snapshotDir), getReplacements(ctx), false, log);
+    }
+
     abstract protected ProductArtifact getTestResourcesArtifact();
     abstract protected File extractApplication(Product ctx, File homeDir) throws MojoExecutionException;
     abstract protected int startApplication(Product ctx, File app, File homeDir, Map<String, String> properties) throws MojoExecutionException;

@@ -38,8 +38,8 @@ public class StudioCrowdProductHandler extends CrowdProductHandler implements St
     @Override
     public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
+        super.processHomeDirectory(ctx, homeDir);
         StudioProductHandler.processProductsHomeDirectory(log, ctx, homeDir);
-        // Nothing to do, StudioCrowd starts with an empty home directory
 
     }
 

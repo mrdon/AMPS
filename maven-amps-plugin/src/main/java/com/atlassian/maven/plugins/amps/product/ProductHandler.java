@@ -2,10 +2,12 @@ package com.atlassian.maven.plugins.amps.product;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
 import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 public interface ProductHandler
 {
@@ -26,17 +28,38 @@ public interface ProductHandler
     int getDefaultHttpPort();
 
     /**
-     * Return the directory that we should take a snapshot of when we want to restore
+     * Return the directory to snapshot when we want to restore
      * the state of the instance.
      *
-     * It is the home directory for all applications, except for Studio which bundles
-     * several homes together.
+     * Most often, equivalent to the home directory.
+     *
+     * Studio snapshots several homes together.
      */
     File getSnapshotDirectory(Product product);
 
     File getHomeDirectory(Product product);
 
     File getBaseDirectory(Product product);
+
+    /**
+     * Lists parameters which must be replaced in the configuration files of the home directory.
+     * <p/>
+     * Replacements returned by this method are guaranteed to be reversed when creating the home zip.
+     *
+     * @return a mutable list of replacements
+     */
+    List<ConfigFileUtils.Replacement> getReplacements(Product product);
+
+    /**
+     * List the configuration files. Used when doing a snapshot to reopen on another
+     * machine, with different port, context path, path, instanceId
+     * <p/>
+     * Files returned by this method are guaranteed to be reversed when creating the home zip.
+     *
+     * @param snapshotCopyDir A snapshot equivalent to the home is most cases. It is a copy of the folder: {@link #getSnapshotDirectory(Product)}
+     * @return a mutable list of files
+     */
+    List<File> getConfigFiles(Product product, File snapshotCopyDir);
 
     /**
      * Snapshots the home directory. The goal is that the state is totally restored if we restart the application

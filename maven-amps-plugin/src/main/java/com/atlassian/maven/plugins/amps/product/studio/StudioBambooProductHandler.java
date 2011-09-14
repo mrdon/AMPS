@@ -40,7 +40,7 @@ public class StudioBambooProductHandler extends BambooProductHandler
     @Override
     public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
-        // Don't do anything, StudioBamboo starts with empty home
+        super.processHomeDirectory(ctx, homeDir);
 
         StudioProductHandler.processProductsHomeDirectory(log, ctx, homeDir);
     }

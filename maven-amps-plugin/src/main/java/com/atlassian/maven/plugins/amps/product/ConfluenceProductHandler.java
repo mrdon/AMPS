@@ -4,7 +4,7 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -75,22 +75,29 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
+    public List<Replacement> getReplacements(Product ctx)
     {
-        File configFile = new File(homeDir, "confluence.cfg.xml");
-        ConfigFileUtils.replace(configFile, "@project-dir@", homeDir.getParent());
-        ConfigFileUtils.replace(configFile, "/confluence-home/", "/home/");
+        List<Replacement> replacements = super.getReplacements(ctx);
+        File homeDir = getHomeDirectory(ctx);
+        replacements.add(new Replacement("@project-dir@", homeDir.getParent()));
+        replacements.add(new Replacement("/confluence-home/", "/home/"));
+        replacements.add(new Replacement("<baseUrl>http://localhost:8080</baseUrl>", "<baseUrl>http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", "") + "</baseUrl>"));
+        return replacements;
+    }
 
-        File script = new File(new File(homeDir, "database"), "confluencedb.script");
+    @Override
+    public List<File> getConfigFiles(Product product, File homeDirectory)
+    {
+        List<File> configFiles = super.getConfigFiles(product, homeDirectory);
+        File script = new File(new File(homeDirectory, "database"), "confluencedb.script");
         if (!script.exists())
         {
-            script = new File(new File(homeDir, "database"), "confluencedb.log");
+            script = new File(new File(homeDirectory, "database"), "confluencedb.log");
         }
 
-        ConfigFileUtils.replace(script,
-                "<baseUrl>http://localhost:8080</baseUrl>",
-                "<baseUrl>http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", "") + "</baseUrl>");
-
+        configFiles.add(script);
+        configFiles.add(new File(homeDirectory, "confluence.cfg.xml"));
+        return configFiles;
     }
 
     @Override

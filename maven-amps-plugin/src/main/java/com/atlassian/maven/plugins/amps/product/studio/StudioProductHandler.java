@@ -13,13 +13,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -35,7 +35,9 @@ import com.atlassian.maven.plugins.amps.product.AmpsProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 import com.atlassian.maven.plugins.amps.util.ProjectUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -45,6 +47,11 @@ import com.google.common.collect.Sets;
  */
 final public class StudioProductHandler extends AmpsProductHandler
 {
+
+    private static final String STUDIO_PROPERTIES = "home/studio.properties";
+    private static final String STUDIO_INITIAL_DATA_PROPERTIES = "home/studio-initial-data.properties";
+    private static final String DEVMODE_HAL_LICENSES_XML = "home/devmode-hal-licenses.xml";
+    private static final String STUDIO_INITIAL_DATA_XML = "home/studio-initial-data.xml";
 
     /** This token is used in product's <version> when they want to reuse the Studio product's version */
     private static final String STUDIO_VERSION_TOKEN = "STUDIO-VERSION";
@@ -412,20 +419,13 @@ final public class StudioProductHandler extends AmpsProductHandler
         properties.setWebDavHome(webDavDir.getAbsolutePath());
 
         // Parametrise the files
-        File studioPropertiesFile = new File(studioHomeDir, "studio.properties");
-        File studioInitialData = new File(studioHomeDir, "studio-initial-data.properties");
-        File studioInitialDataXml = new File(studioHomeDir, "studio-initial-data.xml");
-        File devModeHalLicensesXml = new File(studioHomeDir, "devmode-hal-licenses.xml");
-
-        parameteriseFile(studioPropertiesFile, properties);
-        parameteriseFile(studioInitialData, properties);
-        parameteriseFile(studioInitialDataXml, properties);
+        parameteriseFiles(studioCommonsDir, studioProduct);
 
         // Set the system properties
         properties.overrideSystemProperty("studio.home", studioHomeDir.getAbsolutePath());
-        properties.overrideSystemProperty("studio.initial.data.xml", studioInitialDataXml.getAbsolutePath());
-        properties.overrideSystemProperty("studio.initial.data.properties", studioInitialData.getAbsolutePath());
-        properties.overrideSystemProperty("studio.hal.instance.uri", devModeHalLicensesXml.getAbsolutePath());
+        properties.overrideSystemProperty("studio.initial.data.xml", new File(studioCommonsDir, STUDIO_INITIAL_DATA_XML).getAbsolutePath());
+        properties.overrideSystemProperty("studio.initial.data.properties", new File(studioCommonsDir, STUDIO_INITIAL_DATA_PROPERTIES).getAbsolutePath());
+        properties.overrideSystemProperty("studio.hal.instance.uri", new File(studioCommonsDir, DEVMODE_HAL_LICENSES_XML).getAbsolutePath());
 
         // Sets the home data for the products - we don't override productDataVersion because we
         // won't ship separate studio versions of homes.
@@ -460,34 +460,50 @@ final public class StudioProductHandler extends AmpsProductHandler
         }
     }
 
-    private void parameteriseFile(File file, StudioProperties configuration) throws MojoExecutionException
+    private void parameteriseFiles(File studioSnapshotCopyDir, Product studio) throws MojoExecutionException
     {
-        Map<String, String> parameters = getReplacements(configuration);
-        for (Entry<String, String> parameter : parameters.entrySet())
-        {
-            ConfigFileUtils.replace(file, parameter.getKey(), parameter.getValue());
-        }
+        ConfigFileUtils.replace(getConfigFiles(studio, studioSnapshotCopyDir), getReplacements(studio), false, log);
+    }
+
+    @Override
+    public List<File> getConfigFiles(Product studio, File studioSnapshotDir)
+    {
+        List<File> list = Lists.newArrayList();
+        list.add(new File(studioSnapshotDir, STUDIO_PROPERTIES));
+        list.add(new File(studioSnapshotDir, STUDIO_INITIAL_DATA_PROPERTIES));
+        list.add(new File(studioSnapshotDir, STUDIO_INITIAL_DATA_XML));
+        list.add(new File(studioSnapshotDir, DEVMODE_HAL_LICENSES_XML));
+        return list;
     }
 
     /**
-     * Returns the list of Strings that should be replaced in the Studio properties files and their values,
-     * based on the current configuration of StudioProperties.
-     *
-     * @return a map of the keys to replace and their properties
+     * Both used to unzip and rezip the home
      */
-    public Map<String, String> getReplacements(final StudioProperties properties)
+    @Override
+    public List<Replacement> getReplacements(final Product studio)
     {
-        return new HashMap<String, String>()
+        List<Replacement> replacements = super.getReplacements(studio);
+        replacements.addAll(new ArrayList<Replacement>()
         {
+            private void putNonReversibleIfNotNull(String key, String value)
+            {
+                if (value != null)
+                {
+                    add(new Replacement(key, value, false));
+                }
+            }
+
             private void putIfNotNull(String key, String value)
             {
                 if (value != null)
                 {
-                    put(key, value);
+                    add(new Replacement(key, value));
                 }
             }
 
+            // Static bloc for the anonymous subclass of ArrayList
             {
+                StudioProperties properties = studio.getStudioProperties();
                 putIfNotNull("%GREENHOPPER-LICENSE%", "test-classes/greenhopper.license");
 
                 if (properties.isJiraEnabled())
@@ -511,7 +527,7 @@ final public class StudioProductHandler extends AmpsProductHandler
                     putIfNotNull("%FISHEYE-BASE-URL%", properties.getFisheyeUrl());
                     putIfNotNull("%FISHEYE-HOST-URL%", properties.getFisheyeHostUrl());
                     putIfNotNull("%FISHEYE-CONTROL-PORT%", properties.getFisheyeControlPort());
-                    putIfNotNull("%FISHEYE-CONTEXT%", properties.getFisheyeContextPath());
+                    putNonReversibleIfNotNull("%FISHEYE-CONTEXT%", properties.getFisheyeContextPath());
                     putIfNotNull("%FISHEYE-SHUTDOWN-ENABLED%", properties.getFisheyeShutdownEnabled());
                 }
 
@@ -520,11 +536,11 @@ final public class StudioProductHandler extends AmpsProductHandler
                     putIfNotNull("%BAMBOO-BASE-URL%", properties.getBambooUrl());
                     putIfNotNull("%BAMBOO-HOST-URL%", properties.getBambooHostUrl());
                     putIfNotNull("%BAMBOO-CONTEXT%", properties.getBambooContextPath());
-                    putIfNotNull("%BAMBOO-ENABLED%", "true");
+                    putNonReversibleIfNotNull("%BAMBOO-ENABLED%", "true");
                 }
                 else
                 {
-                    putIfNotNull("%BAMBOO-ENABLED%", "false");
+                    putNonReversibleIfNotNull("%BAMBOO-ENABLED%", "false");
                 }
 
                 putIfNotNull("%CROWD-BASE-URL%", properties.getCrowdUrl());
@@ -535,14 +551,23 @@ final public class StudioProductHandler extends AmpsProductHandler
                 putIfNotNull("%SVN-PUBLIC-URL%", properties.getSvnPublicUrl());
                 putIfNotNull("%SVN-HOOKS%", properties.getSvnHooks());
 
-                putIfNotNull("%STUDIO-DATA-LOCATION%", "");
+                putNonReversibleIfNotNull("%STUDIO-DATA-LOCATION%", "");
                 putIfNotNull("%STUDIO-HOME%", properties.getStudioHome());
-                putIfNotNull("%GAPPS-ENABLED%", Boolean.toString(properties.isGappsEnabled()));
-                putIfNotNull("%STUDIO-GAPPS-DOMAIN%", properties.getGappsDomain());
+                putNonReversibleIfNotNull("%GAPPS-ENABLED%", Boolean.toString(properties.isGappsEnabled()));
+                if (properties.isGappsEnabled())
+                {
+                    putNonReversibleIfNotNull("%GAPPS-ENABLED%", Boolean.toString(true));
+                    putIfNotNull("%STUDIO-GAPPS-DOMAIN%", properties.getGappsDomain());
+                }
+                else
+                {
+                    putNonReversibleIfNotNull("%GAPPS-ENABLED%", Boolean.toString(false));
+                }
                 putIfNotNull("%STUDIO-WEBDAV-DIRECTORY%", properties.getWebDavHome());
                 putIfNotNull("%STUDIO-SVN-IMPORT-STAGING-DIRECTORY%", properties.getSvnImportStagingDirectory());
             }
-        };
+        });
+        return replacements;
     }
 
     private void createSymlink(String source, File target) throws MojoExecutionException
@@ -665,7 +690,7 @@ final public class StudioProductHandler extends AmpsProductHandler
         File crowdProperties = new File(explodedWarDir, crowdPropertiesPath);
         if (checkFileExists(crowdProperties, log))
         {
-            parametriseCrowdFile(crowdProperties, ctx.getStudioProperties().getCrowdUrl());
+            parametriseCrowdFile(crowdProperties, ctx.getStudioProperties().getCrowdUrl(), log);
         }
     }
 
@@ -679,10 +704,13 @@ final public class StudioProductHandler extends AmpsProductHandler
      * @throws MojoExecutionException
      *             if an error is encountered during the replacement
      */
-    public static void parametriseCrowdFile(File crowdProperties, String crowdUrl) throws MojoExecutionException
+    private static void parametriseCrowdFile(File crowdProperties, String crowdUrl, Log log) throws MojoExecutionException
     {
-        ConfigFileUtils.replace(crowdProperties, "%CROWD-INTERNAL-URL%", crowdUrl);
-        ConfigFileUtils.replace(crowdProperties, "%CROWD-URL%", crowdUrl);
+        List<Replacement> replacements = Lists.newArrayList();
+        replacements.add(new Replacement("%CROWD-INTERNAL-URL%", crowdUrl));
+        replacements.add(new Replacement("%CROWD-URL%", crowdUrl));
+
+        ConfigFileUtils.replace(crowdProperties, replacements, false, log);
     }
 
 
@@ -714,6 +742,10 @@ final public class StudioProductHandler extends AmpsProductHandler
                     copyAndCleanProductHome(product, productDestinationDirectory);
                 }
             }
+
+
+            // Un-parametrise the files
+            super.cleanupProductHomeForZip(studioProduct, studioHome);
         }
         catch (IOException ioe)
         {

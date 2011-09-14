@@ -1,7 +1,5 @@
 package com.atlassian.maven.plugins.amps.product;
 
-import static com.atlassian.maven.plugins.amps.util.ConfigFileUtils.replace;
-
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import static com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory.output;
 
@@ -12,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.atlassian.maven.plugins.amps.MavenContext;
@@ -24,6 +23,7 @@ import org.apache.tools.ant.types.Path;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 import com.atlassian.maven.plugins.amps.util.ZipUtils;
 import com.atlassian.maven.plugins.amps.util.ant.AntJavaExecutorThread;
 import com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory;
@@ -90,15 +90,26 @@ public class FeCruProductHandler extends AbstractProductHandler
     }
 
     @Override
-    protected final void processHomeDirectory(Product ctx, final File homeDir) throws MojoExecutionException
+    public List<Replacement> getReplacements(Product ctx)
     {
-        //setup config.xml, ports, test repos, whatever
-        final File configXml = new File(homeDir, "config.xml");
-        replace(configXml, "@CONTROL_BIND@", String.valueOf(controlPort(ctx.getHttpPort())));
-        replace(configXml, "@HTTP_BIND@", String.valueOf(ctx.getHttpPort()));
-        replace(configXml, "@HTTP_CONTEXT@", String.valueOf(ctx.getContextPath()));
-        replace(configXml, "@HOME_DIR@", String.valueOf(homeDir.getAbsolutePath()));
-        replace(configXml, "@SITE_URL@", String.valueOf(siteUrl(ctx)));
+        List<Replacement> replacements = super.getReplacements(ctx);
+        File homeDirectory = getHomeDirectory(ctx);
+        replacements.add(new Replacement("@CONTROL_BIND@", String.valueOf(controlPort(ctx.getHttpPort()))));
+        replacements.add(new Replacement("@HTTP_BIND@", String.valueOf(ctx.getHttpPort())));
+        replacements.add(new Replacement("@HTTP_CONTEXT@", String.valueOf(ctx.getContextPath()), false));
+        replacements.add(new Replacement("@HOME_DIR@", String.valueOf(homeDirectory.getAbsolutePath())));
+        replacements.add(new Replacement("@SITE_URL@", String.valueOf(siteUrl(ctx))));
+
+        // Note: Unfortunately, in config.xml, FeCru sometimes uses url encoding.
+        return replacements;
+    }
+
+    @Override
+    public List<File> getConfigFiles(Product product, File homeDir)
+    {
+        List<File> configFiles = super.getConfigFiles(product, homeDir);
+        configFiles.add(new File(homeDir, "config.xml"));
+        return configFiles;
     }
 
     @Override

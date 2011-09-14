@@ -5,6 +5,7 @@ import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 import org.apache.maven.plugin.MojoExecutionException;
 import java.io.File;
 import java.io.IOException;
@@ -72,15 +73,36 @@ public class BambooProductHandler extends AbstractWebappProductHandler
 
     public void processHomeDirectory(final Product ctx, final File homeDir) throws MojoExecutionException
     {
-        ConfigFileUtils.replace(new File(homeDir, "bamboo.cfg.xml"), "@project-dir@", homeDir.getParent());
-        ConfigFileUtils.replace(new File(homeDir, "bamboo.cfg.xml"), "/bamboo-home/", "/home/");
-        ConfigFileUtils.replace(new File(homeDir, "bamboo.cfg.xml"), "${bambooHome}", homeDir.getAbsolutePath());
+        super.processHomeDirectory(ctx, homeDir);
+
         // The regex in the following search text is used to match IPv4 ([^:]+) or IPv6 (\[.+]) addresses.
         ConfigFileUtils.replaceAll(new File(homeDir, "/xml-data/configuration/administration.xml"),
                 "http://(?:[^:]+|\\[.+]):8085", "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", ""));
+    }
 
-        ConfigFileUtils.replace(new File(homeDir, "database/defaultdb.log"), "${bambooHome}", homeDir.getAbsolutePath());
-        ConfigFileUtils.replace(new File(homeDir, "database/defaultdb.script"), "${bambooHome}", homeDir.getAbsolutePath());
+
+
+    @Override
+    public List<Replacement> getReplacements(Product product)
+    {
+        List<Replacement> replacements = super.getReplacements(product);
+        File homeDirectory = getHomeDirectory(product);
+        replacements.add(new Replacement("@project-dir@", homeDirectory.getParent()));
+        replacements.add(new Replacement("/bamboo-home/", "/home/"));
+        replacements.add(new Replacement("${bambooHome}", homeDirectory.getAbsolutePath()));
+        return replacements;
+    }
+
+    @Override
+    public List<File> getConfigFiles(Product product, File homeDirectory)
+    {
+        List<File> configFiles = super.getConfigFiles(product, homeDirectory);
+        configFiles.add(new File(homeDirectory, "bamboo.cfg.xml"));
+        configFiles.add(new File(homeDirectory, "database/defaultdb.log"));
+        configFiles.add(new File(homeDirectory, "database/defaultdb.script"));
+        configFiles.add(new File(homeDirectory, "database.log"));
+        configFiles.add(new File(homeDirectory, "database.script"));
+        return configFiles;
     }
 
     public List<ProductArtifact> getDefaultLibPlugins()
@@ -100,14 +122,6 @@ public class BambooProductHandler extends AbstractWebappProductHandler
         deleteDir(new File(genDir, "jms-store"));
         deleteDir(new File(genDir, "caches"));
         deleteDir(new File(genDir, "logs"));
-
-        File homeDirectory = getHomeDirectory(bamboo);
-
-        ConfigFileUtils.replace(new File(genDir, "database/defaultdb.script"), homeDirectory.getAbsolutePath(), "${bambooHome}");
-        ConfigFileUtils.replace(new File(genDir, "database/defaultdb.log"), homeDirectory.getAbsolutePath(), "${bambooHome}");
-
-        ConfigFileUtils.replace(new File(genDir, "bamboo.cfg.xml"), homeDirectory.getAbsolutePath(), "${bambooHome}");
-
     }
 
     private static class BambooPluginProvider extends AbstractPluginProvider

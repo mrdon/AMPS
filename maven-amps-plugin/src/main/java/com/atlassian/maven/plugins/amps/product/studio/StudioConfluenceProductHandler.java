@@ -76,6 +76,7 @@ public class StudioConfluenceProductHandler extends ConfluenceProductHandler imp
     @Override
     public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
+        super.processHomeDirectory(ctx, homeDir);
         StudioProductHandler.processProductsHomeDirectory(log, ctx, homeDir);
     }
 

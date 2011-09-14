@@ -5,6 +5,7 @@ import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STU
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -14,6 +15,9 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.product.JiraProductHandler;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
+import com.google.common.collect.Lists;
+
 
 public class StudioJiraProductHandler extends JiraProductHandler implements StudioComponentProductHandler
 {
@@ -40,29 +44,18 @@ public class StudioJiraProductHandler extends JiraProductHandler implements Stud
     {
 
         // change database to hsql
-        File entityEngine = new File(explodedWarDir, "WEB-INF/classes/entityengine.xml");
-        File webDotXml = new File(explodedWarDir, "WEB-INF/web.xml");
-        if (StudioProductHandler.checkFileExists(entityEngine, log) && StudioProductHandler.checkFileExists(webDotXml, log))
-        {
-            // Replace tokens in JIRA import
-            ConfigFileUtils.replace(entityEngine, "field-type-name=\"postgres72\"", "field-type-name=\"hsql\"");
-            ConfigFileUtils.replace(entityEngine, "schema-name=\"public\"", "schema-name=\"PUBLIC\"");
+        List<File> configFiles = Lists.newArrayList();
+        configFiles.add(new File(explodedWarDir, "WEB-INF/classes/entityengine.xml"));
+        configFiles.add(new File(explodedWarDir, "WEB-INF/web.xml"));
 
-            // Replace tokens in context.xml
-            ConfigFileUtils.replace(webDotXml, "%JIRA-HOME%", homeDir.getAbsolutePath());
+        List<Replacement> replacements = Lists.newArrayList();
+        replacements.add(new Replacement("field-type-name=\"postgres72\"", "field-type-name=\"hsql\""));
+        replacements.add(new Replacement("schema-name=\"public\"", "schema-name=\"PUBLIC\""));
+        replacements.add(new Replacement("%JIRA-HOME%", homeDir.getAbsolutePath()));
 
-            // allow xml restore
-            // Since the patch from JRA-21004 has been applied, we need to set jira.paths.set.allowed to true so that xml
-            // restore is enabled.
-            // TODO should check to see if the property exists and replace if it does
-        }
+        ConfigFileUtils.replace(configFiles, replacements, false, log);
+
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir);
-    }
-
-    @Override
-    public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
-    {
-        // Do nothing, the home directory for JIRA in Studio is empty
     }
 
     @Override

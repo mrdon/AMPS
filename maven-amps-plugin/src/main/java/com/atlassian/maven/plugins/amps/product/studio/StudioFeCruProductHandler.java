@@ -7,6 +7,7 @@ import static org.apache.commons.io.FileUtils.copyDirectory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -17,7 +18,7 @@ import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.product.FeCruProductHandler;
-import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 
 public class StudioFeCruProductHandler extends FeCruProductHandler implements StudioComponentProductHandler
 {
@@ -59,22 +60,21 @@ public class StudioFeCruProductHandler extends FeCruProductHandler implements St
         try
         {
             copyDirectory(productHomeData, homeDir);
-
-         // Note: this config.xml is in the Home directory.
-            File configXml = new File(homeDir, "config.xml");
-            if (StudioProductHandler.checkFileExists(configXml, log))
-            {
-                // Replace tokens in JIRA import
-                ConfigFileUtils.replace(configXml, "%TEST-CONTROL-BIND%", String.valueOf(controlPort(ctx.getHttpPort())));
-                ConfigFileUtils.replace(configXml, "%TEST-HTTP-BIND%", String.valueOf(this.getDefaultHttpPort()));
-            }
         }
         catch (IOException e)
         {
             throw new MojoExecutionException(String.format("Can't copy Fisheye's home directory from %s to %s", productHomeData.getAbsolutePath(),
                     homeDir.getAbsolutePath()));
         }
+    }
 
+    @Override
+    public List<Replacement> getReplacements(Product ctx)
+    {
+        List<Replacement> replacements = super.getReplacements(ctx);
+        replacements.add(new Replacement("%TEST-CONTROL-BIND%", String.valueOf(controlPort(ctx.getHttpPort()))));
+        replacements.add(new Replacement("%TEST-HTTP-BIND%", String.valueOf(this.getDefaultHttpPort())));
+        return replacements;
     }
 
     @Override

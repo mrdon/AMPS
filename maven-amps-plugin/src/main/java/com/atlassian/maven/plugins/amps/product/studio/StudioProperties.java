@@ -380,7 +380,7 @@ public class StudioProperties
         }
         if (fisheye.getContextPath() != null)
         {
-            return String.format("http://localhost:%d/%s", fisheye.getHttpPort(), fisheye.getContextPath());
+            return String.format("http://localhost:%d%s", fisheye.getHttpPort(), fisheye.getContextPath());
         }
         else
         {
