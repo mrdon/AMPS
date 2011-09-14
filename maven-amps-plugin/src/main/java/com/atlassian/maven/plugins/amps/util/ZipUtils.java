@@ -3,6 +3,9 @@ package com.atlassian.maven.plugins.amps.util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.google.common.collect.Lists;
+
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,7 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
@@ -18,33 +24,26 @@ public class ZipUtils
 {
     public static void unzip(final File zipFile, final String destDir) throws IOException
     {
-        unzip(zipFile, destDir, false);
+        unzip(zipFile, destDir, 0);
     }
 
     /**
      * Unzips a file
-     * 
+     *
      * @param zipFile
      *            the Zip file
      * @param destDir
      *            the destination folder
-     * @param skipRootFolderIfPresent
-     *            true to test whether all files belong to a root folder; in which case
-     *            skips this folder when expanding the files. Example: If all files are in fecru-2.5.4/, expands the
-     *            files into the destination folder. Other example: the studio-fisheye artifact doesn't have this root folder,
-     *            so it will not stash the files.
+     * @param leadingPathSegmentsToTrim
+     *            number of root folders to skip. Example: If all files are in generated-resources/home/*,
+     *            then you may want to skip 2 folders.
      * @throws IOException
      */
-    public static void unzip(final File zipFile, final String destDir, boolean skipRootFolderIfPresent) throws IOException
+    public static void unzip(final File zipFile, final String destDir, int leadingPathSegmentsToTrim) throws IOException
     {
         final ZipFile zip = new ZipFile(zipFile);
         try
         {
-            int leadingPathSegmentsToTrim = 0;
-            if (skipRootFolderIfPresent)
-            {
-                leadingPathSegmentsToTrim = hasRootFolder(zip) ? 1 : 0;
-            }
             final Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements())
             {
@@ -91,28 +90,60 @@ public class ZipUtils
         }
     }
 
-    private static boolean hasRootFolder(ZipFile zip)
+    /**
+     * Count the number of nested root folders. A root folder is a folder which contains 0 or 1 file or folder.
+     *
+     * Example: A zip with only "generated-resources/home/database.log" has 2 root folders.
+     *
+     * @param zip the zip file
+     * @return the number of root folders.
+     */
+    public static int countNestingLevel(File zip) throws ZipException, IOException
     {
-        // Name of the root folder that all files are assumed to have
-        String rootFolder = null;
+        List<String> filenames = toList(new ZipFile(zip).entries());
 
-        final Enumeration<? extends ZipEntry> entries = zip.entries();
+        // We need to remove the root folders from the list before searching for the common root. Example:
+        // root/ <- to be removed
+        // root/nested/ <- to be removed
+        // root/nested/file1.txt
+        // root/nested/file2.txt
+
+        String root = "";
+        Iterator<String> filenameIterator = filenames.iterator();
+        while (filenameIterator.hasNext())
+        {
+            String filename = filenameIterator.next();
+            if (filename.startsWith(root))
+            {
+                // Append the root
+                root = filename;
+                // Remove the element
+                filenameIterator.remove();
+            }
+            else
+            {
+                // The root is not longer
+                break;
+            }
+        }
+        // Now the first root folders won't disturb the search for the prefix
+        String prefix = StringUtils.getCommonPrefix(filenames.toArray(new String[filenames.size()]));
+        if (!prefix.endsWith("/"))
+        {
+            prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
+        }
+        return StringUtils.countMatches(prefix, "/");
+    }
+
+    private static List<String> toList(final Enumeration<? extends ZipEntry> entries)
+    {
+        List<String> filenamesList = Lists.newArrayList();
         while (entries.hasMoreElements())
         {
             final ZipEntry zipEntry = entries.nextElement();
-            String[] filePath = zipEntry.getName().split("/");
-            if (rootFolder == null)
-            {
-                rootFolder = filePath[0];
-            }
-            else if (!rootFolder.equals(filePath[0]))
-            {
-                // The root folder if this file is different from the root
-                // folder of the original file
-                return false;
-            }
+            filenamesList.add(zipEntry.getName());
         }
-        return true;
+        return filenamesList;
     }
 
     public static void zipDir(final File zipFile, final File srcDir, final String prefix) throws IOException

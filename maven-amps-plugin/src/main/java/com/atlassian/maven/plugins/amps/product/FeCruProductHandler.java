@@ -24,6 +24,7 @@ import org.apache.tools.ant.types.Path;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.util.ZipUtils;
 import com.atlassian.maven.plugins.amps.util.ant.AntJavaExecutorThread;
 import com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory;
 
@@ -115,7 +116,9 @@ public class FeCruProductHandler extends AbstractProductHandler
 
         try
         {
-            unzip(cruDistZip, appDir.getPath(), true);
+            // We remove one level of root folder from the zip if present
+            int nestingLevel = ZipUtils.countNestingLevel(cruDistZip);
+            unzip(cruDistZip, appDir.getPath(), nestingLevel > 0 ? 1 : 0);
         }
         catch (final IOException ex)
         {

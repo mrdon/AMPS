@@ -590,7 +590,7 @@ final public class StudioProductHandler extends AmpsProductHandler
             }
             else
             {
-                unzip(dataSource, target.getAbsolutePath(), true);
+                unzip(dataSource, target.getAbsolutePath(), 1);
             }
         }
         catch (IOException ioe)
@@ -705,11 +705,4 @@ final public class StudioProductHandler extends AmpsProductHandler
         }
         return null;
     }
-
-    @Override
-    public void createHomeZip(File homeDir, File homeZipFile, String productId) throws MojoExecutionException
-    {
-        // TODO Adrien - That's a cool feature to implement
-    }
-
 }
