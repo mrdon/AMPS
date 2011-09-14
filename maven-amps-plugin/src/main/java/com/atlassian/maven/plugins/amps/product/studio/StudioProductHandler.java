@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -122,6 +123,9 @@ final public class StudioProductHandler extends AmpsProductHandler
         // Launch the product
         createStudioHome(ctx);
 
+        // The symlink is pretty much constrained
+        // - must be in /target (the work dir for Bamboo)
+        // - must be 2 levels up from the studio home
         File symlink = new File(context.getProject().getBuild().getDirectory(), "svn");
         if (!symlink.exists())
         {
@@ -305,6 +309,23 @@ final public class StudioProductHandler extends AmpsProductHandler
     }
 
     /**
+     * Studio returns the parent of studio-home, to ship other application's homes:
+     * <ul>
+     * <li>studioInstance <b>(&lt;- the snapshot)</b></li>
+     * <li>studioInstance/confluence-home</li>
+     * <li>studioInstance/jira-home</li>
+     * <li>studioInstance/...</li>
+     * <li>studioInstance/home <b>(&lt;- the home)</b></li>
+     * <ul>
+     */
+    @Override
+    public File getSnapshotDirectory(Product studio)
+    {
+        return getHomeDirectory(studio).getParentFile();
+    }
+
+
+    /**
      * Fills the properties with the studio configuration.
      *
      * If the studio1-home directory does not exist, creates it and fills it with the right contents.
@@ -320,9 +341,9 @@ final public class StudioProductHandler extends AmpsProductHandler
      * <p>
      * It also adds the svn home and the webdav home. The final tree is:
      * <ul>
-     * <li>studioInstance1-home
+     * <li>studioInstance1
      * <ul>
-     * <li>studio-home</li>
+     * <li>home</li>
      * <li>svn-home</li>
      * <li>webdav-home</li>
      * </ul>
@@ -340,45 +361,37 @@ final public class StudioProductHandler extends AmpsProductHandler
     // This method reproduces PrepareStudioMojo.groovy
     public void createStudioHome(Product studioProduct) throws MojoExecutionException
     {
-        String studioInstanceId = studioProduct.getInstanceId();
-        String buildDirectory = context.getProject().getBuild().getDirectory();
+        String studioProductData = studioProduct.getDataPath();
         StudioProperties properties = getStudioProperties(studioProduct);
 
-        File studioCommonsDir = new File(buildDirectory, studioInstanceId + "-home");
-        File studioHomeDir;
+        // All homes are exported, including the studioInstanceId/home
+        File studioHomeDir = getHomeDirectory(studioProduct);
+        File studioCommonsDir = studioHomeDir.getParentFile();
 
-        // Extracts the zip / copies the home to studioInstanceId-home/
-        if (!studioCommonsDir.exists())
-        {
-            copyOrExtract(studioCommonsDir, properties.getStudioHomeData());
-        }
-
-        // studioHomeDir is studioInstanceId-home/studio-home
-        studioHomeDir = new File(studioCommonsDir, "studio-home");
+        // Extracts the zip / copies the homes to studioInstanceId/
         if (!studioHomeDir.exists())
         {
-            throw new MojoExecutionException(properties.getStudioHomeData() + " must contain a 'studio-home' folder");
+            copyOrExtract(studioCommonsDir, studioProductData);
+            if (!studioHomeDir.exists())
+            {
+                throw new MojoExecutionException(studioProductData + " must contain a 'home' folder");
+            }
         }
 
         File svnHomeDir = new File(studioCommonsDir, "svn-home");
-        File svnRootZip = new File(studioCommonsDir, "svnroot.zip");
-        if (properties.getSvnRootData() != null)
+        if (!svnHomeDir.exists())
         {
-            copyOrExtract(svnHomeDir, properties.getSvnRootData());
-        }
-        else if (!svnHomeDir.exists() && svnRootZip.exists())
-        {
-            copyOrExtract(svnHomeDir, svnRootZip.getAbsolutePath());
+            throw new MojoExecutionException(studioProductData + " must contain a 'svn-home' folder");
         }
 
         File webDavDir = new File(studioCommonsDir, "webdav-home");
-        if (properties.getWebDavData() != null)
+        if (!webDavDir.exists())
         {
-            copyOrExtract(webDavDir, properties.getWebDavData());
+            throw new MojoExecutionException(studioProductData + " must contain a 'webdav-home' folder");
         }
 
         String svnPublicUrl;
-        if (System.getProperty("os.name").toLowerCase().contains("windows"))
+        if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows"))
         {
             svnPublicUrl = "file:///" + svnHomeDir.getAbsolutePath();
         }
@@ -590,7 +603,7 @@ final public class StudioProductHandler extends AmpsProductHandler
             }
             else
             {
-                unzip(dataSource, target.getAbsolutePath(), 1);
+                unzip(dataSource, target.getAbsolutePath(), 2);
             }
         }
         catch (IOException ioe)
@@ -643,13 +656,6 @@ final public class StudioProductHandler extends AmpsProductHandler
      */
     static void addProductHandlerOverrides(Log log, Product ctx, File homeDir, File explodedWarDir, String crowdPropertiesPath) throws MojoExecutionException
     {
-        // You need to remove the Gapps from the bindled-plugins!
-        //
-        //
-        // ? ? ?
-        //
-        //
-
         File crowdProperties = new File(explodedWarDir, crowdPropertiesPath);
         if (checkFileExists(crowdProperties, log))
         {

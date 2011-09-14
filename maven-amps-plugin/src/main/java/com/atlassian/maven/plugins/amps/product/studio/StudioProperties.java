@@ -17,31 +17,6 @@ public class StudioProperties
 {
 
     /**
-     * The data to use to initialize Studio Home. Folder or zip.
-     * Must contain:<ul>
-     * <li>studio-home/studio.properties</li>
-     * <li>studio-home/studio.license<li>
-     * <li>studio-home/studio-initial-data.properties</li>
-     * <li>studio-home/studio-initial-data.xml</li>
-     * <li>jira-home/</li>
-     * <li>confluence-home/</li>
-     * <li>fecru-home/</li>
-     * <li>crowd-home/</li>
-     * <li>bamboo-home/</li>
-     */
-    private String studioHomeData;
-
-    /**
-     * The data to use to initialize the svn root. Folder or zip.
-     */
-    protected String svnRootData;
-
-    /**
-     * The data to use to initialize the webdav home. Folder or zip.
-     */
-    protected String webDavData;
-
-    /**
      * The Studio version, which will be used to retrieve each product artifact.
      */
     protected String version;
@@ -90,28 +65,10 @@ public class StudioProperties
             throw new IllegalArgumentException("The Studio Properties should be based on the Studio product");
         }
         version = firstNotNull(studioContext.getVersion(), "RELEASE");
-        webDavData = studioContext.getWebDavData();
-        svnRootData = studioContext.getSvnRootData();
-        studioHomeData = firstNotNull(studioContext.getStudioHomeData(), "src/test/resources/home");
         studioProduct = studioContext;
 
         gappsEnabled = Boolean.getBoolean(studioContext.getGappsEnabled());
         gappsDomain = firstNotNull(studioContext.getGappsDomain(), "");
-    }
-
-    public void setStudioHomeData(String studioHomeData)
-    {
-        this.studioHomeData = studioHomeData;
-    }
-
-    public void setSvnRootData(String svnRootData)
-    {
-        this.svnRootData = svnRootData;
-    }
-
-    public void setWebDavData(String webDavData)
-    {
-        this.webDavData = webDavData;
     }
 
     public void setVersion(String version)
@@ -207,21 +164,6 @@ public class StudioProperties
     public void setGappsDomain(String gappsDomain)
     {
         this.gappsDomain = gappsDomain;
-    }
-
-    public String getStudioHomeData()
-    {
-        return studioHomeData;
-    }
-
-    public String getSvnRootData()
-    {
-        return svnRootData;
-    }
-
-    public String getWebDavData()
-    {
-        return webDavData;
     }
 
     public String getVersion()

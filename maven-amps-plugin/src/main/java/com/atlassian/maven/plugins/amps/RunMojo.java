@@ -44,17 +44,11 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
     protected boolean writePropertiesToFile;
 
     /**
-     * Instance id to run.  If provided, used to determine the product to run instead of just the product ID.
-     */
-    @MojoParameter(expression = "${instanceId}")
-    protected String instanceId;
-
-    /**
      * Test group to run.  If provided, used to determine the products to run.
      */
     @MojoParameter(expression = "${testGroup}")
     protected String testGroup;
-    
+
     /**
      * The properties actually used by the mojo when running
      */
@@ -107,7 +101,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         {
             writePropertiesFile();
         }
-        
+
         // Repeat the messages at the end, because we're developer-friendly
         if (successMessages.size() > 1)
         {

@@ -12,6 +12,14 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
     @MojoParameter(expression = "${product}")
     private String product;
 
+    /**
+     * Instance to run. If provided, used to determine the product to use, instead of
+     * using the product ID.
+     */
+    @MojoParameter(expression = "${instanceId}")
+    protected String instanceId;
+
+
     protected String getDefaultProductId() throws MojoExecutionException
     {
         return null;

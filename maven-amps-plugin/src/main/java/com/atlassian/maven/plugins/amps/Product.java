@@ -130,25 +130,25 @@ public class Product
      * How long to wait for product shutdown, in milliseconds; if not specified, default is determined by AbstractProductHandlerMojo
      */
     private int shutdownTimeout = 0;
-    
+
     /**
      * An optional override of the webapp's groupId
      */
     private String groupId;
-    
+
     /**
      * An optional override of the webapp's artifactId
      */
     private String artifactId;
-    
 
-    
+
+
     /**
      * The studio configuration which is shared for all products in the same
      * studio instance. Null if products are not studio or not yet configured.
      * <p>
      * {@link StudioProductHandler#configure(Product, List)} will set this value.
-     * It must be called before Studio products are launched.  
+     * It must be called before Studio products are launched.
      */
     protected StudioProperties studioProperties;
 
@@ -160,24 +160,6 @@ public class Product
      */
     protected List<String> instanceIds = new ArrayList<String>();
 
-    /**
-     * Only applies to Studio.
-     * The data to use to initialize Studio Home. Folder or zip.
-     */
-    protected String studioHomeData;
-
-    /**
-     * Only applies to Studio.
-     * The data to use to initialize the svn root. Folder or zip.
-     */
-    protected String svnRootData;
-
-    /**
-     * Only applies to Studio.
-     * The data to use to initialize the webdav home. Folder or zip.
-     */
-    protected String webDavData;
-    
     /**
      * Only applies to Studio
      * Set 'true' if GApps is enabled. Default is 'false'
@@ -191,7 +173,7 @@ public class Product
     protected String gappsDomain;
 
 
-    
+
     /**
      * Creates a new product that is merged with this one, where the properties in this one override the passed
      * in product.
@@ -216,7 +198,7 @@ public class Product
         prod.setRestVersion(restVersion == null ? product.getRestVersion() : restVersion);
         prod.setPdkVersion(pdkVersion == null ? product.getPdkVersion() : pdkVersion);
         prod.setSalVersion(salVersion == null ? product.getSalVersion() : salVersion);
-        
+
         prod.setBundledArtifacts(bundledArtifacts.isEmpty() ? product.getBundledArtifacts() : bundledArtifacts);
         prod.setPluginArtifacts(pluginArtifacts.isEmpty() ? product.getPluginArtifacts() : pluginArtifacts);
         prod.setLibArtifacts(libArtifacts.isEmpty() ? product.getLibArtifacts() : libArtifacts);
@@ -237,15 +219,11 @@ public class Product
 
         prod.setStartupTimeout(startupTimeout == 0 ? product.getStartupTimeout() : startupTimeout);
         prod.setShutdownTimeout(shutdownTimeout == 0 ? product.getShutdownTimeout() : shutdownTimeout);
-        
+
         // Studio-related properties
         prod.setStudioProperties(studioProperties == null ? product.getStudioProperties() : studioProperties);
         prod.setInstanceIds(instanceIds == null ? product.getInstanceIds() : instanceIds);
 
-        prod.setSvnRootData(svnRootData == null ? product.getSvnRootData() : svnRootData);
-        prod.setWebDavData(webDavData == null ? product.getWebDavData() : webDavData);
-        prod.setStudioHomeData(studioHomeData == null ? product.getStudioHomeData() : studioHomeData);
-        
         return prod;
     }
 
@@ -513,7 +491,7 @@ public class Product
     {
         return output;
     }
-    
+
     public void setOutput(String output)
     {
         this.output = output;
@@ -528,22 +506,22 @@ public class Product
     {
         this.jvmDebugPort = jvmDebugPort;
     }
-    
+
     public int getStartupTimeout()
     {
         return startupTimeout;
     }
-    
+
     public void setStartupTimeout(int startupTimeout)
     {
         this.startupTimeout = startupTimeout;
     }
-    
+
     public int getShutdownTimeout()
     {
         return shutdownTimeout;
     }
-    
+
     public void setShutdownTimeout(int shutdownTimeout)
     {
         this.shutdownTimeout = shutdownTimeout;
@@ -589,36 +567,6 @@ public class Product
         this.instanceIds = instanceIds;
     }
 
-    public String getStudioHomeData()
-    {
-        return studioHomeData;
-    }
-
-    public void setStudioHomeData(String studioHomeData)
-    {
-        this.studioHomeData = studioHomeData;
-    }
-
-    public String getSvnRootData()
-    {
-        return svnRootData;
-    }
-
-    public void setSvnRootData(String svnRootData)
-    {
-        this.svnRootData = svnRootData;
-    }
-
-    public String getWebDavData()
-    {
-        return webDavData;
-    }
-
-    public void setWebDavData(String webDavData)
-    {
-        this.webDavData = webDavData;
-    }
-
     public String getGappsEnabled()
     {
         return gappsEnabled;
@@ -647,7 +595,7 @@ public class Product
     @Override
     public String toString()
     {
-        return "Product " + id + " [instanceId=" + instanceId + ", localhost:" + httpPort + "/" + contextPath + "]";
+        return "Product " + id + " [instanceId=" + instanceId + ", localhost:" + httpPort + contextPath + "]";
     }
-    
+
 }
