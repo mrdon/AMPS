@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
@@ -19,12 +17,9 @@ import com.atlassian.maven.plugins.amps.product.CrowdProductHandler;
 
 public class StudioCrowdProductHandler extends CrowdProductHandler implements StudioComponentProductHandler
 {
-    private final Log log;
-
-    public StudioCrowdProductHandler(final MavenContext context, final MavenGoals goals, Log log)
+    public StudioCrowdProductHandler(final MavenContext context, final MavenGoals goals)
     {
         super(context, goals);
-        this.log = log;
     }
 
     @Override

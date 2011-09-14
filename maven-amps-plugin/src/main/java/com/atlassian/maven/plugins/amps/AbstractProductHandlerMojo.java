@@ -340,7 +340,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         }
         return resourceProp.toString();
     }
-    
+
     /**
      * @return the path of the project root, for the <tt>plugin.root.directories</tt> system property.
      *
@@ -366,12 +366,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * @param handler the product handler associated to the product
      */
     protected void setDefaultValues(Product product, ProductHandler handler)
-    {   
+    {
         product.setInstanceId(getProductInstanceId(product));
-        
+
         // If it's a Studio product, some defaults are different (ex: context path for Confluence is /wiki)
         StudioProductHandler.setDefaultValues(product);
-        
+
         //Apply the common default values
         String dversion = System.getProperty("product.data.version", product.getDataVersion());
         String pversion = System.getProperty("product.version", product.getVersion());
@@ -426,12 +426,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         {
             product.setHttpPort(handler.getDefaultHttpPort());
         }
-        
+
         if (product.getVersion() == null)
         {
             product.setVersion("RELEASE");
         }
-        
+
         if (product.getContextPath() == null)
         {
             product.setContextPath("/" + handler.getId());
@@ -502,7 +502,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         for (Product ctx : productMap.values())
         {
-            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext(), goals, getLog());
+            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext(), goals);
             setDefaultValues(ctx, handler);
         }
         return productMap;

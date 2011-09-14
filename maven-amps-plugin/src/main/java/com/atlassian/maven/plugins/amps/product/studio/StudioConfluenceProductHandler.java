@@ -10,21 +10,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.product.ConfluenceProductHandler;
-import com.google.inject.internal.util.Maps;
 
 public class StudioConfluenceProductHandler extends ConfluenceProductHandler implements StudioComponentProductHandler
 {
 
-    public StudioConfluenceProductHandler(MavenContext context, MavenGoals goals, Log log)
+    public StudioConfluenceProductHandler(MavenContext context, MavenGoals goals)
     {
-        super(context, goals, log);
+        super(context, goals);
     }
 
     @Override

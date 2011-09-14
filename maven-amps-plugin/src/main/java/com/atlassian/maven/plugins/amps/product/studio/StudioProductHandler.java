@@ -28,24 +28,20 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductExecution;
-import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.AmpsProductHandler;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
-import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.collect.Sets;
 
 /**
  * This product handler is a 'ghost'. It doesn't start a product, but it prepares the environment
  * for all studio-based products.
  */
-final public class StudioProductHandler implements ProductHandler
+final public class StudioProductHandler extends AmpsProductHandler
 {
 
     /** This token is used in product's <version> when they want to reuse the Studio product's version */
     private static final String STUDIO_VERSION_TOKEN = "STUDIO-VERSION";
-    
-    private final MavenContext context;
-    private final MavenGoals goals;
-    private final Log log;
+
     private final static String LAUNCH_INSTANCES_SYSTEM_PROPERTY = "studio.instanceIds";
 
     private final static Map<String, String> defaultContextPaths = new HashMap<String, String>()
@@ -59,12 +55,9 @@ final public class StudioProductHandler implements ProductHandler
         }
     };
 
-    public StudioProductHandler(MavenContext context, MavenGoals goals, Log log)
+    public StudioProductHandler(MavenContext context, MavenGoals goals)
     {
-        super();
-        this.context = context;
-        this.goals = goals;
-        this.log = log;
+        super(context, goals);
     }
 
     @Override
@@ -75,7 +68,7 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Returns the list of products that are configured in this studio instance, as defined in 'instanceIds'
-     * 
+     *
      * @param studioContext
      *            the Studio product
      * @return a list of instance ids. Never null.
@@ -100,7 +93,7 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * System property 'studio.instanceIds': If defined, only runs those applications.
-     * 
+     *
      * They must be comma-separated, eg: {@code -Dstudio.instanceids=studio-crowd,studio-jira}.
      * The studio configuration will be built using the pom.xml configuration.
      */
@@ -118,7 +111,7 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Prepares the studio home. Does not start any application.
-     * 
+     *
      */
     @Override
     public int start(Product ctx) throws MojoExecutionException
@@ -194,22 +187,16 @@ final public class StudioProductHandler implements ProductHandler
         return 0;
     }
 
-    @Override
-    public File getHomeDirectory(Product product)
-    {
-        return ProjectUtils.getHomeDirectory(context.getProject(), product);
-    }
-
     /**
      * Does nothing for non-studios products.
      * For Studio products, defaults the studio-specific properties.
-     * 
+     *
      * @param product
      *            a product. All products are accepted but not all of the will be
      *            modified. The product must have an instanceId.
      */
     public static void setDefaultValues(Product product)
-    {            
+    {
         String defaultContextPath = defaultContextPaths.get(product.getId());
         if (defaultContextPath != null)
         {
@@ -233,13 +220,13 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Requests the Studio instance to configure its fellow products (home directory, ...)
-     * 
+     *
      * Not thread safe.
-     * 
+     *
      * @param studioContext
      *            the studio instance. There may be several Studio instances, so the products should be configured
      *            with this instance in mind.
-     * 
+     *
      * @param dependantProducts
      *            the list of products running 'in' this instance of studio (same home & applinked).
      *            The client should guarantee it calls this method once and only once for all the product on one
@@ -301,7 +288,7 @@ final public class StudioProductHandler implements ProductHandler
     /**
      * Return the studio properties. If it doesn't exist, create the bean.
      * Not thread safe.
-     * 
+     *
      * @param studioContext
      *            the Studio product
      * @return the properties, never null.
@@ -319,17 +306,17 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Fills the properties with the studio configuration.
-     * 
+     *
      * If the studio1-home directory does not exist, creates it and fills it with the right contents.
      * If this studio1-home exists, do not change the contents
-     * 
+     *
      * This method must be guaranteed to be called:
      * <ul>
      * <li>Exactly once for this StudioProperties bean.</li>
      * <li>After {@link #configure(Product, List)}.</li>
      * <li>Before any product's home is created or any product is started</li>
      * </ul>
-     * 
+     *
      * <p>
      * It also adds the svn home and the webdav home. The final tree is:
      * <ul>
@@ -342,13 +329,13 @@ final public class StudioProductHandler implements ProductHandler
      * </li>
      * </ul>
      * </p>
-     * 
+     *
      * @param studio
      *            the Studio properties. Must not be null.
      * @param buildirectory
      *            the base directory (you can obtain it using ((MavenProject)project).getBuild().getDirectory())
      * @throws MojoExecutionException
-     * 
+     *
      */
     // This method reproduces PrepareStudioMojo.groovy
     public void createStudioHome(Product studioProduct) throws MojoExecutionException
@@ -466,7 +453,7 @@ final public class StudioProductHandler implements ProductHandler
     /**
      * Returns the list of Strings that should be replaced in the Studio properties files and their values,
      * based on the current configuration of StudioProperties.
-     * 
+     *
      * @return a map of the keys to replace and their properties
      */
     public Map<String, String> getReplacements(final StudioProperties properties)
@@ -486,8 +473,8 @@ final public class StudioProductHandler implements ProductHandler
 
                 if (properties.isJiraEnabled())
                 {
-                    String jiraHome = properties.getJiraHomeDirectory(context.getProject());
-                    putIfNotNull("%JIRA-ATTACHMENTS%", jiraHome + "/attachments");
+                    File attachmentsFolder = new File(getHomeDirectory(properties.getJira()), "attachments");
+                    putIfNotNull("%JIRA-ATTACHMENTS%", attachmentsFolder.getAbsolutePath());
                     putIfNotNull("%JIRA-BASE-URL%", properties.getJiraUrl());
                     putIfNotNull("%JIRA-HOST-URL%", properties.getJiraHostUrl());
                     putIfNotNull("%JIRA-CONTEXT%", properties.getJiraContextPath());
@@ -580,7 +567,7 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Copies/Extracts the data into parent/directoryName
-     * 
+     *
      * @throws MojoExecutionException
      */
     private static void copyOrExtract(File target, String source) throws MojoExecutionException
@@ -629,7 +616,7 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Performs the necessary initialisation for Studio products
-     * 
+     *
      * @param log
      * @param ctx
      * @param homeDir
@@ -645,7 +632,7 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Performs the necessary initialisation for Studio products
-     * 
+     *
      * @param log
      * @param ctx
      * @param homeDir
@@ -672,7 +659,7 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Replaces the crowd url in the the crowd.properties of the current application
-     * 
+     *
      * @param crowdProperties
      *            the file "crowd.properties"
      * @param crowdUrl
@@ -703,7 +690,7 @@ final public class StudioProductHandler implements ProductHandler
 
     /**
      * Returns the first value which is not null. Useful to set default values
-     * 
+     *
      * @param t
      * @return the first non-null value, or null if all values are null
      */

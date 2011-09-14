@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
@@ -19,27 +17,24 @@ import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 public class StudioJiraProductHandler extends JiraProductHandler implements StudioComponentProductHandler
 {
-    private final Log log;
-
-    public StudioJiraProductHandler(final MavenContext context, final MavenGoals goals, Log log)
+    public StudioJiraProductHandler(final MavenContext context, final MavenGoals goals)
     {
-        super(context, goals, log);
-        this.log = log;
+        super(context, goals);
     }
-    
+
 
     @Override
     public String getId()
     {
         return STUDIO_JIRA;
     }
-    
+
     @Override
     public ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.studio", "studio-jira", "RELEASE");
     }
-    
+
     @Override
     protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {

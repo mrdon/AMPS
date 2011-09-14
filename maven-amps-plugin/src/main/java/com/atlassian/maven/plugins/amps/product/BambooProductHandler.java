@@ -6,8 +6,6 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-
 import java.io.File;
 import java.util.*;
 
@@ -15,12 +13,9 @@ import static com.atlassian.maven.plugins.amps.util.FileUtils.deleteDir;
 
 public class BambooProductHandler extends AbstractWebappProductHandler
 {
-    protected final Log log;
-    
-    public BambooProductHandler(MavenContext context, MavenGoals goals, Log log)
+    public BambooProductHandler(MavenContext context, MavenGoals goals)
     {
         super(context, goals, new BambooPluginProvider());
-        this.log = log;
     }
 
     public String getId()

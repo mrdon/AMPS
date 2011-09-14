@@ -16,7 +16,6 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.atlassian.maven.plugins.amps.util.ZipUtils;
 
 import com.google.common.base.Function;
@@ -24,8 +23,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-
 import static com.atlassian.maven.plugins.amps.util.FileUtils.deleteDir;
 import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
@@ -37,21 +34,14 @@ import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.createDirectory;
-import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getBaseDirectory;
-import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getHomeDirectory;
 
-public abstract class AbstractProductHandler implements ProductHandler
+public abstract class AbstractProductHandler extends AmpsProductHandler
 {
-    protected final MavenGoals goals;
-    protected final MavenProject project;
     private final PluginProvider pluginProvider;
-    protected final MavenContext context;
 
     protected AbstractProductHandler(MavenContext context, MavenGoals goals, PluginProvider pluginProvider)
     {
-        this.project = context.getProject();
-        this.context = context;
-        this.goals = goals;
+        super(context, goals);
         this.pluginProvider = pluginProvider;
     }
 
@@ -63,16 +53,16 @@ public abstract class AbstractProductHandler implements ProductHandler
     {
         // Extract the home directory
         final File homeDir = extractAndProcessHomeDirectory(ctx);
-        
+
         // Extract the application
         final File extractedApp = extractApplication(ctx, homeDir);
-        
-        // Modifies the application 
+
+        // Modifies the application
         final File finalApp = addArtifactsAndOverrides(ctx, homeDir, extractedApp);
-        
-        // Ask for the system properties (from the ProductHandler and from the pom.xml) 
+
+        // Ask for the system properties (from the ProductHandler and from the pom.xml)
         Map<String, String> systemProperties = mergeSystemProperties(ctx);
-        
+
         return startApplication(ctx, finalApp, homeDir, systemProperties);
     }
 
@@ -190,7 +180,7 @@ public abstract class AbstractProductHandler implements ProductHandler
                 getTestResourcesArtifact().getGroupId(), getTestResourcesArtifact().getArtifactId(), ctx.getDataVersion());
             if (artifact != null)
             {
-                productHomeZip = goals.copyHome(getBaseDirectory(project, ctx), artifact);
+                productHomeZip = goals.copyHome(getBaseDirectory(ctx), artifact);
             }
         }
 
@@ -200,14 +190,14 @@ public abstract class AbstractProductHandler implements ProductHandler
     protected void extractProductHomeData(File productHomeData, File homeDir, Product ctx)
             throws MojoExecutionException
     {
-        final File tmpDir = new File(getBaseDirectory(project, ctx), "tmp-resources");
+        final File tmpDir = new File(getBaseDirectory(ctx), "tmp-resources");
         tmpDir.mkdir();
 
         try
         {
             if (productHomeData.isFile())
             {
-                File tmp = new File(getBaseDirectory(project, ctx), ctx.getId() + "-home");
+                File tmp = new File(getBaseDirectory(ctx), ctx.getId() + "-home");
 
                 unzip(productHomeData, tmpDir.getPath());
 
@@ -225,7 +215,7 @@ public abstract class AbstractProductHandler implements ProductHandler
                             + Joiner.on(", ").join(filenames));
                 }
 
-                copyDirectory(topLevelFiles[0], getBaseDirectory(project, ctx), true);
+                copyDirectory(topLevelFiles[0], getBaseDirectory(ctx), true);
                 moveDirectory(tmp, homeDir);
             }
             else if (productHomeData.isDirectory())
@@ -260,7 +250,7 @@ public abstract class AbstractProductHandler implements ProductHandler
             final File appDir;
             if (app.isFile())
             {
-                appDir = new File(getBaseDirectory(project, ctx), "webapp");
+                appDir = new File(getBaseDirectory(ctx), "webapp");
                 if (!appDir.exists())
                 {
                     unzip(app, appDir.getAbsolutePath());
@@ -310,7 +300,7 @@ public abstract class AbstractProductHandler implements ProductHandler
      * @param ctx the product's details
      * @param homeDir the home directory
      * @param explodedWarDir the directory containing the exploded WAR of the application
-     * @throws MojoExecutionException 
+     * @throws MojoExecutionException
      */
     protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {
@@ -321,7 +311,7 @@ public abstract class AbstractProductHandler implements ProductHandler
             throws IOException, MojoExecutionException, Exception
     {
         File pluginsDir = getUserInstalledPluginsDirectory(appDir, homeDir);
-        final File bundledPluginsDir = new File(getBaseDirectory(project, ctx), "bundled-plugins");
+        final File bundledPluginsDir = new File(getBaseDirectory(ctx), "bundled-plugins");
 
         bundledPluginsDir.mkdir();
         // add bundled plugins
@@ -489,12 +479,6 @@ public abstract class AbstractProductHandler implements ProductHandler
         }
     }
 
-
-    public final File getHomeDirectory(Product ctx)
-    {
-        return ProjectUtils.getHomeDirectory(project, ctx);
-    }
-
     /**
      * Merges the properties: pom.xml overrides those of the Product Handler.
      * @param ctx the Product
@@ -516,7 +500,7 @@ public abstract class AbstractProductHandler implements ProductHandler
      * System properties which are specific to the Product Handler
      */
     protected abstract Map<String, String> getSystemProperties(Product ctx);
-    
+
     /**
      * The artifact of the product (a war, a jar, a binary...)
      */

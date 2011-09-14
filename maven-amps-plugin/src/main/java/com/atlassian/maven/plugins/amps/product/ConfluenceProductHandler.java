@@ -6,20 +6,15 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
-
 import java.io.File;
 import java.util.*;
 
 public class ConfluenceProductHandler extends AbstractWebappProductHandler
 {
-    protected final Log log;
-    
-    public ConfluenceProductHandler(MavenContext context, MavenGoals goals, Log log)
+
+    public ConfluenceProductHandler(MavenContext context, MavenGoals goals)
     {
         super(context, goals, new ConfluencePluginProvider());
-        this.log = log;
     }
 
     public String getId()
@@ -88,11 +83,11 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         {
             script = new File(new File(homeDir, "database"), "confluencedb.log");
         }
-        
+
         ConfigFileUtils.replace(script,
                 "<baseUrl>http://localhost:8080</baseUrl>",
                 "<baseUrl>http://" + ctx.getServer() + ":" + ctx.getHttpPort() + "/" + ctx.getContextPath().replaceAll("^/|/$", "") + "</baseUrl>");
-    
+
     }
 
     @Override

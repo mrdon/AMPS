@@ -23,17 +23,17 @@ public class ProductHandlerFactory
     public static final String BAMBOO = "bamboo";
     public static final String FECRU = "fecru";
     public static final String CROWD = "crowd";
-    
+
     public static final String STUDIO = "studio";
     public static final String STUDIO_CONFLUENCE = "studio-confluence";
     public static final String STUDIO_JIRA = "studio-jira";
     public static final String STUDIO_BAMBOO = "studio-bamboo";
     public static final String STUDIO_FECRU = "studio-fecru";
     public static final String STUDIO_CROWD = "studio-crowd";
-    
-    
 
-    public static ProductHandler create(String id, MavenContext context, MavenGoals goals, Log log)
+
+
+    public static ProductHandler create(String id, MavenContext context, MavenGoals goals)
     {
         if (REFAPP.equals(id))
         {
@@ -41,19 +41,19 @@ public class ProductHandlerFactory
         }
         else if (CONFLUENCE.equals(id))
         {
-            return new ConfluenceProductHandler(context, goals, log);
+            return new ConfluenceProductHandler(context, goals);
         }
         else if (JIRA.equals(id))
         {
-            return new JiraProductHandler(context, goals, log);
+            return new JiraProductHandler(context, goals);
         }
         else if (BAMBOO.equals(id))
         {
-            return new BambooProductHandler(context, goals, log);
+            return new BambooProductHandler(context, goals);
         }
         else if (FECRU.equals(id))
         {
-            return new FeCruProductHandler(context, goals, log);
+            return new FeCruProductHandler(context, goals);
         }
         else if (CROWD.equals(id))
         {
@@ -63,31 +63,31 @@ public class ProductHandlerFactory
         // The Studio product itself
         else if (STUDIO.equals(id))
         {
-            return new StudioProductHandler(context, goals, log);
+            return new StudioProductHandler(context, goals);
         }
-        
-        // The Studio products (products which are part of) 
+
+        // The Studio products (products which are part of)
         else if (STUDIO_CONFLUENCE.equals(id))
         {
-            return new StudioConfluenceProductHandler(context, goals, log);
+            return new StudioConfluenceProductHandler(context, goals);
         }
         else if (STUDIO_JIRA.equals(id))
         {
-            return new StudioJiraProductHandler(context, goals, log);
+            return new StudioJiraProductHandler(context, goals);
         }
         else if (STUDIO_BAMBOO.equals(id))
         {
-            return new StudioBambooProductHandler(context, goals, log);
+            return new StudioBambooProductHandler(context, goals);
         }
         else if (STUDIO_FECRU.equals(id))
         {
-            return new StudioFeCruProductHandler(context, goals, log);
+            return new StudioFeCruProductHandler(context, goals);
         }
         else if (STUDIO_CROWD.equals(id))
         {
-            return new StudioCrowdProductHandler(context, goals, log);
+            return new StudioCrowdProductHandler(context, goals);
         }
-        
+
 
         throw new IllegalArgumentException("Unknown product id: '" + id + "' Valid values: "
             + Arrays.toString(getIds().toArray()));

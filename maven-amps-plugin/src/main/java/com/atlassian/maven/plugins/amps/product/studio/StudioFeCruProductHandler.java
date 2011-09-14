@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.tools.ant.taskdefs.Java;
 
 import com.atlassian.maven.plugins.amps.MavenContext;
@@ -23,9 +22,9 @@ import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 public class StudioFeCruProductHandler extends FeCruProductHandler implements StudioComponentProductHandler
 {
 
-    public StudioFeCruProductHandler(MavenContext context, MavenGoals goals, Log log)
+    public StudioFeCruProductHandler(MavenContext context, MavenGoals goals)
     {
-        super(context, goals, log);
+        super(context, goals);
     }
 
     @Override
@@ -33,20 +32,20 @@ public class StudioFeCruProductHandler extends FeCruProductHandler implements St
     {
         return STUDIO_FECRU;
     }
-    
+
     @Override
     protected ProductArtifact getArtifact()
     {
         return new ProductArtifact("com.atlassian.studio", "studio-fisheye", "RELEASE");
     }
-    
+
     @Override
     public Map<String, String> getSystemProperties(Product product)
     {
         Map<String, String> properties = new HashMap<String, String>(super.getSystemProperties(product));
-        
+
         properties.put("fisheye.dev.mode", "true");
-        
+
         // We also add common studio system properties
         properties.putAll(product.getStudioProperties().getSystemProperties());
 
@@ -75,7 +74,7 @@ public class StudioFeCruProductHandler extends FeCruProductHandler implements St
             throw new MojoExecutionException(String.format("Can't copy Fisheye's home directory from %s to %s", productHomeData.getAbsolutePath(),
                     homeDir.getAbsolutePath()));
         }
-        
+
     }
 
     @Override
@@ -84,7 +83,7 @@ public class StudioFeCruProductHandler extends FeCruProductHandler implements St
         // Note: this config.xml is in the War.
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir, "config.xml");
     }
-    
+
     @Override
     protected void addOverridesToJavaTask(final Product ctx, Java java)
     {

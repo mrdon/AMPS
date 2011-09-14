@@ -2,11 +2,7 @@ package com.atlassian.maven.plugins.amps.util;
 
 import java.io.File;
 
-import org.apache.maven.project.MavenProject;
-
 import com.atlassian.maven.plugins.amps.MavenContext;
-import com.atlassian.maven.plugins.amps.Product;
-
 import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
 
 /**
@@ -24,7 +20,7 @@ public class ProjectUtils
     {
         return file(context.getProject().getBuild().getTestOutputDirectory(), "atlassian-plugin.xml").exists();
     }
-    
+
     /**
      * Returns the first non null value. Use this to default values.
      * @return the first non null value of values, or null if all values are null
@@ -36,7 +32,7 @@ public class ProjectUtils
             if (value != null)
             {
                 return value;
-            }   
+            }
         }
         return null;
     }
@@ -49,20 +45,4 @@ public class ProjectUtils
         }
         return dir;
     }
-
-    public final static File getBaseDirectory(MavenProject project, Product ctx)
-    {
-        return createDirectory(new File(project.getBuild().getDirectory(), ctx.getInstanceId()));
-    }
-
-    public final static File getHomeDirectory(MavenProject project, Product ctx)
-    {
-        return new File(getBaseDirectory(project, ctx), "home");
-    }
-
-    protected final static File createHomeDirectory(MavenProject project, Product ctx)
-    {
-        return createDirectory(getHomeDirectory(project, ctx));
-    }
-
 }

@@ -15,7 +15,6 @@ import com.atlassian.maven.plugins.amps.ProductArtifact;
 
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.firstNotNull;
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.createDirectory;
-import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getBaseDirectory;
 
 public abstract class AbstractWebappProductHandler extends AbstractProductHandler
 {
@@ -37,9 +36,9 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
             firstNotNull(ctx.getGroupId(), defaults.getGroupId()),
             firstNotNull(ctx.getArtifactId(), defaults.getArtifactId()),
             firstNotNull(ctx.getVersion(), defaults.getVersion()));
-        
+
         // Copy the webapp war to target
-        return goals.copyWebappWar(ctx.getId(), getBaseDirectory(project, ctx), artifact);
+        return goals.copyWebappWar(ctx.getId(), getBaseDirectory(ctx), artifact);
     }
 
     @Override
@@ -53,12 +52,12 @@ public abstract class AbstractWebappProductHandler extends AbstractProductHandle
     {
         return true;
     }
-    
+
     @Override
     protected String getLog4jPropertiesPath()
     {
         return "WEB-INF/classes/log4j.properties";
     }
-    
+
     protected abstract List<ProductArtifact> getExtraContainerDependencies();
 }

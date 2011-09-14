@@ -1,12 +1,9 @@
 package com.atlassian.maven.plugins.amps.product.studio;
 
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.firstNotNull;
-import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getHomeDirectory;
 
 import java.io.File;
 import java.util.Map;
-
-import org.apache.maven.project.MavenProject;
 
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
@@ -82,7 +79,7 @@ public class StudioProperties
 
     /**
      * Constructs the StudioProperties using the values from the studio product
-     * 
+     *
      * @param studioContext
      *            the Studio product
      */
@@ -97,7 +94,7 @@ public class StudioProperties
         svnRootData = studioContext.getSvnRootData();
         studioHomeData = firstNotNull(studioContext.getStudioHomeData(), "src/test/resources/home");
         studioProduct = studioContext;
-        
+
         gappsEnabled = Boolean.getBoolean(studioContext.getGappsEnabled());
         gappsDomain = firstNotNull(studioContext.getGappsDomain(), "");
     }
@@ -349,9 +346,9 @@ public class StudioProperties
     {
         return firstNotNull(gappsDomain, "");
     }
-    
-    
-    
+
+
+
 
     // Custom getters
 
@@ -364,11 +361,6 @@ public class StudioProperties
     public String getJiraContextPath()
     {
         return jira != null ? jira.getContextPath() : "";
-    }
-
-    public String getJiraHomeDirectory(MavenProject project)
-    {
-        return getHomeDirectory(project, jira).getAbsolutePath();
     }
 
     public String getJiraUrl()

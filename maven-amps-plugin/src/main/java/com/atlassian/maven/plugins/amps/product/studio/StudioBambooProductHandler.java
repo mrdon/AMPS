@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
@@ -22,11 +20,11 @@ import com.atlassian.maven.plugins.amps.product.BambooProductHandler;
 public class StudioBambooProductHandler extends BambooProductHandler
 {
 
-    public StudioBambooProductHandler(MavenContext context, MavenGoals goals, Log log)
+    public StudioBambooProductHandler(MavenContext context, MavenGoals goals)
     {
-        super(context, goals, log);
+        super(context, goals);
     }
-    
+
     @Override
     public String getId()
     {
@@ -43,7 +41,7 @@ public class StudioBambooProductHandler extends BambooProductHandler
     public void processHomeDirectory(Product ctx, File homeDir) throws MojoExecutionException
     {
         // Don't do anything, StudioBamboo starts with empty home
-        
+
         StudioProductHandler.processProductsHomeDirectory(log, ctx, homeDir);
     }
 

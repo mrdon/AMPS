@@ -16,8 +16,6 @@ import java.util.Map;
 
 import com.atlassian.maven.plugins.amps.MavenContext;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 
@@ -28,21 +26,18 @@ import com.atlassian.maven.plugins.amps.util.ant.AntJavaExecutorThread;
 import com.atlassian.maven.plugins.amps.util.ant.JavaTaskFactory;
 
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.createDirectory;
-import static com.atlassian.maven.plugins.amps.util.ProjectUtils.getBaseDirectory;
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.firstNotNull;
 
 public class FeCruProductHandler extends AbstractProductHandler
-{ 	
+{
     private static final int STARTUP_CHECK_DELAY = 1000;
     private static final String FISHEYE_INST = "fisheye.inst";
-    
-    protected final Log log;
+
     private final JavaTaskFactory javaTaskFactory;
-    
-    public FeCruProductHandler(MavenContext context, MavenGoals goals, Log log)
+
+    public FeCruProductHandler(MavenContext context, MavenGoals goals)
     {
         super(context, goals, new FeCruPluginProvider());
-        this.log = log;
         this.javaTaskFactory = new JavaTaskFactory(log);
     }
 
@@ -73,7 +68,7 @@ public class FeCruProductHandler extends AbstractProductHandler
         {
             throw new MojoExecutionException("Failed to stop FishEye/Crucible instance at " + ctx.getServer() + ":" + ctx.getHttpPort());
         }
-        
+
         waitForFishEyeToStop(ctx);
     }
 
@@ -107,15 +102,15 @@ public class FeCruProductHandler extends AbstractProductHandler
     protected File extractApplication(Product ctx, File homeDir) throws MojoExecutionException
     {
         File appDir = createDirectory(getAppDirectory(ctx));
-        
+
         ProductArtifact defaults = getArtifact();
         ProductArtifact artifact = new ProductArtifact(
                 firstNotNull(ctx.getGroupId(), defaults.getGroupId()),
                 firstNotNull(ctx.getArtifactId(), defaults.getArtifactId()),
                 firstNotNull(ctx.getVersion(), defaults.getVersion()));
-        
+
         final File cruDistZip = goals.copyDist(getBuildDirectory(), artifact);
-        
+
         try
         {
             unzip(cruDistZip, appDir.getPath(), true);
@@ -130,15 +125,15 @@ public class FeCruProductHandler extends AbstractProductHandler
 
     protected File getAppDirectory(Product ctx)
     {
-        return new File(getBaseDirectory(project, ctx), ctx.getId() + "-" + ctx.getVersion());
+        return new File(getBaseDirectory(ctx), ctx.getId() + "-" + ctx.getVersion());
     }
-    
+
     @Override
     protected final ProductArtifact getTestResourcesArtifact()
     {
           return new ProductArtifact("com.atlassian.fecru", "amps-fecru", "LATEST");
     }
-    
+
     @Override
     protected Map<String, String> getSystemProperties(final Product ctx)
     {
@@ -200,7 +195,7 @@ public class FeCruProductHandler extends AbstractProductHandler
         }
 
         waitForFishEyeToStart(ctx, thread);
-        
+
         return ctx.getHttpPort();
     }
 
@@ -232,7 +227,7 @@ public class FeCruProductHandler extends AbstractProductHandler
             {
                 throw new MojoExecutionException("Fisheye failed to start.", thread.getBuildException());
             }
-            
+
             if (waited++ * STARTUP_CHECK_DELAY > ctx.getStartupTimeout())
             {
                 throw new MojoExecutionException("FishEye took longer than " + ctx.getStartupTimeout() + "ms to start!");
@@ -273,31 +268,31 @@ public class FeCruProductHandler extends AbstractProductHandler
     private AntJavaExecutorThread execFishEyeCmd(String bootCommand, final Product ctx) throws MojoExecutionException
     {
         final Map<String, String> properties = mergeSystemProperties(ctx);
-        
+
         Java java = javaTaskFactory.newJavaTask(
                 output(ctx.getOutput()).
                 systemProperties(properties).
                 jvmArgs(ctx.getJvmArgs()));
-        
+
         addOverridesToJavaTask(ctx, java);
 
         Path classpath = java.createClasspath();
         classpath.createPathElement().setLocation(new File(getAppDirectory(ctx), "fisheyeboot.jar"));
-        
+
         java.setClassname("com.cenqua.fisheye.FishEyeCtl");
-        
+
         java.createArg().setValue(bootCommand);
-        
+
         AntJavaExecutorThread javaThread = new AntJavaExecutorThread(java);
         javaThread.start();
 
         return javaThread;
     }
-    
+
     /**
      * Add overrides to the Java task before it gets launched. The Studio version of FishEye-Crucible
      * needs to fork the process here.
-     * 
+     *
      * @param ctx
      * @param java
      */
