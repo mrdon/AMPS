@@ -1,6 +1,8 @@
 package com.atlassian.maven.plugins.amps.product;
 
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -15,6 +17,7 @@ import org.apache.maven.project.MavenProject;
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 import com.atlassian.maven.plugins.amps.util.ProjectUtils;
@@ -138,6 +141,42 @@ public abstract class AmpsProductHandler implements ProductHandler
             throw new MojoExecutionException("Could not delete home/plugins/ and /home/bundled-plugins/", ioe);
         }
     }
+
+    abstract protected ProductArtifact getTestResourcesArtifact();
+
+    protected File getProductHomeData(final Product ctx) throws MojoExecutionException
+    {
+        File productHomeZip = null;
+        String dpath = ctx.getDataPath();
+
+        //use custom zip if supplied
+        if (isNotBlank(dpath))
+        {
+            File customHomeZip = new File(dpath);
+
+            if (customHomeZip.exists())
+            {
+                productHomeZip = customHomeZip;
+            }
+            else
+            {
+                throw new MojoExecutionException("Unable to use custom test resources set by <productDataPath>. File '" +
+                        customHomeZip.getAbsolutePath() + "' does not exist");
+            }
+        }
+
+        //if we didn't find a custom zip, use the default
+        ProductArtifact testResourcesArtifact = getTestResourcesArtifact();
+        if (productHomeZip == null && testResourcesArtifact != null)
+        {
+            ProductArtifact artifact = new ProductArtifact(
+                testResourcesArtifact.getGroupId(), testResourcesArtifact.getArtifactId(), ctx.getDataVersion());
+            productHomeZip = goals.copyHome(getBaseDirectory(ctx), artifact);
+        }
+
+        return productHomeZip;
+    }
+
 
     /**
      * Lists parameters which must be replaced in the configuration files of the home directory.

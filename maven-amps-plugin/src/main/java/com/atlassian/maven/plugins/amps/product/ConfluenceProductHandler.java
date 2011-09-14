@@ -41,7 +41,7 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
     @Override
     public ProductArtifact getTestResourcesArtifact()
     {
-        return new ProductArtifact("com.atlassian.confluence.plugins", "confluence-plugin-test-resources", "LATEST");
+        return new ProductArtifact("com.atlassian.confluence.plugins", "confluence-plugin-test-resources");
     }
 
     public int getDefaultHttpPort()

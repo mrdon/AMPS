@@ -41,7 +41,7 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     @Override
     public ProductArtifact getTestResourcesArtifact()
     {
-        return new ProductArtifact("com.atlassian.crowd.distribution", "crowd-plugin-test-resources", "LATEST");
+        return new ProductArtifact("com.atlassian.crowd.distribution", "crowd-plugin-test-resources");
     }
 
     public int getDefaultHttpPort()

@@ -147,7 +147,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     @Override
     protected final ProductArtifact getTestResourcesArtifact()
     {
-          return new ProductArtifact("com.atlassian.fecru", "amps-fecru", "LATEST");
+          return new ProductArtifact("com.atlassian.fecru", "amps-fecru");
     }
 
     @Override

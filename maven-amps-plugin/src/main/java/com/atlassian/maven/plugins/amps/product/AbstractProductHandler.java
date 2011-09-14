@@ -99,41 +99,6 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
         }
     }
 
-    private File getProductHomeData(final Product ctx) throws MojoExecutionException
-    {
-        File productHomeZip = null;
-        String dpath = ctx.getDataPath();
-
-        //use custom zip if supplied
-        if (isNotBlank(dpath))
-        {
-            File customHomeZip = new File(dpath);
-
-            if (customHomeZip.exists())
-            {
-                productHomeZip = customHomeZip;
-            }
-            else
-            {
-                throw new MojoExecutionException("Unable to use custom test resources set by <productDataPath>. File '" +
-                        customHomeZip.getAbsolutePath() + "' does not exist");
-            }
-        }
-
-        //if we didn't find a custom zip, use the default
-        if (productHomeZip == null && getTestResourcesArtifact() != null)
-        {
-            ProductArtifact artifact = new ProductArtifact(
-                getTestResourcesArtifact().getGroupId(), getTestResourcesArtifact().getArtifactId(), ctx.getDataVersion());
-            if (artifact != null)
-            {
-                productHomeZip = goals.copyHome(getBaseDirectory(ctx), artifact);
-            }
-        }
-
-        return productHomeZip;
-    }
-
     protected void extractProductHomeData(File productHomeData, File homeDir, Product ctx)
             throws MojoExecutionException
     {
@@ -330,7 +295,6 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
         ConfigFileUtils.replace(getConfigFiles(ctx, snapshotDir), getReplacements(ctx), false, log);
     }
 
-    abstract protected ProductArtifact getTestResourcesArtifact();
     abstract protected File extractApplication(Product ctx, File homeDir) throws MojoExecutionException;
     abstract protected int startApplication(Product ctx, File app, File homeDir, Map<String, String> properties) throws MojoExecutionException;
     abstract protected boolean supportsStaticPlugins();

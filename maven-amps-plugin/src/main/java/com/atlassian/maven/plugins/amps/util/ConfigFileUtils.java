@@ -127,8 +127,15 @@ public class ConfigFileUtils
 
         /**
          * Represents a key to be replaced in the configuration files.
+         *
+         * <p/>
+         * <b>Important</b>: If your value is short, such as "/", "", "true", "false", please set reversible=false.
+         * When zipping a home, config files are parsed and everything is replaced back with keys, such as %PRODUCT_HOME_DIR%.
+         * If you provide a string with false positives, you may parametrise too many variables.
+         *
+         *
          * @param key the key to be replaced. Must not be null.
-         * @param value the value to be replaced. Must not be null.
+         * @param value the value to be replaced. Must not be null. <b>Important</b>: If short, such as / or "", please set reversible=false.
          */
         public Replacement(String key, String value)
         {

@@ -37,7 +37,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     @Override
     public ProductArtifact getTestResourcesArtifact()
     {
-        return new ProductArtifact("com.atlassian.jira.plugins", "jira-plugin-test-resources", "LATEST");
+        return new ProductArtifact("com.atlassian.jira.plugins", "jira-plugin-test-resources");
     }
 
     public int getDefaultHttpPort()

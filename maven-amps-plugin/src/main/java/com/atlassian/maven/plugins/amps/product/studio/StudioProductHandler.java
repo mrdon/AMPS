@@ -23,13 +23,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.ProductExecution;
 import com.atlassian.maven.plugins.amps.product.AmpsProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
@@ -73,6 +73,16 @@ final public class StudioProductHandler extends AmpsProductHandler
     {
         super(context, goals);
     }
+
+
+
+    @Override
+    protected ProductArtifact getTestResourcesArtifact()
+    {
+        return new ProductArtifact("com.atlassian.studio", "studio-test-resources");
+    }
+
+
 
     @Override
     public String getId()
@@ -372,35 +382,35 @@ final public class StudioProductHandler extends AmpsProductHandler
      *
      */
     // This method reproduces PrepareStudioMojo.groovy
-    public void createStudioHome(Product studioProduct) throws MojoExecutionException
+    public void createStudioHome(Product studio) throws MojoExecutionException
     {
-        String studioProductData = studioProduct.getDataPath();
-        StudioProperties properties = getStudioProperties(studioProduct);
+        StudioProperties properties = getStudioProperties(studio);
 
         // All homes are exported, including the studioInstanceId/home
-        File studioHomeDir = getHomeDirectory(studioProduct);
+        File studioHomeDir = getHomeDirectory(studio);
         File studioCommonsDir = studioHomeDir.getParentFile();
+        String studioProductDataOrigin = studioCommonsDir.getAbsolutePath();
 
         // Extracts the zip / copies the homes to studioInstanceId/
         if (!studioHomeDir.exists())
         {
-            copyOrExtract(studioCommonsDir, studioProductData);
+            extractHome(studioCommonsDir, studio);
             if (!studioHomeDir.exists())
             {
-                throw new MojoExecutionException(studioProductData + " must contain a 'home' folder");
+                throw new MojoExecutionException(studioProductDataOrigin + "studio-test-resources.zip must contain a 'xx/xx/home' folder");
             }
         }
 
         File svnHomeDir = new File(studioCommonsDir, "svn-home");
         if (!svnHomeDir.exists())
         {
-            throw new MojoExecutionException(studioProductData + " must contain a 'svn-home' folder");
+            throw new MojoExecutionException(studioProductDataOrigin + " must contain a 'xx/xx/svn-home' folder");
         }
 
         File webDavDir = new File(studioCommonsDir, "webdav-home");
         if (!webDavDir.exists())
         {
-            throw new MojoExecutionException(studioProductData + " must contain a 'webdav-home' folder");
+            throw new MojoExecutionException(studioProductDataOrigin + " must contain a 'xx/xx/webdav-home' folder");
         }
 
         String svnPublicUrl;
@@ -419,7 +429,7 @@ final public class StudioProductHandler extends AmpsProductHandler
         properties.setWebDavHome(webDavDir.getAbsolutePath());
 
         // Parametrise the files
-        parameteriseFiles(studioCommonsDir, studioProduct);
+        parameteriseFiles(studioCommonsDir, studio);
 
         // Set the system properties
         properties.overrideSystemProperty("studio.home", studioHomeDir.getAbsolutePath());
@@ -611,35 +621,31 @@ final public class StudioProductHandler extends AmpsProductHandler
 
     /**
      * Copies/Extracts the data into parent/directoryName
-     *
      * @throws MojoExecutionException
      */
-    private static void copyOrExtract(File target, String source) throws MojoExecutionException
+    private void extractHome(File target, Product studio) throws MojoExecutionException
     {
-        if (StringUtils.isBlank(source))
-        {
-            throw new MojoExecutionException(String.format("You must specify how to fill %s when you run a Studio product", target));
-        }
-        File dataSource = new File(source);
-        if (!dataSource.exists())
-        {
-            throw new MojoExecutionException(String.format("This source doesn't exist: %s", dataSource));
-        }
+        // Take whichever is provided by the user (dataPath or productDataVersion zip to download)
+        File testResourcesZip = getProductHomeData(studio);
 
         try
         {
-            if (dataSource.isDirectory())
+            if (!testResourcesZip.exists())
             {
-                copyDirectory(dataSource, target);
+                throw new MojoExecutionException(String.format("This source doesn't exist: %s", testResourcesZip.getAbsoluteFile()));
+            }
+            if (testResourcesZip.isDirectory())
+            {
+                copyDirectory(testResourcesZip, target);
             }
             else
             {
-                unzip(dataSource, target.getAbsolutePath(), 2);
+                unzip(testResourcesZip, target.getAbsolutePath(), 2);
             }
         }
         catch (IOException ioe)
         {
-            throw new MojoExecutionException(String.format("Unable to copy/unzip the studio home from %s to %s", dataSource.getAbsolutePath(),
+            throw new MojoExecutionException(String.format("Unable to copy/unzip the studio home from %s to %s", testResourcesZip.getAbsolutePath(),
                     target.getAbsolutePath()), ioe);
         }
     }

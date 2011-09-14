@@ -39,7 +39,7 @@ public class BambooProductHandler extends AbstractWebappProductHandler
 
     public ProductArtifact getTestResourcesArtifact()
     {
-        return new ProductArtifact("com.atlassian.bamboo.plugins", "bamboo-plugin-test-resources", "LATEST");
+        return new ProductArtifact("com.atlassian.bamboo.plugins", "bamboo-plugin-test-resources");
     }
 
     public int getDefaultHttpPort()

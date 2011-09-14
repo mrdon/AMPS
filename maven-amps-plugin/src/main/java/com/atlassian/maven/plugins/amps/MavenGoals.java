@@ -707,7 +707,7 @@ public class MavenGoals
 
     public File copyHome(final File targetDirectory, final ProductArtifact artifact) throws MojoExecutionException
     {
-        return copyZip(targetDirectory, artifact, "test-resources.zip");
+        return copyZip(targetDirectory, artifact, artifact.getArtifactId() + ".zip");
     }
 
     public File copyZip(final File targetDirectory, final ProductArtifact artifact, final String localName) throws MojoExecutionException
