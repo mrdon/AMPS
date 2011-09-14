@@ -11,19 +11,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.atlassian.core.util.FileUtils;
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
-import com.atlassian.maven.plugins.amps.util.ZipUtils;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import static com.atlassian.maven.plugins.amps.util.FileUtils.deleteDir;
 import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import static org.apache.commons.io.FileUtils.copyDirectory;
@@ -64,57 +61,6 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
         Map<String, String> systemProperties = mergeSystemProperties(ctx);
 
         return startApplication(ctx, finalApp, homeDir, systemProperties);
-    }
-
-    /**
-     * Copies and creates a zip file of the previous run's home directory minus any installed plugins.
-     *
-     * @param homeDirectory The path to the previous run's home directory.
-     * @param targetZip     The path to the final zip file.
-     * @param productId     The name of the product.
-     *
-     * @since 3.1-m3
-     */
-    public void createHomeZip(final File homeDirectory, final File targetZip, final String productId) throws MojoExecutionException
-    {
-        if (homeDirectory == null || !homeDirectory.exists())
-        {
-            String homePath = "null";
-            if(homeDirectory != null) {
-                homePath = homeDirectory.getAbsolutePath();
-            }
-            context.getLog().info("home directory doesn't exist, skipping. [" + homePath + "]");
-            return;
-        }
-
-        final File appDir = new File(project.getBuild().getDirectory(), productId);
-        final File tmpDir = new File(appDir, "tmp-resources");
-        final File genDir = new File(tmpDir, "generated-home");
-        final String entryBase = "generated-resources/" + productId + "-home";
-
-        if (genDir.exists())
-        {
-            FileUtils.deleteDir(genDir);
-        }
-
-        genDir.mkdirs();
-
-        try
-        {
-            FileUtils.copyDirectory(homeDirectory, genDir, true);
-
-            //we want to get rid of the plugins folders.
-            deleteDir(new File(genDir, "plugins"));
-            deleteDir(new File(genDir, "bundled-plugins"));
-
-            cleanupProductHomeForZip(homeDirectory, genDir);
-            ZipUtils.zipDir(targetZip, genDir, entryBase);
-        } catch (IOException e)
-        {
-            throw new RuntimeException("Error zipping home directory", e);
-        }
-
-
     }
 
     protected final File extractAndProcessHomeDirectory(final Product ctx) throws MojoExecutionException
@@ -384,8 +330,6 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
     abstract protected Collection<? extends ProductArtifact> getDefaultLibPlugins();
     abstract protected String getBundledPluginPath(Product ctx);
     abstract protected File getUserInstalledPluginsDirectory(File webappDir, File homeDir);
-    protected void cleanupProductHomeForZip(File homeDirectory, File genDir) throws MojoExecutionException
-    {}
 
     protected String getLog4jPropertiesPath()
     {

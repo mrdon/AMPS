@@ -7,6 +7,7 @@ import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static com.atlassian.maven.plugins.amps.util.FileUtils.deleteDir;
@@ -93,11 +94,14 @@ public class BambooProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    protected void cleanupProductHomeForZip(File homeDirectory, File genDir) throws MojoExecutionException
+    public void cleanupProductHomeForZip(Product bamboo, File genDir) throws MojoExecutionException, IOException
     {
+        super.cleanupProductHomeForZip(bamboo, genDir);
         deleteDir(new File(genDir, "jms-store"));
         deleteDir(new File(genDir, "caches"));
         deleteDir(new File(genDir, "logs"));
+
+        File homeDirectory = getHomeDirectory(bamboo);
 
         ConfigFileUtils.replace(new File(genDir, "database/defaultdb.script"), homeDirectory.getAbsolutePath(), "${bambooHome}");
         ConfigFileUtils.replace(new File(genDir, "database/defaultdb.log"), homeDirectory.getAbsolutePath(), "${bambooHome}");

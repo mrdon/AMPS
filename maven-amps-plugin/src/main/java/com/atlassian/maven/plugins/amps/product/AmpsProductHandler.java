@@ -72,19 +72,19 @@ public abstract class AmpsProductHandler implements ProductHandler
              */
             final File appDir = getBaseDirectory(product);
             final File tmpDir = new File(appDir, "tmp-resources");
-            final File genDir = new File(tmpDir, "generated-home");
+            final File homeSnapshot = new File(tmpDir, "generated-home");
             final String entryBase = "generated-resources/" + product.getId() + "-home";
 
-            if (genDir.exists())
+            if (homeSnapshot.exists())
             {
-                FileUtils.deleteDirectory(genDir);
+                FileUtils.deleteDirectory(homeSnapshot);
             }
 
-            genDir.mkdirs();
-            FileUtils.copyDirectory(homeDirectory, genDir, true);
+            homeSnapshot.mkdirs();
+            FileUtils.copyDirectory(homeDirectory, homeSnapshot, true);
 
-            cleanupProductHomeForZip(product, genDir);
-            ZipUtils.zipDir(targetZip, genDir, entryBase);
+            cleanupProductHomeForZip(product, homeSnapshot);
+            ZipUtils.zipDir(targetZip, homeSnapshot, entryBase);
         }
         catch (IOException e)
         {
