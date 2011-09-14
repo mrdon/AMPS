@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.atlassian.maven.plugins.amps.MavenContext;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
@@ -330,5 +332,13 @@ public class FeCruProductHandler extends AbstractProductHandler
                     new ProductArtifact("com.atlassian.sal", "sal-fisheye-plugin", salVersion)
             );
         }
+    }
+
+    @Override
+    public void cleanupProductHomeForZip(Product product, File homeDirectory) throws MojoExecutionException, IOException
+    {
+        super.cleanupProductHomeForZip(product, homeDirectory);
+        FileUtils.deleteDirectory(new File(homeDirectory, "var/plugins"));
+        FileUtils.deleteDirectory(new File(homeDirectory, "cache/plugins"));
     }
 }

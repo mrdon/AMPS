@@ -5,8 +5,11 @@ import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class ConfluenceProductHandler extends AbstractWebappProductHandler
@@ -118,5 +121,13 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
         {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public void cleanupProductHomeForZip(Product product, File homeDirectory) throws MojoExecutionException, IOException
+    {
+        super.cleanupProductHomeForZip(product, homeDirectory);
+        FileUtils.deleteDirectory(new File(homeDirectory, "plugins-osgi-cache"));
+        FileUtils.deleteDirectory(new File(homeDirectory, "plugins-temp"));
     }
 }

@@ -17,6 +17,7 @@ import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
 public class CrowdProductHandler extends AbstractWebappProductHandler
@@ -141,5 +142,13 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
             plugins.add(new ProductArtifact("commons-fileupload", "commons-fileupload", "1.2.1"));
             return plugins;
         }
+    }
+
+    @Override
+    public void cleanupProductHomeForZip(Product product, File homeDirectory) throws MojoExecutionException, IOException
+    {
+        super.cleanupProductHomeForZip(product, homeDirectory);
+        FileUtils.deleteDirectory(new File(homeDirectory, "caches/transformed-plugins"));
+        FileUtils.deleteDirectory(new File(homeDirectory, "caches/felix/felix-cache"));
     }
 }
