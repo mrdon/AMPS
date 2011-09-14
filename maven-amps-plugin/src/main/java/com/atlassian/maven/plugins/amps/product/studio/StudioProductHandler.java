@@ -15,12 +15,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -30,7 +32,11 @@ import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductExecution;
 import com.atlassian.maven.plugins.amps.product.AmpsProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
+import com.atlassian.maven.plugins.amps.util.ProjectUtils;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
@@ -677,6 +683,60 @@ final public class StudioProductHandler extends AmpsProductHandler
     {
         ConfigFileUtils.replace(crowdProperties, "%CROWD-INTERNAL-URL%", crowdUrl);
         ConfigFileUtils.replace(crowdProperties, "%CROWD-URL%", crowdUrl);
+    }
+
+
+    public void cleanupProductHomeForZip(Product studioProduct, File studioHome) throws MojoExecutionException
+    {
+        try
+        {
+            // Get products of this Studio instance
+            StudioProperties studioProperties = studioProduct.getStudioProperties();
+
+            // The key of this map is the name of the home folder for this application
+            // Unused applications are "null", so they will not be seen in the map
+            Map<String, Product> products = Maps.newHashMap();
+            products.put("crowd-home", studioProperties.getCrowd());
+            products.put("confluence-home", studioProperties.getConfluence());
+            products.put("jira-home", studioProperties.getJira());
+            products.put("fecru-home", studioProperties.getFisheye());
+            products.put("bamboo-home", studioProperties.getBamboo());
+
+            // Make each product's home
+            Iterator<String> productKeys = products.keySet().iterator();
+            while (productKeys.hasNext())
+            {
+                String productHomeName = productKeys.next();
+                Product product = products.get(productHomeName);
+                if (product != null)
+                {
+                    File productDestinationDirectory = new File(studioHome, productHomeName);
+                    copyAndCleanProductHome(product, productDestinationDirectory);
+                }
+            }
+        }
+        catch (IOException ioe)
+        {
+            throw new MojoExecutionException("Could not copy a product home directory.", ioe);
+        }
+
+    }
+
+    private void copyAndCleanProductHome(Product product, File productDestinationDirectory) throws IOException, MojoExecutionException
+    {
+        ProductHandler handler = ProductHandlerFactory.create(product.getId(), context, goals);
+        File productHomeDirectory = getHomeDirectory(product);
+
+        // Delete studio1/{product}-home and replace it with the current product's home
+        if (productDestinationDirectory.exists())
+        {
+            FileUtils.deleteDirectory(productDestinationDirectory);
+        }
+        ProjectUtils.createDirectory(productDestinationDirectory);
+        copyDirectory(productHomeDirectory, productDestinationDirectory);
+
+        // Request the product to clean up
+        handler.cleanupProductHomeForZip(product, productDestinationDirectory);
     }
 
     static String fixWindowsSlashes(final String path)
