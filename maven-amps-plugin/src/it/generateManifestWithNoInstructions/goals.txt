@@ -1,1 +1,2 @@
 ${shitty.product}:generate-manifest
+clean

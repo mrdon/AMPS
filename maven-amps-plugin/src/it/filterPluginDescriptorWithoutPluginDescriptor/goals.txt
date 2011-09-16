@@ -1,1 +1,2 @@
 ${shitty.product}:filter-plugin-descriptor
+clean

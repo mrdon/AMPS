@@ -1,1 +1,2 @@
 process-resources ${shitty.product}:validate-manifest
+clean

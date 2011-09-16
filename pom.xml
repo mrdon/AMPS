@@ -110,6 +110,13 @@
                                 <goal>test</goal>
                             </goals>
                         </execution>
+                        <execution>
+                            <id>clean-after-tests</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                        </execution>
                     </executions>
                     <configuration>
                         <offline>false</offline>
