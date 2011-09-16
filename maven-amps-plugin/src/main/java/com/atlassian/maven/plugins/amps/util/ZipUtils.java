@@ -146,6 +146,10 @@ public class ZipUtils
         return filenamesList;
     }
 
+    /**
+     * @param prefix the prefix. If empty, uses the srcDir's name. That means you can't create a zip with no
+     * root folder.
+     */
     public static void zipDir(final File zipFile, final File srcDir, final String prefix) throws IOException
     {
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
@@ -227,6 +231,10 @@ public class ZipUtils
         }
     }
 
+    /**
+     * Make sure 'prefix' is in format 'entry/' or, by default, 'rootDir/'
+     * (not '', '/', '/entry', or 'entry').
+     */
     private static String ensurePrefixWithSlash(File rootDir, String prefix)
     {
         String entryPrefix = prefix;

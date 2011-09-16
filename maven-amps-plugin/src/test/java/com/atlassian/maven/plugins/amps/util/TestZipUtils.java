@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -350,18 +351,20 @@ public class TestZipUtils
 
         int nestedRoots = ZipUtils.countNestingLevel(zipFile);
 
-        assertEquals("One level of nesting should be detected", 1, nestedRoots);
+        assertEquals("One level of nesting should be detected - " + listEntries(zipFile, "\n"), 1, nestedRoots);
     }
+
+
 
     @Test
     public void detectDoublePrefix() throws IOException
     {
-        File zipFile = new File(tempDir, "zip-single-prefix.zip");
+        File zipFile = new File(tempDir, "zip-double-prefix.zip");
         ZipUtils.zipDir(zipFile, sourceZipDir, NESTED_PREFIX);
 
         int nestedRoots = ZipUtils.countNestingLevel(zipFile);
 
-        assertEquals("Two levels of nesting should be detected", 2, nestedRoots);
+        assertEquals("Two levels of nesting should be detected - " + listEntries(zipFile, "\n"), 2, nestedRoots);
     }
 
     @Test
@@ -375,7 +378,25 @@ public class TestZipUtils
 
         int nestedRoots = ZipUtils.countNestingLevel(zipFile);
 
-        assertEquals("No nesting should be detected", 0, nestedRoots);
+        assertEquals("No nesting should be detected - " + listEntries(zipFile, "\n"), 0, nestedRoots);
+    }
+
+    /**
+     * Concatenates the list of files from a zip in a String.
+     * @param separator Character/String used to separate the filenames.
+     * @throws IOException
+     * @throws ZipException
+     */
+    private static String listEntries(File zipFile, String separator) throws ZipException, IOException
+    {
+        StringBuilder list = new StringBuilder("Contents of " + zipFile.getName() + ":" + separator);
+        Enumeration<? extends ZipEntry> entries = new ZipFile(zipFile).entries();
+        while (entries.hasMoreElements())
+        {
+            final ZipEntry zipEntry = entries.nextElement();
+            list.append(zipEntry.getName()).append(separator);
+        }
+        return list.toString();
     }
 
     @Test
