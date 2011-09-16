@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -101,37 +100,36 @@ public class ZipUtils
     public static int countNestingLevel(File zip) throws ZipException, IOException
     {
         List<String> filenames = toList(new ZipFile(zip).entries());
+        return countNestingLevel(filenames);
+    }
 
-        // We need to remove the root folders from the list before searching for the common root. Example:
-        // root/ <- to be removed
-        // root/nested/ <- to be removed
-        // root/nested/file1.txt
-        // root/nested/file2.txt
-
-        String root = "";
-        Iterator<String> filenameIterator = filenames.iterator();
-        while (filenameIterator.hasNext())
-        {
-            String filename = filenameIterator.next();
-            if (filename.startsWith(root))
-            {
-                // Append the root
-                root = filename;
-                // Remove the element
-                filenameIterator.remove();
-            }
-            else
-            {
-                // The root is not longer
-                break;
-            }
-        }
-        // Now the first root folders won't disturb the search for the prefix
+    /**
+     * Count the number of nested root directories in the filenames.
+     *
+     * A root directory is a directory that has no sibling.
+     * @param filenames the list of filenames, using / as a separator. Must be a mutable copy,
+     * as it will be modified.
+     */
+    static int countNestingLevel(List<String> filenames)
+    {
         String prefix = StringUtils.getCommonPrefix(filenames.toArray(new String[filenames.size()]));
         if (!prefix.endsWith("/"))
         {
             prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
         }
+
+        // The first prefix may be wrong, example:
+        // root/ <- to be discarded
+        // root/nested/ <- to be discarded
+        // root/nested/folder1/file.txt <- the root "root/nested/" will be detected properly
+        // root/nested/folder2/file.txt
+        if (filenames.remove(prefix))
+        {
+            return countNestingLevel(filenames);
+        }
+
+        // The client can't use these filenames anymore.
+        filenames.clear();
         return StringUtils.countMatches(prefix, "/");
     }
 

@@ -5,14 +5,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.inject.internal.util.Lists;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -351,10 +353,8 @@ public class TestZipUtils
 
         int nestedRoots = ZipUtils.countNestingLevel(zipFile);
 
-        assertEquals("One level of nesting should be detected - " + listEntries(zipFile, "\n"), 1, nestedRoots);
+        assertEquals("One level of nesting should be detected", 1, nestedRoots);
     }
-
-
 
     @Test
     public void detectDoublePrefix() throws IOException
@@ -364,7 +364,7 @@ public class TestZipUtils
 
         int nestedRoots = ZipUtils.countNestingLevel(zipFile);
 
-        assertEquals("Two levels of nesting should be detected - " + listEntries(zipFile, "\n"), 2, nestedRoots);
+        assertEquals("Two levels of nesting should be detected", 2, nestedRoots);
     }
 
     @Test
@@ -378,25 +378,7 @@ public class TestZipUtils
 
         int nestedRoots = ZipUtils.countNestingLevel(zipFile);
 
-        assertEquals("No nesting should be detected - " + listEntries(zipFile, "\n"), 0, nestedRoots);
-    }
-
-    /**
-     * Concatenates the list of files from a zip in a String.
-     * @param separator Character/String used to separate the filenames.
-     * @throws IOException
-     * @throws ZipException
-     */
-    private static String listEntries(File zipFile, String separator) throws ZipException, IOException
-    {
-        StringBuilder list = new StringBuilder("Contents of " + zipFile.getName() + ":" + separator);
-        Enumeration<? extends ZipEntry> entries = new ZipFile(zipFile).entries();
-        while (entries.hasMoreElements())
-        {
-            final ZipEntry zipEntry = entries.nextElement();
-            list.append(zipEntry.getName()).append(separator);
-        }
-        return list.toString();
+        assertEquals("No nesting should be detected", 0, nestedRoots);
     }
 
     @Test
@@ -425,5 +407,87 @@ public class TestZipUtils
         File nestedUnzip = new File(unzipDir, SECOND_PREFIX);
 
         assertTrue("nested prefix folder in zip should have been trimmed", !nestedUnzip.exists());
+    }
+
+
+    @Test
+    public void countNoNestingLevel()
+    {
+        List<String> filenames = Lists.newArrayList(
+                "file1.txt",
+                "file2.txt");
+
+        int nestedRoots = ZipUtils.countNestingLevel(filenames);
+        assertEquals("The number of nested roots should be detected", 0, nestedRoots);
+    }
+
+    @Test
+    public void countOneNestingLevel()
+    {
+        List<String> filenames = Lists.newArrayList(
+                "root/folder1/file.txt",
+                "root/folder2/file.txt");
+
+        int nestedRoots = ZipUtils.countNestingLevel(filenames);
+        assertEquals("The number of nested roots should be detected", 1, nestedRoots);
+    }
+
+    @Test
+    public void countNestingLevelWithEmptyList()
+    {
+        List<String> filenames = Lists.newArrayList();
+
+        int nestedRoots = ZipUtils.countNestingLevel(filenames);
+        assertEquals("Should work with an empty list", 0, nestedRoots);
+    }
+
+    @Test
+    public void countTwoNestingLevel()
+    {
+        List<String> filenames = Lists.newArrayList(
+                "root/otherRoot/file1.txt",
+                "root/otherRoot/file2.txt");
+        int nestedRoots = ZipUtils.countNestingLevel(filenames);
+        assertEquals("The number of nested roots should be detected", 2, nestedRoots);
+    }
+
+    @Test
+    public void countTwoNestingLevelWithEmptyDirs()
+    {
+        List<String> filenames = Lists.newArrayList(
+                "root/",
+                "root/otherRoot/",
+                "root/otherRoot/file1.txt",
+                "root/otherRoot/file2.txt");
+
+        int nestedRoots = ZipUtils.countNestingLevel(filenames);
+        assertEquals("The number of nested roots should be detected", 2, nestedRoots);
+    }
+
+    @Test
+    public void countTwoNestingLevelWithEmptyDirsInReversedOrder()
+    {
+        List<String> filenames = Lists.newArrayList(
+                "root/otherRoot/file1.txt",
+                "root/otherRoot/file2.txt",
+                "root/otherRoot/",
+                "root/");
+
+        int nestedRoots = ZipUtils.countNestingLevel(filenames);
+        assertEquals("The number of nested roots should be detected", 2, nestedRoots);
+    }
+
+    @Test
+    public void countOneNestingLevelWithEmptyDirs()
+    {
+        List<String> filenames = Lists.newArrayList(
+                "root/folder1/file1.txt",
+                "root/folder1/file2.txt",
+                "root/folder1/",
+                "root/folder2/",
+                "root/");
+
+        int nestedRoots = ZipUtils.countNestingLevel(filenames);
+        assertEquals("The number of nested roots should be detected", 1, nestedRoots);
     }
 }
