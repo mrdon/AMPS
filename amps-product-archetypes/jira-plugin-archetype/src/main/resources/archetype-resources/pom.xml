@@ -22,14 +22,14 @@
     <dependencies>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
-            <artifactId>atlassian-jira</artifactId>
+            <artifactId>jira-api</artifactId>
             <version>\${dollar}{jira.version}</version>
             <scope>provided</scope>
-        </dependency>        
+        </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.6</version>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-tests</artifactId>
+            <version>\${dollar}{jira.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -49,7 +49,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <productVersion>\${dollar}{jira.version}</productVersion>
-                    <productDataVersion>\${dollar}{jira.data.version}</productDataVersion>
+                    <productDataVersion>\${dollar}{jira.version}</productDataVersion>
                 </configuration>
             </plugin>
             <plugin>
@@ -64,7 +64,6 @@
 
     <properties>
         <jira.version>${jira.version}</jira.version>
-        <jira.data.version>${jira.data.version}</jira.data.version>
     </properties>
 
 </project>
