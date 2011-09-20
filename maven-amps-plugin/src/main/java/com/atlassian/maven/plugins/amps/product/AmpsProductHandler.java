@@ -123,8 +123,11 @@ public abstract class AmpsProductHandler implements ProductHandler
 
             // Get rid of "studio-test-resources.zip", which is the homeZip that was used
             // when we started Amps.
-            String originalHomeZip = this.getTestResourcesArtifact().getArtifactId() + ".zip";
-            FileUtils.deleteQuietly(new File(snapshotDir, originalHomeZip));
+            if (this.getTestResourcesArtifact() != null)
+            {
+                String originalHomeZip = this.getTestResourcesArtifact().getArtifactId() + ".zip";
+                FileUtils.deleteQuietly(new File(snapshotDir, originalHomeZip));
+            }
 
 
             // Proceed to replacements
