@@ -29,8 +29,6 @@ import static org.apache.commons.io.FileUtils.copyFile;
 import static org.apache.commons.io.FileUtils.iterateFiles;
 import static org.apache.commons.io.FileUtils.moveDirectory;
 import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
 import static com.atlassian.maven.plugins.amps.util.ProjectUtils.createDirectory;
 
 public abstract class AbstractProductHandler extends AmpsProductHandler
@@ -327,18 +325,25 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
     {
         final File thisPlugin = getPluginFile();
 
-        // remove any existing version
-        for (final Iterator<?> iterateFiles = iterateFiles(targetDir, null, false); iterateFiles.hasNext();)
+        if (thisPlugin.exists())
         {
-            final File file = (File) iterateFiles.next();
-            if (doesFileNameMatchArtifact(file.getName(), project.getArtifactId()))
+            // remove any existing version
+            for (final Iterator<?> iterateFiles = iterateFiles(targetDir, null, false); iterateFiles.hasNext();)
             {
-                file.delete();
+                final File file = (File) iterateFiles.next();
+                if (doesFileNameMatchArtifact(file.getName(), project.getArtifactId()))
+                {
+                    file.delete();
+                }
             }
-        }
 
-        // add the plugin jar to the directory
-        copyFile(thisPlugin, new File(targetDir, thisPlugin.getName()));
+            // add the plugin jar to the directory
+            copyFile(thisPlugin, new File(targetDir, thisPlugin.getName()));
+        }
+        else
+        {
+            log.info("No plugin in the current project - " + thisPlugin.getAbsolutePath());
+        }
     }
 
     protected void addTestPluginToDirectory(final File targetDir) throws IOException

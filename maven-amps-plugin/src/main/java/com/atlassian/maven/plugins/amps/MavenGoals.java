@@ -56,6 +56,7 @@ public class MavenGoals
             put("maven-archetype-plugin", "2.0-alpha-4");
             put("maven-bundle-plugin", "2.0.0");
             put("yuicompressor-maven-plugin", "0.7.1");
+            put("build-helper-maven-plugin", "1.7");
 
             // You can't actually override the version a plugin if defined in the project, so these don't actually do
             // anything, since the super pom already defines versions.
@@ -824,6 +825,38 @@ public class MavenGoals
                 ),
                 executionEnvironment()
         );
+    }
+
+    /**
+     * Adds the file to the artifacts of this build.
+     * The artifact will be deployed using the name and version of the current project,
+     * as in if your artifactId is 'MyProject', it will be MyProject-1.0-SNAPSHOT.jar,
+     * overriding any artifact created at compilation time.
+     *
+     * Attached artifacts get installed (at install phase) and deployed (at deploy phase)
+     * @param file the file
+     * @param type the type of the file, default 'jar'
+     */
+    public void attachArtifact(File file, String type) throws MojoExecutionException
+    {
+
+        executeMojo(
+                plugin(
+                        groupId("org.codehaus.mojo"),
+                        artifactId("build-helper-maven-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("build-helper-maven-plugin"))
+                ),
+                goal("attach-artifact"),
+                configuration(
+                        element(name("artifacts"),
+                                element(name("artifact"),
+                                        element(name("file"), file.getAbsolutePath()),
+                                        element(name("type"), type)
+                                    )
+                                )
+                        ),
+                executionEnvironment());
+
     }
 
     private static class Container extends ProductArtifact

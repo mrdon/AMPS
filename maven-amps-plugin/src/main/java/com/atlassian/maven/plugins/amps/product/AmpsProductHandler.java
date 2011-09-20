@@ -5,6 +5,8 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -119,6 +121,12 @@ public abstract class AmpsProductHandler implements ProductHandler
             FileUtils.deleteDirectory(new File(snapshotDir, "plugins")); // Not used by: fisheye, confluence, studio - Used by: crowd, bamboo, jira
             FileUtils.deleteDirectory(new File(snapshotDir, "bundled-plugins")); // Not used by: fisheye, jira - Used by: confluence, crowd, bamboo
 
+            // Get rid of "studio-test-resources.zip", which is the homeZip that was used
+            // when we started Amps.
+            String originalHomeZip = this.getTestResourcesArtifact().getArtifactId() + ".zip";
+            FileUtils.deleteQuietly(new File(snapshotDir, originalHomeZip));
+
+
             // Proceed to replacements
             List<Replacement> replacements = getReplacements(product);
             // Sort by longer values first, so that the right keys are used.
@@ -187,10 +195,37 @@ public abstract class AmpsProductHandler implements ProductHandler
     {
         // Standard replacements:
         List<Replacement> replacements = Lists.newArrayList();
-        replacements.add(new Replacement("%PROJECT_BUILD_DIR%", project.getBuild().getDirectory()));
-        replacements.add(new Replacement("%PRODUCT_BASE_DIR%", getBaseDirectory(product).getAbsolutePath()));
-        replacements.add(new Replacement("%PRODUCT_HOME_DIR%", getHomeDirectory(product).getAbsolutePath()));
+        String buildDirectory = project.getBuild().getDirectory();
+        String baseDirectory = getBaseDirectory(product).getAbsolutePath();
+        String homeDirectory = getHomeDirectory(product).getAbsolutePath();
+
+        replacements.add(new Replacement("%PROJECT_BUILD_DIR%", buildDirectory));
+        replacements.add(new Replacement("%PRODUCT_BASE_DIR%", baseDirectory));
+        replacements.add(new Replacement("%PRODUCT_HOME_DIR%", homeDirectory));
+
+        // These replacements are especially for Fecru, but there's no reason not to find them in other config files
+        try {
+            replacements.add(new Replacement("%PROJECT_BUILD_DIR_URL_ENCODED%", URLEncoder.encode(propertiesEncode(buildDirectory), "UTF-8")));
+            replacements.add(new Replacement("%PRODUCT_BASE_DIR_URL_ENCODED%", URLEncoder.encode(propertiesEncode(baseDirectory), "UTF-8")));
+            replacements.add(new Replacement("%PRODUCT_HOME_DIR_URL_ENCODED%", URLEncoder.encode(propertiesEncode(homeDirectory), "UTF-8")));
+        }
+        catch (UnsupportedEncodingException badJvm)
+        {
+            throw new RuntimeException("UTF-8 should be supported on any JVM", badJvm);
+        }
+
+
         return replacements;
+    }
+
+    /**
+     * Encodes a String for a Properties file. Escapes : and =.
+     */
+    private String propertiesEncode(String decoded)
+    {
+        String replacement1 = decoded.replaceAll(":", "\\:");
+        String replacement2 = replacement1.replaceAll("=", "\\=");
+        return replacement2;
     }
 
     @Override

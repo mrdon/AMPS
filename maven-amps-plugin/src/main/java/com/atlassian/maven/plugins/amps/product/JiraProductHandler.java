@@ -162,6 +162,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     {
         List<File> configFiles = super.getConfigFiles(product, homeDir);
         configFiles.add(new File(homeDir, "database.script"));
+        configFiles.add(new File(homeDir, "dbconfig.xml"));
         return configFiles;
     }
 
