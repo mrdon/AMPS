@@ -26,7 +26,7 @@ public class CreateHomeZipMojo extends AbstractProductHandlerMojo {
      * Generated home directory zip file.
      */
     @MojoParameter(expression = "${homeZip}", required = false)
-    protected File homeZipFile;
+    protected File homeZip;
 
     public void doExecute() throws MojoExecutionException, MojoFailureException
     {
@@ -39,14 +39,18 @@ public class CreateHomeZipMojo extends AbstractProductHandlerMojo {
         }
 
         final File snapshotDir = productHandler.getSnapshotDirectory(product);
-        if (homeZipFile == null)
+        if (homeZip == null)
         {
-            homeZipFile = new File(productHandler.getBaseDirectory(product), "generated-test-resources.zip");
+            homeZip = new File(productHandler.getBaseDirectory(product), "generated-test-resources.zip");
         }
 
-        productHandler.createHomeZip(snapshotDir, homeZipFile, product);
+        productHandler.createHomeZip(snapshotDir, homeZip, product);
 
-        getLog().info("Home directory zip created successfully at " + homeZipFile.getAbsolutePath());
+        getLog().info("Home directory zip created successfully at " + homeZip.getAbsolutePath());
+
+        // Make the file the artifact of the project
+        getMavenGoals().attachArtifact(homeZip, "zip");
+
     }
 
 
