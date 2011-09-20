@@ -285,8 +285,8 @@
         <refapp.version>2.9.1</refapp.version>
         <confluence.version>3.5.2</confluence.version>
         <confluence.data.version>3.5</confluence.data.version>
-        <jira.version>4.3.2</jira.version>
-        <jira.data.version>4.3</jira.data.version>
+        <jira.version>4.4.1</jira.version>
+        <jira.data.version>4.4</jira.data.version>
         <bamboo.version>3.1</bamboo.version>
         <bamboo.data.version>2.6.1</bamboo.data.version>
         <fecru.version>2.5.4-20110408064401</fecru.version>
