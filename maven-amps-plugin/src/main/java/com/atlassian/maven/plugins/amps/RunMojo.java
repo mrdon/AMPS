@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.io.IOUtils;
@@ -32,8 +33,6 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 @MojoRequiresDependencyResolution
 public class RunMojo extends AbstractTestGroupsHandlerMojo
 {
-    private static final char CONTROL_C = (char) 27;
-
     @MojoParameter (expression = "${wait}", defaultValue = "true")
     private boolean wait;
 
@@ -59,6 +58,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         final List<ProductExecution> productExecutions = getProductExecutions();
 
         startProducts(productExecutions);
+        stopProducts(productExecutions);
     }
 
     protected void startProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
@@ -114,10 +114,11 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
         if (wait)
         {
-            getLog().info("Type CTRL-C to exit");
+            getLog().info("Type CTRL-D to shutdown gracefully and CTRL-C to exit");
             try
             {
-                while (System.in.read() != CONTROL_C)
+                int key = 0;
+                while (System.in.read() != -1)
                 {
                 }
             }
@@ -126,6 +127,19 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
                 // ignore
             }
         }
+    }
+
+    protected void stopProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
+    {
+        for (ProductExecution execution : Iterables.reverse(productExecutions))
+        {
+            Product product = execution.getProduct();
+            ProductHandler productHandler = execution.getProductHandler();
+
+            getLog().info("Shutting down " + product.getInstanceId());
+            productHandler.stop(product);
+        }
+        getLog().info("All products successfully shut down");
     }
 
     protected List<ProductExecution> getProductExecutions() throws MojoExecutionException
