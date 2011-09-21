@@ -56,6 +56,16 @@ public class StudioJiraProductHandler extends JiraProductHandler implements Stud
         ConfigFileUtils.replace(configFiles, replacements, false, log);
 
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir);
+
+        // JIRA needs a bit more PermGen - default is -Xmx512m -XX:MaxPermSize=160m
+        if (ctx.getJvmArgs() == null)
+        {
+            ctx.setJvmArgs("-Xms256m -Xmx768m -XX:MaxPermSize=512m");
+        }
+        else
+        {
+            ctx.setJvmArgs(ctx.getJvmArgs() + " -Xms256m -Xmx768m -XX:MaxPermSize=512m");
+        }
     }
 
     @Override

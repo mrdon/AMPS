@@ -417,6 +417,7 @@ final public class StudioProductHandler extends AmpsProductHandler
         if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows"))
         {
             svnPublicUrl = "file:///" + svnHomeDir.getAbsolutePath();
+            log.warn("Studio is only designed to run on Linux systems.");
         }
         else
         {
