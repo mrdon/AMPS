@@ -27,6 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Base class for webapp mojos
@@ -563,7 +569,67 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         return product;
     }
 
+    /**
+     * Attempts to stop all products. Returns after the timeout or as soon as all products
+     * are shut down.
+     */
+    protected void stopProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
+    {
+        ExecutorService executor = Executors.newFixedThreadPool(productExecutions.size());
+        try
+        {
+            for (final ProductExecution execution : productExecutions)
+            {
+                final Product product = execution.getProduct();
+                final ProductHandler productHandler = execution.getProductHandler();
 
+                Future<?> task = executor.submit(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        getLog().info(product.getInstanceId() + ": Shutting down");
+                        try
+                        {
+                            productHandler.stop(product);
+                        }
+                        catch (MojoExecutionException e)
+                        {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
+                boolean successful = true;
+                try
+                {
+                    task.get(52, TimeUnit.SECONDS);
+                }
+                catch (TimeoutException e)
+                {
+                    getLog().info(product.getInstanceId() + ": Didn't shut down in time");
+                    successful = false;
+                    task.cancel(true);
+                }
+                if (successful)
+                {
+                    getLog().info(product.getInstanceId() + ": Stopped");
+                }
+            }
+        }
+        catch (InterruptedException e1)
+        {
+            Thread.currentThread().interrupt();
+        }
+        catch (ExecutionException e)
+        {
+            throw new MojoExecutionException("Exception while stopping the products", e);
+        }
+    }
+
+    /**
+     * @return the list of instances for the product 'studio'
+     */
     private Iterator<ProductExecution> getStudioExecutions(final List<ProductExecution> productExecutions)
     {
         return Iterables.filter(productExecutions, new Predicate<ProductExecution>(){

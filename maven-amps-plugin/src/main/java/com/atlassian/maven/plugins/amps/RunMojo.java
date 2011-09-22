@@ -1,7 +1,6 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.io.IOUtils;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import static org.apache.commons.lang.StringUtils.isBlank;
 
 /**
@@ -132,18 +130,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         }
     }
 
-    protected void stopProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
-    {
-        for (ProductExecution execution : Iterables.reverse(productExecutions))
-        {
-            Product product = execution.getProduct();
-            ProductHandler productHandler = execution.getProductHandler();
 
-            getLog().info("Shutting down " + product.getInstanceId());
-            productHandler.stop(product);
-        }
-        getLog().info("All products successfully shut down");
-    }
 
     protected List<ProductExecution> getProductExecutions() throws MojoExecutionException
     {

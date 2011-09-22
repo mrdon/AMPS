@@ -157,7 +157,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
 
         List<ProductExecution> executionsDeclaredInPom = getTestGroupProductExecutions(testGroupId);
         List<ProductExecution> productExecutions = includeStudioDependentProducts(executionsDeclaredInPom, goals);
-        
+
         // Install the plugin in each product and start it
         for (ProductExecution productExecution : productExecutions)
         {
@@ -210,14 +210,9 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);
 
         // Shut all products down
-        for (ProductExecution productExecution : productExecutions)
+        if (!noWebapp)
         {
-            ProductHandler productHandler = productExecution.getProductHandler();
-            Product product = productExecution.getProduct();
-            if (!noWebapp)
-            {
-                productHandler.stop(product);
-            }
+            stopProducts(productExecutions);
         }
     }
 
