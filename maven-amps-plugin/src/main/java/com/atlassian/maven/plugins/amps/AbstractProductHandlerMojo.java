@@ -523,13 +523,18 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     void makeProductsInheritDefaultConfiguration(List<Product> products, Map<String, Product> productMap) throws MojoExecutionException
     {
-        productMap.put(getProductId(), createDefaultProductContext());
+        Product defaultProduct = createDefaultProductContext();
+        productMap.put(getProductId(), defaultProduct);
         if (!products.isEmpty())
         {
-            Product defaultProduct = createDefaultProductContext();
             for (Product product : products)
             {
                 Product processedProduct = product.merge(defaultProduct);
+                if (ProductHandlerFactory.STUDIO_CROWD.equals(processedProduct.getId()))
+                {
+                    // This is a temporary fix for StudioCrowd - it requires atlassian.dev.mode=false - see AMPS-556
+                    processedProduct.getSystemPropertyVariables().put("atlassian.dev.mode", "false");
+                }
                 String instanceId = getProductInstanceId(processedProduct);
                 productMap.put(instanceId, processedProduct);
             }

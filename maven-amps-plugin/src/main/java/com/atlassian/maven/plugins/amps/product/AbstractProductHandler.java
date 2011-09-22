@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.atlassian.maven.plugins.amps.AbstractProductHandlerMojo;
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
@@ -401,7 +402,7 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
     }
 
     /**
-     * Merges the properties: pom.xml overrides those of the Product Handler.
+     * Merges the properties: pom.xml overrides {@link AbstractProductHandlerMojo#setDefaultValues} overrides the Product Handler.
      * @param ctx the Product
      * @return the complete list of system properties
      */
