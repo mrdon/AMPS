@@ -222,7 +222,7 @@ final public class StudioProductHandler extends AmpsProductHandler
      *            a product. All products are accepted but not all of the will be
      *            modified. The product must have an instanceId.
      */
-    public static void setDefaultValues(Product product)
+    public static void setDefaultValues(MavenContext context, Product product)
     {
         String defaultContextPath = defaultContextPaths.get(product.getId());
         if (defaultContextPath != null)
@@ -230,7 +230,7 @@ final public class StudioProductHandler extends AmpsProductHandler
             // It's a Studio product
             if (product.getOutput() == null)
             {
-                product.setOutput("target/" + product.getInstanceId() + ".log");
+                product.setOutput(new File(context.getProject().getBuild().getDirectory(), product.getInstanceId() + ".log").getAbsolutePath());
             }
             if (product.getContextPath() == null)
             {

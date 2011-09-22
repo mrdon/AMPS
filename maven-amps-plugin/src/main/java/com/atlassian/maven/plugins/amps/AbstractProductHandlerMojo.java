@@ -376,7 +376,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         product.setInstanceId(getProductInstanceId(product));
 
         // If it's a Studio product, some defaults are different (ex: context path for Confluence is /wiki)
-        StudioProductHandler.setDefaultValues(product);
+        StudioProductHandler.setDefaultValues(getMavenContext(), product);
 
         //Apply the common default values
         String dversion = System.getProperty("product.data.version", product.getDataVersion());
@@ -555,6 +555,11 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         product.setId(productNickname);
         product.setInstanceId(instanceId);
         setDefaultValues(product, handler);
+        if (ProductHandlerFactory.STUDIO_CROWD.equals(product.getId()))
+        {
+            // This is a temporary fix for StudioCrowd - it requires atlassian.dev.mode=false - see AMPS-556
+            product.getSystemPropertyVariables().put("atlassian.dev.mode", "false");
+        }
         return product;
     }
 
