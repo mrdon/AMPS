@@ -18,6 +18,7 @@
         <module>maven-refapp-plugin</module>
         <module>maven-fecru-plugin</module>
         <module>maven-crowd-plugin</module>
+        <module>maven-studio-plugin</module>
     </modules>
 
     <dependencies>
