@@ -58,7 +58,6 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         final List<ProductExecution> productExecutions = getProductExecutions();
 
         startProducts(productExecutions);
-        stopProducts(productExecutions);
     }
 
     protected void startProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
@@ -126,6 +125,11 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             {
                 // ignore
             }
+
+            // We don't stop products when -Dwait=false, because some projects rely on the
+            // application running after the end of the RunMojo goal. The SHITTY tests
+            // check this behaviour.
+            stopProducts(productExecutions);
         }
     }
 
