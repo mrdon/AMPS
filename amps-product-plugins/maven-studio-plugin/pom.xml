@@ -35,6 +35,10 @@
                 <shitty.product>studio</shitty.product>
                 <product.version>${studio.version}</product.version>
                 <product.data.version>${studio.data.version}</product.data.version>
+                <tests>
+                <!-- No other mojo is defined for Studio -->
+                create
+                </tests>
             </properties>
         </profile>
     </profiles>

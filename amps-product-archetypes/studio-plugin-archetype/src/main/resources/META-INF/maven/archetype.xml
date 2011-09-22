@@ -1,6 +1,7 @@
 <archetype>
     <id>refapp-plugin-archetype</id>
     <sources>
+        <source>src/main/java/ExampleClass.java</source>
     </sources>
     <testSources>
         <source>src/test/java/HeaderSection.java</source>
