@@ -24,6 +24,8 @@ package com.atlassian.maven.plugins.amps.codegen.prompter;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import jline.ANSIBuffer;
 import org.codehaus.plexus.components.interactivity.InputHandler;
 import org.codehaus.plexus.components.interactivity.OutputHandler;
 import org.codehaus.plexus.components.interactivity.Prompter;
@@ -39,6 +41,25 @@ import java.util.List;
  */
 public class PrettyPrompter implements Prompter {
 
+    //maven-cli-plugin uses an old version jline that has ansi codes in package scope.
+    //re-defining them in public here
+    public static final int OFF = 0;
+    public static final int BOLD = 1;
+    public static final int UNDERSCORE = 4;
+    public static final int BLINK = 5;
+    public static final int REVERSE = 7;
+    public static final int CONCEALED = 8;
+    public static final int FG_BLACK = 30;
+    public static final int FG_RED = 31;
+    public static final int FG_GREEN = 32;
+    public static final int FG_YELLOW = 33;
+    public static final int FG_BLUE = 34;
+    public static final int FG_MAGENTA = 35;
+    public static final int FG_CYAN = 36;
+    public static final int FG_WHITE = 37;
+    public static final char ESC = 27;
+
+
     /**
      * @requirement
      */
@@ -48,6 +69,15 @@ public class PrettyPrompter implements Prompter {
      * @requirement
      */
     private InputHandler inputHandler;
+
+    private boolean useAnsiColor;
+
+    public PrettyPrompter() {
+        String mavencolor = System.getenv("MAVEN_COLOR");
+        if (mavencolor != null && !mavencolor.equals("")) {
+            useAnsiColor = Boolean.parseBoolean(mavencolor);
+        }
+    }
 
     public String prompt(String message)
             throws PrompterException {
@@ -110,7 +140,13 @@ public class PrettyPrompter implements Prompter {
 
             if (line != null && !possibleValues.contains(line)) {
                 try {
-                    outputHandler.writeLine("Invalid selection.");
+                    String invalid = "Invalid selection.";
+                    if (useAnsiColor) {
+                        ANSIBuffer ansiBuffer = new ANSIBuffer();
+                        ansiBuffer.append(ANSIBuffer.ANSICodes.attrib(FG_RED)).append(ANSIBuffer.ANSICodes.attrib(BOLD)).append("Invalid selection.");
+                        invalid = ansiBuffer.toString();
+                    }
+                    outputHandler.writeLine(invalid);
                 } catch (IOException e) {
                     throw new PrompterException("Failed to present feedback", e);
                 }
@@ -142,6 +178,42 @@ public class PrettyPrompter implements Prompter {
     }
 
     protected String formatMessage(String message, List possibleValues, String defaultReply) {
+        if(useAnsiColor) {
+            return formatAnsiMessage(message,possibleValues,defaultReply);
+        } else {
+            return formatPlainMessage(message,possibleValues,defaultReply);
+        }
+    }
+
+    private String formatAnsiMessage(String message, List possibleValues, String defaultReply) {
+        ANSIBuffer formatted = new ANSIBuffer();
+
+        formatted.append(message);
+
+        if (possibleValues != null && !possibleValues.isEmpty()) {
+            formatted.append(" (");
+
+            for (Iterator it = possibleValues.iterator(); it.hasNext(); ) {
+                String possibleValue = (String) it.next();
+
+                formatted.attrib(possibleValue,BOLD);
+
+                if (it.hasNext()) {
+                    formatted.append("/");
+                }
+            }
+
+            formatted.append(")");
+        }
+
+        if (defaultReply != null) {
+            formatted.append(ANSIBuffer.ANSICodes.attrib(FG_GREEN)).append(ANSIBuffer.ANSICodes.attrib(BOLD)).append(" [").append(defaultReply).append("]").append(ANSIBuffer.ANSICodes.attrib(OFF));
+        }
+
+        return formatted.toString();
+    }
+
+    private String formatPlainMessage(String message, List possibleValues, String defaultReply) {
         StringBuffer formatted = new StringBuffer(message.length() * 2);
 
         formatted.append(message);
