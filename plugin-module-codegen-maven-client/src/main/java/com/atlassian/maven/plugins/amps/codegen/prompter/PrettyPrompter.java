@@ -76,6 +76,8 @@ public class PrettyPrompter implements Prompter {
         String mavencolor = System.getenv("MAVEN_COLOR");
         if (mavencolor != null && !mavencolor.equals("")) {
             useAnsiColor = Boolean.parseBoolean(mavencolor);
+        } else {
+            useAnsiColor = false;
         }
     }
 
@@ -143,7 +145,7 @@ public class PrettyPrompter implements Prompter {
                     String invalid = "Invalid selection.";
                     if (useAnsiColor) {
                         ANSIBuffer ansiBuffer = new ANSIBuffer();
-                        ansiBuffer.append(ANSIBuffer.ANSICodes.attrib(FG_RED)).append(ANSIBuffer.ANSICodes.attrib(BOLD)).append("Invalid selection.");
+                        ansiBuffer.append(ANSIBuffer.ANSICodes.attrib(FG_RED)).append(ANSIBuffer.ANSICodes.attrib(BOLD)).append("Invalid selection.").append(ANSIBuffer.ANSICodes.attrib(OFF));
                         invalid = ansiBuffer.toString();
                     }
                     outputHandler.writeLine(invalid);

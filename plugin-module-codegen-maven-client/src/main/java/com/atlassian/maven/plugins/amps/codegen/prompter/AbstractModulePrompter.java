@@ -4,11 +4,15 @@ import com.atlassian.plugins.codegen.modules.NameBasedModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.util.ClassnameUtil;
+import jline.ANSIBuffer;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @since 3.5
@@ -21,12 +25,20 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     protected boolean showAdvancedPrompt;
     protected boolean showAdvancedNamePrompt;
     protected String defaultBasePackage;
+    protected boolean useAnsiColor;
 
     public AbstractModulePrompter(Prompter prompter) {
         this.prompter = prompter;
         this.showExamplesPrompt = true;
         this.showAdvancedPrompt = true;
         this.showAdvancedNamePrompt = true;
+
+        String mavencolor = System.getenv("MAVEN_COLOR");
+        if (StringUtils.isNotBlank(mavencolor)) {
+            useAnsiColor = Boolean.parseBoolean(mavencolor);
+        } else {
+            useAnsiColor = false;
+        }
     }
 
     @Override
@@ -41,10 +53,10 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
             String moduleName;
 
             if (showAdvanced) {
-                if(props instanceof NameBasedModuleProperties) {
+                if (props instanceof NameBasedModuleProperties) {
                     NameBasedModuleProperties namedProps = (NameBasedModuleProperties) props;
 
-                    if(showAdvancedNamePrompt) {
+                    if (showAdvancedNamePrompt) {
                         moduleName = promptNotBlank("Plugin Name", namedProps.getModuleName());
                     } else {
                         moduleName = namedProps.getModuleName();
@@ -69,7 +81,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
             props.setIncludeExamples(promptForBoolean("Include Example Code?", "N"));
         }
 
-        return (P)props;
+        return (P) props;
     }
 
     @Override
@@ -86,7 +98,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     protected String promptJavaClassname(String message, String defaultValue) throws PrompterException {
         String classname;
         if (StringUtils.isBlank(defaultValue)) {
-            classname = prompter.prompt(message);
+            classname = prompter.prompt(requiredMessage(message));
         } else {
             classname = prompt(message, defaultValue);
         }
@@ -105,7 +117,8 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     protected String promptFullyQualifiedJavaClass(String message, String defaultValue) throws PrompterException {
         String fqName;
         if (StringUtils.isBlank(defaultValue)) {
-            fqName = prompter.prompt(message);
+
+            fqName = prompter.prompt(requiredMessage(message));
         } else {
             fqName = prompt(message, defaultValue);
         }
@@ -134,7 +147,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
             fqName = prompt(message, defaultValue);
         }
 
-        if (StringUtils.isNotBlank(fqName)){
+        if (StringUtils.isNotBlank(fqName)) {
             String packageName = "";
             String className = "";
             if (fqName.contains(".")) {
@@ -144,7 +157,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
                 className = fqName;
             }
 
-             if(!ClassnameUtil.isValidPackageName(packageName) || !ClassnameUtil.isValidClassName(className)) {
+            if (!ClassnameUtil.isValidPackageName(packageName) || !ClassnameUtil.isValidClassName(className)) {
                 fqName = promptFullyQualifiedJavaClass(message, defaultValue);
             }
         }
@@ -156,7 +169,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         String packagename;
 
         if (StringUtils.isBlank(defaultValue)) {
-            packagename = prompter.prompt(message);
+            packagename = prompter.prompt(requiredMessage(message));
         } else {
             packagename = prompt(message, defaultValue);
         }
@@ -175,7 +188,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     protected String promptNotBlank(String message, String defaultValue) throws PrompterException {
         String value;
         if (StringUtils.isBlank(defaultValue)) {
-            value = prompter.prompt(message);
+            value = prompter.prompt(requiredMessage(message));
         } else {
             value = prompt(message, defaultValue);
         }
@@ -194,7 +207,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         String answer;
         boolean bool;
         if (StringUtils.isBlank(defaultValue)) {
-            answer = prompter.prompt(message, YN_ANSWERS);
+            answer = prompter.prompt(requiredMessage(message), YN_ANSWERS);
         } else {
             answer = prompt(message, YN_ANSWERS, defaultValue);
         }
@@ -263,7 +276,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         String userVal = promptNotBlank(message, Integer.toString(defaultInt));
         int userInt;
         if (!StringUtils.isNumeric(userVal)) {
-            userInt = promptForInt(message,defaultInt);
+            userInt = promptForInt(message, defaultInt);
         } else {
             userInt = Integer.parseInt(userVal);
         }
@@ -294,16 +307,27 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         this.showAdvancedNamePrompt = false;
     }
 
+    protected String requiredMessage(String message) {
+        String formattedMessage = message;
+        if (useAnsiColor) {
+            ANSIBuffer ansiBuffer = new ANSIBuffer();
+            ansiBuffer.append(ANSIBuffer.ANSICodes.attrib(PrettyPrompter.BOLD)).append(ANSIBuffer.ANSICodes.attrib(PrettyPrompter.FG_RED)).append(message).append(ANSIBuffer.ANSICodes.attrib(PrettyPrompter.OFF));
+            formattedMessage = ansiBuffer.toString();
+        }
+
+        return formattedMessage;
+    }
+
     @Override
     public void setDefaultBasePackage(String basePackage) {
-        if(StringUtils.isNotBlank(basePackage)) {
+        if (StringUtils.isNotBlank(basePackage)) {
             this.defaultBasePackage = basePackage;
         }
     }
 
     @Override
     public String getDefaultBasePackage() {
-        if(StringUtils.isNotBlank(defaultBasePackage)) {
+        if (StringUtils.isNotBlank(defaultBasePackage)) {
             return defaultBasePackage;
         } else {
             return DEFAULT_BASE_PACKAGE;

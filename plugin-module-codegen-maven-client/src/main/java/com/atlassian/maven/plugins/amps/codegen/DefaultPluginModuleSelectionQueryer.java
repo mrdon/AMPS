@@ -22,6 +22,8 @@ public class DefaultPluginModuleSelectionQueryer extends AbstractLogEnabled impl
         String mavencolor = System.getenv("MAVEN_COLOR");
         if (mavencolor != null && !mavencolor.equals("")) {
             useAnsiColor = Boolean.parseBoolean(mavencolor);
+        } else {
+            useAnsiColor = false;
         }
     }
 
