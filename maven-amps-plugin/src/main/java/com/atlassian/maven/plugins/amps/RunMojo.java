@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.surefire.shade.org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.Artifact;
 import org.jfrog.maven.annomojo.annotations.MojoExecute;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
@@ -21,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
 import static org.apache.commons.lang.StringUtils.isBlank;
 
 /**
@@ -60,7 +63,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
     protected void startProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
     {
-        List<String> successMessages = Lists.newArrayList();
+        List<StartupInformation> successMessages = Lists.newArrayList();
         for (ProductExecution productExecution : productExecutions)
         {
             final ProductHandler productHandler = productExecution.getProductHandler();
@@ -70,16 +73,15 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
                 product.setInstallPlugin(shouldInstallPlugin());
             }
 
+            long startTime = System.nanoTime();
             int actualHttpPort = productHandler.start(product);
+            long durationSeconds = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime);
 
-            String successMessage = product.getInstanceId() + " started successfully";
-            if (actualHttpPort != 0)
-            {
-                successMessage += " and available at http://localhost:" + actualHttpPort + product.getContextPath();
-            }
-            getLog().info(successMessage);
+            StartupInformation message = new StartupInformation(product, "started successfully", actualHttpPort, durationSeconds);
 
-            successMessages.add(successMessage);
+            getLog().info(message.toString());
+
+            successMessages.add(message);
 
             if (writePropertiesToFile)
             {
@@ -103,9 +105,9 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         if (successMessages.size() > 1)
         {
             getLog().info("Summary:");
-            for (String message : successMessages)
+            for (StartupInformation message : successMessages)
             {
-                getLog().info(message);
+                getLog().info(message.toString());
             }
         }
 
@@ -194,5 +196,40 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         {
             IOUtils.closeQuietly(out);
         }
+    }
+
+    /**
+     * Wraps information about the startup of a product
+     */
+    private static class StartupInformation
+    {
+        int actualHttpPort;
+        long durationSeconds;
+        Product product;
+        String event;
+
+        public StartupInformation(Product product, String event, int actualHttpPort, long durationSeconds)
+        {
+            super();
+            this.actualHttpPort = actualHttpPort;
+            this.product = product;
+            this.event = event;
+            this.durationSeconds = durationSeconds;
+        }
+        @Override
+        public String toString()
+        {
+            String message = String.format("%s %s in %ds", product.getInstanceId(), event, durationSeconds);
+            if (actualHttpPort != 0)
+            {
+                message += " at http://localhost:" + actualHttpPort + product.getContextPath();
+            }
+            if (!StringUtils.isBlank(product.getOutput()))
+            {
+                message += " \nSee log file: " + product.getOutput();
+            }
+            return message;
+        }
+
     }
 }
