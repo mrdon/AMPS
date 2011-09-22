@@ -148,7 +148,8 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     public void cleanupProductHomeForZip(Product product, File homeDirectory) throws MojoExecutionException, IOException
     {
         super.cleanupProductHomeForZip(product, homeDirectory);
-        FileUtils.deleteDirectory(new File(homeDirectory, "caches/transformed-plugins"));
-        FileUtils.deleteDirectory(new File(homeDirectory, "caches/felix/felix-cache"));
+        FileUtils.deleteQuietly(new File(homeDirectory, "caches/transformed-plugins"));
+        FileUtils.deleteQuietly(new File(homeDirectory, "caches/felix/felix-cache"));
+        FileUtils.deleteQuietly(new File(homeDirectory, "logs"));
     }
 }

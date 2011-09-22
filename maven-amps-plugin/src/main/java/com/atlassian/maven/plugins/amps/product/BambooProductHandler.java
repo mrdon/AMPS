@@ -87,9 +87,10 @@ public class BambooProductHandler extends AbstractWebappProductHandler
     {
         List<Replacement> replacements = super.getReplacements(product);
         File homeDirectory = getHomeDirectory(product);
-        replacements.add(new Replacement("@project-dir@", homeDirectory.getParent()));
+        // We don't rewrap homes with these values:
+        replacements.add(new Replacement("@project-dir@", homeDirectory.getParent(), false));
         replacements.add(new Replacement("/bamboo-home/", "/home/", false));
-        replacements.add(new Replacement("${bambooHome}", homeDirectory.getAbsolutePath()));
+        replacements.add(new Replacement("${bambooHome}", homeDirectory.getAbsolutePath(), false));
         return replacements;
     }
 
@@ -99,10 +100,6 @@ public class BambooProductHandler extends AbstractWebappProductHandler
         List<File> configFiles = super.getConfigFiles(product, homeDirectory);
         configFiles.add(new File(homeDirectory, "bamboo.cfg.xml"));
         configFiles.add(new File(homeDirectory, "database.log"));
-        // Those 3 are not used in Studio-Bamboo
-        configFiles.add(new File(homeDirectory, "database.script"));
-        configFiles.add(new File(homeDirectory, "database/defaultdb.log"));
-        configFiles.add(new File(homeDirectory, "database/defaultdb.script"));
         return configFiles;
     }
 

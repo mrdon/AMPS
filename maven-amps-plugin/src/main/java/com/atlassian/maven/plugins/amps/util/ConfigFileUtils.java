@@ -36,7 +36,6 @@ public class ConfigFileUtils
     {
         if (!cfgFile.exists())
         {
-            log.warn(replacements.size() + " replacements were attempted to be made in the following file, but the file doesn't exist: " + cfgFile.getAbsolutePath());
             return;
         }
         try
@@ -46,7 +45,10 @@ public class ConfigFileUtils
             {
                 for (Replacement replacement : replacements)
                 {
-                    config = config.replace(replacement.getKey(), replacement.getValue());
+                    if (replacement.applyWhenUnzipping())
+                    {
+                        config = config.replace(replacement.getKey(), replacement.getValue());
+                    }
                 }
             }
             else
@@ -123,6 +125,12 @@ public class ConfigFileUtils
     {
         String key;
         String value;
+
+        /** Replace the key with the value when unzipping a home. This is the normal meaning of
+         * a replacement, {@literal key -> value} */
+        boolean applyWhenUnzipping = true;
+
+        /** Detect the value and replace it with the key when zipping a home directory */
         boolean reversible = true;
 
         /**
@@ -158,13 +166,28 @@ public class ConfigFileUtils
          * @param key the key to be replaced. Must not be null.
          * @param value the value to be replaced. Must not be null.
          * @param reversible true if the value should be replaced with the key before
-         * preparing a snapshot. Default is true. Use false when the value is non-unique,
-         * e.g. "%BAMBOO_ENABLED% = true" should not be reversible.
+         * preparing a snapshot. Default is true. Use false when:<ul>
+         * <li>the value is non-unique, e.g. "%BAMBOO_ENABLED% = true" should not be reversible.</li>
+         * <li>we only support the value for legacy, but we wouldn't re-wrap a snapshot with this key</li>
+         * </ul>
          */
         public Replacement(String key, String value, boolean reversible)
         {
             this(key, value);
             this.reversible = reversible;
+        }
+
+        /**
+         * @param key the key, never null
+         * @param value the value, never null
+         * @param applyWhenUnzipping apply when unzipping a home. Defaults to true.
+         * @param applyWhenZipping apply when zipping a home. Defaults to true.
+         */
+        public Replacement(String key, String value, boolean applyWhenUnzipping, boolean applyWhenZipping)
+        {
+            this(key, value);
+            this.applyWhenUnzipping = applyWhenUnzipping;
+            this.reversible = applyWhenZipping;
         }
 
         /**
@@ -186,6 +209,11 @@ public class ConfigFileUtils
         public boolean isReversible()
         {
             return reversible;
+        }
+
+        public boolean applyWhenUnzipping()
+        {
+            return applyWhenUnzipping;
         }
 
         @Override

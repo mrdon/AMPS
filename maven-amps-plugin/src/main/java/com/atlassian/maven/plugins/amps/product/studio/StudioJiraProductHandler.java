@@ -49,8 +49,8 @@ public class StudioJiraProductHandler extends JiraProductHandler implements Stud
         configFiles.add(new File(explodedWarDir, "WEB-INF/web.xml"));
 
         List<Replacement> replacements = Lists.newArrayList();
-        replacements.add(new Replacement("field-type-name=\"postgres72\"", "field-type-name=\"hsql\""));
-        replacements.add(new Replacement("schema-name=\"public\"", "schema-name=\"PUBLIC\""));
+        replacements.add(new Replacement("field-type-name=\"postgres72\"", "field-type-name=\"hsql\"", false));
+        replacements.add(new Replacement("schema-name=\"public\"", "schema-name=\"PUBLIC\"", false));
         replacements.add(new Replacement("%JIRA-HOME%", homeDir.getAbsolutePath()));
 
         ConfigFileUtils.replace(configFiles, replacements, false, log);

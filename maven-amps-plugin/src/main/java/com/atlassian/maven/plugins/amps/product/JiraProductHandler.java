@@ -150,10 +150,11 @@ public class JiraProductHandler extends AbstractWebappProductHandler
 
         List<Replacement> replacements = super.getReplacements(ctx);
         File homeDir = getHomeDirectory(ctx);
-        replacements.add(new Replacement("@project-dir@", homeDir.getParent()));
-        replacements.add(new Replacement("/jira-home/", "/home/"));
+        // We don't rewrap snapshots with these values:
+        replacements.add(new Replacement("@project-dir@", homeDir.getParent(), false));
+        replacements.add(new Replacement("/jira-home/", "/home/", false));
         replacements.add(new Replacement("@base-url@",
-                "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + contextPath));
+                "http://" + ctx.getServer() + ":" + ctx.getHttpPort() + contextPath, false));
         return replacements;
     }
 
@@ -161,6 +162,7 @@ public class JiraProductHandler extends AbstractWebappProductHandler
     public List<File> getConfigFiles(Product product, File homeDir)
     {
         List<File> configFiles = super.getConfigFiles(product, homeDir);
+        configFiles.add(new File(homeDir, "database.log"));
         configFiles.add(new File(homeDir, "database.script"));
         configFiles.add(new File(homeDir, "dbconfig.xml"));
         return configFiles;
@@ -227,4 +229,14 @@ public class JiraProductHandler extends AbstractWebappProductHandler
             return plugins;
         }
     }
+
+    @Override
+    public void cleanupProductHomeForZip(Product product, File snapshotDir) throws MojoExecutionException, IOException
+    {
+        super.cleanupProductHomeForZip(product, snapshotDir);
+
+        FileUtils.deleteQuietly(new File(snapshotDir, "log/atlassian-jira.log"));
+    }
+
+
 }

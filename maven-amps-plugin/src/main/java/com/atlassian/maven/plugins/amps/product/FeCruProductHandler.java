@@ -109,6 +109,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     {
         List<File> configFiles = super.getConfigFiles(product, homeDir);
         configFiles.add(new File(homeDir, "config.xml"));
+        configFiles.add(new File(homeDir, "var/data/crudb/crucible.script"));
         return configFiles;
     }
 
@@ -352,7 +353,8 @@ public class FeCruProductHandler extends AbstractProductHandler
     public void cleanupProductHomeForZip(Product product, File homeDirectory) throws MojoExecutionException, IOException
     {
         super.cleanupProductHomeForZip(product, homeDirectory);
-        FileUtils.deleteDirectory(new File(homeDirectory, "var/plugins"));
-        FileUtils.deleteDirectory(new File(homeDirectory, "cache/plugins"));
+        FileUtils.deleteQuietly(new File(homeDirectory, "var/log"));
+        FileUtils.deleteQuietly(new File(homeDirectory, "var/plugins"));
+        FileUtils.deleteQuietly(new File(homeDirectory, "cache/plugins"));
     }
 }

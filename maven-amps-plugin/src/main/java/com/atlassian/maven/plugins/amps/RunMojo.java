@@ -116,7 +116,6 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             getLog().info("Type CTRL-D to shutdown gracefully and CTRL-C to exit");
             try
             {
-                int key = 0;
                 while (System.in.read() != -1)
                 {
                 }
