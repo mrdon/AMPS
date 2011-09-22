@@ -23,6 +23,12 @@
                     <configuration>
                         <products>
                             <product>
+                                <id>studio</id>
+                                <version>${studio.version}</version>
+                                <dataVersion>${studio.data.version}</dataVersion>
+                                <output>${project.build.directory}/studio-${studio.version}.log</output>
+                            </product>
+                            <product>
                                 <id>refapp</id>
                                 <version>${refapp.version}</version>
                                 <output>${project.build.directory}/refapp-${refapp.version}.log</output>
@@ -30,31 +36,31 @@
                             <product>
                                 <id>confluence</id>
                                 <version>${confluence.version}</version>
-                                <productDataVersion>${confluence.data.version}</productDataVersion>
+                                <dataVersion>${confluence.data.version}</dataVersion>
                                 <output>${project.build.directory}/confluence-${confluence.version}.log</output>
                             </product>
                             <product>
                                 <id>jira</id>
                                 <version>${jira.version}</version>
-                                <productDataVersion>${jira.data.version}</productDataVersion>
+                                <dataVersion>${jira.data.version}</dataVersion>
                                 <output>${project.build.directory}/jira-${jira.version}.log</output>
                             </product>
                             <product>
                                 <id>bamboo</id>
                                 <version>${bamboo.version}</version>
-                                <productDataVersion>${bamboo.data.version}</productDataVersion>
+                                <dataVersion>${bamboo.data.version}</dataVersion>
                                 <output>${project.build.directory}/bamboo-${bamboo.version}.log</output>
                             </product>
                             <product>
                                 <id>fecru</id>
                                 <version>${fecru.version}</version>
-                                <productDataVersion>${fecru.data.version}</productDataVersion>
+                                <dataVersion>${fecru.data.version}</dataVersion>
                                 <output>${project.build.directory}/fecru-${fecru.version}.log</output>
                             </product>
                             <product>
                                 <id>crowd</id>
                                 <version>${crowd.version}</version>
-                                <productDataVersion>${crowd.data.version}</productDataVersion>
+                                <dataVersion>${crowd.data.version}</dataVersion>
                                 <output>${project.build.directory}/crowd-${crowd.version}.log</output>
                             </product>
                         </products>
