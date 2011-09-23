@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -40,6 +39,7 @@ import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.inject.internal.util.ImmutableMap;
 
 /**
  * This product handler is a 'ghost'. It doesn't start a product, but it prepares the environment
@@ -47,7 +47,6 @@ import com.google.common.collect.Sets;
  */
 final public class StudioProductHandler extends AmpsProductHandler
 {
-
     private static final String STUDIO_PROPERTIES = "home/studio.properties";
     private static final String STUDIO_INITIAL_DATA_PROPERTIES = "home/studio-initial-data.properties";
     private static final String DEVMODE_HAL_LICENSES_XML = "home/devmode-hal-licenses.xml";
@@ -58,16 +57,13 @@ final public class StudioProductHandler extends AmpsProductHandler
 
     private final static String LAUNCH_INSTANCES_SYSTEM_PROPERTY = "studio.instanceIds";
 
-    private final static Map<String, String> defaultContextPaths = new HashMap<String, String>()
-    {
-        {
-            put(STUDIO_BAMBOO, "/builds");
-            put(STUDIO_CONFLUENCE, "/wiki");
-            put(STUDIO_CROWD, "/crowd");
-            put(STUDIO_FECRU, "/");
-            put(STUDIO_JIRA, "/jira");
-        }
-    };
+    private final static Map<String, String> defaultContextPaths = ImmutableMap.<String, String>builder()
+            .put(STUDIO_BAMBOO, "/builds")
+            .put(STUDIO_CONFLUENCE, "/wiki")
+            .put(STUDIO_CROWD, "/crowd")
+            .put(STUDIO_FECRU, "/")
+            .put(STUDIO_JIRA, "/jira")
+            .build();
 
     public StudioProductHandler(MavenContext context, MavenGoals goals)
     {
