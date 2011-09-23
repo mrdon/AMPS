@@ -57,13 +57,19 @@ final public class StudioProductHandler extends AmpsProductHandler
 
     private final static String LAUNCH_INSTANCES_SYSTEM_PROPERTY = "studio.instanceIds";
 
-    private final static Map<String, String> defaultContextPaths = ImmutableMap.<String, String>builder()
+    private static final Map<String, String> defaultContextPaths;
+
+    static
+    {
+        // This is just in a static block to avoid confusing qdox
+        defaultContextPaths = ImmutableMap.<String,String>builder()
             .put(STUDIO_BAMBOO, "/builds")
             .put(STUDIO_CONFLUENCE, "/wiki")
             .put(STUDIO_CROWD, "/crowd")
             .put(STUDIO_FECRU, "/")
             .put(STUDIO_JIRA, "/jira")
             .build();
+    }
 
     public StudioProductHandler(MavenContext context, MavenGoals goals)
     {
