@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +40,6 @@ import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.inject.internal.util.ImmutableMap;
 
 /**
  * This product handler is a 'ghost'. It doesn't start a product, but it prepares the environment
@@ -61,14 +61,12 @@ final public class StudioProductHandler extends AmpsProductHandler
 
     static
     {
-        // This is just in a static block to avoid confusing qdox
-        defaultContextPaths = ImmutableMap.<String,String>builder()
-            .put(STUDIO_BAMBOO, "/builds")
-            .put(STUDIO_CONFLUENCE, "/wiki")
-            .put(STUDIO_CROWD, "/crowd")
-            .put(STUDIO_FECRU, "/")
-            .put(STUDIO_JIRA, "/jira")
-            .build();
+        defaultContextPaths = new HashMap<String, String>();
+        defaultContextPaths.put(STUDIO_BAMBOO, "/builds");
+        defaultContextPaths.put(STUDIO_CONFLUENCE, "/wiki");
+        defaultContextPaths.put(STUDIO_CROWD, "/crowd");
+        defaultContextPaths.put(STUDIO_FECRU, "/");
+        defaultContextPaths.put(STUDIO_JIRA, "/jira");
     }
 
     public StudioProductHandler(MavenContext context, MavenGoals goals)
