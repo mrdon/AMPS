@@ -73,6 +73,7 @@
     <properties>
         <studio.version>${studio.version}</studio.version>
         <studio.data.version>${studio.data.version}</studio.data.version>
+        <amps.version>${project.version}</amps.version>
     </properties>
 
 </project>

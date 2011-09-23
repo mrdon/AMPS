@@ -59,6 +59,7 @@
     <properties>
         <crowd.version>${crowd.version}</crowd.version>
         <crowd.data.version>${crowd.data.version}</crowd.data.version>
+        <amps.version>${project.version}</amps.version>
     </properties>
 
 </project>

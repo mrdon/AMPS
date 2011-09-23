@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.amps;
 
+import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
 import com.atlassian.maven.plugins.amps.product.studio.StudioProperties;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 
@@ -88,6 +89,16 @@ public class Product
      * Version of the Felix OSGi web console
      */
     private String webConsoleVersion;
+
+    /**
+     * Flag to indicate whether or not to disable automatic bundling of Fastdev.
+     */
+    private Boolean disableFastdev;
+
+    /**
+     * Version of the Fastdev plugin
+     */
+    private String fastdevVersion;
 
     /**
      * Product id - nickname of the product to run
@@ -195,6 +206,8 @@ public class Product
         prod.setId(id == null ? product.getId() : id);
         prod.setInstanceId(instanceId == null ? product.getInstanceId() : instanceId);
         prod.setWebConsoleVersion(webConsoleVersion == null ? product.getWebConsoleVersion() : webConsoleVersion);
+        prod.setDisableFastdev(disableFastdev == null ? product.isDisableFastdev() : disableFastdev);
+        prod.setFastdevVersion(fastdevVersion == null ? product.getFastdevVersion() : fastdevVersion);
         prod.setRestVersion(restVersion == null ? product.getRestVersion() : restVersion);
         prod.setPdkVersion(pdkVersion == null ? product.getPdkVersion() : pdkVersion);
         prod.setSalVersion(salVersion == null ? product.getSalVersion() : salVersion);
@@ -452,6 +465,26 @@ public class Product
     public String getWebConsoleVersion()
     {
         return webConsoleVersion;
+    }
+
+    public Boolean isDisableFastdev()
+    {
+        return disableFastdev;
+    }
+
+    public void setDisableFastdev(final Boolean disableFastdev)
+    {
+        this.disableFastdev = disableFastdev;
+    }
+
+    public String getFastdevVersion()
+    {
+        return fastdevVersion;
+    }
+
+    public void setFastdevVersion(String fastdevVersion)
+    {
+        this.fastdevVersion = fastdevVersion;
     }
 
     public void setWebConsoleVersion(String webConsoleVersion)

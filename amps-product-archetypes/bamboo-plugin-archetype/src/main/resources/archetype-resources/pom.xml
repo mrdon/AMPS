@@ -22,6 +22,7 @@
     <properties>
         <bamboo.version>${bamboo.version}</bamboo.version>
         <bamboo.data.version>${bamboo.data.version}</bamboo.data.version>
+        <amps.version>${project.version}</amps.version>
     </properties>
 
     <dependencies>

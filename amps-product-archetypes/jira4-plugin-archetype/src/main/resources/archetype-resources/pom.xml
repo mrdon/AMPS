@@ -65,6 +65,7 @@
     <properties>
         <jira.version>${jira.version}</jira.version>
         <jira.data.version>${jira.data.version}</jira.data.version>
+        <amps.version>${project.version}</amps.version>
     </properties>
 
 </project>

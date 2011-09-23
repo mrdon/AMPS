@@ -70,6 +70,7 @@
 
     <properties>
         <jira.version>${jira.version}</jira.version>
+        <amps.version>${project.version}</amps.version>
     </properties>
 
 </project>

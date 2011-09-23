@@ -77,6 +77,7 @@
     <properties>
         <confluence.version>${confluence.version}</confluence.version>
         <confluence.data.version>${confluence.data.version}</confluence.data.version>
+        <amps.version>${project.version}</amps.version>
     </properties>
 
 </project>

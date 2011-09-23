@@ -36,6 +36,11 @@ public abstract class AbstractPluginProvider implements PluginProvider
             artifacts.addAll(getWebConsoleArtifacts(product.getWebConsoleVersion()));
         }
 
+        if (!product.isDisableFastdev() && product.getFastdevVersion() != null)
+        {
+            artifacts.addAll(getFastdevArtifacts(product.getFastdevVersion()));
+        }
+
         return artifacts;
     }
 
@@ -53,6 +58,11 @@ public abstract class AbstractPluginProvider implements PluginProvider
                 new ProductArtifact("org.apache.felix", "org.osgi.compendium", "1.2.0"),
                 new ProductArtifact("com.atlassian.labs.httpservice", "httpservice-bridge", "0.6.1")
                 );
+    }
+
+    protected Collection<ProductArtifact> getFastdevArtifacts(String fastdevVersion)
+    {
+        return Collections.singletonList(new ProductArtifact("com.atlassian.labs", "fastdev-plugin", fastdevVersion));
     }
 
     protected Collection<ProductArtifact> getRestArtifacts(String restVersion)

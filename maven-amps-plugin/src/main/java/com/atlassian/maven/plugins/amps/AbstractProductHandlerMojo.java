@@ -46,6 +46,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";
     private static final String DEFAULT_PDK_VERSION = "0.4";
     private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
+    private static final String DEFAULT_FASTDEV_VERSION = "1.7";
 
     /**
       * Default product startup timeout: three minutes
@@ -149,7 +150,17 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private String productDataPath;
 
     /**
+     * If FastDev should be disabled
      */
+    @MojoParameter(expression = "${disable.fastdev}", defaultValue = "false")
+    protected boolean disableFastdev;
+
+    /**
+     * The version of FastDev to bundle
+     */
+    @MojoParameter(expression = "${fastdev.version}", defaultValue = DEFAULT_FASTDEV_VERSION)
+    protected String fastdevVersion;
+
     @MojoParameter
     private List<ProductArtifact> pluginArtifacts = new ArrayList<ProductArtifact>();
 
@@ -314,6 +325,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setPdkVersion(pdkVersion);
         ctx.setWebConsoleVersion(webConsoleVersion);
 
+        ctx.setDisableFastdev(disableFastdev);
+        ctx.setFastdevVersion(fastdevVersion);
+
         ctx.setHttpPort(httpPort);
         return ctx;
     }
@@ -417,6 +431,16 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         if (product.getWebConsoleVersion() == null)
         {
             product.setWebConsoleVersion(DEFAULT_WEB_CONSOLE_VERSION);
+        }
+
+        if (product.isDisableFastdev() == null)
+        {
+            product.setDisableFastdev(false);
+        }
+
+        if (product.getFastdevVersion() == null)
+        {
+            product.setFastdevVersion(DEFAULT_FASTDEV_VERSION);
         }
 
         if (product.getOutput() == null)
