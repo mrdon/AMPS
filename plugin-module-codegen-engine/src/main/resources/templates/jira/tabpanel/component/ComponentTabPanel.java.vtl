@@ -1,0 +1,32 @@
+package ${PACKAGE};
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.atlassian.jira.plugin.componentpanel.ComponentTabPanel;
+import com.atlassian.jira.plugin.componentpanel.ComponentTabPanelModuleDescriptor;
+import com.atlassian.jira.plugin.componentpanel.BrowseComponentContext;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ${CLASSNAME} implements ComponentTabPanel
+{
+    private static final Logger log = LoggerFactory.getLogger(${CLASSNAME}.class);
+    protected ComponentTabPanelModuleDescriptor descriptor;
+
+    public void init(ComponentTabPanelModuleDescriptor descriptor)
+    {
+        this.descriptor = descriptor;
+    }
+
+    public String getHtml(BrowseComponentContext context)
+    {
+        final Map<String, Object> velocityParams = new HashMap<String,Object>();
+
+        return descriptor.getHtml("view", velocityParams);
+    }
+
+    public boolean showPanel(BrowseComponentContext context)
+    {
+        return true;
+    }
+}

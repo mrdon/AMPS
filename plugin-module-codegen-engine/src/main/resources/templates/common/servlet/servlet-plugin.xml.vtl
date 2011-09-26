@@ -1,0 +1,17 @@
+<servlet
+        name="${MODULE_NAME}"
+        i18n-name-key="${NAME_I18N_KEY}"
+        key="${MODULE_KEY}"
+        class="${FQ_CLASSNAME}">
+
+    <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
+    <url-pattern>${URL_PATTERN}</url-pattern>
+    #if($INIT_PARAMS.entrySet().size() > 0)
+        <init-param>
+            #foreach($mapEntry in $INIT_PARAMS.entrySet())
+                <param-name>$mapEntry.key</param-name>
+                <param-value>$mapEntry.value</param-value>
+            #end
+        </init-param>
+    #end
+</servlet>

@@ -48,6 +48,10 @@
     </ciManagement>
 
     <modules>
+        <module>plugin-module-codegen-api</module>
+        <module>test-codegen-jar-classes</module>
+        <module>plugin-module-codegen-engine</module>
+        <module>plugin-module-codegen-maven-client</module>
         <module>maven-amps-plugin</module>
         <module>maven-amps-dispatcher-plugin</module>
         <module>atlassian-plugin-sdk</module>

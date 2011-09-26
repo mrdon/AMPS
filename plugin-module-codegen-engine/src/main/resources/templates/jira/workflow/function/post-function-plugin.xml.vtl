@@ -1,0 +1,19 @@
+<workflow-function key="${MODULE_KEY}"
+                   name="${MODULE_NAME}"
+                   i18n-name-key="${NAME_I18N_KEY}"
+                   class="${FQ_FACTORY_NAME}">
+
+    <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
+
+    <function-class>${FQ_CLASSNAME}</function-class>
+
+    #if(${ORDERABLE})<orderable>${ORDERABLE}</orderable>#end
+    #if(${UNIQUE})<unique>${UNIQUE}</unique>#end
+    #if(${DELETABLE})<deletable>${DELETABLE}</deletable>#end
+    #if(${ADDABLE} && ${ADDABLE} != "")<addable>${ADDABLE}</addable>#end
+
+    <resource type="velocity" name="view" location="templates/postfunctions/${MODULE_KEY}.vm"/>
+    <resource type="velocity" name="input-parameters" location="templates/postfunctions/${MODULE_KEY}-input.vm"/>
+    <resource type="velocity" name="edit-parameters" location="templates/postfunctions/${MODULE_KEY}-input.vm"/>
+
+</workflow-function>
