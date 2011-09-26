@@ -50,6 +50,7 @@ public class WebPanelRendererPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebPanelRendererPrompter modulePrompter = new WebPanelRendererPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WebPanelRendererProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", CLASSNAME, props.getClassname());
@@ -77,6 +78,7 @@ public class WebPanelRendererPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebPanelRendererPrompter modulePrompter = new WebPanelRendererPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WebPanelRendererProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", CLASSNAME, props.getClassname());

@@ -65,6 +65,7 @@ public class RPCPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         RPCPrompter modulePrompter = new RPCPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         RPCProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong interface", SOAP_INTERFACE, props.getInterfaceClass());
@@ -100,6 +101,7 @@ public class RPCPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         RPCPrompter modulePrompter = new RPCPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         RPCProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv interface", SOAP_INTERFACE, props.getInterfaceClass());
@@ -128,6 +130,7 @@ public class RPCPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         RPCPrompter modulePrompter = new RPCPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         RPCProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong interface", XML_INTERFACE, props.getInterfaceClass());
@@ -163,6 +166,7 @@ public class RPCPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         RPCPrompter modulePrompter = new RPCPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         RPCProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv interface", XML_INTERFACE, props.getInterfaceClass());

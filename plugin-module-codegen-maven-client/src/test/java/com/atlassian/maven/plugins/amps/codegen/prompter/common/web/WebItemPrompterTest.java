@@ -54,6 +54,7 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebItemPrompter modulePrompter = new WebItemPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         setProps((WebItemProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -104,6 +105,7 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebItemPrompter modulePrompter = new WebItemPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         setProps((WebItemProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -173,6 +175,7 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebItemPrompter modulePrompter = new WebItemPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         setProps((WebItemProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
         assertEquals("wrong context provider", "com.atlassian.test.WidthContextProvider", props.getContextProvider());
@@ -223,6 +226,7 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebItemPrompter modulePrompter = new WebItemPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         setProps((WebItemProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
         Condition condition = (Condition) ((Conditions) props.getConditions()

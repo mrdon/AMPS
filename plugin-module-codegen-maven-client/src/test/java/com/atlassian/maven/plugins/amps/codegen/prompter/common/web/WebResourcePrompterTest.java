@@ -90,6 +90,7 @@ public class WebResourcePrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebResourcePrompter modulePrompter = new WebResourcePrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WebResourceProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -156,6 +157,7 @@ public class WebResourcePrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebResourcePrompter modulePrompter = new WebResourcePrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WebResourceProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv module name", MODULE_NAME, props.getModuleName());

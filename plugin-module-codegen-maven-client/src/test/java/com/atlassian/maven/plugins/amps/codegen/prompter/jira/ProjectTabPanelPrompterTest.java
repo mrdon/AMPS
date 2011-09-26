@@ -56,6 +56,7 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         ProjectTabPanelPrompter modulePrompter = new ProjectTabPanelPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TabPanelProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", CLASSNAME, props.getClassname());
@@ -82,6 +83,7 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         ProjectTabPanelPrompter modulePrompter = new ProjectTabPanelPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TabPanelProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", ProjectTabPanelModuleCreator.GENERIC_CLASS, props.getClassname());
@@ -120,6 +122,7 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         ProjectTabPanelPrompter modulePrompter = new ProjectTabPanelPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TabPanelProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", CLASSNAME, props.getClassname());
@@ -156,6 +159,7 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         ProjectTabPanelPrompter modulePrompter = new ProjectTabPanelPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TabPanelProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", ProjectTabPanelModuleCreator.GENERIC_CLASS, props.getClassname());

@@ -60,6 +60,7 @@ public class ReportPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         ReportPrompter modulePrompter = new ReportPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         ReportProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", CLASSNAME, props.getClassname());
@@ -100,6 +101,7 @@ public class ReportPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         ReportPrompter modulePrompter = new ReportPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         ReportProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", CLASSNAME, props.getClassname());

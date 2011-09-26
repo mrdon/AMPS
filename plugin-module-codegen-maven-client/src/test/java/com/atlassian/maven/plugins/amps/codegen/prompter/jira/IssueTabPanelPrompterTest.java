@@ -54,6 +54,7 @@ public class IssueTabPanelPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         IssueTabPanelPrompter modulePrompter = new IssueTabPanelPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TabPanelProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", CLASSNAME, props.getClassname());
@@ -90,6 +91,7 @@ public class IssueTabPanelPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         IssueTabPanelPrompter modulePrompter = new IssueTabPanelPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TabPanelProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", CLASSNAME, props.getClassname());

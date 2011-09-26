@@ -72,6 +72,7 @@ public class WebworkPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebworkPrompter modulePrompter = new WebworkPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WebworkProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -143,6 +144,7 @@ public class WebworkPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebworkPrompter modulePrompter = new WebworkPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WebworkProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv module name", MODULE_NAME, props.getModuleName());

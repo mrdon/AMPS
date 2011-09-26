@@ -53,6 +53,7 @@ public class KeyboardShortcutPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         KeyboardShortcutPrompter modulePrompter = new KeyboardShortcutPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         KeyboardShortcutProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -90,6 +91,7 @@ public class KeyboardShortcutPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         KeyboardShortcutPrompter modulePrompter = new KeyboardShortcutPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         KeyboardShortcutProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv module name", MODULE_NAME, props.getModuleName());

@@ -63,6 +63,7 @@ public class UserFormatPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         UserFormatPrompter modulePrompter = new UserFormatPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         UserFormatProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", CLASSNAME, props.getClassname());
@@ -100,6 +101,7 @@ public class UserFormatPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         UserFormatPrompter modulePrompter = new UserFormatPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         UserFormatProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", CLASSNAME, props.getClassname());

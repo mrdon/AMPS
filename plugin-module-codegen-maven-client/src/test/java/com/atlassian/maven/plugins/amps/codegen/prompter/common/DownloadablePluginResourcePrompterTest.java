@@ -41,6 +41,7 @@ public class DownloadablePluginResourcePrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         DownloadablePluginResourcePrompter modulePrompter = new DownloadablePluginResourcePrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         DownloadablePluginResourceProperties props = (DownloadablePluginResourceProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         Resource cssResource = props.getResource();
@@ -68,6 +69,7 @@ public class DownloadablePluginResourcePrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         DownloadablePluginResourcePrompter modulePrompter = new DownloadablePluginResourcePrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         DownloadablePluginResourceProperties props = (DownloadablePluginResourceProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         Resource vmResource = props.getResource();

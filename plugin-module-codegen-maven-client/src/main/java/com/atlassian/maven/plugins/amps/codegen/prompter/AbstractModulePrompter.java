@@ -378,6 +378,16 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         this.showAdvancedNamePrompt = false;
     }
 
+    public boolean isUseAnsiColor()
+    {
+        return useAnsiColor;
+    }
+
+    public void setUseAnsiColor(boolean useAnsiColor)
+    {
+        this.useAnsiColor = useAnsiColor;
+    }
+
     protected String requiredMessage(String message)
     {
         String formattedMessage = message;

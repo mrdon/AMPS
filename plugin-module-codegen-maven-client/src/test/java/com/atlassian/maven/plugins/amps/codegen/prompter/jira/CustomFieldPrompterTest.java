@@ -65,6 +65,7 @@ public class CustomFieldPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         CustomFieldPrompter modulePrompter = new CustomFieldPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         CustomFieldProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", CLASSNAME, props.getClassname());
@@ -100,6 +101,7 @@ public class CustomFieldPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         CustomFieldPrompter modulePrompter = new CustomFieldPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         CustomFieldProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", CLASSNAME, props.getClassname());

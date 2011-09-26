@@ -50,6 +50,7 @@ public class JqlFunctionPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         JqlFunctionPrompter modulePrompter = new JqlFunctionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         JqlFunctionProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", CLASSNAME, props.getClassname());
@@ -77,6 +78,7 @@ public class JqlFunctionPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         JqlFunctionPrompter modulePrompter = new JqlFunctionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         JqlFunctionProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", CLASSNAME, props.getClassname());

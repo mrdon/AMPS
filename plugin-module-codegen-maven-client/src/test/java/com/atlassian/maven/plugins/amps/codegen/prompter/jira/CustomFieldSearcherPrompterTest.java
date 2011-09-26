@@ -68,6 +68,7 @@ public class CustomFieldSearcherPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         CustomFieldSearcherPrompter modulePrompter = new CustomFieldSearcherPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         CustomFieldSearcherProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", "TextSearcher", props.getClassname());
@@ -103,6 +104,7 @@ public class CustomFieldSearcherPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         CustomFieldSearcherPrompter modulePrompter = new CustomFieldSearcherPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         CustomFieldSearcherProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", "TextSearcher", props.getClassname());

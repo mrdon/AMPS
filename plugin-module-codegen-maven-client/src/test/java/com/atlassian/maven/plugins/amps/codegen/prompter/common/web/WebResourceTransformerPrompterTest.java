@@ -48,6 +48,7 @@ public class WebResourceTransformerPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebResourceTransformerPrompter modulePrompter = new WebResourceTransformerPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WebResourceTransformerProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong class", CLASSNAME, props.getClassname());
@@ -74,6 +75,7 @@ public class WebResourceTransformerPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebResourceTransformerPrompter modulePrompter = new WebResourceTransformerPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WebResourceTransformerProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong adv class", CLASSNAME, props.getClassname());

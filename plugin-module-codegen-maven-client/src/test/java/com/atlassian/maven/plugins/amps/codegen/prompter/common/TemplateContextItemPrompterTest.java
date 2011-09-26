@@ -47,6 +47,7 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         TemplateContextItemPrompter modulePrompter = new TemplateContextItemPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TemplateContextItemProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -71,6 +72,7 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         TemplateContextItemPrompter modulePrompter = new TemplateContextItemPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TemplateContextItemProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -96,6 +98,7 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         TemplateContextItemPrompter modulePrompter = new TemplateContextItemPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TemplateContextItemProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -121,6 +124,7 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         TemplateContextItemPrompter modulePrompter = new TemplateContextItemPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         TemplateContextItemProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());

@@ -68,6 +68,7 @@ public class WorkflowPostFunctionPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WorkflowPostFunctionPrompter modulePrompter = new WorkflowPostFunctionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WorkflowPostFunctionProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong function class", CLASSNAME, props.getClassname());
@@ -110,6 +111,7 @@ public class WorkflowPostFunctionPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WorkflowPostFunctionPrompter modulePrompter = new WorkflowPostFunctionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WorkflowPostFunctionProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong function class", CLASSNAME, props.getClassname());

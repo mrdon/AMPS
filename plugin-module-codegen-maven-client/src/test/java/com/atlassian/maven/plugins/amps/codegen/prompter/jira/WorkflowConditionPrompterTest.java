@@ -51,6 +51,7 @@ public class WorkflowConditionPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WorkflowConditionPrompter modulePrompter = new WorkflowConditionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WorkflowElementProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong condition class", CLASSNAME, props.getClassname());
@@ -79,6 +80,7 @@ public class WorkflowConditionPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WorkflowConditionPrompter modulePrompter = new WorkflowConditionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         WorkflowElementProperties props = modulePrompter.getModulePropertiesFromInput(moduleLocation);
 
         assertEquals("wrong condition class", CLASSNAME, props.getClassname());

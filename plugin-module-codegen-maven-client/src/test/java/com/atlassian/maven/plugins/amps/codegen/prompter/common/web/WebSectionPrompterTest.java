@@ -48,6 +48,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebSectionPrompter modulePrompter = new WebSectionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         setProps((WebSectionProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -89,6 +90,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebSectionPrompter modulePrompter = new WebSectionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         setProps((WebSectionProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
         assertEquals("wrong module name", MODULE_NAME, props.getModuleName());
@@ -149,6 +151,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebSectionPrompter modulePrompter = new WebSectionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         setProps((WebSectionProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
         assertEquals("wrong context provider", "com.atlassian.test.WidthContextProvider", props.getContextProvider());
@@ -193,6 +196,7 @@ public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebS
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
         WebSectionPrompter modulePrompter = new WebSectionPrompter(prompter);
+        modulePrompter.setUseAnsiColor(false);
         setProps((WebSectionProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
         Condition condition = (Condition) ((Conditions) props.getConditions()
