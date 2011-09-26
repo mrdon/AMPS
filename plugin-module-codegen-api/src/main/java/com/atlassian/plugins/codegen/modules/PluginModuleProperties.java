@@ -7,7 +7,8 @@ import java.util.Properties;
 /**
  * @since 3.5
  */
-public interface PluginModuleProperties extends Map<Object,Object> {
+public interface PluginModuleProperties extends Map<Object, Object>
+{
 
     String PRODUCT_ID = "PRODUCT_ID";
 

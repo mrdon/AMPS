@@ -1,20 +1,16 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 
-import com.atlassian.maven.plugins.amps.codegen.ConditionFactory;
-import com.atlassian.maven.plugins.amps.codegen.ContextProviderFactory;
-import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
-import com.atlassian.plugins.codegen.modules.common.Condition;
-import com.atlassian.plugins.codegen.modules.common.Conditions;
-import com.atlassian.plugins.codegen.modules.common.web.AbstractWebFragmentProperties;
-import com.atlassian.plugins.codegen.modules.common.web.WebPanelProperties;
-import org.apache.commons.collections.MapUtils;
-import org.codehaus.plexus.components.interactivity.PrompterException;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
+import com.atlassian.plugins.codegen.modules.common.Condition;
+import com.atlassian.plugins.codegen.modules.common.Conditions;
+import com.atlassian.plugins.codegen.modules.common.web.WebPanelProperties;
+
+import org.codehaus.plexus.components.interactivity.PrompterException;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -22,7 +18,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class WebPanelPrompterTest extends AbstractWebFragmentPrompterTest<WebPanelProperties> {
+public class WebPanelPrompterTest extends AbstractWebFragmentPrompterTest<WebPanelProperties>
+{
     public static final String MODULE_NAME = "My Web Panel";
     public static final String MODULE_KEY = "my-web-panel";
     public static final String DESCRIPTION = "The My Web Panel Plugin";
@@ -37,7 +34,8 @@ public class WebPanelPrompterTest extends AbstractWebFragmentPrompterTest<WebPan
     public static final String WEIGHT = "20";
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Plugin Module Name", "My Web Panel")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Location (e.g. system.admin/globalsettings)")).thenReturn(CUSTOM_SECTION);
 
@@ -56,7 +54,8 @@ public class WebPanelPrompterTest extends AbstractWebFragmentPrompterTest<WebPan
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Plugin Module Name", "My Web Panel")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Location (e.g. system.admin/globalsettings)")).thenReturn(CUSTOM_SECTION);
 
@@ -86,12 +85,15 @@ public class WebPanelPrompterTest extends AbstractWebFragmentPrompterTest<WebPan
         assertEquals("wrong context provider", CUSTOM_CONTEXT_PROVIDER, props.getContextProvider());
 
         //custom condition name check
-        Condition condition = (Condition) ((Conditions) props.getConditions().get(0)).getConditions().get(0);
+        Condition condition = (Condition) ((Conditions) props.getConditions()
+                .get(0)).getConditions()
+                .get(0);
         assertEquals("wrong condition name", CUSTOM_CONDITION, condition.getFullyQualifiedClassName());
     }
 
     @Test
-    public void providerContextFromListIsValid() throws PrompterException {
+    public void providerContextFromListIsValid() throws PrompterException
+    {
         SortedMap<String, String> providersMap = new TreeMap<String, String>();
         providersMap.put("HeightContextProvider", "com.atlassian.test.HeightContextProvider");
         providersMap.put("WidthContextProvider", "com.atlassian.test.WidthContextProvider");
@@ -120,7 +122,8 @@ public class WebPanelPrompterTest extends AbstractWebFragmentPrompterTest<WebPan
     }
 
     @Test
-    public void conditionFromListIsValid() throws PrompterException {
+    public void conditionFromListIsValid() throws PrompterException
+    {
         SortedMap<String, String> conditionMap = new TreeMap<String, String>();
         conditionMap.put("NoFacialHairCondition", "com.atlassian.test.NoFacialHairCondition");
         conditionMap.put("HasGlobalAdminPermissionCondition", "com.atlassian.test.HasGlobalAdminPermissionCondition");
@@ -144,7 +147,9 @@ public class WebPanelPrompterTest extends AbstractWebFragmentPrompterTest<WebPan
         WebPanelPrompter modulePrompter = new WebPanelPrompter(prompter);
         setProps((WebPanelProperties) modulePrompter.getModulePropertiesFromInput(moduleLocation));
 
-        Condition condition = (Condition) ((Conditions) props.getConditions().get(0)).getConditions().get(0);
+        Condition condition = (Condition) ((Conditions) props.getConditions()
+                .get(0)).getConditions()
+                .get(0);
         assertEquals("wrong condition name", "com.atlassian.test.NoFacialHairCondition", condition.getFullyQualifiedClassName());
     }
 }

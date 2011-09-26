@@ -1,31 +1,33 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+import java.util.List;
+import java.util.Properties;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.Label;
 import com.atlassian.plugins.codegen.modules.common.Resource;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.List;
-import java.util.Properties;
-
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @since 3.5
  */
-public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
+public class ReportTest extends AbstractCodegenTestCase<ReportProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.reports";
     public static final String XPATH_RESOURCE = "/atlassian-plugin/*//resource";
     public static final String XPATH_PARAM_RELATIVE = "param";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new ReportModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -41,7 +43,8 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
         creator.createModule(moduleLocation, props);
 
         String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
@@ -52,21 +55,24 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
     }
 
     @Test
-    public void i18nGenerated() throws Exception {
+    public void i18nGenerated() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("i18n");
         resource.setLocation("MyReport");
         resource.setType("i18n");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
-        
+
         assertTrue("i18n not generated", new File(resourcesDir, "MyReport.properties").exists());
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/report[@name='My Report' and @key='my-report' and @i18n-name-key='my-report.name' and @class='" + PACKAGE_NAME + ".MyReport']";
 
         creator.createModule(moduleLocation, props);
@@ -76,7 +82,8 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
     }
 
     @Test
-    public void labelAdded() throws Exception {
+    public void labelAdded() throws Exception
+    {
         String paramVal0 = "$helper.project.name";
         String paramVal1 = "$helper.project.description";
         Label label = new Label("common.concepts.create.new.issue", "create new issue");
@@ -92,7 +99,7 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
 
         Node labelNode = pluginDoc.selectSingleNode(labelXpath);
 
-        assertNotNull("label not found",labelNode);
+        assertNotNull("label not found", labelNode);
 
         Node param0 = labelNode.selectSingleNode("param[@name='param0' and @value='" + paramVal0 + "']");
         Node param1 = labelNode.selectSingleNode("param[@name='param1' and @value='" + paramVal1 + "']");
@@ -102,18 +109,20 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
 
         Properties i18nprops = loadI18nProperties();
         assertTrue("label i18n not found", i18nprops.containsKey(label.getKey()));
-        assertEquals("label i18n has wrong value",label.getValue(),i18nprops.getProperty(label.getKey()));
+        assertEquals("label i18n has wrong value", label.getValue(), i18nprops.getProperty(label.getKey()));
 
     }
 
     @Test
-    public void singleResourceAdded() throws Exception {
+    public void singleResourceAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -128,13 +137,15 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
     }
 
     @Test
-    public void singleResourceNamePatternAdded() throws Exception {
+    public void singleResourceNamePatternAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setNamePattern("*.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -149,14 +160,16 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
     }
 
     @Test
-    public void nameChosenOverPattern() throws Exception {
+    public void nameChosenOverPattern() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setNamePattern("*.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -171,15 +184,19 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
     }
 
     @Test
-    public void resourceParamsAdded() throws Exception {
+    public void resourceParamsAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
-        resource.getParams().put("content-type", "text/css");
-        resource.getParams().put("awesome", "me");
+        resource.getParams()
+                .put("content-type", "text/css");
+        resource.getParams()
+                .put("awesome", "me");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -200,21 +217,26 @@ public class ReportTest extends AbstractCodegenTestCase<ReportProperties> {
     }
 
     @Test
-    public void multipleResourcesAdded() throws Exception {
+    public void multipleResourcesAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
-        resource.getParams().put("content-type", "text/css");
-        resource.getParams().put("awesome", "me");
+        resource.getParams()
+                .put("content-type", "text/css");
+        resource.getParams()
+                .put("awesome", "me");
 
         Resource resource2 = new Resource();
         resource2.setName("custom.js");
         resource2.setLocation("com/example/plugin/custom.js");
         resource2.setType("download");
 
-        props.getResources().add(resource);
-        props.getResources().add(resource2);
+        props.getResources()
+                .add(resource);
+        props.getResources()
+                .add(resource2);
 
         creator.createModule(moduleLocation, props);
 

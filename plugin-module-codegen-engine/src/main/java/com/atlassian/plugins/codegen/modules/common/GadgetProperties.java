@@ -5,29 +5,35 @@ import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
 /**
  * @since 3.5
  */
-public class GadgetProperties extends BasicNameModuleProperties {
+public class GadgetProperties extends BasicNameModuleProperties
+{
 
     public static final String LOCATION = "LOCATION";
 
 
-    public GadgetProperties() {
+    public GadgetProperties()
+    {
         this("My Gadget");
     }
 
-    public GadgetProperties(String moduleName) {
+    public GadgetProperties(String moduleName)
+    {
         super(moduleName);
     }
 
-    public GadgetProperties(String moduleName,String location) {
+    public GadgetProperties(String moduleName, String location)
+    {
         this(moduleName);
         setLocation(location);
     }
 
-    public String getLocation() {
+    public String getLocation()
+    {
         return getProperty(LOCATION);
     }
 
-    public void setLocation(String location) {
-        setProperty(LOCATION,location);
+    public void setLocation(String location)
+    {
+        setProperty(LOCATION, location);
     }
 }

@@ -1,26 +1,29 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
+import java.util.Properties;
+
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.Label;
 import com.atlassian.plugins.codegen.modules.common.Tooltip;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Properties;
 
 import static org.junit.Assert.*;
 
 /**
  * @since 3.5
  */
-public class WebSectionTest extends AbstractWebFragmentTest<WebSectionProperties> {
+public class WebSectionTest extends AbstractWebFragmentTest<WebSectionProperties>
+{
     public static final String MODULE_NAME = "Awesome Web Section";
     public static final String CUSTOM_LOCATION = "system.admin/mysection";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new WebSectionModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -33,7 +36,8 @@ public class WebSectionTest extends AbstractWebFragmentTest<WebSectionProperties
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/web-section[@name='Awesome Web Section' and @key='awesome-web-section' and @i18n-name-key='awesome-web-section.name' and @location='system.admin/mysection' and @weight='1000']";
 
         creator.createModule(moduleLocation, props);
@@ -43,7 +47,8 @@ public class WebSectionTest extends AbstractWebFragmentTest<WebSectionProperties
     }
 
     @Test
-    public void moduleIsValidWithCustomWeight() throws Exception {
+    public void moduleIsValidWithCustomWeight() throws Exception
+    {
         props.setWeight(20);
 
         String xpath = "/atlassian-plugin/web-section[@name='Awesome Web Section' and @key='awesome-web-section' and @i18n-name-key='awesome-web-section.name' and @location='system.admin/mysection' and @weight='20']";
@@ -55,7 +60,8 @@ public class WebSectionTest extends AbstractWebFragmentTest<WebSectionProperties
     }
 
     @Test
-    public void labelAdded() throws Exception {
+    public void labelAdded() throws Exception
+    {
         String paramVal0 = "$helper.project.name";
         String paramVal1 = "$helper.project.description";
         Label label = new Label("web.section.mysection", "awesome web section");
@@ -86,7 +92,8 @@ public class WebSectionTest extends AbstractWebFragmentTest<WebSectionProperties
     }
 
     @Test
-    public void paramsAdded() throws Exception {
+    public void paramsAdded() throws Exception
+    {
         props.addParam("isAwesomeSection", "true");
         props.addParam("isSuperAwesome", "false");
 
@@ -101,7 +108,8 @@ public class WebSectionTest extends AbstractWebFragmentTest<WebSectionProperties
     }
 
     @Test
-    public void tooltipAdded() throws Exception {
+    public void tooltipAdded() throws Exception
+    {
         Tooltip tooltip = new Tooltip("web.section.mysection.tooltip", "this is an awesome section");
         props.setTooltip(tooltip);
 

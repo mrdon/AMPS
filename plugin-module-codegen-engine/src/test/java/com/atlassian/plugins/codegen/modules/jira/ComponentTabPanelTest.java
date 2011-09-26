@@ -1,28 +1,30 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+import java.util.Properties;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.Label;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.Properties;
-
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @since 3.5
  */
-public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelProperties> {
+public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.tabpanels";
     protected File templatePath;
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new ComponentTabPanelModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -34,11 +36,12 @@ public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelPrope
 
         props.setIncludeExamples(false);
 
-        templatePath = new File(templateDir,"tabpanels");
+        templatePath = new File(templateDir, "tabpanels");
     }
 
     @Test
-    public void customFilesAreGenerated() throws Exception {
+    public void customFilesAreGenerated() throws Exception
+    {
         props.setUseCustomClass(true);
         creator.createModule(moduleLocation, props);
 
@@ -51,7 +54,8 @@ public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelPrope
     }
 
     @Test
-    public void genericFilesAreGenerated() throws Exception {
+    public void genericFilesAreGenerated() throws Exception
+    {
         setProps(new TabPanelProperties(ComponentTabPanelModuleCreator.FQ_GENERIC_CLASS));
         props.setUseCustomClass(false);
         props.setModuleNameAndKey("My Component Tab Panel");
@@ -66,7 +70,8 @@ public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelPrope
     }
 
     @Test
-    public void customModuleIsValid() throws Exception {
+    public void customModuleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/component-tabpanel[@name='My Component Tab Panel' and @key='my-component-tab-panel' and @i18n-name-key='my-component-tab-panel.name' and @class='" + PACKAGE_NAME + ".MyComponentTabPanel']";
         props.setUseCustomClass(true);
         creator.createModule(moduleLocation, props);
@@ -76,7 +81,8 @@ public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelPrope
     }
 
     @Test
-    public void genericModuleIsValid() throws Exception {
+    public void genericModuleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/component-tabpanel[@name='My Component Tab Panel' and @key='my-component-tab-panel' and @i18n-name-key='my-component-tab-panel.name' and @class='" + ComponentTabPanelModuleCreator.FQ_GENERIC_CLASS + "']";
 
         setProps(new TabPanelProperties(ComponentTabPanelModuleCreator.FQ_GENERIC_CLASS));
@@ -89,7 +95,8 @@ public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelPrope
     }
 
     @Test
-    public void labelIsAdded() throws Exception {
+    public void labelIsAdded() throws Exception
+    {
         String xpath = "/atlassian-plugin/component-tabpanel[@name='My Component Tab Panel' and @key='my-component-tab-panel' and @i18n-name-key='my-component-tab-panel.name' and @class='" + PACKAGE_NAME + ".MyComponentTabPanel']";
 
         Label label = new Label("common.concepts.component.tabpanel", "my component panel");
@@ -103,19 +110,20 @@ public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelPrope
         assertNotNull("valid custom component-tabpanel not found", pluginDoc.selectSingleNode(xpath));
 
         Node labelNode = pluginDoc.selectSingleNode(labelXpath);
-        assertNotNull("label not found",labelNode);
+        assertNotNull("label not found", labelNode);
 
         Properties i18nprops = loadI18nProperties();
         assertTrue("label i18n not found", i18nprops.containsKey(label.getKey()));
-        assertEquals("label i18n has wrong value",label.getValue(),i18nprops.getProperty(label.getKey()));
+        assertEquals("label i18n has wrong value", label.getValue(), i18nprops.getProperty(label.getKey()));
 
         Document viewDoc = getXmlDocument(new File(templatePath, "my-component-tab-panel.vm"));
         String viewLableXpath = "/div/h3[text() = \"$i18n.getText('" + label.getKey() + "')\"]";
-        assertNotNull("label not found in view template",viewDoc.selectSingleNode(viewLableXpath));
+        assertNotNull("label not found in view template", viewDoc.selectSingleNode(viewLableXpath));
     }
 
     @Test
-    public void orderIsAdded() throws Exception {
+    public void orderIsAdded() throws Exception
+    {
         String xpath = "/atlassian-plugin/component-tabpanel[@name='My Component Tab Panel' and @key='my-component-tab-panel' and @i18n-name-key='my-component-tab-panel.name' and @class='" + PACKAGE_NAME + ".MyComponentTabPanel']";
         props.setOrder(10);
         props.setUseCustomClass(true);
@@ -127,7 +135,7 @@ public class ComponentTabPanelTest extends AbstractCodegenTestCase<TabPanelPrope
         assertNotNull("valid custom component-tabpanel not found", pluginDoc.selectSingleNode(xpath));
 
         Node orderNode = pluginDoc.selectSingleNode(orderXpath);
-        assertNotNull("order not found",orderNode);
+        assertNotNull("order not found", orderNode);
 
     }
 

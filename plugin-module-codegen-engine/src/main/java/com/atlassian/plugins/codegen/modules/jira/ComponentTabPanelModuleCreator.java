@@ -1,11 +1,12 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.annotations.*;
+import java.io.File;
+
+import com.atlassian.plugins.codegen.annotations.Dependencies;
+import com.atlassian.plugins.codegen.annotations.Dependency;
+import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
-
-import java.io.File;
 
 /**
  * @since 3.5
@@ -14,7 +15,8 @@ import java.io.File;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class ComponentTabPanelModuleCreator extends AbstractPluginModuleCreator<TabPanelProperties> {
+public class ComponentTabPanelModuleCreator extends AbstractPluginModuleCreator<TabPanelProperties>
+{
 
     public static final String GENERIC_CLASS = "GenericTabPanel";
     public static final String GENERIC_PACKAGE = "com.atlassian.jira.plugin.componentpanel.impl";
@@ -35,18 +37,22 @@ public class ComponentTabPanelModuleCreator extends AbstractPluginModuleCreator<
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "component-tab-panel-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, TabPanelProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, TabPanelProperties props) throws Exception
+    {
         String moduleKey = props.getModuleKey();
         String packageName = props.getPackage();
         String classname = props.getClassname();
         String viewFileName = moduleKey + ".vm";
         File templatesDir = new File(location.getTemplateDirectory(), "tabpanels");
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
 
-            if(props.isUseCustomClass()) {
+            if (props.isUseCustomClass())
+            {
                 //main class
                 templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -63,7 +69,8 @@ public class ComponentTabPanelModuleCreator extends AbstractPluginModuleCreator<
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

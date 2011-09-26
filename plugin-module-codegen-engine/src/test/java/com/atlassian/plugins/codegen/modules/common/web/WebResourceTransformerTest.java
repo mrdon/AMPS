@@ -1,23 +1,27 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.dom4j.Document;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @since 3.5
  */
-public class WebResourceTransformerTest extends AbstractCodegenTestCase<WebResourceTransformerProperties> {
+public class WebResourceTransformerTest extends AbstractCodegenTestCase<WebResourceTransformerProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugin.webresource";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new WebResourceTransformerModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -33,7 +37,8 @@ public class WebResourceTransformerTest extends AbstractCodegenTestCase<WebResou
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
         String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
         String itPackagePath = "it" + File.separator + packagePath;
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyWebResourceTransformer.java").exists());
@@ -43,7 +48,8 @@ public class WebResourceTransformerTest extends AbstractCodegenTestCase<WebResou
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/web-resource-transformer[@name='My Web Resource Transformer' and @key='my-web-resource-transformer' and @i18n-name-key='my-web-resource-transformer.name' and @class='" + PACKAGE_NAME + ".MyWebResourceTransformer']";
 
         creator.createModule(moduleLocation, props);

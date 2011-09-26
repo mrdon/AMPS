@@ -3,21 +3,19 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common.moduletype;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.moduletype.ModuleTypeProperties;
-import org.codehaus.plexus.components.interactivity.Prompter;
+
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
  * @since 3.5
  */
-public class ModuleTypePrompterTest extends AbstractPrompterTest {
+public class ModuleTypePrompterTest extends AbstractPrompterTest
+{
     public static final String INTERFACE_CLASS = "Dictionary";
     public static final String PACKAGE = "com.atlassian.plugins.modules";
     public static final String CLASSNAME = "DictionaryModuleDescriptor";
@@ -34,7 +32,8 @@ public class ModuleTypePrompterTest extends AbstractPrompterTest {
     public static final String ADV_I18N_DESCRIPTION_KEY = "pluginus-awesomeous.description";
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Interface name", "MYModule")).thenReturn(INTERFACE_CLASS);
         when(prompter.prompt("Enter Interface package", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".modules")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter Class name", CLASSNAME)).thenReturn(CLASSNAME);
@@ -57,7 +56,8 @@ public class ModuleTypePrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Interface name", "MYModule")).thenReturn(INTERFACE_CLASS);
         when(prompter.prompt("Enter Interface package", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".modules")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter Class name", CLASSNAME)).thenReturn(CLASSNAME);

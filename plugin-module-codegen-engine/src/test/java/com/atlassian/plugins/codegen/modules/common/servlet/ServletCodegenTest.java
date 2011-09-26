@@ -1,13 +1,14 @@
 package com.atlassian.plugins.codegen.modules.common.servlet;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 //TODO: update test to use Dom4J
@@ -15,11 +16,13 @@ import static org.junit.Assert.assertTrue;
 /**
  * @since 3.5
  */
-public class ServletCodegenTest extends AbstractCodegenTestCase<ServletProperties> {
+public class ServletCodegenTest extends AbstractCodegenTestCase<ServletProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.servlet";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new ServletModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -38,7 +41,8 @@ public class ServletCodegenTest extends AbstractCodegenTestCase<ServletPropertie
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
         String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
         String itPackagePath = "it" + File.separator + packagePath;
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyServlet.java").exists());
@@ -49,7 +53,8 @@ public class ServletCodegenTest extends AbstractCodegenTestCase<ServletPropertie
     }
 
     @Test
-    public void pluginXmlContainsModule() throws IOException {
+    public void pluginXmlContainsModule() throws IOException
+    {
         String pluginXmlContent = FileUtils.readFileToString(pluginXml);
 
         assertTrue("module not found in plugin xml", pluginXmlContent.contains("<servlet"));

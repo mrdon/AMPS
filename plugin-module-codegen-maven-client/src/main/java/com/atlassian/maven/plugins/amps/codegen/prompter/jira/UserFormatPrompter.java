@@ -1,40 +1,41 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.jira;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
-import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.common.AbstractResourcePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Resource;
 import com.atlassian.plugins.codegen.modules.jira.UserFormatModuleCreator;
 import com.atlassian.plugins.codegen.modules.jira.UserFormatProperties;
 import com.atlassian.plugins.codegen.util.ClassnameUtil;
-import org.apache.commons.lang.StringUtils;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @since 3.5
  */
 @ModuleCreatorClass(UserFormatModuleCreator.class)
-public class UserFormatPrompter extends AbstractResourcePrompter<UserFormatProperties> {
+public class UserFormatPrompter extends AbstractResourcePrompter<UserFormatProperties>
+{
 
-    public UserFormatPrompter(Prompter prompter) {
+    public UserFormatPrompter(Prompter prompter)
+    {
         super(prompter);
 
     }
 
     @Override
-    public UserFormatProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
+    public UserFormatProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException
+    {
         String className = promptJavaClassname("Enter New Classname", "MyUserFormat");
         String packageName = promptJavaPackagename("Enter Package Name", getDefaultBasePackage() + ".jira.userformat");
 
         String fqClass = ClassnameUtil.fullyQualifiedName(packageName, className);
 
-        UserFormatProperties props =  new UserFormatProperties(fqClass);
+        UserFormatProperties props = new UserFormatProperties(fqClass);
 
         props.setTypeName(promptNotBlank("Enter Type Name"));
         props.setTypeKey(promptNotBlank("Enter Type i18n Key"));
@@ -54,12 +55,14 @@ public class UserFormatPrompter extends AbstractResourcePrompter<UserFormatPrope
     }
 
     @Override
-    public void promptForAdvancedProperties(UserFormatProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
+    public void promptForAdvancedProperties(UserFormatProperties props, PluginModuleLocation moduleLocation) throws PrompterException
+    {
         props.setResources(promptForResources());
     }
 
     @Override
-    protected Resource promptForResource() throws PrompterException {
+    protected Resource promptForResource() throws PrompterException
+    {
         Resource resource = new Resource();
         resource.setName(promptNotBlank("Enter Resource Name"));
 

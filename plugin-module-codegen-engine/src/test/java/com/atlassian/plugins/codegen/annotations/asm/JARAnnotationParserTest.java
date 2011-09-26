@@ -1,9 +1,16 @@
 package com.atlassian.plugins.codegen.annotations.asm;
 
+import java.util.List;
+import java.util.Map;
+
 import com.atlassian.plugins.codegen.PluginModuleCreatorRegistryImpl;
 import com.atlassian.plugins.codegen.annotations.DependencyDescriptor;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import fake.jar.annotation.parser.modules.JARInheritedValidJira;
 import fake.jar.annotation.parser.modules.JARJiraAndConfluenceCreator;
 import fake.jar.annotation.parser.modules.JARJiraAnnotatedWithoutInterface;
@@ -12,11 +19,6 @@ import fake.jar.annotation.parser.modules.dependencies.JARValidJiraWithDependenc
 import fake.jar.annotation.parser.modules.dependencies.JARValidJiraWithMissingNestedDependency;
 import fake.jar.annotation.parser.modules.dependencies.JARValidJiraWithMissingScopeDependency;
 import fake.jar.annotation.parser.modules.nested.JARNestedValidJira;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -24,20 +26,23 @@ import static org.junit.Assert.assertTrue;
 /**
  * @since 3.5
  */
-public class JARAnnotationParserTest {
+public class JARAnnotationParserTest
+{
     private static final String MODULES_PACKAGE = "fake.jar.annotation.parser.modules";
 
     private PluginModuleCreatorRegistry registry;
     private ModuleCreatorAnnotationParser parser;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         registry = new PluginModuleCreatorRegistryImpl();
         parser = new ModuleCreatorAnnotationParser(registry);
     }
 
     @Test
-    public void hasJiraModule() throws Exception {
+    public void hasJiraModule() throws Exception
+    {
 
         parser.parse(MODULES_PACKAGE);
 
@@ -48,7 +53,8 @@ public class JARAnnotationParserTest {
     }
 
     @Test
-    public void annotatedWithoutInterfaceIsNotRegistered() throws Exception {
+    public void annotatedWithoutInterfaceIsNotRegistered() throws Exception
+    {
         parser.parse(MODULES_PACKAGE);
 
         Map<Class, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
@@ -58,7 +64,8 @@ public class JARAnnotationParserTest {
     }
 
     @Test
-    public void nestedCreatorsAreRegistered() throws Exception {
+    public void nestedCreatorsAreRegistered() throws Exception
+    {
         parser.parse(MODULES_PACKAGE);
 
         Map<Class, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
@@ -68,7 +75,8 @@ public class JARAnnotationParserTest {
     }
 
     @Test
-    public void inheritedCreatorsAreRegistered() throws Exception {
+    public void inheritedCreatorsAreRegistered() throws Exception
+    {
         parser.parse(MODULES_PACKAGE);
 
         Map<Class, PluginModuleCreator> modules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
@@ -78,7 +86,8 @@ public class JARAnnotationParserTest {
     }
 
     @Test
-    public void muiltipleProductsHaveSameCreator() throws Exception {
+    public void muiltipleProductsHaveSameCreator() throws Exception
+    {
         parser.parse(MODULES_PACKAGE);
 
         Map<Class, PluginModuleCreator> jiraModules = registry.getModuleCreatorsForProduct(PluginModuleCreatorRegistry.JIRA);
@@ -89,7 +98,8 @@ public class JARAnnotationParserTest {
     }
 
     @Test
-    public void noDependenciesReturnsEmptyList() throws Exception {
+    public void noDependenciesReturnsEmptyList() throws Exception
+    {
         parser.parse(MODULES_PACKAGE);
         List<DependencyDescriptor> dependencies = registry.getDependenciesForCreatorClass(JARValidJiraModuleCreator.class);
 
@@ -97,7 +107,8 @@ public class JARAnnotationParserTest {
     }
 
     @Test
-    public void validDependenciesAreRegistered() throws Exception {
+    public void validDependenciesAreRegistered() throws Exception
+    {
         parser.parse(MODULES_PACKAGE);
 
         DependencyDescriptor expectedServlet = new DependencyDescriptor();
@@ -119,7 +130,8 @@ public class JARAnnotationParserTest {
     }
 
     @Test
-    public void validDependencyWithMissingScopeIsRegistered() throws Exception {
+    public void validDependencyWithMissingScopeIsRegistered() throws Exception
+    {
         parser.parse(MODULES_PACKAGE);
 
         DependencyDescriptor expectedServlet = new DependencyDescriptor();
@@ -133,7 +145,8 @@ public class JARAnnotationParserTest {
     }
 
     @Test
-    public void depedenciesWithoutNestedAnnotationIsNotRegistered() throws Exception {
+    public void depedenciesWithoutNestedAnnotationIsNotRegistered() throws Exception
+    {
         parser.parse(MODULES_PACKAGE);
         List<DependencyDescriptor> dependencies = registry.getDependenciesForCreatorClass(JARValidJiraWithMissingNestedDependency.class);
         assertTrue("dependency list is empty for missing nested annotation", dependencies.isEmpty());

@@ -1,15 +1,16 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter;
 
 import com.atlassian.maven.plugins.amps.codegen.annotations.asm.ModulePrompterAnnotationParser;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.components.interactivity.Prompter;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
  * @since 3.5
  */
-public class PluginModulePrompterFactoryImpl implements PluginModulePrompterFactory {
+public class PluginModulePrompterFactoryImpl implements PluginModulePrompterFactory
+{
     private final PluginModulePrompterRegistry prompterRegistry;
     private final ModulePrompterAnnotationParser annotationParser;
     private String basePackage;
@@ -19,11 +20,13 @@ public class PluginModulePrompterFactoryImpl implements PluginModulePrompterFact
 
     private Log log;
 
-    public PluginModulePrompterFactoryImpl() throws Exception {
+    public PluginModulePrompterFactoryImpl() throws Exception
+    {
         this("");
     }
 
-    public PluginModulePrompterFactoryImpl(String basePackage) throws Exception {
+    public PluginModulePrompterFactoryImpl(String basePackage) throws Exception
+    {
         this.prompterRegistry = new PluginModulePrompterRegistryImpl();
         this.annotationParser = new ModulePrompterAnnotationParser(prompterRegistry);
         this.basePackage = basePackage;
@@ -31,30 +34,37 @@ public class PluginModulePrompterFactoryImpl implements PluginModulePrompterFact
     }
 
     @Override
-    public void scanForPrompters() throws Exception {
+    public void scanForPrompters() throws Exception
+    {
         annotationParser.setLog(getLog());
         annotationParser.setMavenPrompter(prompter);
         doParse(basePackage);
     }
 
     @Override
-    public PluginModulePrompter getPrompterForCreatorClass(Class clazz) {
+    public PluginModulePrompter getPrompterForCreatorClass(Class clazz)
+    {
         return prompterRegistry.getPrompterForCreatorClass(clazz);
     }
 
-    private void doParse(String packageName) throws Exception {
-        if(StringUtils.isBlank(packageName)) {
+    private void doParse(String packageName) throws Exception
+    {
+        if (StringUtils.isBlank(packageName))
+        {
             annotationParser.parse();
-        } else {
+        } else
+        {
             annotationParser.parse(packageName);
         }
     }
 
-    public Log getLog() {
+    public Log getLog()
+    {
         return log;
     }
 
-    public void setLog(Log log) {
+    public void setLog(Log log)
+    {
         this.log = log;
     }
 }

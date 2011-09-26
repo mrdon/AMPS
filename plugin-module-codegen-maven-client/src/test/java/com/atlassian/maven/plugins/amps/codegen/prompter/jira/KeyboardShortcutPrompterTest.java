@@ -1,27 +1,25 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.jira;
 
-import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
+import java.util.Arrays;
+
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.jira.KeyboardShortcutProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
  * @since 3.5
  */
-public class KeyboardShortcutPrompterTest extends AbstractPrompterTest {
+public class KeyboardShortcutPrompterTest extends AbstractPrompterTest
+{
     public static final String MODULE_NAME = "My KB Shortcut";
     public static final String MODULE_KEY = "my-kb-shortcut";
     public static final String DESCRIPTION = "The My KB Shortcut Plugin";
@@ -37,16 +35,18 @@ public class KeyboardShortcutPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Keyboard Shortcut Name", "My Keyboard Shortcut")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Shortcut Character")).thenReturn("m");
-        when(prompter.prompt("Choose A Context\n1: global\n2: issueaction\n3: issuenavigation\nChoose a number: ", Arrays.asList("1","2","3"),"")).thenReturn("2");
-        when(prompter.prompt("Choose An Operation\n1: click\n2: evaluate\n3: execute\n4: followLink\n5: goTo\n6: moveToAndClick\n7: moveToAndFocus\n8: moveToNextItem\n9: moveToPrevItem\nChoose a number: ", Arrays.asList("1","2","3","4","5","6","7","8","9"),"")).thenReturn("2");
+        when(prompter.prompt("Choose A Context\n1: global\n2: issueaction\n3: issuenavigation\nChoose a number: ", Arrays.asList("1", "2", "3"), "")).thenReturn("2");
+        when(prompter.prompt("Choose An Operation\n1: click\n2: evaluate\n3: execute\n4: followLink\n5: goTo\n6: moveToAndClick\n7: moveToAndFocus\n8: moveToNextItem\n9: moveToPrevItem\nChoose a number: ", Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9"), "")).thenReturn("2");
         when(prompter.prompt("Enter Operation Value")).thenReturn("some:selector");
 
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -70,15 +70,16 @@ public class KeyboardShortcutPrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Keyboard Shortcut Name", "My Keyboard Shortcut")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Shortcut Character")).thenReturn("m");
-        when(prompter.prompt("Choose A Context\n1: global\n2: issueaction\n3: issuenavigation\nChoose a number: ", Arrays.asList("1","2","3"),"")).thenReturn("2");
-        when(prompter.prompt("Choose An Operation\n1: click\n2: evaluate\n3: execute\n4: followLink\n5: goTo\n6: moveToAndClick\n7: moveToAndFocus\n8: moveToNextItem\n9: moveToPrevItem\nChoose a number: ", Arrays.asList("1","2","3","4","5","6","7","8","9"),"")).thenReturn("2");
+        when(prompter.prompt("Choose A Context\n1: global\n2: issueaction\n3: issuenavigation\nChoose a number: ", Arrays.asList("1", "2", "3"), "")).thenReturn("2");
+        when(prompter.prompt("Choose An Operation\n1: click\n2: evaluate\n3: execute\n4: followLink\n5: goTo\n6: moveToAndClick\n7: moveToAndFocus\n8: moveToNextItem\n9: moveToPrevItem\nChoose a number: ", Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9"), "")).thenReturn("2");
         when(prompter.prompt("Enter Operation Value")).thenReturn("some:selector");
 
         when(prompter.prompt("Hidden?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("y");
-        when(prompter.prompt("Order","10")).thenReturn("50");
+        when(prompter.prompt("Order", "10")).thenReturn("50");
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
 
         when(prompter.prompt("Plugin Key", MODULE_KEY)).thenReturn(ADV_MODULE_KEY);

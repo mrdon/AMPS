@@ -1,12 +1,12 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.annotations.Dependencies;
 import com.atlassian.plugins.codegen.annotations.Dependency;
 import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-
-import java.io.File;
 
 /**
  *
@@ -15,7 +15,8 @@ import java.io.File;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreator<WorkflowPostFunctionProperties> {
+public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreator<WorkflowPostFunctionProperties>
+{
     public static final String MODULE_NAME = "Workflow Post Function";
     private static final String TEMPLATE_PREFIX = "templates/jira/workflow/function/";
 
@@ -27,7 +28,8 @@ public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreat
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "post-function-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, WorkflowPostFunctionProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, WorkflowPostFunctionProperties props) throws Exception
+    {
         String moduleKey = props.getModuleKey();
         String viewFileName = moduleKey + ".vm";
         String inputFileName = moduleKey + "-input.vm";
@@ -35,7 +37,7 @@ public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreat
         String functionClass = props.getClassname();
         String factoryClass = props.getFactoryName();
 
-        File templatesDir = new File(location.getTemplateDirectory(),"postfunctions");
+        File templatesDir = new File(location.getTemplateDirectory(), "postfunctions");
 
         templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, functionClass, location.getSourceDirectory(), packageName, props);
         templateHelper.writeJavaClassFromTemplate(FACTORY_TEMPLATE, factoryClass, location.getSourceDirectory(), packageName, props);
@@ -50,7 +52,8 @@ public class WorkflowPostFunctionModuleCreator extends AbstractPluginModuleCreat
     }
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

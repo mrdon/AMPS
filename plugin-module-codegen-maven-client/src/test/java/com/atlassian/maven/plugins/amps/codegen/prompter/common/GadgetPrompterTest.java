@@ -3,9 +3,9 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.common.GadgetProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +16,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class GadgetPrompterTest extends AbstractPrompterTest {
+public class GadgetPrompterTest extends AbstractPrompterTest
+{
     public static final String MODULE_NAME = "My Gadget";
     public static final String MODULE_KEY = "my-gadget";
     public static final String DESCRIPTION = "The My Gadget Plugin";
@@ -34,12 +35,14 @@ public class GadgetPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Gadget Name", "My Gadget")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Gadget XML location", "gadgets/" + MODULE_KEY + "/gadget.xml")).thenReturn(LOCATION);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -57,7 +60,8 @@ public class GadgetPrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Gadget Name", "My Gadget")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Gadget XML location", "gadgets/" + MODULE_KEY + "/gadget.xml")).thenReturn(LOCATION);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");

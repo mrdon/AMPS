@@ -4,9 +4,9 @@ import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.jira.TabPanelProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +17,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class IssueTabPanelPrompterTest extends AbstractPrompterTest {
+public class IssueTabPanelPrompterTest extends AbstractPrompterTest
+{
     public static final String PACKAGE = "com.atlassian.plugins.jira.tabpanels";
     public static final String CLASSNAME = "MyIssueTabPanel";
     public static final String MODULE_NAME = "My Issue Tab Panel";
@@ -39,12 +40,14 @@ public class IssueTabPanelPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyIssueTabPanel")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.tabpanels")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -61,12 +64,15 @@ public class IssueTabPanelPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
         assertEquals("wrong order", "10", props.getOrder());
-        assertEquals("wrong label key", MODULE_KEY + ".label", props.getLabel().getKey());
-        assertEquals("wrong label value", MODULE_NAME, props.getLabel().getValue());
+        assertEquals("wrong label key", MODULE_KEY + ".label", props.getLabel()
+                .getKey());
+        assertEquals("wrong label value", MODULE_NAME, props.getLabel()
+                .getValue());
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyIssueTabPanel")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.tabpanels")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
@@ -94,7 +100,9 @@ public class IssueTabPanelPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong adv i18n name key", ADV_I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong adv i18n desc key", ADV_I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
         assertEquals("wrong order", ORDER, props.getOrder());
-        assertEquals("wrong label key", LABEL_KEY, props.getLabel().getKey());
-        assertEquals("wrong label value", LABEL_VALUE, props.getLabel().getValue());
+        assertEquals("wrong label key", LABEL_KEY, props.getLabel()
+                .getKey());
+        assertEquals("wrong label value", LABEL_VALUE, props.getLabel()
+                .getValue());
     }
 }

@@ -3,6 +3,7 @@ package com.atlassian.plugins.codegen;
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.util.CodeTemplateHelper;
+
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.junit.Test;
 
@@ -11,10 +12,12 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
-public class TestTemplateUtil {
+public class TestTemplateUtil
+{
 
     @Test
-    public void simpleTextReplacement() throws Exception {
+    public void simpleTextReplacement() throws Exception
+    {
         PluginModuleProperties props = new BasicClassModuleProperties();
         String expected = "i.work";
         props.setProperty("PACKAGE_NAME", expected);
@@ -25,7 +28,8 @@ public class TestTemplateUtil {
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void throwsResourceNotFound() throws Exception {
+    public void throwsResourceNotFound() throws Exception
+    {
         PluginModuleProperties props = new BasicClassModuleProperties();
         String expected = "i.work";
         props.setProperty("PACKAGE_NAME", expected);

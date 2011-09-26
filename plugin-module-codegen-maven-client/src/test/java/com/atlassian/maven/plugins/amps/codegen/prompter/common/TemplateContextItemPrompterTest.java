@@ -2,23 +2,22 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common;
 
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.TemplateContextItemProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
  * @since 3.5
  */
-public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
+public class TemplateContextItemPrompterTest extends AbstractPrompterTest
+{
     public static final String CLASSNAME = "com.atlassian.plugins.MyContextItem";
     public static final String MODULE_NAME = "My Context Item";
     public static final String MODULE_KEY = "my-context-item";
@@ -32,12 +31,14 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void nonGlobalComponentRefIsValid() throws PrompterException {
+    public void nonGlobalComponentRefIsValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Plugin Module Name", "My Context Item")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Context Key")).thenReturn(CONTEXT_KEY);
         when(prompter.prompt("Enter Component-Ref Key (leave blank to specify class)")).thenReturn(COMPONENT_REF);
@@ -54,13 +55,14 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
-        assertEquals("wrong context key",CONTEXT_KEY,props.getContextKey());
-        assertEquals("wrong component-ref",COMPONENT_REF,props.getComponentRef());
+        assertEquals("wrong context key", CONTEXT_KEY, props.getContextKey());
+        assertEquals("wrong component-ref", COMPONENT_REF, props.getComponentRef());
         assertFalse("wong global access", props.isGlobal());
     }
 
     @Test
-    public void globalComponentRefIsValid() throws PrompterException {
+    public void globalComponentRefIsValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Plugin Module Name", "My Context Item")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Context Key")).thenReturn(CONTEXT_KEY);
         when(prompter.prompt("Enter Component-Ref Key (leave blank to specify class)")).thenReturn(COMPONENT_REF);
@@ -77,13 +79,14 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
-        assertEquals("wrong context key",CONTEXT_KEY,props.getContextKey());
-        assertEquals("wrong component-ref",COMPONENT_REF,props.getComponentRef());
+        assertEquals("wrong context key", CONTEXT_KEY, props.getContextKey());
+        assertEquals("wrong component-ref", COMPONENT_REF, props.getComponentRef());
         assertTrue("wong global access", props.isGlobal());
     }
 
     @Test
-    public void nonGlobalClassIsValid() throws PrompterException {
+    public void nonGlobalClassIsValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Plugin Module Name", "My Context Item")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Context Key")).thenReturn(CONTEXT_KEY);
         when(prompter.prompt("Enter Component-Ref Key (leave blank to specify class)")).thenReturn("");
@@ -101,13 +104,14 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
-        assertEquals("wrong context key",CONTEXT_KEY,props.getContextKey());
-        assertEquals("wrong class",CLASSNAME,props.getFullyQualifiedClassname());
+        assertEquals("wrong context key", CONTEXT_KEY, props.getContextKey());
+        assertEquals("wrong class", CLASSNAME, props.getFullyQualifiedClassname());
         assertFalse("wong global access", props.isGlobal());
     }
 
     @Test
-    public void globalClassIsValid() throws PrompterException {
+    public void globalClassIsValid() throws PrompterException
+    {
         when(prompter.prompt("Enter Plugin Module Name", "My Context Item")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Enter Context Key")).thenReturn(CONTEXT_KEY);
         when(prompter.prompt("Enter Component-Ref Key (leave blank to specify class)")).thenReturn("");
@@ -125,8 +129,8 @@ public class TemplateContextItemPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
 
-        assertEquals("wrong context key",CONTEXT_KEY,props.getContextKey());
-        assertEquals("wrong class",CLASSNAME,props.getFullyQualifiedClassname());
+        assertEquals("wrong context key", CONTEXT_KEY, props.getContextKey());
+        assertEquals("wrong class", CLASSNAME, props.getFullyQualifiedClassname());
         assertTrue("wong global access", props.isGlobal());
     }
 }

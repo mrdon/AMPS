@@ -3,8 +3,8 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.web.WebPanelRendererProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.junit.Before;
@@ -17,7 +17,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class WebPanelRendererPrompterTest extends AbstractPrompterTest {
+public class WebPanelRendererPrompterTest extends AbstractPrompterTest
+{
     public static final String PACKAGE = "com.atlassian.plugins.web";
     public static final String CLASSNAME = "AwesomeWebPanelRenderer";
     public static final String MODULE_NAME = "Awesome Web Panel Renderer";
@@ -35,12 +36,14 @@ public class WebPanelRendererPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyWebPanelRenderer")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".web")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -59,7 +62,8 @@ public class WebPanelRendererPrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyWebPanelRenderer")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".web")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");

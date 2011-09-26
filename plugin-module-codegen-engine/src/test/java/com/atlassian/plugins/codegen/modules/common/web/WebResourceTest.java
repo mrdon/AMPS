@@ -1,26 +1,30 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
+import java.util.List;
+
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.AbstractConditionTest;
 import com.atlassian.plugins.codegen.modules.common.Resource;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @since 3.5
  */
-public class WebResourceTest extends AbstractConditionTest<WebResourceProperties> {
+public class WebResourceTest extends AbstractConditionTest<WebResourceProperties>
+{
     public static final String MODULE_NAME = "Awesome Web Resource";
     public static final String XPATH_RESOURCE = "/atlassian-plugin/web-resource/resource";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new WebResourceModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -35,7 +39,8 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/web-resource[@name='Awesome Web Resource' and @key='awesome-web-resource' and @i18n-name-key='awesome-web-resource.name']";
 
         creator.createModule(moduleLocation, props);
@@ -45,13 +50,15 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void dependenciesAreAdded() throws Exception {
+    public void dependenciesAreAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         props.addDependency("jira.web.resources:ajs");
         props.addDependency("jira.web.resources:jquery");
@@ -70,13 +77,15 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void contextsAreAdded() throws Exception {
+    public void contextsAreAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         props.addContext("atl.general");
         props.addContext("atl.userprofile");
@@ -95,13 +104,15 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void singleTransformationWithSingleTransformerAdded() throws Exception {
+    public void singleTransformationWithSingleTransformerAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         WebResourceTransformation transformation = new WebResourceTransformation("txt");
         transformation.addTransformerKey("template");
@@ -117,22 +128,26 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
 
         List<Node> transformationList = pluginDoc.selectNodes(transformationXPath);
 
-        assertEquals("wrong number of transformations",1,transformationList.size());
+        assertEquals("wrong number of transformations", 1, transformationList.size());
 
         Node transformationNode = transformationList.get(0);
-        assertEquals("wrong number of transformers",1,transformationNode.selectNodes(transformerXPath).size());
-        assertEquals("wrong transformation extension","txt",transformationNode.selectSingleNode("@extension").getStringValue());
-        assertNotNull("template transformer not found",transformationNode.selectSingleNode("transformer[@key='template']"));
+        assertEquals("wrong number of transformers", 1, transformationNode.selectNodes(transformerXPath)
+                .size());
+        assertEquals("wrong transformation extension", "txt", transformationNode.selectSingleNode("@extension")
+                .getStringValue());
+        assertNotNull("template transformer not found", transformationNode.selectSingleNode("transformer[@key='template']"));
     }
 
     @Test
-    public void singleTransformationWithMultipleTransformersAdded() throws Exception {
+    public void singleTransformationWithMultipleTransformersAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         WebResourceTransformation transformation = new WebResourceTransformation("txt");
         transformation.addTransformerKey("template");
@@ -149,24 +164,28 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
 
         List<Node> transformationList = pluginDoc.selectNodes(transformationXPath);
 
-        assertEquals("wrong number of transformations",1,transformationList.size());
+        assertEquals("wrong number of transformations", 1, transformationList.size());
 
         Node transformationNode = transformationList.get(0);
 
-        assertEquals("wrong number of transformers",2,transformationNode.selectNodes(transformerXPath).size());
-        assertEquals("wrong transformation extension","txt",transformationNode.selectSingleNode("@extension").getStringValue());
-        assertNotNull("template transformer not found",transformationNode.selectSingleNode("transformer[@key='template']"));
-        assertNotNull("prefix transformer not found",transformationNode.selectSingleNode("transformer[@key='prefix']"));
+        assertEquals("wrong number of transformers", 2, transformationNode.selectNodes(transformerXPath)
+                .size());
+        assertEquals("wrong transformation extension", "txt", transformationNode.selectSingleNode("@extension")
+                .getStringValue());
+        assertNotNull("template transformer not found", transformationNode.selectSingleNode("transformer[@key='template']"));
+        assertNotNull("prefix transformer not found", transformationNode.selectSingleNode("transformer[@key='prefix']"));
     }
 
     @Test
-    public void multipleTransformationsAdded() throws Exception {
+    public void multipleTransformationsAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         WebResourceTransformation txtTrans = new WebResourceTransformation("txt");
         txtTrans.addTransformerKey("template");
@@ -186,26 +205,28 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
 
         List<Node> transformationList = pluginDoc.selectNodes(transformationXPath);
 
-        assertEquals("wrong number of transformations",2,transformationList.size());
+        assertEquals("wrong number of transformations", 2, transformationList.size());
 
         Node txtNode = pluginDoc.selectSingleNode(transformationXPath + "[@extension='txt']");
         Node cssNode = pluginDoc.selectSingleNode(transformationXPath + "[@extension='css']");
 
-        assertNotNull("missing txt node",txtNode);
-        assertNotNull("missing css node",cssNode);
+        assertNotNull("missing txt node", txtNode);
+        assertNotNull("missing css node", cssNode);
 
-        assertNotNull("template transformer not found",txtNode.selectSingleNode("transformer[@key='template']"));
-        assertNotNull("prefix transformer not found",cssNode.selectSingleNode("transformer[@key='prefix']"));
+        assertNotNull("template transformer not found", txtNode.selectSingleNode("transformer[@key='template']"));
+        assertNotNull("prefix transformer not found", cssNode.selectSingleNode("transformer[@key='prefix']"));
     }
 
     @Test
-    public void singleResourceAdded() throws Exception {
+    public void singleResourceAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -220,13 +241,15 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void singleResourceNamePatternAdded() throws Exception {
+    public void singleResourceNamePatternAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setNamePattern("*.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -241,14 +264,16 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void nameChosenOverPattern() throws Exception {
+    public void nameChosenOverPattern() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setNamePattern("*.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -263,15 +288,19 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void resourceParamsAdded() throws Exception {
+    public void resourceParamsAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
-        resource.getParams().put("content-type", "text/css");
-        resource.getParams().put("awesome", "me");
+        resource.getParams()
+                .put("content-type", "text/css");
+        resource.getParams()
+                .put("awesome", "me");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -292,14 +321,16 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void nonBatchResourceParamAdded() throws Exception {
+    public void nonBatchResourceParamAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
         resource.setBatch(false);
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -319,16 +350,20 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void nonBatchResourceWithParamsAdded() throws Exception {
+    public void nonBatchResourceWithParamsAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
         resource.setBatch(false);
-        resource.getParams().put("content-type", "text/css");
-        resource.getParams().put("awesome", "me");
+        resource.getParams()
+                .put("content-type", "text/css");
+        resource.getParams()
+                .put("awesome", "me");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -350,21 +385,26 @@ public class WebResourceTest extends AbstractConditionTest<WebResourceProperties
     }
 
     @Test
-    public void multipleResourcesAdded() throws Exception {
+    public void multipleResourcesAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
-        resource.getParams().put("content-type", "text/css");
-        resource.getParams().put("awesome", "me");
+        resource.getParams()
+                .put("content-type", "text/css");
+        resource.getParams()
+                .put("awesome", "me");
 
         Resource resource2 = new Resource();
         resource2.setName("custom.js");
         resource2.setLocation("com/example/plugin/custom.js");
         resource2.setType("download");
 
-        props.getResources().add(resource);
-        props.getResources().add(resource2);
+        props.getResources()
+                .add(resource);
+        props.getResources()
+                .add(resource2);
 
         creator.createModule(moduleLocation, props);
 

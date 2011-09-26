@@ -1,27 +1,29 @@
 package com.atlassian.plugins.codegen.modules.common.moduletype;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 //TODO: update test to use Dom4J
+
 /**
  * @since 3.5
  */
-public class ModuleTypeTest extends AbstractCodegenTestCase<ModuleTypeProperties> {
+public class ModuleTypeTest extends AbstractCodegenTestCase<ModuleTypeProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.modules";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new ModuleTypeModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -38,7 +40,8 @@ public class ModuleTypeTest extends AbstractCodegenTestCase<ModuleTypeProperties
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
         String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
         String itPackagePath = "it" + File.separator + packagePath;
         assertTrue("interface class not generated", new File(srcDir, packagePath + File.separator + "Dictionary.java").exists());
@@ -50,7 +53,8 @@ public class ModuleTypeTest extends AbstractCodegenTestCase<ModuleTypeProperties
     }
 
     @Test
-    public void pluginXmlContainsModule() throws IOException {
+    public void pluginXmlContainsModule() throws IOException
+    {
         String pluginXmlContent = FileUtils.readFileToString(pluginXml);
 
         assertTrue("module not found in plugin xml", pluginXmlContent.contains("<module-type"));

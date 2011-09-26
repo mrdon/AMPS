@@ -1,12 +1,13 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.dom4j.Document;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -14,11 +15,13 @@ import static org.junit.Assert.assertTrue;
 /**
  * @since 3.5
  */
-public class WebPanelRendererTest extends AbstractCodegenTestCase<WebPanelRendererProperties> {
+public class WebPanelRendererTest extends AbstractCodegenTestCase<WebPanelRendererProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.web";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new WebPanelRendererModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -34,7 +37,8 @@ public class WebPanelRendererTest extends AbstractCodegenTestCase<WebPanelRender
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
         String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyWebPanelRenderer.java").exists());
         assertTrue("test class not generated", new File(testDir, packagePath + File.separator + "MyWebPanelRendererTest.java").exists());
@@ -43,7 +47,8 @@ public class WebPanelRendererTest extends AbstractCodegenTestCase<WebPanelRender
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/web-panel-renderer[@name='My Web Panel Renderer' and @key='my-web-panel-renderer' and @i18n-name-key='my-web-panel-renderer.name' and @class='" + PACKAGE_NAME + ".MyWebPanelRenderer']";
 
         creator.createModule(moduleLocation, props);

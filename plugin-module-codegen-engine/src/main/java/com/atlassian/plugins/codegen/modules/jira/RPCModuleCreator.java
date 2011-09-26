@@ -1,9 +1,10 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.annotations.*;
+import com.atlassian.plugins.codegen.annotations.Dependencies;
+import com.atlassian.plugins.codegen.annotations.Dependency;
+import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.component.ComponentModuleCreator;
 import com.atlassian.plugins.codegen.modules.common.component.ComponentProperties;
 
@@ -15,7 +16,8 @@ import com.atlassian.plugins.codegen.modules.common.component.ComponentPropertie
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
         , @Dependency(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.1.1", scope = "test")
 })
-public class RPCModuleCreator extends AbstractPluginModuleCreator<RPCProperties> {
+public class RPCModuleCreator extends AbstractPluginModuleCreator<RPCProperties>
+{
 
     public static final String MODULE_NAME = "RPC Endpoint Plugin";
     private static final String TEMPLATE_PREFIX = "templates/jira/rpc/";
@@ -33,15 +35,18 @@ public class RPCModuleCreator extends AbstractPluginModuleCreator<RPCProperties>
     private static final String XML_PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "xml-rpc-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, RPCProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, RPCProperties props) throws Exception
+    {
         String packageName = props.getPackage();
         String classname = props.getClassname();
         String iClassname = props.getInterfaceClass();
         String iPackage = props.getInterfacePackage();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
 
             //interface
             templateHelper.writeJavaClassFromTemplate(INTERFACE_TEMPLATE, iClassname, location.getSourceDirectory(), iPackage, props);
@@ -68,12 +73,14 @@ public class RPCModuleCreator extends AbstractPluginModuleCreator<RPCProperties>
         //
 
         ComponentModuleCreator componentCreator = new ComponentModuleCreator();
-        componentCreator.createModule(location,cProps);
+        componentCreator.createModule(location, cProps);
 
         //now add the rpc element
-        if(props.isSoap()) {
+        if (props.isSoap())
+        {
             addModuleToPluginXml(SOAP_PLUGIN_MODULE_TEMPLATE, location, props);
-        } else {
+        } else
+        {
             addModuleToPluginXml(XML_PLUGIN_MODULE_TEMPLATE, location, props);
         }
 
@@ -82,7 +89,8 @@ public class RPCModuleCreator extends AbstractPluginModuleCreator<RPCProperties>
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

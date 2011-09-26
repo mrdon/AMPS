@@ -1,12 +1,12 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.annotations.Dependencies;
 import com.atlassian.plugins.codegen.annotations.Dependency;
 import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-
-import java.io.File;
 
 /**
  * @since 3.5
@@ -16,7 +16,8 @@ import java.io.File;
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
         , @Dependency(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.1.1", scope = "test")
 })
-public class WorkflowValidatorModuleCreator extends AbstractPluginModuleCreator<WorkflowElementProperties> {
+public class WorkflowValidatorModuleCreator extends AbstractPluginModuleCreator<WorkflowElementProperties>
+{
 
     public static final String MODULE_NAME = "Workflow Validator";
     private static final String TEMPLATE_PREFIX = "templates/jira/workflow/validator/";
@@ -35,7 +36,8 @@ public class WorkflowValidatorModuleCreator extends AbstractPluginModuleCreator<
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "workflow-validator-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, WorkflowElementProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, WorkflowElementProperties props) throws Exception
+    {
         String moduleKey = props.getModuleKey();
         String viewFileName = moduleKey + ".vm";
         String inputFileName = moduleKey + "-input.vm";
@@ -45,8 +47,10 @@ public class WorkflowValidatorModuleCreator extends AbstractPluginModuleCreator<
 
         File templatesDir = new File(location.getTemplateDirectory(), "validators");
 
-        if (props.includeExamples()) {
-        } else {
+        if (props.includeExamples())
+        {
+        } else
+        {
             templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, functionClass, location.getSourceDirectory(), packageName, props);
             templateHelper.writeJavaClassFromTemplate(FACTORY_TEMPLATE, factoryClass, location.getSourceDirectory(), packageName, props);
 
@@ -62,7 +66,8 @@ public class WorkflowValidatorModuleCreator extends AbstractPluginModuleCreator<
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

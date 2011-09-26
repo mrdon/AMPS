@@ -9,16 +9,19 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
  * @since 3.5
  */
 @JiraPluginModuleCreator
-public class ValidJiraModuleCreator implements PluginModuleCreator {
+public class ValidJiraModuleCreator implements PluginModuleCreator
+{
     public static final String MODULE_NAME = "Valid Jira Module";
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception
+    {
 
     }
 }

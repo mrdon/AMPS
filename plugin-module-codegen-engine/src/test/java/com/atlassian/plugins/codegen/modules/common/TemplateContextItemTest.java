@@ -1,25 +1,20 @@
 package com.atlassian.plugins.codegen.modules.common;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import org.apache.commons.io.FileUtils;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @since 3.5
  */
-public class TemplateContextItemTest extends AbstractCodegenTestCase<TemplateContextItemProperties> {
+public class TemplateContextItemTest extends AbstractCodegenTestCase<TemplateContextItemProperties>
+{
 
     public static final String MODULE_NAME = "My Template Context Item";
     public static final String COMPONENT_REF = "i18nResolver";
@@ -27,7 +22,8 @@ public class TemplateContextItemTest extends AbstractCodegenTestCase<TemplateCon
     public static final String CONTEXT_KEY = "i18n";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new TemplateContextItemModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -35,14 +31,15 @@ public class TemplateContextItemTest extends AbstractCodegenTestCase<TemplateCon
                 .templateDirectory(templateDir)
                 .build());
 
-        setProps(new TemplateContextItemProperties(MODULE_NAME,CONTEXT_KEY));
+        setProps(new TemplateContextItemProperties(MODULE_NAME, CONTEXT_KEY));
 
         props.setIncludeExamples(false);
 
     }
 
     @Test
-    public void componentRefModuleIsValid() throws Exception {
+    public void componentRefModuleIsValid() throws Exception
+    {
         props.setComponentRef(COMPONENT_REF);
         creator.createModule(moduleLocation, props);
 
@@ -54,7 +51,8 @@ public class TemplateContextItemTest extends AbstractCodegenTestCase<TemplateCon
     }
 
     @Test
-    public void classModuleIsValid() throws Exception {
+    public void classModuleIsValid() throws Exception
+    {
         props.setFullyQualifiedClassname(CLASSNAME);
         creator.createModule(moduleLocation, props);
 
@@ -66,7 +64,8 @@ public class TemplateContextItemTest extends AbstractCodegenTestCase<TemplateCon
     }
 
     @Test
-    public void globalModuleIsValid() throws Exception {
+    public void globalModuleIsValid() throws Exception
+    {
         props.setComponentRef(COMPONENT_REF);
         props.setGlobal(true);
         creator.createModule(moduleLocation, props);

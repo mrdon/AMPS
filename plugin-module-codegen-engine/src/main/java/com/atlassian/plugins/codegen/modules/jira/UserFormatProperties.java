@@ -1,55 +1,68 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Resource;
-
-import java.util.*;
 
 /**
  * @since 3.5
  */
-public class UserFormatProperties extends BasicClassModuleProperties {
+public class UserFormatProperties extends BasicClassModuleProperties
+{
 
     public static final String TYPE_NAME = "TYPE_NAME";
     public static final String TYPE_KEY = "TYPE_KEY";
     public static final String RESOURCES = "RESOURCES";
 
-    public UserFormatProperties() {
+    public UserFormatProperties()
+    {
         this("MyUserFormat");
     }
 
-    public UserFormatProperties(String fqClassName) {
+    public UserFormatProperties(String fqClassName)
+    {
         super(fqClassName);
         setResources(new ArrayList<Resource>());
     }
 
-    public void setTypeKey(String key) {
-        setProperty(TYPE_KEY,key);
+    public void setTypeKey(String key)
+    {
+        setProperty(TYPE_KEY, key);
     }
 
-    public String getTypeKey() {
+    public String getTypeKey()
+    {
         return getProperty(TYPE_KEY);
     }
 
-    public void setTypeName(String name) {
-        setProperty(TYPE_NAME,name);
+    public void setTypeName(String name)
+    {
+        setProperty(TYPE_NAME, name);
     }
 
-    public String getTypeName() {
+    public String getTypeName()
+    {
         return getProperty(TYPE_NAME);
     }
 
-    public void setResources(List<Resource> resources) {
-        put(RESOURCES,resources);
+    public void setResources(List<Resource> resources)
+    {
+        put(RESOURCES, resources);
     }
 
-    public List<Resource> getResources() {
-        return (List<Resource>)get(RESOURCES);
+    public List<Resource> getResources()
+    {
+        return (List<Resource>) get(RESOURCES);
     }
 
-    public void addResource(Resource resource) {
+    public void addResource(Resource resource)
+    {
         List<Resource> resources = getResources();
-        if(null == resources) {
+        if (null == resources)
+        {
             resources = new ArrayList<Resource>();
             setResources(resources);
         }
@@ -58,11 +71,13 @@ public class UserFormatProperties extends BasicClassModuleProperties {
     }
 
     @Override
-    public Properties getI18nProperties() {
+    public Properties getI18nProperties()
+    {
         Properties props = super.getI18nProperties();
 
-        if(containsKey(TYPE_KEY) && containsKey(TYPE_NAME)) {
-            props.setProperty(getProperty(TYPE_KEY),getProperty(TYPE_NAME));
+        if (containsKey(TYPE_KEY) && containsKey(TYPE_NAME))
+        {
+            props.setProperty(getProperty(TYPE_KEY), getProperty(TYPE_NAME));
         }
 
         return props;

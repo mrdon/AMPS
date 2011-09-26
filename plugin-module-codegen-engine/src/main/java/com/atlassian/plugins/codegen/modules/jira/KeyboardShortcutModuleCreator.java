@@ -1,9 +1,10 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.annotations.*;
+import com.atlassian.plugins.codegen.annotations.Dependencies;
+import com.atlassian.plugins.codegen.annotations.Dependency;
+import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
  * @since 3.5
@@ -12,7 +13,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class KeyboardShortcutModuleCreator extends AbstractPluginModuleCreator<KeyboardShortcutProperties> {
+public class KeyboardShortcutModuleCreator extends AbstractPluginModuleCreator<KeyboardShortcutProperties>
+{
 
     public static final String MODULE_NAME = "Keyboard Shortcut";
     private static final String TEMPLATE_PREFIX = "templates/jira/keyboard/";
@@ -20,14 +22,16 @@ public class KeyboardShortcutModuleCreator extends AbstractPluginModuleCreator<K
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "keyboard-shortcut-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, KeyboardShortcutProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, KeyboardShortcutProperties props) throws Exception
+    {
 
         addModuleToPluginXml(PLUGIN_MODULE_TEMPLATE, location, props);
     }
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

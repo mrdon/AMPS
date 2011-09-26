@@ -1,23 +1,27 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.dom4j.Document;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @since 3.5
  */
-public class JqlFunctionTest extends AbstractCodegenTestCase<JqlFunctionProperties> {
+public class JqlFunctionTest extends AbstractCodegenTestCase<JqlFunctionProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.jql";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new JqlFunctionModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -33,7 +37,8 @@ public class JqlFunctionTest extends AbstractCodegenTestCase<JqlFunctionProperti
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
         String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
         String itPackagePath = "it" + File.separator + packagePath;
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyJqlFunction.java").exists());
@@ -43,7 +48,8 @@ public class JqlFunctionTest extends AbstractCodegenTestCase<JqlFunctionProperti
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/jql-function[@name='My Jql Function' and @key='my-jql-function' and @i18n-name-key='my-jql-function.name' and @class='" + PACKAGE_NAME + ".MyJqlFunction']";
 
         creator.createModule(moduleLocation, props);

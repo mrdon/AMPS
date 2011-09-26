@@ -1,9 +1,10 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.annotations.*;
+import com.atlassian.plugins.codegen.annotations.Dependencies;
+import com.atlassian.plugins.codegen.annotations.Dependency;
+import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
  * @since 3.5
@@ -12,7 +13,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class JqlFunctionModuleCreator extends AbstractPluginModuleCreator<JqlFunctionProperties> {
+public class JqlFunctionModuleCreator extends AbstractPluginModuleCreator<JqlFunctionProperties>
+{
 
     public static final String MODULE_NAME = "JQL Function";
     private static final String TEMPLATE_PREFIX = "templates/jira/jql/";
@@ -28,14 +30,17 @@ public class JqlFunctionModuleCreator extends AbstractPluginModuleCreator<JqlFun
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "jql-function-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, JqlFunctionProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, JqlFunctionProperties props) throws Exception
+    {
         String packageName = props.getPackage();
 
         String classname = props.getClassname();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
             //main class
             templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -52,7 +57,8 @@ public class JqlFunctionModuleCreator extends AbstractPluginModuleCreator<JqlFun
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

@@ -3,11 +3,10 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common.moduletype;
 import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.moduletype.ModuleTypeModuleCreator;
 import com.atlassian.plugins.codegen.modules.common.moduletype.ModuleTypeProperties;
 import com.atlassian.plugins.codegen.util.ClassnameUtil;
-import org.apache.commons.lang.StringUtils;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
@@ -15,15 +14,18 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
  * @since 3.5
  */
 @ModuleCreatorClass(ModuleTypeModuleCreator.class)
-public class ModuleTypePrompter extends AbstractModulePrompter<ModuleTypeProperties> {
+public class ModuleTypePrompter extends AbstractModulePrompter<ModuleTypeProperties>
+{
 
-    public ModuleTypePrompter(Prompter prompter) {
+    public ModuleTypePrompter(Prompter prompter)
+    {
         super(prompter);
 
     }
 
     @Override
-    public ModuleTypeProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
+    public ModuleTypeProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException
+    {
         String interfaceName = promptJavaClassname("Enter Interface name", "MYModule");
         String interfacePackage = promptJavaPackagename("Enter Interface package", getDefaultBasePackage() + ".modules");
 

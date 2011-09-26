@@ -1,15 +1,14 @@
 package com.atlassian.plugins.codegen.modules.common.servlet;
 
-import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
-import org.apache.commons.collections.CollectionUtils;
-
-
 import java.util.*;
+
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 
 /**
  *
  */
-public class ServletFilterProperties extends BasicClassModuleProperties {
+public class ServletFilterProperties extends BasicClassModuleProperties
+{
     public static final String LOCATION = "LOCATION";
     public static final String WEIGHT = "WEIGHT";
     public static final String URL_PATTERN = "URL_PATTERN";
@@ -19,7 +18,8 @@ public class ServletFilterProperties extends BasicClassModuleProperties {
     public static final List<String> ALLOWED_LOCATIONS = initLocations();
     public static final List<String> ALLOWED_DISPATCHERS = initDispatchers();
 
-    private static List<String> initLocations() {
+    private static List<String> initLocations()
+    {
         List<String> locations = new ArrayList<String>(4);
         locations.add("after-encoding");
         locations.add("before-login");
@@ -29,7 +29,8 @@ public class ServletFilterProperties extends BasicClassModuleProperties {
         return Collections.unmodifiableList(locations);
     }
 
-    private static List<String> initDispatchers() {
+    private static List<String> initDispatchers()
+    {
         List<String> dispatchers = new ArrayList<String>(4);
         dispatchers.add("REQUEST");
         dispatchers.add("INCLUDE");
@@ -39,11 +40,13 @@ public class ServletFilterProperties extends BasicClassModuleProperties {
         return Collections.unmodifiableList(dispatchers);
     }
 
-    public ServletFilterProperties() {
+    public ServletFilterProperties()
+    {
         this("MyServletFilter");
     }
 
-    public ServletFilterProperties(String fqClassName) {
+    public ServletFilterProperties(String fqClassName)
+    {
         super(fqClassName);
         put(DISPATCHERS, new ArrayList<String>());
         put(INIT_PARAMS, new HashMap<String, String>());
@@ -54,26 +57,32 @@ public class ServletFilterProperties extends BasicClassModuleProperties {
         setWeight(100);
     }
 
-    public void setLocation(String location) {
+    public void setLocation(String location)
+    {
         setProperty(LOCATION, location);
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(int weight)
+    {
         setProperty(WEIGHT, Integer.toString(weight));
     }
 
-    public void setUrlPattern(String pattern) {
+    public void setUrlPattern(String pattern)
+    {
         setProperty(URL_PATTERN, pattern);
     }
 
-    public void setDispatchers(List<String> dispatchers) {
+    public void setDispatchers(List<String> dispatchers)
+    {
         put(DISPATCHERS, dispatchers);
     }
 
     @SuppressWarnings(value = "unchecked")
-    public void addDispatcher(String dispatcher) {
+    public void addDispatcher(String dispatcher)
+    {
         List<String> dispatchers = (List<String>) get(DISPATCHERS);
-        if (dispatchers == null) {
+        if (dispatchers == null)
+        {
             dispatchers = new ArrayList<String>();
             setDispatchers(dispatchers);
         }
@@ -81,14 +90,17 @@ public class ServletFilterProperties extends BasicClassModuleProperties {
         dispatchers.add(dispatcher);
     }
 
-    public void setInitParams(Map<String, String> params) {
+    public void setInitParams(Map<String, String> params)
+    {
         put(INIT_PARAMS, params);
     }
 
     @SuppressWarnings(value = "unchecked")
-    public void addInitParam(String name, String value) {
+    public void addInitParam(String name, String value)
+    {
         Map<String, String> params = (Map<String, String>) get(INIT_PARAMS);
-        if (params == null) {
+        if (params == null)
+        {
             params = new HashMap<String, String>();
             setInitParams(params);
         }
@@ -96,11 +108,13 @@ public class ServletFilterProperties extends BasicClassModuleProperties {
         params.put(name, value);
     }
 
-    public List<String> allowedLocations() {
+    public List<String> allowedLocations()
+    {
         return ALLOWED_LOCATIONS;
     }
 
-    public List<String> allowedDispatchers() {
+    public List<String> allowedDispatchers()
+    {
         return ALLOWED_DISPATCHERS;
     }
 }

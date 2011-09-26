@@ -1,31 +1,36 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 
-import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
-import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
-import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
-import com.atlassian.plugins.codegen.modules.common.*;
-import com.atlassian.plugins.codegen.modules.common.web.WebItemModuleCreator;
-import com.atlassian.plugins.codegen.modules.common.web.WebItemProperties;
-import org.codehaus.plexus.components.interactivity.Prompter;
-import org.codehaus.plexus.components.interactivity.PrompterException;
-
 import java.util.List;
 import java.util.Map;
+
+import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
+import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+import com.atlassian.plugins.codegen.modules.common.Icon;
+import com.atlassian.plugins.codegen.modules.common.Label;
+import com.atlassian.plugins.codegen.modules.common.Link;
+import com.atlassian.plugins.codegen.modules.common.Tooltip;
+import com.atlassian.plugins.codegen.modules.common.web.WebItemModuleCreator;
+import com.atlassian.plugins.codegen.modules.common.web.WebItemProperties;
+
+import org.codehaus.plexus.components.interactivity.Prompter;
+import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
  * @since 3.5
  */
 @ModuleCreatorClass(WebItemModuleCreator.class)
-public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperties> {
+public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperties>
+{
 
-    public WebItemPrompter(Prompter prompter) {
+    public WebItemPrompter(Prompter prompter)
+    {
         super(prompter);
 
     }
 
     @Override
-    public WebItemProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
+    public WebItemProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException
+    {
         String moduleName = promptNotBlank("Enter Plugin Module Name", "My Web Item");
         String section = promptNotBlank("Enter Section (e.g. system.admin/globalsettings)");
 
@@ -36,7 +41,7 @@ public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperti
         link.setLinkId(props.getModuleKey() + "-link");
         props.setLink(link);
 
-        Label label = new Label(props.getModuleKey() + ".label",props.getModuleName());
+        Label label = new Label(props.getModuleKey() + ".label", props.getModuleName());
         props.setLabel(label);
 
         suppressAdvancedNamePrompt();
@@ -45,32 +50,40 @@ public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperti
     }
 
     @Override
-    public void promptForAdvancedProperties(WebItemProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
+    public void promptForAdvancedProperties(WebItemProperties props, PluginModuleLocation moduleLocation) throws PrompterException
+    {
         //WEIGHT
         props.setWeight(promptForInt("Weight", 1000));
 
         //LINK
-        props.getLink().setLinkId(promptNotBlank("Link Id", props.getLink().getLinkId()));
+        props.getLink()
+                .setLinkId(promptNotBlank("Link Id", props.getLink()
+                        .getLinkId()));
 
         //LABEL
         Label label = props.getLabel();
-        String labelKey = promptNotBlank("Enter Label Key", props.getLabel().getKey());
-        String labelValue = promptNotBlank("Enter Label Value", props.getLabel().getValue());
+        String labelKey = promptNotBlank("Enter Label Key", props.getLabel()
+                .getKey());
+        String labelValue = promptNotBlank("Enter Label Value", props.getLabel()
+                .getValue());
 
         label.setKey(labelKey);
         label.setValue(labelValue);
 
-        props.addI18nProperty(labelKey,labelValue);
+        props.addI18nProperty(labelKey, labelValue);
 
-        List<String> labelParamVals = promptForList("Add Label Param?","Enter Param Value");
-        if (!labelParamVals.isEmpty()) {
-            for (String labelVal : labelParamVals) {
+        List<String> labelParamVals = promptForList("Add Label Param?", "Enter Param Value");
+        if (!labelParamVals.isEmpty())
+        {
+            for (String labelVal : labelParamVals)
+            {
                 label.addParam(labelVal);
             }
         }
 
         //ICON
-        if (promptForBoolean("Add Icon?", "N")) {
+        if (promptForBoolean("Add Icon?", "N"))
+        {
             String iconPath = promptNotBlank("Icon Location (e.g. /images/icons/print.gif)");
             int width = promptForInt("Icon Width", 16);
             int height = promptForInt("Icon Height", 16);
@@ -85,30 +98,33 @@ public class WebItemPrompter extends AbstractWebFragmentPrompter<WebItemProperti
         }
 
         //TOOLTIP
-        if (promptForBoolean("Add Tooltip?", "N")) {
+        if (promptForBoolean("Add Tooltip?", "N"))
+        {
             String tooltipKey = promptNotBlank("Enter Tooltip Key", props.getModuleKey() + ".tooltip");
             String tooltipValue = promptNotBlank("Enter Tooltip Value", props.getModuleName() + " Tooltip");
-            Tooltip tooltip = new Tooltip(tooltipKey,tooltipValue);
+            Tooltip tooltip = new Tooltip(tooltipKey, tooltipValue);
 
-            List<String> tooltipParamVals = promptForList("Add Tooltip Param?","Enter Param Value");
-            if (!tooltipParamVals.isEmpty()) {
-                for (String tipVal : tooltipParamVals) {
+            List<String> tooltipParamVals = promptForList("Add Tooltip Param?", "Enter Param Value");
+            if (!tooltipParamVals.isEmpty())
+            {
+                for (String tipVal : tooltipParamVals)
+                {
                     tooltip.addParam(tipVal);
                 }
             }
 
             props.setTooltip(tooltip);
-            props.addI18nProperty(tooltipKey,tooltipValue);
+            props.addI18nProperty(tooltipKey, tooltipValue);
         }
 
         //RESOURCES
         props.setResources(promptForResources());
-        
+
         //CONTEXT PROVIDER
         props.setContextProvider(promptForContextProvider());
 
         //MODULE PARAMS
-        Map<String,String> moduleParams = promptForParams("Add Plugin Module Param?");
+        Map<String, String> moduleParams = promptForParams("Add Plugin Module Param?");
         props.setParams(moduleParams);
 
         //CONDITIONS

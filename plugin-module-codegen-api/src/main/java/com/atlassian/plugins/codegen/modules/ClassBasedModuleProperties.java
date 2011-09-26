@@ -3,7 +3,8 @@ package com.atlassian.plugins.codegen.modules;
 /**
  * @since 3.5
  */
-public interface ClassBasedModuleProperties extends NameBasedModuleProperties {
+public interface ClassBasedModuleProperties extends NameBasedModuleProperties
+{
     String FQ_CLASSNAME = "FQ_CLASSNAME";
     String CLASSNAME = "CLASSNAME";
     String PACKAGE = "PACKAGE";

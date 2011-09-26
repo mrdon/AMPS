@@ -1,14 +1,16 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
-import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.*;
+import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
 
 /**
  * @since 3.5
  */
-public class KeyboardShortcutProperties extends BasicNameModuleProperties {
+public class KeyboardShortcutProperties extends BasicNameModuleProperties
+{
 
     public static final String HIDDEN = "HIDDEN";
     public static final String ORDER = "ORDER";
@@ -20,7 +22,8 @@ public class KeyboardShortcutProperties extends BasicNameModuleProperties {
     public static final List<String> ALLOWED_CONTEXTS = initContexts();
     public static final List<String> ALLOWED_OPERATIONS = initOperations();
 
-    private static List<String> initContexts() {
+    private static List<String> initContexts()
+    {
         List<String> contexts = new ArrayList<String>(3);
         contexts.add("global");
         contexts.add("issueaction");
@@ -29,7 +32,8 @@ public class KeyboardShortcutProperties extends BasicNameModuleProperties {
         return Collections.unmodifiableList(contexts);
     }
 
-    private static List<String> initOperations() {
+    private static List<String> initOperations()
+    {
         List<String> operations = new ArrayList<String>();
         operations.add("click");
         operations.add("evaluate");
@@ -44,66 +48,81 @@ public class KeyboardShortcutProperties extends BasicNameModuleProperties {
         return Collections.unmodifiableList(operations);
     }
 
-    public KeyboardShortcutProperties() {
+    public KeyboardShortcutProperties()
+    {
         this("My Keyboard Shortcut");
     }
 
-    public KeyboardShortcutProperties(String moduleName) {
+    public KeyboardShortcutProperties(String moduleName)
+    {
         super(moduleName);
         setHidden(false);
         setOrder(10);
         setContext("global");
     }
 
-    public void setHidden(boolean hidden) {
-        setProperty(HIDDEN,Boolean.toString(hidden));
+    public void setHidden(boolean hidden)
+    {
+        setProperty(HIDDEN, Boolean.toString(hidden));
     }
 
-    public boolean isHidden() {
+    public boolean isHidden()
+    {
         return Boolean.valueOf(getProperty(HIDDEN));
     }
 
-    public void setOrder(int order) {
+    public void setOrder(int order)
+    {
         setProperty(ORDER, Integer.toString(order));
     }
 
-    public String getOrder() {
+    public String getOrder()
+    {
         return getProperty(ORDER);
     }
 
-    public int getOrderAsInt() {
+    public int getOrderAsInt()
+    {
         return Integer.parseInt(getProperty(ORDER));
     }
 
-    public void setShortcut(String s) {
-        setProperty(SHORTCUT,s);
+    public void setShortcut(String s)
+    {
+        setProperty(SHORTCUT, s);
     }
 
-    public String getShortcut() {
+    public String getShortcut()
+    {
         return getProperty(SHORTCUT);
     }
 
-    public void setContext(String s) {
-        setProperty(CONTEXT,s);
+    public void setContext(String s)
+    {
+        setProperty(CONTEXT, s);
     }
 
-    public String getContext() {
+    public String getContext()
+    {
         return getProperty(CONTEXT);
     }
 
-    public void setOperationType(String s) {
-        setProperty(OPERATION_TYPE,s);
+    public void setOperationType(String s)
+    {
+        setProperty(OPERATION_TYPE, s);
     }
 
-    public String getOperationType(){
+    public String getOperationType()
+    {
         return getProperty(OPERATION_TYPE);
     }
 
-    public void setOperationValue(String s) {
-        setProperty(OPERATION_VALUE,s);
+    public void setOperationValue(String s)
+    {
+        setProperty(OPERATION_VALUE, s);
     }
 
-    public String getOperationValue(){
+    public String getOperationValue()
+    {
         return getProperty(OPERATION_VALUE);
     }
 }

@@ -1,29 +1,31 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+import java.util.List;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.Resource;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.List;
-
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @since 3.5
  */
-public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties> {
+public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.userformat";
     public static final String XPATH_RESOURCE = "/atlassian-plugin/*//resource";
     public static final String XPATH_PARAM_RELATIVE = "param";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new UserFormatModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -39,7 +41,8 @@ public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
         creator.createModule(moduleLocation, props);
         String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyUserFormat.java").exists());
@@ -49,7 +52,8 @@ public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
 
         props.setTypeKey("my.type.key");
         props.setTypeName("My Type");
@@ -63,17 +67,19 @@ public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties
         assertNotNull("valid user-format not found", userFormatNode);
 
         String type = "type[@i18n-name-key='my.type.key' and text()='My Type']";
-        assertNotNull("type not found",userFormatNode.selectSingleNode(type));
+        assertNotNull("type not found", userFormatNode.selectSingleNode(type));
     }
 
     @Test
-    public void singleResourceAdded() throws Exception {
+    public void singleResourceAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -88,13 +94,15 @@ public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties
     }
 
     @Test
-    public void singleResourceNamePatternAdded() throws Exception {
+    public void singleResourceNamePatternAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setNamePattern("*.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -109,14 +117,16 @@ public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties
     }
 
     @Test
-    public void nameChosenOverPattern() throws Exception {
+    public void nameChosenOverPattern() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setNamePattern("*.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -131,15 +141,19 @@ public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties
     }
 
     @Test
-    public void resourceParamsAdded() throws Exception {
+    public void resourceParamsAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
-        resource.getParams().put("content-type", "text/css");
-        resource.getParams().put("awesome", "me");
+        resource.getParams()
+                .put("content-type", "text/css");
+        resource.getParams()
+                .put("awesome", "me");
 
-        props.getResources().add(resource);
+        props.getResources()
+                .add(resource);
 
         creator.createModule(moduleLocation, props);
 
@@ -160,21 +174,26 @@ public class UserFormatTest extends AbstractCodegenTestCase<UserFormatProperties
     }
 
     @Test
-    public void multipleResourcesAdded() throws Exception {
+    public void multipleResourcesAdded() throws Exception
+    {
         Resource resource = new Resource();
         resource.setName("style.css");
         resource.setLocation("com/example/plugin/style.css");
         resource.setType("download");
-        resource.getParams().put("content-type", "text/css");
-        resource.getParams().put("awesome", "me");
+        resource.getParams()
+                .put("content-type", "text/css");
+        resource.getParams()
+                .put("awesome", "me");
 
         Resource resource2 = new Resource();
         resource2.setName("custom.js");
         resource2.setLocation("com/example/plugin/custom.js");
         resource2.setType("download");
 
-        props.getResources().add(resource);
-        props.getResources().add(resource2);
+        props.getResources()
+                .add(resource);
+        props.getResources()
+                .add(resource2);
 
         creator.createModule(moduleLocation, props);
 

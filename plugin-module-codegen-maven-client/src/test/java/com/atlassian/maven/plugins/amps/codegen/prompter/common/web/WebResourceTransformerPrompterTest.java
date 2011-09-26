@@ -3,9 +3,9 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common.web;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.common.web.WebResourceTransformerProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +16,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class WebResourceTransformerPrompterTest extends AbstractPrompterTest {
+public class WebResourceTransformerPrompterTest extends AbstractPrompterTest
+{
     public static final String PACKAGE = "com.atlassian.plugin.webresource";
     public static final String CLASSNAME = "MyWebResourceTransformer";
     public static final String MODULE_NAME = "My Web Resource Transformer";
@@ -34,12 +35,14 @@ public class WebResourceTransformerPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyWebResourceTransformer")).thenReturn(CLASSNAME);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -57,7 +60,8 @@ public class WebResourceTransformerPrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyWebResourceTransformer")).thenReturn(CLASSNAME);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
 

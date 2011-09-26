@@ -5,6 +5,7 @@ import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.jira.ProjectTabPanelModuleCreator;
 import com.atlassian.plugins.codegen.modules.jira.TabPanelProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.junit.Before;
@@ -17,7 +18,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class ProjectTabPanelPrompterTest extends AbstractPrompterTest {
+public class ProjectTabPanelPrompterTest extends AbstractPrompterTest
+{
     public static final String PACKAGE = "com.atlassian.plugins.jira.tabpanels";
     public static final String CLASSNAME = "MyProjectTabPanel";
     public static final String MODULE_NAME = "My Project Tab Panel";
@@ -39,12 +41,14 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void basicCustomPropertiesAreValid() throws PrompterException {
+    public void basicCustomPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Use " + ProjectTabPanelModuleCreator.GENERIC_CLASS + "?", PluginModulePrompter.YN_ANSWERS, "Y")).thenReturn("n");
         when(prompter.prompt("Enter New Classname", "MyProjectTabPanel")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.tabpanels")).thenReturn(PACKAGE);
@@ -62,13 +66,16 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
         assertEquals("wrong order", "10", props.getOrder());
-        assertEquals("wrong label key", MODULE_KEY + ".label", props.getLabel().getKey());
-        assertEquals("wrong label value", MODULE_NAME, props.getLabel().getValue());
+        assertEquals("wrong label key", MODULE_KEY + ".label", props.getLabel()
+                .getKey());
+        assertEquals("wrong label value", MODULE_NAME, props.getLabel()
+                .getValue());
         assertTrue("use custom class should be true", props.isUseCustomClass());
     }
 
     @Test
-    public void basicGenericPropertiesAreValid() throws PrompterException {
+    public void basicGenericPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Use " + ProjectTabPanelModuleCreator.GENERIC_CLASS + "?", PluginModulePrompter.YN_ANSWERS, "Y")).thenReturn("y");
         when(prompter.prompt("Enter Plugin Module Name", "My Project Tab Panel")).thenReturn(MODULE_NAME);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -85,13 +92,16 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong i18n name key", I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong i18n desc key", I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
         assertEquals("wrong order", "10", props.getOrder());
-        assertEquals("wrong label key", MODULE_KEY + ".label", props.getLabel().getKey());
-        assertEquals("wrong label value", MODULE_NAME, props.getLabel().getValue());
+        assertEquals("wrong label key", MODULE_KEY + ".label", props.getLabel()
+                .getKey());
+        assertEquals("wrong label value", MODULE_NAME, props.getLabel()
+                .getValue());
         assertFalse("use custom class should be false", props.isUseCustomClass());
     }
 
     @Test
-    public void advancedCustomPropertiesAreValid() throws PrompterException {
+    public void advancedCustomPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Use " + ProjectTabPanelModuleCreator.GENERIC_CLASS + "?", PluginModulePrompter.YN_ANSWERS, "Y")).thenReturn("n");
         when(prompter.prompt("Enter New Classname", "MyProjectTabPanel")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.tabpanels")).thenReturn(PACKAGE);
@@ -120,13 +130,16 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong adv i18n name key", ADV_I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong adv i18n desc key", ADV_I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
         assertEquals("wrong order", ORDER, props.getOrder());
-        assertEquals("wrong label key", LABEL_KEY, props.getLabel().getKey());
-        assertEquals("wrong label value", LABEL_VALUE, props.getLabel().getValue());
+        assertEquals("wrong label key", LABEL_KEY, props.getLabel()
+                .getKey());
+        assertEquals("wrong label value", LABEL_VALUE, props.getLabel()
+                .getValue());
         assertTrue("use custom class should be true", props.isUseCustomClass());
     }
 
     @Test
-    public void advancedGenericPropertiesAreValid() throws PrompterException {
+    public void advancedGenericPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Use " + ProjectTabPanelModuleCreator.GENERIC_CLASS + "?", PluginModulePrompter.YN_ANSWERS, "Y")).thenReturn("y");
         when(prompter.prompt("Enter Plugin Module Name", "My Project Tab Panel")).thenReturn(ADV_MODULE_NAME);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("y");
@@ -153,8 +166,10 @@ public class ProjectTabPanelPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong adv i18n name key", ADV_I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong adv i18n desc key", ADV_I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
         assertEquals("wrong order", ORDER, props.getOrder());
-        assertEquals("wrong label key", LABEL_KEY, props.getLabel().getKey());
-        assertEquals("wrong label value", LABEL_VALUE, props.getLabel().getValue());
+        assertEquals("wrong label key", LABEL_KEY, props.getLabel()
+                .getKey());
+        assertEquals("wrong label value", LABEL_VALUE, props.getLabel()
+                .getValue());
         assertFalse("use custom class should be false", props.isUseCustomClass());
     }
 }

@@ -4,9 +4,9 @@ import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.jira.JqlFunctionProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +17,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class JqlFunctionPrompterTest extends AbstractPrompterTest {
+public class JqlFunctionPrompterTest extends AbstractPrompterTest
+{
     public static final String PACKAGE = "com.atlassian.plugins.jira.jql";
     public static final String CLASSNAME = "MyJqlFunction";
     public static final String MODULE_NAME = "My Jql Function";
@@ -35,12 +36,14 @@ public class JqlFunctionPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyJqlFunction")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.jql")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -59,7 +62,8 @@ public class JqlFunctionPrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyJqlFunction")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.jql")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");

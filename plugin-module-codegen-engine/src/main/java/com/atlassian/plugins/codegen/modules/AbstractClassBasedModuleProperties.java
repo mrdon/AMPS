@@ -5,23 +5,29 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @since 3.5
  */
-public abstract class AbstractClassBasedModuleProperties extends AbstractNameBasedModuleProperties implements ClassBasedModuleProperties {
+public abstract class AbstractClassBasedModuleProperties extends AbstractNameBasedModuleProperties implements ClassBasedModuleProperties
+{
 
-    protected AbstractClassBasedModuleProperties() {
+    protected AbstractClassBasedModuleProperties()
+    {
         super();
     }
 
-    public void setFullyQualifiedClassname(String fqName) {
+    public void setFullyQualifiedClassname(String fqName)
+    {
         String classname;
-        if (StringUtils.isNotBlank(fqName)) {
-            if (fqName.lastIndexOf(".") > 0) {
+        if (StringUtils.isNotBlank(fqName))
+        {
+            if (fqName.lastIndexOf(".") > 0)
+            {
                 classname = StringUtils.substringAfterLast(fqName, ".");
                 String packageName = StringUtils.substringBeforeLast(fqName, ".");
                 setProperty(CLASSNAME, classname);
                 setClassUnderTest(fqName);
 
                 setProperty(PACKAGE, packageName);
-            } else {
+            } else
+            {
                 classname = fqName;
                 setProperty(CLASSNAME, classname);
                 setClassUnderTest(fqName);
@@ -33,15 +39,19 @@ public abstract class AbstractClassBasedModuleProperties extends AbstractNameBas
 
     }
 
-    public void setClassUnderTest(String fqName) {
+    public void setClassUnderTest(String fqName)
+    {
         String classname;
-        if (StringUtils.isNotBlank(fqName)) {
-            if (fqName.lastIndexOf(".") > 0) {
+        if (StringUtils.isNotBlank(fqName))
+        {
+            if (fqName.lastIndexOf(".") > 0)
+            {
                 classname = StringUtils.substringAfterLast(fqName, ".");
                 String packageName = StringUtils.substringBeforeLast(fqName, ".");
                 setProperty(CLASS_UNDER_TEST, classname);
                 setProperty(PACKAGE_UNDER_TEST, packageName);
-            } else {
+            } else
+            {
                 classname = fqName;
                 setProperty(CLASS_UNDER_TEST, classname);
                 setProperty(PACKAGE_UNDER_TEST, "");
@@ -52,32 +62,38 @@ public abstract class AbstractClassBasedModuleProperties extends AbstractNameBas
     }
 
     @Override
-    public String getFullyQualifiedClassname() {
+    public String getFullyQualifiedClassname()
+    {
         return getProperty(FQ_CLASSNAME);
     }
 
     @Override
-    public String getClassname() {
+    public String getClassname()
+    {
         return getProperty(CLASSNAME);
     }
 
     @Override
-    public String getPackage() {
+    public String getPackage()
+    {
         return getProperty(PACKAGE);
     }
 
     @Override
-    public String getClassUnderTest() {
+    public String getClassUnderTest()
+    {
         return getProperty(CLASS_UNDER_TEST);
     }
 
     @Override
-    public String getFullyQualifiedClassUnderTest() {
+    public String getFullyQualifiedClassUnderTest()
+    {
         return getProperty(FQ_CLASS_UNDER_TEST);
     }
 
     @Override
-    public String getPackageUnderTest() {
+    public String getPackageUnderTest()
+    {
         return getProperty(PACKAGE_UNDER_TEST);
     }
 }

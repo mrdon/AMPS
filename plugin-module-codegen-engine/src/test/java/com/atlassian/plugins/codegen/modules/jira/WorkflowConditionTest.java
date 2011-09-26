@@ -1,13 +1,14 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -15,14 +16,16 @@ import static org.junit.Assert.assertTrue;
 /**
  * @since 3.5
  */
-public class WorkflowConditionTest extends AbstractCodegenTestCase<WorkflowElementProperties> {
+public class WorkflowConditionTest extends AbstractCodegenTestCase<WorkflowElementProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.workflow";
     public static final String XPATH = "/atlassian-plugin/workflow-condition[@name='My Workflow Condition' and @key='my-workflow-condition' and @i18n-name-key='my-workflow-condition.name' and @class='" + PACKAGE_NAME + ".MyWorkflowConditionFactory']";
 
     protected File templatePath;
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new WorkflowConditionModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -34,12 +37,13 @@ public class WorkflowConditionTest extends AbstractCodegenTestCase<WorkflowEleme
 
         props.setIncludeExamples(false);
 
-        templatePath = new File(templateDir,"conditions");
+        templatePath = new File(templateDir, "conditions");
 
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
 
         creator.createModule(moduleLocation, props);
 
@@ -55,7 +59,8 @@ public class WorkflowConditionTest extends AbstractCodegenTestCase<WorkflowEleme
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
 
         creator.createModule(moduleLocation, props);
         Document pluginDoc = getXmlDocument(pluginXml);
@@ -65,7 +70,8 @@ public class WorkflowConditionTest extends AbstractCodegenTestCase<WorkflowEleme
     }
 
     @Test
-    public void moduleHasCondition() throws Exception {
+    public void moduleHasCondition() throws Exception
+    {
 
         creator.createModule(moduleLocation, props);
         Document pluginDoc = getXmlDocument(pluginXml);

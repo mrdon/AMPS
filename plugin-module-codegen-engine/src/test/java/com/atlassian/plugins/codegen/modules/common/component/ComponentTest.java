@@ -1,27 +1,28 @@
 package com.atlassian.plugins.codegen.modules.common.component;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import org.apache.commons.io.FileUtils;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
 /**
  * @since 3.5
  */
-public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties> {
+public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.component";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new ComponentModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -36,7 +37,8 @@ public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties> 
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
+    public void allFilesAreGenerated() throws Exception
+    {
         props.setFullyQualifiedInterface(PACKAGE_NAME + ".CustomInterface");
         props.setGenerateClass(true);
         props.setGenerateInterface(true);
@@ -53,7 +55,8 @@ public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties> 
     }
 
     @Test
-    public void componentAdded() throws Exception {
+    public void componentAdded() throws Exception
+    {
         props.setFullyQualifiedInterface(PACKAGE_NAME + ".CustomInterface");
         props.setGenerateClass(true);
         props.setGenerateInterface(true);
@@ -64,8 +67,8 @@ public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties> 
         String compIfaceXPath = "interface[text() = '" + PACKAGE_NAME + ".CustomInterface']";
 
         Node compNode = pluginDoc.selectSingleNode(compXPath);
-        assertNotNull("component not found",compNode);
-        assertNotNull("interface not found",compNode.selectSingleNode(compIfaceXPath));
+        assertNotNull("component not found", compNode);
+        assertNotNull("interface not found", compNode.selectSingleNode(compIfaceXPath));
 
     }
 

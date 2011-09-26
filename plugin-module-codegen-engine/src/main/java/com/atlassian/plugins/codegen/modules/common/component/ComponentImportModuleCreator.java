@@ -17,7 +17,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class ComponentImportModuleCreator extends AbstractPluginModuleCreator {
+public class ComponentImportModuleCreator extends AbstractPluginModuleCreator
+{
 
     public static final String MODULE_NAME = "Component Import";
     private static final String TEMPLATE_PREFIX = "templates/common/component/";
@@ -25,13 +26,15 @@ public class ComponentImportModuleCreator extends AbstractPluginModuleCreator {
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "component-import-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception
+    {
         addModuleToPluginXml(PLUGIN_MODULE_TEMPLATE, location, props);
     }
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

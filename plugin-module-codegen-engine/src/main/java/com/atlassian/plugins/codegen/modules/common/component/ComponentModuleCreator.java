@@ -3,7 +3,6 @@ package com.atlassian.plugins.codegen.modules.common.component;
 import com.atlassian.plugins.codegen.annotations.*;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
  * @since 3.5
@@ -17,7 +16,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class ComponentModuleCreator extends AbstractPluginModuleCreator<ComponentProperties> {
+public class ComponentModuleCreator extends AbstractPluginModuleCreator<ComponentProperties>
+{
 
     public static final String MODULE_NAME = "Component";
     private static final String TEMPLATE_PREFIX = "templates/common/component/";
@@ -32,7 +32,8 @@ public class ComponentModuleCreator extends AbstractPluginModuleCreator<Componen
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "component-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, ComponentProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ComponentProperties props) throws Exception
+    {
 
         String packageName = props.getPackage();
 
@@ -41,10 +42,13 @@ public class ComponentModuleCreator extends AbstractPluginModuleCreator<Componen
         String iClassname = props.getInterfaceClass();
         String iPackage = props.getInterfacePackage();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
-            if (props.generateClass()) {
+        } else
+        {
+            if (props.generateClass())
+            {
                 //main class
                 templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -55,7 +59,8 @@ public class ComponentModuleCreator extends AbstractPluginModuleCreator<Componen
                 templateHelper.writeJavaClassFromTemplate(GENERIC_TEST_TEMPLATE, funcTestClassname(classname), location.getTestDirectory(), funcTestPackageName(packageName), props);
             }
 
-            if(props.generateInterface()) {
+            if (props.generateInterface())
+            {
                 templateHelper.writeJavaClassFromTemplate(INTERFACE_TEMPLATE, iClassname, location.getSourceDirectory(), iPackage, props);
             }
 
@@ -67,7 +72,8 @@ public class ComponentModuleCreator extends AbstractPluginModuleCreator<Componen
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

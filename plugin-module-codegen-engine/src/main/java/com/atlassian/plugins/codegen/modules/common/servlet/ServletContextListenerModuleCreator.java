@@ -3,7 +3,6 @@ package com.atlassian.plugins.codegen.modules.common.servlet;
 import com.atlassian.plugins.codegen.annotations.*;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
  * @since 3.5
@@ -17,7 +16,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
         , @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
         , @Dependency(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.1.1", scope = "test")
 })
-public class ServletContextListenerModuleCreator extends AbstractPluginModuleCreator<ServletContextListenerProperties> {
+public class ServletContextListenerModuleCreator extends AbstractPluginModuleCreator<ServletContextListenerProperties>
+{
 
     public static final String MODULE_NAME = "Servlet Context Listener";
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/listener/";
@@ -32,14 +32,17 @@ public class ServletContextListenerModuleCreator extends AbstractPluginModuleCre
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-context-listener-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, ServletContextListenerProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ServletContextListenerProperties props) throws Exception
+    {
         String packageName = props.getPackage();
 
         String classname = props.getClassname();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
             //main class
             templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -56,7 +59,8 @@ public class ServletContextListenerModuleCreator extends AbstractPluginModuleCre
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

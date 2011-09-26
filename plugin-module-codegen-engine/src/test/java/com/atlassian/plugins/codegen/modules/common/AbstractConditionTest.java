@@ -1,19 +1,21 @@
 package com.atlassian.plugins.codegen.modules.common;
 
+import java.util.List;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.common.web.AbstractConditionsProperties;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 
 /**
  * @since 3.5
  */
-public abstract class AbstractConditionTest<T extends AbstractConditionsProperties> extends AbstractCodegenTestCase<T> {
+public abstract class AbstractConditionTest<T extends AbstractConditionsProperties> extends AbstractCodegenTestCase<T>
+{
     public static final String XPATH_ALL_CONDITIONS = "//conditions";
     public static final String XPATH_TOP_CONDITIONS = "/atlassian-plugin/*[not(self::conditions)]/conditions";
     public static final String XPATH_CONDITIONS_RELATIVE = "conditions";
@@ -25,7 +27,8 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
     public static final String XPATH_PARAM_RELATIVE = "param";
 
     @Test
-    public void emptyConditionsAreNotIncluded() throws Exception {
+    public void emptyConditionsAreNotIncluded() throws Exception
+    {
         creator.createModule(moduleLocation, props);
         Document pluginDoc = getXmlDocument(pluginXml);
         List<Node> conditions = pluginDoc.selectNodes(XPATH_ALL_CONDITIONS);
@@ -36,8 +39,10 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
     }
 
     @Test
-    public void singleConditionWithoutParamsAdded() throws Exception {
-        props.getConditions().add(new Condition(JIRA_GLOBAL_PERMISSION));
+    public void singleConditionWithoutParamsAdded() throws Exception
+    {
+        props.getConditions()
+                .add(new Condition(JIRA_GLOBAL_PERMISSION));
         creator.createModule(moduleLocation, props);
 
         Document pluginDoc = getXmlDocument(pluginXml);
@@ -50,16 +55,19 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
         assertEquals("single condition not found", 1, condition.size());
 
         Node conditionNode = condition.get(0);
-        assertEquals("class name mismatch", JIRA_GLOBAL_PERMISSION, conditionNode.selectSingleNode("@class").getStringValue());
+        assertEquals("class name mismatch", JIRA_GLOBAL_PERMISSION, conditionNode.selectSingleNode("@class")
+                .getStringValue());
         assertNull("should not be inverted", conditionNode.selectSingleNode("@invert"));
     }
 
     @Test
-    public void invertedConditionHasAttribute() throws Exception {
+    public void invertedConditionHasAttribute() throws Exception
+    {
         Condition jiraCondition = new Condition(JIRA_GLOBAL_PERMISSION);
         jiraCondition.setInvert(true);
 
-        props.getConditions().add(jiraCondition);
+        props.getConditions()
+                .add(jiraCondition);
         creator.createModule(moduleLocation, props);
 
         Document pluginDoc = getXmlDocument(pluginXml);
@@ -69,16 +77,20 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
         assertEquals("single condition not found", 1, condition.size());
 
         Node conditionNode = condition.get(0);
-        assertEquals("class name mismatch", JIRA_GLOBAL_PERMISSION, conditionNode.selectSingleNode("@class").getStringValue());
-        assertEquals("should be inverted", "true", conditionNode.selectSingleNode("@invert").getStringValue());
+        assertEquals("class name mismatch", JIRA_GLOBAL_PERMISSION, conditionNode.selectSingleNode("@class")
+                .getStringValue());
+        assertEquals("should be inverted", "true", conditionNode.selectSingleNode("@invert")
+                .getStringValue());
     }
 
     @Test
-    public void singleANDConditionsAdded() throws Exception {
+    public void singleANDConditionsAdded() throws Exception
+    {
         Conditions conditionsRoot = new Conditions(Conditions.AND);
         conditionsRoot.addCondition(new Condition(JIRA_GLOBAL_PERMISSION));
 
-        props.getConditions().add(conditionsRoot);
+        props.getConditions()
+                .add(conditionsRoot);
 
         creator.createModule(moduleLocation, props);
 
@@ -89,23 +101,27 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
 
         Node conditionsNode = conditions.get(0);
 
-        assertEquals("wrong conditions type", Conditions.AND, conditionsNode.selectSingleNode("@type").getStringValue());
+        assertEquals("wrong conditions type", Conditions.AND, conditionsNode.selectSingleNode("@type")
+                .getStringValue());
 
         List<Node> condition = conditionsNode.selectNodes(XPATH_CONDITION_RELATIVE);
 
         assertEquals("single AND condition not found", 1, condition.size());
 
         Node conditionNode = condition.get(0);
-        assertEquals("class name mismatch", JIRA_GLOBAL_PERMISSION, conditionNode.selectSingleNode("@class").getStringValue());
+        assertEquals("class name mismatch", JIRA_GLOBAL_PERMISSION, conditionNode.selectSingleNode("@class")
+                .getStringValue());
         assertNull("should not be inverted", conditionNode.selectSingleNode("@invert"));
     }
 
     @Test
-    public void singleORConditionsAdded() throws Exception {
+    public void singleORConditionsAdded() throws Exception
+    {
         Conditions conditionsRoot = new Conditions(Conditions.OR);
         conditionsRoot.addCondition(new Condition(JIRA_GLOBAL_PERMISSION));
 
-        props.getConditions().add(conditionsRoot);
+        props.getConditions()
+                .add(conditionsRoot);
 
         creator.createModule(moduleLocation, props);
 
@@ -116,19 +132,22 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
 
         Node conditionsNode = conditions.get(0);
 
-        assertEquals("wrong conditions type", Conditions.OR, conditionsNode.selectSingleNode("@type").getStringValue());
+        assertEquals("wrong conditions type", Conditions.OR, conditionsNode.selectSingleNode("@type")
+                .getStringValue());
 
         List<Node> condition = conditionsNode.selectNodes(XPATH_CONDITION_RELATIVE);
 
         assertEquals("single AND condition not found", 1, condition.size());
 
         Node conditionNode = condition.get(0);
-        assertEquals("class name mismatch", JIRA_GLOBAL_PERMISSION, conditionNode.selectSingleNode("@class").getStringValue());
+        assertEquals("class name mismatch", JIRA_GLOBAL_PERMISSION, conditionNode.selectSingleNode("@class")
+                .getStringValue());
         assertNull("should not be inverted", conditionNode.selectSingleNode("@invert"));
     }
 
     @Test
-    public void nestedMixedConditionsAdded() throws Exception {
+    public void nestedMixedConditionsAdded() throws Exception
+    {
         Conditions conditionsRoot = new Conditions(Conditions.AND);
         conditionsRoot.addCondition(new Condition(JIRA_GLOBAL_PERMISSION));
 
@@ -136,7 +155,8 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
         nestedConditions.addCondition(new Condition(JIRA_HAS_ISSUE_PERMISSION));
 
         conditionsRoot.addCondition(nestedConditions);
-        props.getConditions().add(conditionsRoot);
+        props.getConditions()
+                .add(conditionsRoot);
 
         creator.createModule(moduleLocation, props);
 
@@ -147,14 +167,16 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
 
         Node conditionsNode = conditionsList.get(0);
 
-        assertEquals("wrong conditions type", Conditions.AND, conditionsNode.selectSingleNode("@type").getStringValue());
+        assertEquals("wrong conditions type", Conditions.AND, conditionsNode.selectSingleNode("@type")
+                .getStringValue());
 
         List<Node> firstSingleList = conditionsNode.selectNodes(XPATH_CONDITION_RELATIVE);
 
         assertEquals("first single condition not found", 1, firstSingleList.size());
 
         Node firstSingleNode = firstSingleList.get(0);
-        assertEquals("first single class name mismatch", JIRA_GLOBAL_PERMISSION, firstSingleNode.selectSingleNode("@class").getStringValue());
+        assertEquals("first single class name mismatch", JIRA_GLOBAL_PERMISSION, firstSingleNode.selectSingleNode("@class")
+                .getStringValue());
 
         List<Node> nestedConditionsList = conditionsNode.selectNodes(XPATH_CONDITIONS_RELATIVE);
 
@@ -162,7 +184,8 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
 
         Node nestedConditionsNode = nestedConditionsList.get(0);
 
-        assertEquals("wrong nested conditions type", Conditions.OR, nestedConditionsNode.selectSingleNode("@type").getStringValue());
+        assertEquals("wrong nested conditions type", Conditions.OR, nestedConditionsNode.selectSingleNode("@type")
+                .getStringValue());
 
         List<Node> nestedConditionList = nestedConditionsNode.selectNodes(XPATH_CONDITION_RELATIVE);
 
@@ -170,19 +193,23 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
 
         Node nestedConditionNode = nestedConditionList.get(0);
 
-        assertEquals("nested condition class name mismatch", JIRA_HAS_ISSUE_PERMISSION, nestedConditionNode.selectSingleNode("@class").getStringValue());
+        assertEquals("nested condition class name mismatch", JIRA_HAS_ISSUE_PERMISSION, nestedConditionNode.selectSingleNode("@class")
+                .getStringValue());
         assertNull("should not be inverted", nestedConditionNode.selectSingleNode("@invert"));
     }
 
     @Test
-    public void conditionIsSiblingOfConditions() throws Exception {
+    public void conditionIsSiblingOfConditions() throws Exception
+    {
         Conditions conditionsRoot = new Conditions(Conditions.AND);
         conditionsRoot.addCondition(new Condition(JIRA_GLOBAL_PERMISSION));
 
         Condition singleCondition = new Condition(JIRA_HAS_ISSUE_PERMISSION);
 
-        props.getConditions().add(conditionsRoot);
-        props.getConditions().add(singleCondition);
+        props.getConditions()
+                .add(conditionsRoot);
+        props.getConditions()
+                .add(singleCondition);
 
         creator.createModule(moduleLocation, props);
 
@@ -193,14 +220,16 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
 
         Node conditionsNode = conditionsList.get(0);
 
-        assertEquals("wrong conditions type", Conditions.AND, conditionsNode.selectSingleNode("@type").getStringValue());
+        assertEquals("wrong conditions type", Conditions.AND, conditionsNode.selectSingleNode("@type")
+                .getStringValue());
 
         List<Node> nestedSingleList = conditionsNode.selectNodes(XPATH_CONDITION_RELATIVE);
 
         assertEquals("nested single condition not found", 1, nestedSingleList.size());
 
         Node nestedSingleNode = nestedSingleList.get(0);
-        assertEquals("nested single class name mismatch", JIRA_GLOBAL_PERMISSION, nestedSingleNode.selectSingleNode("@class").getStringValue());
+        assertEquals("nested single class name mismatch", JIRA_GLOBAL_PERMISSION, nestedSingleNode.selectSingleNode("@class")
+                .getStringValue());
 
         List<Node> siblingConditionList = pluginDoc.selectNodes(XPATH_TOP_CONDITION);
 
@@ -208,17 +237,22 @@ public abstract class AbstractConditionTest<T extends AbstractConditionsProperti
 
         Node siblingNode = siblingConditionList.get(0);
 
-        assertEquals("sibling condition class name mismatch", JIRA_HAS_ISSUE_PERMISSION, siblingNode.selectSingleNode("@class").getStringValue());
+        assertEquals("sibling condition class name mismatch", JIRA_HAS_ISSUE_PERMISSION, siblingNode.selectSingleNode("@class")
+                .getStringValue());
         assertNull("should not be inverted", siblingNode.selectSingleNode("@invert"));
     }
 
     @Test
-    public void conditionParamsAreRendered() throws Exception {
+    public void conditionParamsAreRendered() throws Exception
+    {
         Condition condition = new Condition(JIRA_GLOBAL_PERMISSION);
-        condition.getParams().put("permission", "admin");
-        condition.getParams().put("username", "user");
+        condition.getParams()
+                .put("permission", "admin");
+        condition.getParams()
+                .put("username", "user");
 
-        props.getConditions().add(condition);
+        props.getConditions()
+                .add(condition);
 
         creator.createModule(moduleLocation, props);
 

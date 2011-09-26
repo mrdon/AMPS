@@ -1,35 +1,37 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.jira;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.jira.ActionProperties;
 import com.atlassian.plugins.codegen.modules.jira.View;
 import com.atlassian.plugins.codegen.modules.jira.WebworkModuleCreator;
 import com.atlassian.plugins.codegen.modules.jira.WebworkProperties;
 import com.atlassian.plugins.codegen.util.ClassnameUtil;
+
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @since 3.5
  */
 @ModuleCreatorClass(WebworkModuleCreator.class)
-public class WebworkPrompter extends AbstractModulePrompter<WebworkProperties> {
+public class WebworkPrompter extends AbstractModulePrompter<WebworkProperties>
+{
 
-    public WebworkPrompter(Prompter prompter) {
+    public WebworkPrompter(Prompter prompter)
+    {
         super(prompter);
 
     }
 
     @Override
-    public WebworkProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
+    public WebworkProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException
+    {
         suppressAdvancedNamePrompt();
         String moduleName = promptNotBlank("Enter Plugin Module Name", "My Webwork Module");
 
@@ -40,7 +42,8 @@ public class WebworkPrompter extends AbstractModulePrompter<WebworkProperties> {
         return props;
     }
 
-    private List<ActionProperties> createDefaultAction(WebworkProperties props) {
+    private List<ActionProperties> createDefaultAction(WebworkProperties props)
+    {
         List<ActionProperties> actions = new ArrayList<ActionProperties>();
         String packageName = getDefaultBasePackage() + ".jira.webwork";
         String className = ClassnameUtil.removeSpaces(props.getModuleName()) + "Action";
@@ -50,9 +53,9 @@ public class WebworkPrompter extends AbstractModulePrompter<WebworkProperties> {
         action.setAlias(ClassnameUtil.removeSpaces(props.getModuleName()));
 
         String templatePath = "/templates/" + props.getModuleKey() + "/";
-        View success = new View("success",templatePath + "success.vm");
-        View input = new View("input",templatePath + "input.vm");
-        View error = new View("error",templatePath + "error.vm");
+        View success = new View("success", templatePath + "success.vm");
+        View input = new View("input", templatePath + "input.vm");
+        View error = new View("error", templatePath + "error.vm");
 
         action.addView(success);
         action.addView(input);
@@ -64,27 +67,30 @@ public class WebworkPrompter extends AbstractModulePrompter<WebworkProperties> {
     }
 
     @Override
-    public void promptForAdvancedProperties(WebworkProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
+    public void promptForAdvancedProperties(WebworkProperties props, PluginModuleLocation moduleLocation) throws PrompterException
+    {
         props.setActions(promptForActions(props));
     }
 
-    private List<ActionProperties> promptForActions(WebworkProperties props) throws PrompterException {
+    private List<ActionProperties> promptForActions(WebworkProperties props) throws PrompterException
+    {
         List<ActionProperties> actions = new ArrayList<ActionProperties>();
 
         String initialPackage = getDefaultBasePackage() + ".jira.webwork";
         String templatePathPrefix = "/templates/" + props.getModuleKey() + "/";
-        promptForAction(actions,initialPackage,templatePathPrefix);
+        promptForAction(actions, initialPackage, templatePathPrefix);
 
         return actions;
     }
 
-    private void promptForAction(List<ActionProperties> actions,String packageName, String templatePathPrefix) throws PrompterException {
+    private void promptForAction(List<ActionProperties> actions, String packageName, String templatePathPrefix) throws PrompterException
+    {
 
         String className = promptJavaClassname("Enter Action Classname", "MyActionClass");
         String newPackageName = promptJavaPackagename("Enter Package Name", packageName);
 
         String fqClass = ClassnameUtil.fullyQualifiedName(newPackageName, className);
-        String alias = promptNotBlank("Enter Alias",className);
+        String alias = promptNotBlank("Enter Alias", className);
 
         ActionProperties action = new ActionProperties(fqClass);
         action.setAlias(alias);
@@ -93,12 +99,14 @@ public class WebworkPrompter extends AbstractModulePrompter<WebworkProperties> {
 
         actions.add(action);
 
-        if(promptForBoolean("Add Another Action?","N")) {
-            promptForAction(actions,newPackageName,templatePathPrefix);
+        if (promptForBoolean("Add Another Action?", "N"))
+        {
+            promptForAction(actions, newPackageName, templatePathPrefix);
         }
     }
 
-    private List<View> promptForViews(ActionProperties action, String templatePath) throws PrompterException {
+    private List<View> promptForViews(ActionProperties action, String templatePath) throws PrompterException
+    {
         List<View> views = new ArrayList<View>();
 
         promptForView(views, templatePath);
@@ -106,20 +114,23 @@ public class WebworkPrompter extends AbstractModulePrompter<WebworkProperties> {
         return views;
     }
 
-    private void promptForView(List<View> views, String templatePath) throws PrompterException {
-        String viewName = promptNotBlank("Enter View Name","success");
+    private void promptForView(List<View> views, String templatePath) throws PrompterException
+    {
+        String viewName = promptNotBlank("Enter View Name", "success");
 
         String pathWithEndSlash = templatePath;
-        if(!pathWithEndSlash.endsWith("/")) {
+        if (!pathWithEndSlash.endsWith("/"))
+        {
             pathWithEndSlash = pathWithEndSlash + "/";
         }
 
-        String viewPath = promptNotBlank("Enter Template Path",pathWithEndSlash + viewName + ".vm");
+        String viewPath = promptNotBlank("Enter Template Path", pathWithEndSlash + viewName + ".vm");
 
-        View view = new View(viewName,viewPath);
+        View view = new View(viewName, viewPath);
         views.add(view);
 
-        if(promptForBoolean("Add Another View?","N")) {
+        if (promptForBoolean("Add Another View?", "N"))
+        {
             promptForView(views, FilenameUtils.getFullPath(viewPath));
         }
     }

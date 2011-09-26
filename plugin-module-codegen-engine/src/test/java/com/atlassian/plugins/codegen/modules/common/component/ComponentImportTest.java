@@ -1,25 +1,26 @@
 package com.atlassian.plugins.codegen.modules.common.component;
 
+import java.io.IOException;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
-import com.atlassian.plugins.codegen.modules.PluginModuleCreatorRegistry;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 //TODO: update test to use Dom4J
+
 /**
  * @since 3.5
  */
-public class ComponentImportTest extends AbstractCodegenTestCase<ComponentImportProperties> {
+public class ComponentImportTest extends AbstractCodegenTestCase<ComponentImportProperties>
+{
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new ComponentImportModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -35,7 +36,8 @@ public class ComponentImportTest extends AbstractCodegenTestCase<ComponentImport
 
 
     @Test
-    public void pluginXmlContainsModule() throws IOException {
+    public void pluginXmlContainsModule() throws IOException
+    {
         String pluginXmlContent = FileUtils.readFileToString(pluginXml);
 
         assertTrue("module not found in plugin xml", pluginXmlContent.contains("<component-import"));

@@ -1,23 +1,24 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
-import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
-import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
-import com.atlassian.plugins.codegen.modules.common.Conditional;
-import com.atlassian.plugins.codegen.modules.common.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.*;
+import com.atlassian.plugins.codegen.modules.common.Resource;
 
 /**
  * @since 3.5
  */
-public class WebResourceProperties extends AbstractConditionsProperties {
+public class WebResourceProperties extends AbstractConditionsProperties
+{
     public static final String RESOURCES = "RESOURCES";
     public static final String DEPENDENCIES = "DEPENDENCIES";
     public static final String CONTEXTS = "CONTEXTS";
     public static final String TRANSFORMATIONS = "TRANSFORMATIONS";
     public static final List<String> KNOWN_CONTEXTS = initContexts();
 
-    private static List<String> initContexts() {
+    private static List<String> initContexts()
+    {
         List<String> contexts = new ArrayList<String>(3);
         contexts.add("atl.general");
         contexts.add("atl.admin");
@@ -26,11 +27,13 @@ public class WebResourceProperties extends AbstractConditionsProperties {
         return Collections.unmodifiableList(contexts);
     }
 
-    public WebResourceProperties() {
+    public WebResourceProperties()
+    {
         this("My Web Resource");
     }
 
-    public WebResourceProperties(String moduleName) {
+    public WebResourceProperties(String moduleName)
+    {
         super(moduleName);
         setDependencies(new ArrayList<String>());
         setContexts(new ArrayList<String>());
@@ -38,26 +41,32 @@ public class WebResourceProperties extends AbstractConditionsProperties {
         setResources(new ArrayList<Resource>());
     }
 
-    public void setResources(List<Resource> resources) {
-        put(RESOURCES,resources);
+    public void setResources(List<Resource> resources)
+    {
+        put(RESOURCES, resources);
     }
 
-    public List<Resource> getResources() {
-        return (List<Resource>)get(RESOURCES);
+    public List<Resource> getResources()
+    {
+        return (List<Resource>) get(RESOURCES);
     }
 
-    public void setDependencies(List<String> dependencies) {
+    public void setDependencies(List<String> dependencies)
+    {
         put(DEPENDENCIES, dependencies);
     }
 
-    public List<String> getDependencies() {
+    public List<String> getDependencies()
+    {
         return (List<String>) get(DEPENDENCIES);
     }
 
     @SuppressWarnings(value = "unchecked")
-    public void addDependency(String dependency) {
+    public void addDependency(String dependency)
+    {
         List<String> dependencies = (List<String>) get(DEPENDENCIES);
-        if (dependencies == null) {
+        if (dependencies == null)
+        {
             dependencies = new ArrayList<String>();
             setDependencies(dependencies);
         }
@@ -65,18 +74,22 @@ public class WebResourceProperties extends AbstractConditionsProperties {
         dependencies.add(dependency);
     }
 
-    public void setContexts(List<String> contexts) {
+    public void setContexts(List<String> contexts)
+    {
         put(CONTEXTS, contexts);
     }
 
-    public List<String> getContexts() {
+    public List<String> getContexts()
+    {
         return (List<String>) get(CONTEXTS);
     }
 
     @SuppressWarnings(value = "unchecked")
-    public void addContext(String context) {
+    public void addContext(String context)
+    {
         List<String> contexts = (List<String>) get(CONTEXTS);
-        if (contexts == null) {
+        if (contexts == null)
+        {
             contexts = new ArrayList<String>();
             setContexts(contexts);
         }
@@ -84,18 +97,22 @@ public class WebResourceProperties extends AbstractConditionsProperties {
         contexts.add(context);
     }
 
-    public void setTransformations(List<WebResourceTransformation> transformations) {
-        put(TRANSFORMATIONS,transformations);
+    public void setTransformations(List<WebResourceTransformation> transformations)
+    {
+        put(TRANSFORMATIONS, transformations);
     }
 
-    public List<WebResourceTransformation> getTransformations() {
+    public List<WebResourceTransformation> getTransformations()
+    {
         return (List<WebResourceTransformation>) get(TRANSFORMATIONS);
     }
 
     @SuppressWarnings(value = "unchecked")
-    public void addTransformation(WebResourceTransformation transformation) {
+    public void addTransformation(WebResourceTransformation transformation)
+    {
         List<WebResourceTransformation> transformations = (List<WebResourceTransformation>) get(TRANSFORMATIONS);
-        if (transformations == null) {
+        if (transformations == null)
+        {
             transformations = new ArrayList<WebResourceTransformation>();
             setTransformations(transformations);
         }
@@ -103,7 +120,8 @@ public class WebResourceProperties extends AbstractConditionsProperties {
         transformations.add(transformation);
     }
 
-    public List<String> knownContexts() {
+    public List<String> knownContexts()
+    {
         return KNOWN_CONTEXTS;
     }
 }

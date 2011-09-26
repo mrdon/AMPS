@@ -1,27 +1,30 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+import java.util.Properties;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.Label;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.util.Properties;
 
 import static org.junit.Assert.*;
 
 /**
  * @since 3.5
  */
-public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelProperties> {
+public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.tabpanels";
     protected File templatePath;
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new ProjectTabPanelModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -37,7 +40,8 @@ public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelPropert
     }
 
     @Test
-    public void customFilesAreGenerated() throws Exception {
+    public void customFilesAreGenerated() throws Exception
+    {
         props.setUseCustomClass(true);
         creator.createModule(moduleLocation, props);
 
@@ -50,7 +54,8 @@ public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelPropert
     }
 
     @Test
-    public void genericFilesAreGenerated() throws Exception {
+    public void genericFilesAreGenerated() throws Exception
+    {
         setProps(new TabPanelProperties(ProjectTabPanelModuleCreator.FQ_GENERIC_CLASS));
         props.setUseCustomClass(false);
         props.setModuleNameAndKey("My Project Tab Panel");
@@ -65,7 +70,8 @@ public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelPropert
     }
 
     @Test
-    public void customModuleIsValid() throws Exception {
+    public void customModuleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/project-tabpanel[@name='My Project Tab Panel' and @key='my-project-tab-panel' and @i18n-name-key='my-project-tab-panel.name' and @class='" + PACKAGE_NAME + ".MyProjectTabPanel']";
         props.setUseCustomClass(true);
         creator.createModule(moduleLocation, props);
@@ -75,7 +81,8 @@ public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelPropert
     }
 
     @Test
-    public void genericModuleIsValid() throws Exception {
+    public void genericModuleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/project-tabpanel[@name='My Project Tab Panel' and @key='my-project-tab-panel' and @i18n-name-key='my-project-tab-panel.name' and @class='" + ProjectTabPanelModuleCreator.FQ_GENERIC_CLASS + "']";
 
         setProps(new TabPanelProperties(ProjectTabPanelModuleCreator.FQ_GENERIC_CLASS));
@@ -88,7 +95,8 @@ public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelPropert
     }
 
     @Test
-    public void labelIsAdded() throws Exception {
+    public void labelIsAdded() throws Exception
+    {
         String xpath = "/atlassian-plugin/project-tabpanel[@name='My Project Tab Panel' and @key='my-project-tab-panel' and @i18n-name-key='my-project-tab-panel.name' and @class='" + PACKAGE_NAME + ".MyProjectTabPanel']";
 
         Label label = new Label("common.concepts.project.tabpanel", "my project panel");
@@ -114,7 +122,8 @@ public class ProjectTabPanelTest extends AbstractCodegenTestCase<TabPanelPropert
     }
 
     @Test
-    public void orderIsAdded() throws Exception {
+    public void orderIsAdded() throws Exception
+    {
         String xpath = "/atlassian-plugin/project-tabpanel[@name='My Project Tab Panel' and @key='my-project-tab-panel' and @i18n-name-key='my-project-tab-panel.name' and @class='" + PACKAGE_NAME + ".MyProjectTabPanel']";
         props.setOrder(10);
         props.setUseCustomClass(true);

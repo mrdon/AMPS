@@ -11,16 +11,19 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
  */
 @JiraPluginModuleCreator
 @ConfluencePluginModuleCreator
-public class JiraAndConfluenceCreator implements PluginModuleCreator {
+public class JiraAndConfluenceCreator implements PluginModuleCreator
+{
     public static final String MODULE_NAME = "Jira And Confluence";
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception
+    {
 
     }
 }

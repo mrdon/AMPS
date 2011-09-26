@@ -1,57 +1,61 @@
 package com.atlassian.plugins.codegen.modules.common;
 
 import com.atlassian.plugins.codegen.modules.AbstractClassBasedModuleProperties;
-import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
-import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
-import org.apache.commons.lang.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @since 3.5
  */
-public class TemplateContextItemProperties extends AbstractClassBasedModuleProperties {
+public class TemplateContextItemProperties extends AbstractClassBasedModuleProperties
+{
     public static final String CONTEXT_KEY = "CONTEXT_KEY";
     public static final String COMPONENT_REF = "COMPONENT_REF";
     public static final String GLOBAL = "GLOBAL";
 
-    public TemplateContextItemProperties() {
+    public TemplateContextItemProperties()
+    {
         this("My Template Context Item");
     }
 
-    public TemplateContextItemProperties(String moduleName) {
+    public TemplateContextItemProperties(String moduleName)
+    {
         super();
         setModuleNameAndKey(moduleName);
         setGlobal(false);
     }
 
-    public TemplateContextItemProperties(String moduleName, String contextKey) {
+    public TemplateContextItemProperties(String moduleName, String contextKey)
+    {
         this(moduleName);
         setContextKey(contextKey);
     }
 
-    public void setContextKey(String key) {
-        setProperty(CONTEXT_KEY,key);
+    public void setContextKey(String key)
+    {
+        setProperty(CONTEXT_KEY, key);
     }
 
-    public String getContextKey() {
+    public String getContextKey()
+    {
         return getProperty(CONTEXT_KEY);
     }
 
-    public void setComponentRef(String ref) {
-        setProperty(COMPONENT_REF,ref);
+    public void setComponentRef(String ref)
+    {
+        setProperty(COMPONENT_REF, ref);
     }
 
-    public String getComponentRef() {
+    public String getComponentRef()
+    {
         return getProperty(COMPONENT_REF);
     }
 
-    public void setGlobal(boolean global) {
-        setProperty(GLOBAL,Boolean.toString(global));
+    public void setGlobal(boolean global)
+    {
+        setProperty(GLOBAL, Boolean.toString(global));
     }
 
-    public boolean isGlobal() {
+    public boolean isGlobal()
+    {
         return Boolean.valueOf(getProperty(GLOBAL));
     }
 }

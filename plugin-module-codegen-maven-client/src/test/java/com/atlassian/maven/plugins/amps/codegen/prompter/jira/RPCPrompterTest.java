@@ -4,21 +4,21 @@ import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.jira.RPCProperties;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
  * @since 3.5
  */
-public class RPCPrompterTest extends AbstractPrompterTest {
+public class RPCPrompterTest extends AbstractPrompterTest
+{
     public static final String PACKAGE = "com.atlassian.plugins.jira.rpc";
     public static final String SOAP_CLASSNAME = "MySoapEndpointImpl";
     public static final String SOAP_INTERFACE = "MySoapEndpoint";
@@ -47,18 +47,20 @@ public class RPCPrompterTest extends AbstractPrompterTest {
     Prompter prompter;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
     }
 
     @Test
-    public void basicSoapPropertiesAreValid() throws PrompterException {
-        when(prompter.prompt("[S]OAP or [X]ML-RPC?",RPCPrompter.RPC_ANSWERS,"S")).thenReturn("S");
+    public void basicSoapPropertiesAreValid() throws PrompterException
+    {
+        when(prompter.prompt("[S]OAP or [X]ML-RPC?", RPCPrompter.RPC_ANSWERS, "S")).thenReturn("S");
         when(prompter.prompt("Enter Interface name", "MYSoapEndpoint")).thenReturn(SOAP_INTERFACE);
         when(prompter.prompt("Enter Interface package", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.rpc")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter Class name", "MySoapEndpointImpl")).thenReturn(SOAP_CLASSNAME);
         when(prompter.prompt("Enter Package Name", PACKAGE)).thenReturn(PACKAGE);
-        when(prompter.prompt("Enter Service Path","mysoapendpoint-v1")).thenReturn(SOAP_PATH);
+        when(prompter.prompt("Enter Service Path", "mysoapendpoint-v1")).thenReturn(SOAP_PATH);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
@@ -75,17 +77,18 @@ public class RPCPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong description", SOAP_DESCRIPTION, props.getDescription());
         assertEquals("wrong i18n name key", SOAP_I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong i18n desc key", SOAP_I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
-        assertTrue("isSoap should be true",props.isSoap());
+        assertTrue("isSoap should be true", props.isSoap());
     }
 
     @Test
-    public void advancedSoapPropertiesAreValid() throws PrompterException {
-        when(prompter.prompt("[S]OAP or [X]ML-RPC?",RPCPrompter.RPC_ANSWERS,"S")).thenReturn("S");
+    public void advancedSoapPropertiesAreValid() throws PrompterException
+    {
+        when(prompter.prompt("[S]OAP or [X]ML-RPC?", RPCPrompter.RPC_ANSWERS, "S")).thenReturn("S");
         when(prompter.prompt("Enter Interface name", "MYSoapEndpoint")).thenReturn(SOAP_INTERFACE);
         when(prompter.prompt("Enter Interface package", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.rpc")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter Class name", "MySoapEndpointImpl")).thenReturn(SOAP_CLASSNAME);
         when(prompter.prompt("Enter Package Name", PACKAGE)).thenReturn(PACKAGE);
-        when(prompter.prompt("Enter Service Path","mysoapendpoint-v1")).thenReturn(SOAP_PATH);
+        when(prompter.prompt("Enter Service Path", "mysoapendpoint-v1")).thenReturn(SOAP_PATH);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
 
         when(prompter.prompt("Plugin Name", SOAP_MODULE_NAME)).thenReturn(ADV_MODULE_NAME);
@@ -109,17 +112,18 @@ public class RPCPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong adv description", ADV_DESCRIPTION, props.getDescription());
         assertEquals("wrong adv i18n name key", ADV_I18N_NAME_KEY, props.getNameI18nKey());
         assertEquals("wrong adv i18n desc key", ADV_I18N_DESCRIPTION_KEY, props.getDescriptionI18nKey());
-        assertTrue("isSoap should be true",props.isSoap());
+        assertTrue("isSoap should be true", props.isSoap());
     }
 
     @Test
-    public void basicXmlPropertiesAreValid() throws PrompterException {
-        when(prompter.prompt("[S]OAP or [X]ML-RPC?",RPCPrompter.RPC_ANSWERS,"S")).thenReturn("x");
+    public void basicXmlPropertiesAreValid() throws PrompterException
+    {
+        when(prompter.prompt("[S]OAP or [X]ML-RPC?", RPCPrompter.RPC_ANSWERS, "S")).thenReturn("x");
         when(prompter.prompt("Enter Interface name", "MYXmlEndpoint")).thenReturn(XML_INTERFACE);
         when(prompter.prompt("Enter Interface package", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.rpc")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter Class name", "MyXmlEndpointImpl")).thenReturn(XML_CLASSNAME);
         when(prompter.prompt("Enter Package Name", PACKAGE)).thenReturn(PACKAGE);
-        when(prompter.prompt("Enter Service Path","myxmlendpoint-v1")).thenReturn(XML_PATH);
+        when(prompter.prompt("Enter Service Path", "myxmlendpoint-v1")).thenReturn(XML_PATH);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
@@ -140,13 +144,14 @@ public class RPCPrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedXmlPropertiesAreValid() throws PrompterException {
-        when(prompter.prompt("[S]OAP or [X]ML-RPC?",RPCPrompter.RPC_ANSWERS,"S")).thenReturn("X");
+    public void advancedXmlPropertiesAreValid() throws PrompterException
+    {
+        when(prompter.prompt("[S]OAP or [X]ML-RPC?", RPCPrompter.RPC_ANSWERS, "S")).thenReturn("X");
         when(prompter.prompt("Enter Interface name", "MYXmlEndpoint")).thenReturn(XML_INTERFACE);
         when(prompter.prompt("Enter Interface package", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.rpc")).thenReturn(PACKAGE);
         when(prompter.prompt("Enter Class name", "MyXmlEndpointImpl")).thenReturn(XML_CLASSNAME);
         when(prompter.prompt("Enter Package Name", PACKAGE)).thenReturn(PACKAGE);
-        when(prompter.prompt("Enter Service Path","myxmlendpoint-v1")).thenReturn(XML_PATH);
+        when(prompter.prompt("Enter Service Path", "myxmlendpoint-v1")).thenReturn(XML_PATH);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
 
         when(prompter.prompt("Plugin Name", XML_MODULE_NAME)).thenReturn(ADV_MODULE_NAME);

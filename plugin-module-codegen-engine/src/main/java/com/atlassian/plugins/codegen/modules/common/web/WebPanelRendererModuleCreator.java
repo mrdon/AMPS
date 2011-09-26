@@ -3,7 +3,6 @@ package com.atlassian.plugins.codegen.modules.common.web;
 import com.atlassian.plugins.codegen.annotations.*;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
  * @since 3.5
@@ -15,7 +14,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class WebPanelRendererModuleCreator extends AbstractPluginModuleCreator<WebPanelRendererProperties> {
+public class WebPanelRendererModuleCreator extends AbstractPluginModuleCreator<WebPanelRendererProperties>
+{
 
     public static final String MODULE_NAME = "Web Panel Renderer";
     private static final String TEMPLATE_PREFIX = "templates/common/web/webpanelrenderer/";
@@ -31,14 +31,17 @@ public class WebPanelRendererModuleCreator extends AbstractPluginModuleCreator<W
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "web-panel-renderer-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, WebPanelRendererProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, WebPanelRendererProperties props) throws Exception
+    {
         String packageName = props.getPackage();
 
         String classname = props.getClassname();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
             //main class
             templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -55,7 +58,8 @@ public class WebPanelRendererModuleCreator extends AbstractPluginModuleCreator<W
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

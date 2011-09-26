@@ -1,15 +1,16 @@
 package com.atlassian.plugins.codegen.modules.common;
 
-import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
+
 /**
  * @since 3.5
  */
-public class RESTProperties extends BasicClassModuleProperties {
+public class RESTProperties extends BasicClassModuleProperties
+{
 
     public static final String PATH = "PATH";
     public static final String VERSION = "VERSION";
@@ -18,7 +19,8 @@ public class RESTProperties extends BasicClassModuleProperties {
 
     public static final List<String> ALLOWED_DISPATCHERS = initDispatchers();
 
-    private static List<String> initDispatchers() {
+    private static List<String> initDispatchers()
+    {
         List<String> dispatchers = new ArrayList<String>(4);
         dispatchers.add("REQUEST");
         dispatchers.add("INCLUDE");
@@ -28,11 +30,13 @@ public class RESTProperties extends BasicClassModuleProperties {
         return Collections.unmodifiableList(dispatchers);
     }
 
-    public RESTProperties() {
+    public RESTProperties()
+    {
         this("MyRESTResource");
     }
 
-    public RESTProperties(String fqClassname) {
+    public RESTProperties(String fqClassname)
+    {
         super(fqClassname);
 
         put(DISPATCHERS, new ArrayList<String>());
@@ -42,34 +46,42 @@ public class RESTProperties extends BasicClassModuleProperties {
         setVersion("1.0");
     }
 
-    public void setPath(String path) {
-        if(!path.startsWith("/")) {
+    public void setPath(String path)
+    {
+        if (!path.startsWith("/"))
+        {
             path = "/" + path;
         }
-        
-        setProperty(PATH,path);
+
+        setProperty(PATH, path);
     }
 
-    public String getPath() {
+    public String getPath()
+    {
         return getProperty(PATH);
     }
 
-    public void setVersion(String version) {
-        setProperty(VERSION,version);
+    public void setVersion(String version)
+    {
+        setProperty(VERSION, version);
     }
 
-    public String getVersion() {
+    public String getVersion()
+    {
         return getProperty(VERSION);
     }
 
-    public void setDispatchers(List<String> dispatchers) {
+    public void setDispatchers(List<String> dispatchers)
+    {
         put(DISPATCHERS, dispatchers);
     }
 
     @SuppressWarnings(value = "unchecked")
-    public void addDispatcher(String dispatcher) {
+    public void addDispatcher(String dispatcher)
+    {
         List<String> dispatchers = (List<String>) get(DISPATCHERS);
-        if (dispatchers == null) {
+        if (dispatchers == null)
+        {
             dispatchers = new ArrayList<String>();
             setDispatchers(dispatchers);
         }
@@ -77,14 +89,17 @@ public class RESTProperties extends BasicClassModuleProperties {
         dispatchers.add(dispatcher);
     }
 
-    public void setPackagesToScan(List<String> packages) {
+    public void setPackagesToScan(List<String> packages)
+    {
         put(PACKAGES_TO_SCAN, packages);
     }
 
     @SuppressWarnings(value = "unchecked")
-    public void addPackageToScan(String packageToScan) {
+    public void addPackageToScan(String packageToScan)
+    {
         List<String> packages = (List<String>) get(PACKAGES_TO_SCAN);
-        if (packages == null) {
+        if (packages == null)
+        {
             packages = new ArrayList<String>();
             setPackagesToScan(packages);
         }
@@ -92,15 +107,18 @@ public class RESTProperties extends BasicClassModuleProperties {
         packages.add(packageToScan);
     }
 
-    public List<String> getPackagesToScan() {
-        return (List<String>)get(PACKAGES_TO_SCAN);
+    public List<String> getPackagesToScan()
+    {
+        return (List<String>) get(PACKAGES_TO_SCAN);
     }
 
-    public List<String> getDispatchers() {
-        return (List<String>)get(DISPATCHERS);
+    public List<String> getDispatchers()
+    {
+        return (List<String>) get(DISPATCHERS);
     }
 
-    public List<String> allowedDispatchers() {
+    public List<String> allowedDispatchers()
+    {
         return ALLOWED_DISPATCHERS;
     }
 }

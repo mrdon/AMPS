@@ -3,7 +3,6 @@ package com.atlassian.plugins.codegen.modules.common.servlet;
 import com.atlassian.plugins.codegen.annotations.*;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
  * @since 3.5
@@ -19,7 +18,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
         , @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
         , @Dependency(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.1.1", scope = "test")
 })
-public class ServletModuleCreator extends AbstractPluginModuleCreator<ServletProperties> {
+public class ServletModuleCreator extends AbstractPluginModuleCreator<ServletProperties>
+{
 
     public static final String MODULE_NAME = "Servlet";
     private static final String TEMPLATE_PREFIX = "templates/common/servlet/";
@@ -35,14 +35,17 @@ public class ServletModuleCreator extends AbstractPluginModuleCreator<ServletPro
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "servlet-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, ServletProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ServletProperties props) throws Exception
+    {
         String packageName = props.getPackage();
 
         String classname = props.getClassname();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
             //main class
             templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -59,7 +62,8 @@ public class ServletModuleCreator extends AbstractPluginModuleCreator<ServletPro
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

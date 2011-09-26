@@ -15,16 +15,19 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
         @Dependency(groupId = "javax.servlet", artifactId = "servlet-api", version = "2.4", scope = "provided")
         , @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class ValidJiraWithDependencies implements PluginModuleCreator {
+public class ValidJiraWithDependencies implements PluginModuleCreator
+{
     public static final String MODULE_NAME = "Valid Jira Module With Dependencies";
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception
+    {
 
     }
 }

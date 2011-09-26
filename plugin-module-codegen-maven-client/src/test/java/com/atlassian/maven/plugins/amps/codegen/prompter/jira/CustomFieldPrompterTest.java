@@ -1,5 +1,9 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.jira;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import com.atlassian.core.util.map.EasyMap;
 import com.atlassian.maven.plugins.amps.codegen.jira.CustomFieldTypeFactory;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
@@ -7,16 +11,12 @@ import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.common.Resource;
 import com.atlassian.plugins.codegen.modules.jira.CustomFieldProperties;
+
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +26,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class CustomFieldPrompterTest extends AbstractPrompterTest {
+public class CustomFieldPrompterTest extends AbstractPrompterTest
+{
     public static final String PACKAGE = "com.atlassian.plugins.jira.customfields";
     public static final String CLASSNAME = "MyCustomField";
     public static final String MODULE_NAME = "My Custom Field";
@@ -48,14 +49,16 @@ public class CustomFieldPrompterTest extends AbstractPrompterTest {
     TestingCustomFieldTypeFactory fieldTypeFactory;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
         fieldTypeFactory = new TestingCustomFieldTypeFactory();
-        fieldTypeFactory.setFieldTypes(EasyMap.build("AbstractCustomField","com.example.AbstractCustomField","AnotherCustomField","com.example.AnotherCustomField"));
+        fieldTypeFactory.setFieldTypes(EasyMap.build("AbstractCustomField", "com.example.AbstractCustomField", "AnotherCustomField", "com.example.AnotherCustomField"));
     }
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyCustomField")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.customfields")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -74,7 +77,8 @@ public class CustomFieldPrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyCustomField")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.customfields")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
@@ -85,10 +89,12 @@ public class CustomFieldPrompterTest extends AbstractPrompterTest {
         when(prompter.prompt("i18n Name Key", I18N_NAME_KEY)).thenReturn(ADV_I18N_NAME_KEY);
         when(prompter.prompt("i18n Description Key", I18N_DESCRIPTION_KEY)).thenReturn(ADV_I18N_DESCRIPTION_KEY);
 
-        when(prompter.prompt("Choose A Custom Field Type To Extend\n1: AbstractCustomField\n2: AnotherCustomField\nChoose a number: ", Arrays.asList("1", "2"),"")).thenReturn("1");
+        when(prompter.prompt("Choose A Custom Field Type To Extend\n1: AbstractCustomField\n2: AnotherCustomField\nChoose a number: ", Arrays.asList("1", "2"), "")).thenReturn("1");
 
-        when(prompter.prompt("Add Resource", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y").thenReturn("N");
-        when(prompter.prompt("Enter Resource Name")).thenReturn(RESOURCE_NAME).thenReturn("");
+        when(prompter.prompt("Add Resource", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y")
+                .thenReturn("N");
+        when(prompter.prompt("Enter Resource Name")).thenReturn(RESOURCE_NAME)
+                .thenReturn("");
         when(prompter.prompt("Enter Location (path to resource file)")).thenReturn(RESOURCE_VM_PATH);
 
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -107,20 +113,22 @@ public class CustomFieldPrompterTest extends AbstractPrompterTest {
         //resources
         List<Resource> resources = props.getResources();
         assertTrue("resources not found", !resources.isEmpty());
-        assertEquals("wrong number of resources",1,resources.size());
+        assertEquals("wrong number of resources", 1, resources.size());
 
         Resource viewResource = resources.get(0);
 
         assertEquals("wrong css resource name", RESOURCE_NAME, viewResource.getName());
         assertTrue("name pattern found when name is set", StringUtils.isBlank(viewResource.getNamePattern()));
         assertEquals("wrong resource type", "velocity", viewResource.getType());
-        assertEquals("wrong resource location",RESOURCE_VM_PATH,viewResource.getLocation());
+        assertEquals("wrong resource location", RESOURCE_VM_PATH, viewResource.getLocation());
 
-        assertEquals("wrong super class","com.example.AbstractCustomField",props.getFullyQualifiedClassToExtend());
+        assertEquals("wrong super class", "com.example.AbstractCustomField", props.getFullyQualifiedClassToExtend());
     }
 
-    protected class TestingCustomFieldTypeFactory extends CustomFieldTypeFactory {
-        public void setFieldTypes(Map<String,String> types) {
+    protected class TestingCustomFieldTypeFactory extends CustomFieldTypeFactory
+    {
+        public void setFieldTypes(Map<String, String> types)
+        {
             fields = types;
         }
     }

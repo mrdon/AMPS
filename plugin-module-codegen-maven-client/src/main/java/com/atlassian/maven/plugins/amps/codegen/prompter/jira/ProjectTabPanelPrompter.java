@@ -7,6 +7,7 @@ import com.atlassian.plugins.codegen.modules.common.Label;
 import com.atlassian.plugins.codegen.modules.jira.ProjectTabPanelModuleCreator;
 import com.atlassian.plugins.codegen.modules.jira.TabPanelProperties;
 import com.atlassian.plugins.codegen.util.ClassnameUtil;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
@@ -14,23 +15,28 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
  * @since 3.5
  */
 @ModuleCreatorClass(ProjectTabPanelModuleCreator.class)
-public class ProjectTabPanelPrompter extends AbstractModulePrompter<TabPanelProperties> {
+public class ProjectTabPanelPrompter extends AbstractModulePrompter<TabPanelProperties>
+{
 
-    public ProjectTabPanelPrompter(Prompter prompter) {
+    public ProjectTabPanelPrompter(Prompter prompter)
+    {
         super(prompter);
 
     }
 
     @Override
-    public TabPanelProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
+    public TabPanelProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException
+    {
         TabPanelProperties props;
         boolean useGenericClass = promptForBoolean("Use " + ProjectTabPanelModuleCreator.GENERIC_CLASS + "?", "Y");
 
-        if (useGenericClass) {
+        if (useGenericClass)
+        {
             props = new TabPanelProperties(ProjectTabPanelModuleCreator.FQ_GENERIC_CLASS);
             props.setModuleNameAndKey(promptNotBlank("Enter Plugin Module Name", "My Project Tab Panel"));
             suppressAdvancedNamePrompt();
-        } else {
+        } else
+        {
             String className = promptJavaClassname("Enter New Classname", "MyProjectTabPanel");
             String packageName = promptJavaPackagename("Enter Package Name", getDefaultBasePackage() + ".jira.tabpanels");
             String fqClass = ClassnameUtil.fullyQualifiedName(packageName, className);
@@ -47,12 +53,15 @@ public class ProjectTabPanelPrompter extends AbstractModulePrompter<TabPanelProp
     }
 
     @Override
-    public void promptForAdvancedProperties(TabPanelProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
+    public void promptForAdvancedProperties(TabPanelProperties props, PluginModuleLocation moduleLocation) throws PrompterException
+    {
         props.setOrder(promptForInt("Order", 10));
 
         Label label = props.getLabel();
-        String labelKey = promptNotBlank("Enter Label Key", props.getLabel().getKey());
-        String labelValue = promptNotBlank("Enter Label Value", props.getLabel().getValue());
+        String labelKey = promptNotBlank("Enter Label Key", props.getLabel()
+                .getKey());
+        String labelValue = promptNotBlank("Enter Label Value", props.getLabel()
+                .getValue());
 
         label.setKey(labelKey);
         label.setValue(labelValue);

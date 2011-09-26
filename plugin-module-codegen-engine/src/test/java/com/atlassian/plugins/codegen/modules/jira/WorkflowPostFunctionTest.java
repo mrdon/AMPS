@@ -1,27 +1,30 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 import static org.junit.Assert.*;
 
 /**
  * @since 3.5
  */
-public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPostFunctionProperties> {
+public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPostFunctionProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.workflow";
     public static final String XPATH = "/atlassian-plugin/workflow-function[@name='My Post Function' and @key='my-post-function' and @i18n-name-key='my-post-function.name' and @class='" + PACKAGE_NAME + ".MyPostFunctionFactory']";
 
     protected File templatePath;
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new WorkflowPostFunctionModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -33,13 +36,14 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
 
         props.setIncludeExamples(false);
 
-        templatePath = new File(templateDir,"postfunctions");
+        templatePath = new File(templateDir, "postfunctions");
 
     }
 
     @Test
-    public void allFilesAreGenerated() throws Exception {
-        
+    public void allFilesAreGenerated() throws Exception
+    {
+
         creator.createModule(moduleLocation, props);
 
         String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
@@ -54,7 +58,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
 
         creator.createModule(moduleLocation, props);
         Document pluginDoc = getXmlDocument(pluginXml);
@@ -68,7 +73,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
     }
 
     @Test
-    public void moduleHasFunction() throws Exception {
+    public void moduleHasFunction() throws Exception
+    {
 
         creator.createModule(moduleLocation, props);
         Document pluginDoc = getXmlDocument(pluginXml);
@@ -81,7 +87,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
     }
 
     @Test
-    public void moduleHasOrderable() throws Exception {
+    public void moduleHasOrderable() throws Exception
+    {
 
         props.setOrderable(true);
         creator.createModule(moduleLocation, props);
@@ -95,7 +102,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
     }
 
     @Test
-    public void moduleHasDeletable() throws Exception {
+    public void moduleHasDeletable() throws Exception
+    {
 
         props.setDeletable(false);
         creator.createModule(moduleLocation, props);
@@ -109,7 +117,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
     }
 
     @Test
-    public void moduleHasUnique() throws Exception {
+    public void moduleHasUnique() throws Exception
+    {
 
         props.setUnique(true);
         creator.createModule(moduleLocation, props);
@@ -123,7 +132,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
     }
 
     @Test
-    public void moduleHasAddable() throws Exception {
+    public void moduleHasAddable() throws Exception
+    {
 
         props.setAddable("global,common");
         creator.createModule(moduleLocation, props);
@@ -137,7 +147,8 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
     }
 
     @Test
-    public void moduleHasMultipleFlags() throws Exception {
+    public void moduleHasMultipleFlags() throws Exception
+    {
 
         props.setAddable("global,common");
         props.setDeletable(false);

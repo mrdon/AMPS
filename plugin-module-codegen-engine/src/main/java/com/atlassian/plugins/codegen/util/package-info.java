@@ -5,4 +5,4 @@
  * @since 3.6
  *
  */
-package com.atlassian.plugins.codegen.modules;
+package com.atlassian.plugins.codegen.util;

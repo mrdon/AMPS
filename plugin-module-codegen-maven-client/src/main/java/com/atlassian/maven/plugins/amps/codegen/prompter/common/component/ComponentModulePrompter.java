@@ -1,33 +1,36 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.common.component;
 
-import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
-import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
-import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
-import com.atlassian.plugins.codegen.modules.common.component.ComponentModuleCreator;
-import com.atlassian.plugins.codegen.modules.common.component.ComponentProperties;
-import com.atlassian.plugins.codegen.util.ClassnameUtil;
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.plexus.components.interactivity.Prompter;
-import org.codehaus.plexus.components.interactivity.PrompterException;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
+import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
+import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+import com.atlassian.plugins.codegen.modules.common.component.ComponentModuleCreator;
+import com.atlassian.plugins.codegen.modules.common.component.ComponentProperties;
+import com.atlassian.plugins.codegen.util.ClassnameUtil;
+
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.plexus.components.interactivity.Prompter;
+import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
  * @since 3.5
  */
 @ModuleCreatorClass(ComponentModuleCreator.class)
-public class ComponentModulePrompter extends AbstractModulePrompter<ComponentProperties> {
+public class ComponentModulePrompter extends AbstractModulePrompter<ComponentProperties>
+{
 
-    public ComponentModulePrompter(Prompter prompter) {
+    public ComponentModulePrompter(Prompter prompter)
+    {
         super(prompter);
 
     }
 
     @Override
-    public ComponentProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
+    public ComponentProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException
+    {
         String interfaceName = promptJavaClassname("Enter Interface name", "MYComponent");
         String interfacePackage = promptJavaPackagename("Enter Interface package", getDefaultBasePackage() + ".components");
 
@@ -49,27 +52,32 @@ public class ComponentModulePrompter extends AbstractModulePrompter<ComponentPro
     }
 
     @Override
-    public void promptForAdvancedProperties(ComponentProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
+    public void promptForAdvancedProperties(ComponentProperties props, PluginModuleLocation moduleLocation) throws PrompterException
+    {
         boolean createClass = props.generateClass();
         boolean createInterface = props.generateInterface();
 
-        if (createInterface) {
+        if (createInterface)
+        {
             props.setGenerateInterface(promptForBoolean("Generate Module Interface?", "Y"));
         }
 
-        if (createClass) {
+        if (createClass)
+        {
             props.setGenerateClass(promptForBoolean("Generate Module Class?", "Y"));
         }
 
         String alias = prompter.prompt("Alias (not required)");
-        if (StringUtils.isNotBlank(alias)) {
+        if (StringUtils.isNotBlank(alias))
+        {
             props.setAlias(alias);
         }
 
         props.setPublic(promptForBoolean("Public access?", "N"));
 
         Map<String, String> serviceProps = promptForServiceProps();
-        if (serviceProps.size() > 0) {
+        if (serviceProps.size() > 0)
+        {
             props.setServiceProps(serviceProps);
         }
 
@@ -77,25 +85,33 @@ public class ComponentModulePrompter extends AbstractModulePrompter<ComponentPro
 
     }
 
-    private Map<String, String> promptForServiceProps() throws PrompterException {
+    private Map<String, String> promptForServiceProps() throws PrompterException
+    {
         Map<String, String> props = new HashMap<String, String>();
         promptForServiceProp(props);
 
         return props;
     }
 
-    private void promptForServiceProp(Map<String, String> props) throws PrompterException {
+    private void promptForServiceProp(Map<String, String> props) throws PrompterException
+    {
         StringBuffer addBuffer = new StringBuffer();
-        if (props.size() > 0) {
+        if (props.size() > 0)
+        {
             addBuffer.append("service-properties:\n");
-            for (Map.Entry<String, String> entry : props.entrySet()) {
-                addBuffer.append(entry.getKey()).append("->").append(entry.getValue()).append("\n");
+            for (Map.Entry<String, String> entry : props.entrySet())
+            {
+                addBuffer.append(entry.getKey())
+                        .append("->")
+                        .append(entry.getValue())
+                        .append("\n");
             }
         }
         addBuffer.append("Add Service Property?");
         boolean addProp = promptForBoolean(addBuffer.toString(), "N");
 
-        if (addProp) {
+        if (addProp)
+        {
             String key = promptNotBlank("property key");
             String value = promptNotBlank("property value");
             props.put(key, value);
@@ -103,7 +119,8 @@ public class ComponentModulePrompter extends AbstractModulePrompter<ComponentPro
         }
     }
 
-    private boolean javaFileExists(String fqInterface, PluginModuleLocation moduleLocation) {
+    private boolean javaFileExists(String fqInterface, PluginModuleLocation moduleLocation)
+    {
         File javaFile = new File(moduleLocation.getSourceDirectory(), fqInterface.replaceAll("\\.", File.separator) + ".java");
         return javaFile.exists();
     }

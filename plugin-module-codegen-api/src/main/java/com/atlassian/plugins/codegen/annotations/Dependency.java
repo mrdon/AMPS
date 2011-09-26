@@ -9,9 +9,13 @@ import java.lang.annotation.*;
 @Target({})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface Dependency {
+public @interface Dependency
+{
     String groupId();
+
     String artifactId();
+
     String version();
+
     String scope() default "";
 }

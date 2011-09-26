@@ -7,39 +7,47 @@ import java.util.Map;
 /**
  * @since 3.5
  */
-public class Label {
+public class Label
+{
     private String key;
     private String value;
-    private Map<String,String> params;
+    private Map<String, String> params;
 
-    public Label(String key,String value) {
+    public Label(String key, String value)
+    {
         this.key = key;
         this.value = value;
         this.params = new HashMap<String, String>();
     }
 
-    public String getKey() {
+    public String getKey()
+    {
         return key;
     }
 
-    public void setKey(String key) {
+    public void setKey(String key)
+    {
         this.key = key;
     }
 
-    public Map<String, String> getParams() {
+    public Map<String, String> getParams()
+    {
         return Collections.unmodifiableMap(params);
     }
 
-    public void addParam(String value) {
+    public void addParam(String value)
+    {
         String paramName = "param" + params.size();
-        params.put(paramName,value);
+        params.put(paramName, value);
     }
 
-    public String getValue() {
+    public String getValue()
+    {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(String value)
+    {
         this.value = value;
     }
 }

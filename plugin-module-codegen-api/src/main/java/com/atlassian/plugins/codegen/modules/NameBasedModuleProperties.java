@@ -1,11 +1,10 @@
 package com.atlassian.plugins.codegen.modules;
 
-import java.util.Properties;
-
 /**
  * @since 3.5
  */
-public interface NameBasedModuleProperties extends PluginModuleProperties {
+public interface NameBasedModuleProperties extends PluginModuleProperties
+{
     String DESCRIPTION = "DESCRIPTION";
     String DESCRIPTION_I18N_KEY = "DESCRIPTION_I18N_KEY";
     String MODULE_NAME = "MODULE_NAME";

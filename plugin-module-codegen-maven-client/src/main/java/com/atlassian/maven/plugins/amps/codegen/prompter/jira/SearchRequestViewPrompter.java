@@ -1,34 +1,35 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.jira;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
-import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.common.AbstractResourcePrompter;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Resource;
 import com.atlassian.plugins.codegen.modules.jira.SearchRequestViewModuleCreator;
 import com.atlassian.plugins.codegen.modules.jira.SearchRequestViewProperties;
 import com.atlassian.plugins.codegen.util.ClassnameUtil;
-import org.apache.commons.lang.StringUtils;
+
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @since 3.5
  */
 @ModuleCreatorClass(SearchRequestViewModuleCreator.class)
-public class SearchRequestViewPrompter extends AbstractResourcePrompter<SearchRequestViewProperties> {
+public class SearchRequestViewPrompter extends AbstractResourcePrompter<SearchRequestViewProperties>
+{
 
-    public SearchRequestViewPrompter(Prompter prompter) {
+    public SearchRequestViewPrompter(Prompter prompter)
+    {
         super(prompter);
 
     }
 
     @Override
-    public SearchRequestViewProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException {
+    public SearchRequestViewProperties promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException
+    {
         String className = promptJavaClassname("Enter New Classname", "MySearchRequestView");
         String packageName = promptJavaPackagename("Enter Package Name", getDefaultBasePackage() + ".jira.search");
 
@@ -68,13 +69,15 @@ public class SearchRequestViewPrompter extends AbstractResourcePrompter<SearchRe
     }
 
     @Override
-    public void promptForAdvancedProperties(SearchRequestViewProperties props, PluginModuleLocation moduleLocation) throws PrompterException {
-        props.setOrder(promptForInt("Enter Order",10));
+    public void promptForAdvancedProperties(SearchRequestViewProperties props, PluginModuleLocation moduleLocation) throws PrompterException
+    {
+        props.setOrder(promptForInt("Enter Order", 10));
         props.setResources(promptForResources());
     }
 
     @Override
-    protected Resource promptForResource() throws PrompterException {
+    protected Resource promptForResource() throws PrompterException
+    {
         Resource resource = new Resource();
         resource.setName(promptNotBlank("Enter Resource Name"));
 

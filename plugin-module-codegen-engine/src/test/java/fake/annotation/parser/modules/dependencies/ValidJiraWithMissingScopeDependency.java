@@ -14,16 +14,19 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "javax.servlet", artifactId = "servlet-api", version = "2.4")
 })
-public class ValidJiraWithMissingScopeDependency implements PluginModuleCreator {
+public class ValidJiraWithMissingScopeDependency implements PluginModuleCreator
+{
     public static final String MODULE_NAME = "Valid Jira Module With Missing Scope Dependency";
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 
     @Override
-    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, PluginModuleProperties props) throws Exception
+    {
 
     }
 }

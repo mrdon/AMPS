@@ -7,32 +7,39 @@ import java.util.List;
 /**
  * @since 3.5
  */
-public class WebResourceTransformation {
+public class WebResourceTransformation
+{
     private String extension;
     private List<String> transformerKeys;
 
-    public WebResourceTransformation(String extension) {
+    public WebResourceTransformation(String extension)
+    {
         this.extension = extension;
         this.transformerKeys = new ArrayList<String>();
     }
 
-    public String getExtension() {
+    public String getExtension()
+    {
         return extension;
     }
 
-    public void setExtension(String extension) {
+    public void setExtension(String extension)
+    {
         this.extension = extension;
     }
 
-    public void addTransformerKey(String key) {
+    public void addTransformerKey(String key)
+    {
         transformerKeys.add(key);
     }
 
-    public List<String> getTransformerKeys() {
+    public List<String> getTransformerKeys()
+    {
         return Collections.unmodifiableList(transformerKeys);
     }
 
-    public void setTransformerKeys(List<String> keys) {
+    public void setTransformerKeys(List<String> keys)
+    {
         transformerKeys = keys;
     }
 }

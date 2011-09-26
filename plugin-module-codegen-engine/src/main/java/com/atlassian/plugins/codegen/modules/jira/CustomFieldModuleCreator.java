@@ -1,14 +1,16 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.annotations.*;
+import java.io.File;
+
+import com.atlassian.plugins.codegen.annotations.Dependencies;
+import com.atlassian.plugins.codegen.annotations.Dependency;
+import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Resource;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-
-import java.io.File;
 
 /**
  * @since 3.5
@@ -17,7 +19,8 @@ import java.io.File;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class CustomFieldModuleCreator extends AbstractPluginModuleCreator<CustomFieldProperties> {
+public class CustomFieldModuleCreator extends AbstractPluginModuleCreator<CustomFieldProperties>
+{
 
     public static final String MODULE_NAME = "Custom Field";
     private static final String TEMPLATE_PREFIX = "templates/jira/customfield/";
@@ -34,14 +37,17 @@ public class CustomFieldModuleCreator extends AbstractPluginModuleCreator<Custom
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "custom-field-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, CustomFieldProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, CustomFieldProperties props) throws Exception
+    {
         String packageName = props.getPackage();
 
         String classname = props.getClassname();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
             //main class
             templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -52,19 +58,21 @@ public class CustomFieldModuleCreator extends AbstractPluginModuleCreator<Custom
             //templateHelper.writeJavaClassFromTemplate(FUNC_TEST_TEMPLATE, funcTestClassname(classname), location.getTestDirectory(), funcTestPackageName(packageName), props);
 
             //since we know resources are velocity templates, let's create them
-            for(Resource resource : props.getResources()) {
+            for (Resource resource : props.getResources())
+            {
                 String resourcePath = FilenameUtils.separatorsToSystem(resource.getLocation());
 
-                    if(resourcePath.startsWith("templates" + File.separator) || resourcePath.startsWith(File.separator + "templates" + File.separator)) {
-                        resourcePath = StringUtils.substringAfter(resourcePath, "templates" + File.separator);
-                    }
+                if (resourcePath.startsWith("templates" + File.separator) || resourcePath.startsWith(File.separator + "templates" + File.separator))
+                {
+                    resourcePath = StringUtils.substringAfter(resourcePath, "templates" + File.separator);
+                }
 
-                    File resourceFolder = new File(location.getTemplateDirectory(),FilenameUtils.getPath(resourcePath));
-                    String resourceFile = FilenameUtils.getName(resourcePath);
+                File resourceFolder = new File(location.getTemplateDirectory(), FilenameUtils.getPath(resourcePath));
+                String resourceFile = FilenameUtils.getName(resourcePath);
 
-                    props.setProperty("CURRENT_VIEW",resourceFile);
+                props.setProperty("CURRENT_VIEW", resourceFile);
 
-                    templateHelper.writeFileFromTemplate(VIEW_TEMPLATE,FilenameUtils.getName(resourcePath),resourceFolder,props);
+                templateHelper.writeFileFromTemplate(VIEW_TEMPLATE, FilenameUtils.getName(resourcePath), resourceFolder, props);
             }
         }
 
@@ -74,7 +82,8 @@ public class CustomFieldModuleCreator extends AbstractPluginModuleCreator<Custom
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

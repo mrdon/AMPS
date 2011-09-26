@@ -3,7 +3,6 @@ package com.atlassian.plugins.codegen.modules.common.moduletype;
 import com.atlassian.plugins.codegen.annotations.*;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
  * @since 3.5
@@ -17,7 +16,8 @@ import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class ModuleTypeModuleCreator extends AbstractPluginModuleCreator<ModuleTypeProperties> {
+public class ModuleTypeModuleCreator extends AbstractPluginModuleCreator<ModuleTypeProperties>
+{
 
     public static final String MODULE_NAME = "Module Type";
     private static final String TEMPLATE_PREFIX = "templates/common/moduletype/";
@@ -32,15 +32,18 @@ public class ModuleTypeModuleCreator extends AbstractPluginModuleCreator<ModuleT
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "module-type-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, ModuleTypeProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ModuleTypeProperties props) throws Exception
+    {
         String packageName = props.getPackage();
         String classname = props.getClassname();
         String iClassname = props.getInterfaceClass();
         String iPackage = props.getInterfacePackage();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
             //main interface
             templateHelper.writeJavaClassFromTemplate(INTERFACE_TEMPLATE, iClassname, location.getSourceDirectory(), iPackage, props);
 
@@ -60,7 +63,8 @@ public class ModuleTypeModuleCreator extends AbstractPluginModuleCreator<ModuleT
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

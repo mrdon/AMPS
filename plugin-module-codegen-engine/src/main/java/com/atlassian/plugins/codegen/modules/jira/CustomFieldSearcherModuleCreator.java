@@ -1,16 +1,16 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.annotations.Dependencies;
 import com.atlassian.plugins.codegen.annotations.Dependency;
 import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
-import com.atlassian.plugins.codegen.annotations.RefAppPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.Resource;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-
-import java.io.File;
 
 /**
  * @since 3.5
@@ -19,7 +19,8 @@ import java.io.File;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class CustomFieldSearcherModuleCreator extends AbstractPluginModuleCreator<CustomFieldSearcherProperties> {
+public class CustomFieldSearcherModuleCreator extends AbstractPluginModuleCreator<CustomFieldSearcherProperties>
+{
 
     public static final String MODULE_NAME = "Custom Field Searcher";
     private static final String TEMPLATE_PREFIX = "templates/jira/customfield/searcher/";
@@ -36,14 +37,18 @@ public class CustomFieldSearcherModuleCreator extends AbstractPluginModuleCreato
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "customfield-searcher-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, CustomFieldSearcherProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, CustomFieldSearcherProperties props) throws Exception
+    {
         String packageName = props.getPackage();
         String classname = props.getClassname();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
-            if (props.generateClass()) {
+        } else
+        {
+            if (props.generateClass())
+            {
                 //main class
                 templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -56,10 +61,12 @@ public class CustomFieldSearcherModuleCreator extends AbstractPluginModuleCreato
         }
 
         //since we know resources are velocity templates, let's create them
-        for (Resource resource : props.getResources()) {
+        for (Resource resource : props.getResources())
+        {
             String resourcePath = FilenameUtils.separatorsToSystem(resource.getLocation());
 
-            if (resourcePath.startsWith("templates" + File.separator) || resourcePath.startsWith(File.separator + "templates" + File.separator)) {
+            if (resourcePath.startsWith("templates" + File.separator) || resourcePath.startsWith(File.separator + "templates" + File.separator))
+            {
                 resourcePath = StringUtils.substringAfter(resourcePath, "templates" + File.separator);
             }
 
@@ -76,7 +83,8 @@ public class CustomFieldSearcherModuleCreator extends AbstractPluginModuleCreato
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

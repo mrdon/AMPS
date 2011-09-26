@@ -1,28 +1,25 @@
 package com.atlassian.plugins.codegen.modules.common;
 
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleProperties;
-import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @since 3.5
  */
-public class DownloadablePluginResourceProperties extends AbstractPluginModuleProperties {
+public class DownloadablePluginResourceProperties extends AbstractPluginModuleProperties
+{
     private boolean includeExamples;
 
     public static final String RESOURCE = "RESOURCE";
 
-    public DownloadablePluginResourceProperties(Resource resource) {
+    public DownloadablePluginResourceProperties(Resource resource)
+    {
         super();
         includeExamples = false;
-        put(RESOURCE,resource);
+        put(RESOURCE, resource);
     }
 
-    public Resource getResource() {
-        return (Resource)get(RESOURCE);
+    public Resource getResource()
+    {
+        return (Resource) get(RESOURCE);
     }
 }

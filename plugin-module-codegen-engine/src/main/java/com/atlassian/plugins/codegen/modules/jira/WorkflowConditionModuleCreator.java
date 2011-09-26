@@ -1,11 +1,12 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.annotations.*;
+import java.io.File;
+
+import com.atlassian.plugins.codegen.annotations.Dependencies;
+import com.atlassian.plugins.codegen.annotations.Dependency;
+import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
-
-import java.io.File;
 
 /**
  * @since 3.5
@@ -14,7 +15,8 @@ import java.io.File;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class WorkflowConditionModuleCreator extends AbstractPluginModuleCreator<WorkflowElementProperties> {
+public class WorkflowConditionModuleCreator extends AbstractPluginModuleCreator<WorkflowElementProperties>
+{
 
     public static final String MODULE_NAME = "Workflow Condition";
     private static final String TEMPLATE_PREFIX = "templates/jira/workflow/condition/";
@@ -33,7 +35,8 @@ public class WorkflowConditionModuleCreator extends AbstractPluginModuleCreator<
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "workflow-condition-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, WorkflowElementProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, WorkflowElementProperties props) throws Exception
+    {
         String moduleKey = props.getModuleKey();
         String viewFileName = moduleKey + ".vm";
         String inputFileName = moduleKey + "-input.vm";
@@ -41,7 +44,7 @@ public class WorkflowConditionModuleCreator extends AbstractPluginModuleCreator<
         String functionClass = props.getClassname();
         String factoryClass = props.getFactoryName();
 
-        File templatesDir = new File(location.getTemplateDirectory(),"conditions");
+        File templatesDir = new File(location.getTemplateDirectory(), "conditions");
 
         templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, functionClass, location.getSourceDirectory(), packageName, props);
         templateHelper.writeJavaClassFromTemplate(FACTORY_TEMPLATE, factoryClass, location.getSourceDirectory(), packageName, props);
@@ -56,7 +59,8 @@ public class WorkflowConditionModuleCreator extends AbstractPluginModuleCreator<
 
 
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 }

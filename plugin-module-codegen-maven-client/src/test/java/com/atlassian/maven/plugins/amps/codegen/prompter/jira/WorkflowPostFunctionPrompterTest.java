@@ -1,21 +1,21 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter.jira;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import com.atlassian.maven.plugins.amps.codegen.jira.ActionTypeFactory;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractPrompterTest;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.jira.WorkflowPostFunctionProperties;
+
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +25,8 @@ import static org.mockito.Mockito.when;
 /**
  * @since 3.5
  */
-public class WorkflowPostFunctionPrompterTest extends AbstractPrompterTest {
+public class WorkflowPostFunctionPrompterTest extends AbstractPrompterTest
+{
     public static final String PACKAGE = "com.atlassian.plugins.jira.workflow";
     public static final String CLASSNAME = "MyPostFunction";
     public static final String FACTORY_CLASSNAME = "MyPostFunctionFactory";
@@ -45,19 +46,22 @@ public class WorkflowPostFunctionPrompterTest extends AbstractPrompterTest {
     TestingActionTypeFactory actionTypeFactory;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         prompter = mock(Prompter.class);
         actionTypeFactory = new TestingActionTypeFactory();
-        actionTypeFactory.setActionTypes(Arrays.asList("common","initial","global","ordinary"));
+        actionTypeFactory.setActionTypes(Arrays.asList("common", "initial", "global", "ordinary"));
     }
 
     @After
-    public void resetActionTypes() {
+    public void resetActionTypes()
+    {
         actionTypeFactory.setActionTypes(Collections.<String>emptyList());
     }
 
     @Test
-    public void basicPropertiesAreValid() throws PrompterException {
+    public void basicPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyPostFunction")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.workflow")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
@@ -81,7 +85,8 @@ public class WorkflowPostFunctionPrompterTest extends AbstractPrompterTest {
     }
 
     @Test
-    public void advancedPropertiesAreValid() throws PrompterException {
+    public void advancedPropertiesAreValid() throws PrompterException
+    {
         when(prompter.prompt("Enter New Classname", "MyPostFunction")).thenReturn(CLASSNAME);
         when(prompter.prompt("Enter Package Name", AbstractModulePrompter.DEFAULT_BASE_PACKAGE + ".jira.workflow")).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
@@ -97,9 +102,10 @@ public class WorkflowPostFunctionPrompterTest extends AbstractPrompterTest {
         when(prompter.prompt("Is Function Deletable?", PluginModulePrompter.YN_ANSWERS, "Y")).thenReturn("y");
 
         when(prompter.prompt("Define Action Types? (addable)", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("y");
-        when(prompter.prompt("Choose A Type\n1: common\n2: global\n3: initial\n4: ordinary\nChoose a number: ", Arrays.asList("1", "2", "3", "4"),"1")).thenReturn("2");
-        when(prompter.prompt("Add Action Type?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("y").thenReturn("n");
-        when(prompter.prompt("Choose A Type\n1: common\n2: initial\n3: ordinary\nChoose a number: ", Arrays.asList("1", "2", "3"),"1")).thenReturn("1");
+        when(prompter.prompt("Choose A Type\n1: common\n2: global\n3: initial\n4: ordinary\nChoose a number: ", Arrays.asList("1", "2", "3", "4"), "1")).thenReturn("2");
+        when(prompter.prompt("Add Action Type?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("y")
+                .thenReturn("n");
+        when(prompter.prompt("Choose A Type\n1: common\n2: initial\n3: ordinary\nChoose a number: ", Arrays.asList("1", "2", "3"), "1")).thenReturn("1");
 
         when(prompter.prompt("Include Example Code?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("N");
 
@@ -120,8 +126,10 @@ public class WorkflowPostFunctionPrompterTest extends AbstractPrompterTest {
         assertEquals("wrong addable", "global,common", props.getAddable());
     }
 
-    protected class TestingActionTypeFactory extends ActionTypeFactory {
-        public void setActionTypes(List<String> types) {
+    protected class TestingActionTypeFactory extends ActionTypeFactory
+    {
+        public void setActionTypes(List<String> types)
+        {
             availableActionTypes = types;
         }
     }

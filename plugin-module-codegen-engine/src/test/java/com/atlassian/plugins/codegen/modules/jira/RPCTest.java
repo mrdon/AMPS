@@ -1,24 +1,28 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @since 3.5
  */
-public class RPCTest extends AbstractCodegenTestCase<RPCProperties> {
+public class RPCTest extends AbstractCodegenTestCase<RPCProperties>
+{
     public static final String PACKAGE_NAME = "com.atlassian.plugins.jira.rpc";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new RPCModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -28,7 +32,8 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties> {
     }
 
     @Test
-    public void allSoapFilesAreGenerated() throws Exception {
+    public void allSoapFilesAreGenerated() throws Exception
+    {
         setProps(new RPCProperties(PACKAGE_NAME + ".MySoapEndpoint"));
         props.setIncludeExamples(false);
         props.setSoap(true);
@@ -44,7 +49,8 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties> {
     }
 
     @Test
-    public void allXmlFilesAreGenerated() throws Exception {
+    public void allXmlFilesAreGenerated() throws Exception
+    {
         setProps(new RPCProperties(PACKAGE_NAME + ".MyXmlEndpoint"));
         props.setIncludeExamples(false);
         props.setSoap(false);
@@ -60,7 +66,8 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties> {
     }
 
     @Test
-    public void soapModuleIsValid() throws Exception {
+    public void soapModuleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/rpc-soap[@name='My Soap Endpoint' and @key='my-soap-endpoint' and @i18n-name-key='my-soap-endpoint.name' and @class='" + PACKAGE_NAME + ".MySoapEndpointImpl']";
         String pathXPath = "service-path[text() = 'mysoapendpoint-v1']";
         String interfaceXPath = "published-interface[text() = '" + PACKAGE_NAME + ".MySoapEndpoint']";
@@ -80,7 +87,8 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties> {
     }
 
     @Test
-    public void xmlModuleIsValid() throws Exception {
+    public void xmlModuleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/rpc-xmlrpc[@name='My Xml Endpoint' and @key='my-xml-endpoint' and @i18n-name-key='my-xml-endpoint.name' and @class='" + PACKAGE_NAME + ".MyXmlEndpointImpl']";
 
         String pathXPath = "service-path[text() = 'myxmlendpoint-v1']";
@@ -99,7 +107,8 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties> {
     }
 
     @Test
-    public void soapComponentAdded() throws Exception {
+    public void soapComponentAdded() throws Exception
+    {
         setProps(new RPCProperties(PACKAGE_NAME + ".MySoapEndpoint"));
         props.setIncludeExamples(false);
         props.setSoap(true);
@@ -111,13 +120,14 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties> {
         String compIfaceXPath = "interface[text() = '" + PACKAGE_NAME + ".MySoapEndpoint']";
 
         Node compNode = pluginDoc.selectSingleNode(compXPath);
-        assertNotNull("component not found",compNode);
-        assertNotNull("interface not found",compNode.selectSingleNode(compIfaceXPath));
+        assertNotNull("component not found", compNode);
+        assertNotNull("interface not found", compNode.selectSingleNode(compIfaceXPath));
 
     }
 
     @Test
-    public void xmlComponentAdded() throws Exception {
+    public void xmlComponentAdded() throws Exception
+    {
         setProps(new RPCProperties(PACKAGE_NAME + ".MyXmlEndpoint"));
         props.setIncludeExamples(false);
         props.setSoap(true);
@@ -129,7 +139,7 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties> {
         String compIfaceXPath = "interface[text() = '" + PACKAGE_NAME + ".MyXmlEndpoint']";
 
         Node compNode = pluginDoc.selectSingleNode(compXPath);
-        assertNotNull("component not found",compNode);
-        assertNotNull("interface not found",compNode.selectSingleNode(compIfaceXPath));
+        assertNotNull("component not found", compNode);
+        assertNotNull("interface not found", compNode.selectSingleNode(compIfaceXPath));
     }
 }

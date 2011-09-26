@@ -1,15 +1,16 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
+import java.io.File;
+
 import com.atlassian.plugins.codegen.annotations.Dependencies;
 import com.atlassian.plugins.codegen.annotations.Dependency;
 import com.atlassian.plugins.codegen.annotations.JiraPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.Resource;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-
-import java.io.File;
 
 /**
  * @since 3.5
@@ -18,7 +19,8 @@ import java.io.File;
 @Dependencies({
         @Dependency(groupId = "org.mockito", artifactId = "mockito-all", version = "1.8.5", scope = "test")
 })
-public class ReportModuleCreator extends AbstractPluginModuleCreator<ReportProperties> {
+public class ReportModuleCreator extends AbstractPluginModuleCreator<ReportProperties>
+{
 
     public static final String MODULE_NAME = "Report";
     private static final String TEMPLATE_PREFIX = "templates/jira/report/";
@@ -35,14 +37,17 @@ public class ReportModuleCreator extends AbstractPluginModuleCreator<ReportPrope
     private static final String PLUGIN_MODULE_TEMPLATE = TEMPLATE_PREFIX + "report-plugin.xml.vtl";
 
     @Override
-    public void createModule(PluginModuleLocation location, ReportProperties props) throws Exception {
+    public void createModule(PluginModuleLocation location, ReportProperties props) throws Exception
+    {
         String packageName = props.getPackage();
 
         String classname = props.getClassname();
 
-        if (props.includeExamples()) {
+        if (props.includeExamples())
+        {
             templateHelper.writeJavaClassFromTemplate(EXAMPLE_CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
-        } else {
+        } else
+        {
             //main class
             templateHelper.writeJavaClassFromTemplate(CLASS_TEMPLATE, classname, location.getSourceDirectory(), packageName, props);
 
@@ -54,16 +59,22 @@ public class ReportModuleCreator extends AbstractPluginModuleCreator<ReportPrope
         }
 
         //since we know resources are velocity templates, let's create them
-        for (Resource resource : props.getResources()) {
-            if (resource.getType().equals("i18n")) {
+        for (Resource resource : props.getResources())
+        {
+            if (resource.getType()
+                    .equals("i18n"))
+            {
                 File resourceFile = new File(location.getResourcesDir(), resource.getLocation() + ".properties");
-                if (!resourceFile.exists()) {
+                if (!resourceFile.exists())
+                {
                     resourceFile.createNewFile();
                 }
-            } else {
+            } else
+            {
                 String resourcePath = FilenameUtils.separatorsToSystem(resource.getLocation());
 
-                if (resourcePath.startsWith("templates" + File.separator) || resourcePath.startsWith(File.separator + "templates" + File.separator)) {
+                if (resourcePath.startsWith("templates" + File.separator) || resourcePath.startsWith(File.separator + "templates" + File.separator))
+                {
                     resourcePath = StringUtils.substringAfter(resourcePath, "templates" + File.separator);
                 }
 
@@ -82,7 +93,8 @@ public class ReportModuleCreator extends AbstractPluginModuleCreator<ReportPrope
 
     @Override
     public String getModuleName
-            () {
+            ()
+    {
         return MODULE_NAME;
     }
 }

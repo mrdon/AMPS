@@ -1,51 +1,57 @@
 package com.atlassian.plugins.codegen.modules.common;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @since 3.5
  */
-public class Condition implements Conditional {
+public class Condition implements Conditional
+{
 
     private final String fqClassName;
     private boolean invert;
 
-    private final Map<String,String> params;
+    private final Map<String, String> params;
 
-    public Condition(String fqClassName) {
+    public Condition(String fqClassName)
+    {
         this.fqClassName = fqClassName;
         this.params = new HashMap<String, String>();
     }
 
-    public String getFullyQualifiedClassName() {
+    public String getFullyQualifiedClassName()
+    {
         return fqClassName;
     }
 
-    public Map<String, String> getParams() {
+    public Map<String, String> getParams()
+    {
         return params;
     }
 
-    public void addParam(String name, String value) {
-        params.put(name,value);
+    public void addParam(String name, String value)
+    {
+        params.put(name, value);
     }
 
-    public void setParams(Map<String,String> newParams) {
+    public void setParams(Map<String, String> newParams)
+    {
         params.putAll(newParams);
     }
 
-    public boolean isParamsEmpty() {
+    public boolean isParamsEmpty()
+    {
         return params.isEmpty();
     }
 
-    public boolean isInvert() {
+    public boolean isInvert()
+    {
         return invert;
     }
 
-    public void setInvert(boolean invert) {
+    public void setInvert(boolean invert)
+    {
         this.invert = invert;
     }
 }

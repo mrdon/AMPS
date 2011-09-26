@@ -1,39 +1,46 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
-import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
 
 /**
  * @since 3.5
  */
-public class WebworkProperties extends BasicNameModuleProperties {
+public class WebworkProperties extends BasicNameModuleProperties
+{
     public static final String ACTIONS = "ACTIONS";
 
-    public WebworkProperties() {
+    public WebworkProperties()
+    {
         this("My Webwork Action");
     }
 
-    public WebworkProperties(String moduleName) {
+    public WebworkProperties(String moduleName)
+    {
         super(moduleName);
         setActions(new ArrayList<ActionProperties>());
     }
 
-    public List<ActionProperties> getActions() {
-        return (List<ActionProperties>)get(ACTIONS);
+    public List<ActionProperties> getActions()
+    {
+        return (List<ActionProperties>) get(ACTIONS);
     }
 
-    public void setActions(List<ActionProperties> actions) {
-        put(ACTIONS,actions);
+    public void setActions(List<ActionProperties> actions)
+    {
+        put(ACTIONS, actions);
     }
 
-    public void addAction(ActionProperties action) {
+    public void addAction(ActionProperties action)
+    {
         List<ActionProperties> actions = getActions();
 
-        if(null == actions) {
+        if (null == actions)
+        {
             actions = new ArrayList<ActionProperties>();
-            put(ACTIONS,actions);
+            put(ACTIONS, actions);
         }
         actions.add(action);
     }

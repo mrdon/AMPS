@@ -1,30 +1,31 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
+import java.util.Properties;
+
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.common.Icon;
 import com.atlassian.plugins.codegen.modules.common.Label;
 import com.atlassian.plugins.codegen.modules.common.Link;
 import com.atlassian.plugins.codegen.modules.common.Tooltip;
+
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Properties;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @since 3.5
  */
-public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
+public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties>
+{
     public static final String MODULE_NAME = "My Web Item";
     public static final String GLOBAL_SETTINGS_SECTION = "system.admin/globalsettings";
 
     @Before
-    public void runGenerator() throws Exception {
+    public void runGenerator() throws Exception
+    {
         setCreator(new WebItemModuleCreator());
         setModuleLocation(new PluginModuleLocation.Builder(srcDir)
                 .resourcesDirectory(resourcesDir)
@@ -38,7 +39,8 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
     }
 
     @Test
-    public void moduleIsValid() throws Exception {
+    public void moduleIsValid() throws Exception
+    {
         String xpath = "/atlassian-plugin/web-item[@name='My Web Item' and @key='my-web-item' and @i18n-name-key='my-web-item.name' and @section='system.admin/globalsettings' and @weight='1000']";
 
         creator.createModule(moduleLocation, props);
@@ -48,7 +50,8 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
     }
 
     @Test
-    public void moduleIsValidWithCustomWeight() throws Exception {
+    public void moduleIsValidWithCustomWeight() throws Exception
+    {
         props.setWeight(20);
 
         String xpath = "/atlassian-plugin/web-item[@name='My Web Item' and @key='my-web-item' and @i18n-name-key='my-web-item.name' and @section='system.admin/globalsettings' and @weight='20']";
@@ -60,7 +63,8 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
     }
 
     @Test
-    public void iconAdded() throws Exception {
+    public void iconAdded() throws Exception
+    {
         String path = "/images/myicon.png";
         Link link = new Link(path);
         Icon icon = new Icon(16, 16);
@@ -75,12 +79,13 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
 
         Node linkNode = pluginDoc.selectSingleNode(xpath);
 
-        assertNotNull("icon link not found",linkNode);
-        assertEquals("wrong icon link",path,linkNode.getStringValue());
+        assertNotNull("icon link not found", linkNode);
+        assertEquals("wrong icon link", path, linkNode.getStringValue());
     }
 
     @Test
-    public void labelAdded() throws Exception {
+    public void labelAdded() throws Exception
+    {
         String paramVal0 = "$helper.project.name";
         String paramVal1 = "$helper.project.description";
         Label label = new Label("common.concepts.create.new.issue", "create new issue");
@@ -96,7 +101,7 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
 
         Node labelNode = pluginDoc.selectSingleNode(labelXpath);
 
-        assertNotNull("label not found",labelNode);
+        assertNotNull("label not found", labelNode);
 
         Node param0 = labelNode.selectSingleNode("param[@name='param0' and @value='" + paramVal0 + "']");
         Node param1 = labelNode.selectSingleNode("param[@name='param1' and @value='" + paramVal1 + "']");
@@ -106,12 +111,13 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
 
         Properties i18nprops = loadI18nProperties();
         assertTrue("label i18n not found", i18nprops.containsKey(label.getKey()));
-        assertEquals("label i18n has wrong value",label.getValue(),i18nprops.getProperty(label.getKey()));
+        assertEquals("label i18n has wrong value", label.getValue(), i18nprops.getProperty(label.getKey()));
 
     }
 
     @Test
-    public void linkAdded() throws Exception {
+    public void linkAdded() throws Exception
+    {
         String path = "/secure/CreateIssue!default.jspa";
         Link link = new Link(path);
         link.setLinkId("create link");
@@ -125,14 +131,15 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
 
         Node linkNode = pluginDoc.selectSingleNode(linkXpath);
 
-        assertNotNull("link not found",linkNode);
+        assertNotNull("link not found", linkNode);
         assertEquals("wrong link value", path, linkNode.getStringValue());
     }
 
     @Test
-    public void paramsAdded() throws Exception {
-        props.addParam("isPopupLink","true");
-        props.addParam("isSuperAwesome","false");
+    public void paramsAdded() throws Exception
+    {
+        props.addParam("isPopupLink", "true");
+        props.addParam("isSuperAwesome", "false");
 
         String param1Xpath = "/atlassian-plugin/web-item/param[@name='isPopupLink' and @value='true']";
         String param2Xpath = "/atlassian-plugin/web-item/param[@name='isSuperAwesome' and @value='false']";
@@ -140,13 +147,14 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
         creator.createModule(moduleLocation, props);
         Document pluginDoc = getXmlDocument(pluginXml);
 
-        assertNotNull("param 1 not found",pluginDoc.selectSingleNode(param1Xpath));
-        assertNotNull("param 2 not found",pluginDoc.selectSingleNode(param2Xpath));
+        assertNotNull("param 1 not found", pluginDoc.selectSingleNode(param1Xpath));
+        assertNotNull("param 2 not found", pluginDoc.selectSingleNode(param2Xpath));
     }
 
     @Test
-    public void tooltipAdded() throws Exception {
-        Tooltip tooltip = new Tooltip("common.concepts.create.new.issue.tooltip","creates a new issue");
+    public void tooltipAdded() throws Exception
+    {
+        Tooltip tooltip = new Tooltip("common.concepts.create.new.issue.tooltip", "creates a new issue");
         props.setTooltip(tooltip);
 
         String xpath = "/atlassian-plugin/web-item/tooltip[@key='common.concepts.create.new.issue.tooltip']";
@@ -154,10 +162,10 @@ public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties> {
         creator.createModule(moduleLocation, props);
         Document pluginDoc = getXmlDocument(pluginXml);
 
-        assertNotNull("tooltip not found",pluginDoc.selectSingleNode(xpath));
+        assertNotNull("tooltip not found", pluginDoc.selectSingleNode(xpath));
 
         Properties i18nprops = loadI18nProperties();
         assertTrue("tooltip i18n not found", i18nprops.containsKey(tooltip.getKey()));
-        assertEquals("tooltip i18n has wrong value",tooltip.getValue(),i18nprops.getProperty(tooltip.getKey()));
+        assertEquals("tooltip i18n has wrong value", tooltip.getValue(), i18nprops.getProperty(tooltip.getKey()));
     }
 }

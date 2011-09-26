@@ -1,23 +1,25 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
+
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.UUID;
-
 import static org.mockito.Mockito.mock;
 
 /**
  * @since 3.5
  */
-public abstract class AbstractPrompterTest {
+public abstract class AbstractPrompterTest
+{
     protected File tempDir;
     protected File srcDir;
     protected File testDir;
@@ -28,10 +30,12 @@ public abstract class AbstractPrompterTest {
     protected Prompter prompter;
 
     @Before
-    public void setupDirs() throws Exception {
+    public void setupDirs() throws Exception
+    {
 
         final File sysTempDir = new File("target");
-        String dirName = UUID.randomUUID().toString();
+        String dirName = UUID.randomUUID()
+                .toString();
         tempDir = new File(sysTempDir, dirName);
         srcDir = new File(tempDir, "src");
         testDir = new File(tempDir, "test-src");
@@ -44,7 +48,8 @@ public abstract class AbstractPrompterTest {
         resourcesDir.mkdirs();
         templateDir.mkdirs();
 
-        InputStream is = this.getClass().getResourceAsStream("/empty-plugin.xml");
+        InputStream is = this.getClass()
+                .getResourceAsStream("/empty-plugin.xml");
         IOUtils.copy(is, FileUtils.openOutputStream(pluginXml));
 
         moduleLocation = new PluginModuleLocation.Builder(srcDir)
@@ -56,7 +61,8 @@ public abstract class AbstractPrompterTest {
     }
 
     @After
-    public void removeTempDir() throws IOException {
+    public void removeTempDir() throws IOException
+    {
         FileUtils.deleteDirectory(tempDir);
     }
 }

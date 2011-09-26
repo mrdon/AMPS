@@ -25,21 +25,23 @@ package com.atlassian.maven.plugins.amps.codegen.prompter;
  * SOFTWARE.
  */
 
-import jline.ANSIBuffer;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+
 import org.codehaus.plexus.components.interactivity.InputHandler;
 import org.codehaus.plexus.components.interactivity.OutputHandler;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
+import jline.ANSIBuffer;
 
 /**
  * @since 3.5
  */
-public class PrettyPrompter implements Prompter {
+public class PrettyPrompter implements Prompter
+{
 
     //maven-cli-plugin uses an old version jline that has ansi codes in package scope.
     //re-defining them in public here
@@ -72,84 +74,115 @@ public class PrettyPrompter implements Prompter {
 
     private boolean useAnsiColor;
 
-    public PrettyPrompter() {
+    public PrettyPrompter()
+    {
         String mavencolor = System.getenv("MAVEN_COLOR");
-        if (mavencolor != null && !mavencolor.equals("")) {
+        if (mavencolor != null && !mavencolor.equals(""))
+        {
             useAnsiColor = Boolean.parseBoolean(mavencolor);
-        } else {
+        } else
+        {
             useAnsiColor = false;
         }
     }
 
     public String prompt(String message)
-            throws PrompterException {
-        try {
+            throws PrompterException
+    {
+        try
+        {
             writePrompt(message);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new PrompterException("Failed to present prompt", e);
         }
 
-        try {
+        try
+        {
             return inputHandler.readLine();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new PrompterException("Failed to read user response", e);
         }
     }
 
     public String prompt(String message, String defaultReply)
-            throws PrompterException {
-        try {
+            throws PrompterException
+    {
+        try
+        {
             writePrompt(formatMessage(message, null, defaultReply));
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new PrompterException("Failed to present prompt", e);
         }
 
-        try {
+        try
+        {
             String line = inputHandler.readLine();
 
-            if (StringUtils.isEmpty(line)) {
+            if (StringUtils.isEmpty(line))
+            {
                 line = defaultReply;
             }
 
             return line;
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new PrompterException("Failed to read user response", e);
         }
     }
 
     public String prompt(String message, List possibleValues, String defaultReply)
-            throws PrompterException {
+            throws PrompterException
+    {
         String formattedMessage = formatMessage(message, possibleValues, defaultReply);
 
         String line;
 
-        do {
-            try {
+        do
+        {
+            try
+            {
                 writePrompt(formattedMessage);
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 throw new PrompterException("Failed to present prompt", e);
             }
 
-            try {
+            try
+            {
                 line = inputHandler.readLine();
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 throw new PrompterException("Failed to read user response", e);
             }
 
-            if (StringUtils.isEmpty(line)) {
+            if (StringUtils.isEmpty(line))
+            {
                 line = defaultReply;
             }
 
-            if (line != null && !possibleValues.contains(line)) {
-                try {
+            if (line != null && !possibleValues.contains(line))
+            {
+                try
+                {
                     String invalid = "Invalid selection.";
-                    if (useAnsiColor) {
+                    if (useAnsiColor)
+                    {
                         ANSIBuffer ansiBuffer = new ANSIBuffer();
-                        ansiBuffer.append(ANSIBuffer.ANSICodes.attrib(FG_RED)).append(ANSIBuffer.ANSICodes.attrib(BOLD)).append("Invalid selection.").append(ANSIBuffer.ANSICodes.attrib(OFF));
+                        ansiBuffer.append(ANSIBuffer.ANSICodes
+                                .attrib(FG_RED))
+                                .append(ANSIBuffer.ANSICodes
+                                        .attrib(BOLD))
+                                .append("Invalid selection.")
+                                .append(ANSIBuffer.ANSICodes
+                                        .attrib(OFF));
                         invalid = ansiBuffer.toString();
                     }
                     outputHandler.writeLine(invalid);
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                     throw new PrompterException("Failed to present feedback", e);
                 }
             }
@@ -160,47 +193,60 @@ public class PrettyPrompter implements Prompter {
     }
 
     public String prompt(String message, List possibleValues)
-            throws PrompterException {
+            throws PrompterException
+    {
         return prompt(message, possibleValues, null);
     }
 
     public String promptForPassword(String message)
-            throws PrompterException {
-        try {
+            throws PrompterException
+    {
+        try
+        {
             writePrompt(message);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new PrompterException("Failed to present prompt", e);
         }
 
-        try {
+        try
+        {
             return inputHandler.readPassword();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new PrompterException("Failed to read user response", e);
         }
     }
 
-    protected String formatMessage(String message, List possibleValues, String defaultReply) {
-        if(useAnsiColor) {
-            return formatAnsiMessage(message,possibleValues,defaultReply);
-        } else {
-            return formatPlainMessage(message,possibleValues,defaultReply);
+    protected String formatMessage(String message, List possibleValues, String defaultReply)
+    {
+        if (useAnsiColor)
+        {
+            return formatAnsiMessage(message, possibleValues, defaultReply);
+        } else
+        {
+            return formatPlainMessage(message, possibleValues, defaultReply);
         }
     }
 
-    private String formatAnsiMessage(String message, List possibleValues, String defaultReply) {
+    private String formatAnsiMessage(String message, List possibleValues, String defaultReply)
+    {
         ANSIBuffer formatted = new ANSIBuffer();
 
         formatted.append(message);
 
-        if (possibleValues != null && !possibleValues.isEmpty()) {
+        if (possibleValues != null && !possibleValues.isEmpty())
+        {
             formatted.append(" (");
 
-            for (Iterator it = possibleValues.iterator(); it.hasNext(); ) {
+            for (Iterator it = possibleValues.iterator(); it.hasNext(); )
+            {
                 String possibleValue = (String) it.next();
 
-                formatted.attrib(possibleValue,BOLD);
+                formatted.attrib(possibleValue, BOLD);
 
-                if (it.hasNext()) {
+                if (it.hasNext())
+                {
                     formatted.append("/");
                 }
             }
@@ -208,27 +254,40 @@ public class PrettyPrompter implements Prompter {
             formatted.append(")");
         }
 
-        if (defaultReply != null) {
-            formatted.append(ANSIBuffer.ANSICodes.attrib(FG_GREEN)).append(ANSIBuffer.ANSICodes.attrib(BOLD)).append(" [").append(defaultReply).append("]").append(ANSIBuffer.ANSICodes.attrib(OFF));
+        if (defaultReply != null)
+        {
+            formatted.append(ANSIBuffer.ANSICodes
+                    .attrib(FG_GREEN))
+                    .append(ANSIBuffer.ANSICodes
+                            .attrib(BOLD))
+                    .append(" [")
+                    .append(defaultReply)
+                    .append("]")
+                    .append(ANSIBuffer.ANSICodes
+                            .attrib(OFF));
         }
 
         return formatted.toString();
     }
 
-    private String formatPlainMessage(String message, List possibleValues, String defaultReply) {
+    private String formatPlainMessage(String message, List possibleValues, String defaultReply)
+    {
         StringBuffer formatted = new StringBuffer(message.length() * 2);
 
         formatted.append(message);
 
-        if (possibleValues != null && !possibleValues.isEmpty()) {
+        if (possibleValues != null && !possibleValues.isEmpty())
+        {
             formatted.append(" (");
 
-            for (Iterator it = possibleValues.iterator(); it.hasNext(); ) {
+            for (Iterator it = possibleValues.iterator(); it.hasNext(); )
+            {
                 String possibleValue = (String) it.next();
 
                 formatted.append(possibleValue);
 
-                if (it.hasNext()) {
+                if (it.hasNext())
+                {
                     formatted.append('/');
                 }
             }
@@ -236,23 +295,30 @@ public class PrettyPrompter implements Prompter {
             formatted.append(')');
         }
 
-        if (defaultReply != null) {
-            formatted.append(" [").append(defaultReply).append("]");
+        if (defaultReply != null)
+        {
+            formatted.append(" [")
+                    .append(defaultReply)
+                    .append("]");
         }
 
         return formatted.toString();
     }
 
     private void writePrompt(String message)
-            throws IOException {
+            throws IOException
+    {
         outputHandler.write(message + ": ");
     }
 
     public void showMessage(String message)
-            throws PrompterException {
-        try {
+            throws PrompterException
+    {
+        try
+        {
             writePrompt(message);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new PrompterException("Failed to present prompt", e);
         }
 

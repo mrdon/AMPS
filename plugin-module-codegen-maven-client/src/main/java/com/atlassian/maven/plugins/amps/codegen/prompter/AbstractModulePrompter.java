@@ -1,23 +1,26 @@
 package com.atlassian.maven.plugins.amps.codegen.prompter;
 
-import com.atlassian.plugins.codegen.modules.NameBasedModuleProperties;
-import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
-import com.atlassian.plugins.codegen.util.ClassnameUtil;
-import jline.ANSIBuffer;
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.plexus.components.interactivity.Prompter;
-import org.codehaus.plexus.components.interactivity.PrompterException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.atlassian.plugins.codegen.modules.NameBasedModuleProperties;
+import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
+import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
+import com.atlassian.plugins.codegen.util.ClassnameUtil;
+
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.plexus.components.interactivity.Prompter;
+import org.codehaus.plexus.components.interactivity.PrompterException;
+
+import jline.ANSIBuffer;
+
 /**
  * @since 3.5
  */
-public abstract class AbstractModulePrompter<T extends PluginModuleProperties> implements PluginModulePrompter<T> {
+public abstract class AbstractModulePrompter<T extends PluginModuleProperties> implements PluginModulePrompter<T>
+{
     public static final String DEFAULT_BASE_PACKAGE = "com.example";
 
     protected final Prompter prompter;
@@ -27,38 +30,47 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     protected String defaultBasePackage;
     protected boolean useAnsiColor;
 
-    public AbstractModulePrompter(Prompter prompter) {
+    public AbstractModulePrompter(Prompter prompter)
+    {
         this.prompter = prompter;
         this.showExamplesPrompt = true;
         this.showAdvancedPrompt = true;
         this.showAdvancedNamePrompt = true;
 
         String mavencolor = System.getenv("MAVEN_COLOR");
-        if (StringUtils.isNotBlank(mavencolor)) {
+        if (StringUtils.isNotBlank(mavencolor))
+        {
             useAnsiColor = Boolean.parseBoolean(mavencolor);
-        } else {
+        } else
+        {
             useAnsiColor = false;
         }
     }
 
     @Override
-    public <P extends PluginModuleProperties> P getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException {
+    public <P extends PluginModuleProperties> P getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException
+    {
         //!!! REMOVE THIS WHEN WE SUPPORT EXAMPLE CODE
         suppressExamplesPrompt();
 
         T props = (T) promptForBasicProperties(moduleLocation);
 
-        if (showAdvancedPrompt) {
+        if (showAdvancedPrompt)
+        {
             boolean showAdvanced = promptForBoolean("Show Advanced Setup?", "N");
             String moduleName;
 
-            if (showAdvanced) {
-                if (props instanceof NameBasedModuleProperties) {
+            if (showAdvanced)
+            {
+                if (props instanceof NameBasedModuleProperties)
+                {
                     NameBasedModuleProperties namedProps = (NameBasedModuleProperties) props;
 
-                    if (showAdvancedNamePrompt) {
+                    if (showAdvancedNamePrompt)
+                    {
                         moduleName = promptNotBlank("Plugin Name", namedProps.getModuleName());
-                    } else {
+                    } else
+                    {
                         moduleName = namedProps.getModuleName();
                     }
                     String moduleKey = promptNotBlank("Plugin Key", namedProps.getModuleKey());
@@ -77,7 +89,8 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
             }
         }
 
-        if (showExamplesPrompt) {
+        if (showExamplesPrompt)
+        {
             props.setIncludeExamples(promptForBoolean("Include Example Code?", "N"));
         }
 
@@ -88,76 +101,96 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     public abstract <T extends PluginModuleProperties> T promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException;
 
     @Override
-    public void promptForAdvancedProperties(T props, PluginModuleLocation moduleLocation) throws PrompterException {
+    public void promptForAdvancedProperties(T props, PluginModuleLocation moduleLocation) throws PrompterException
+    {
     }
 
-    protected String promptJavaClassname(String message) throws PrompterException {
+    protected String promptJavaClassname(String message) throws PrompterException
+    {
         return promptJavaClassname(message, null);
     }
 
-    protected String promptJavaClassname(String message, String defaultValue) throws PrompterException {
+    protected String promptJavaClassname(String message, String defaultValue) throws PrompterException
+    {
         String classname;
-        if (StringUtils.isBlank(defaultValue)) {
+        if (StringUtils.isBlank(defaultValue))
+        {
             classname = prompter.prompt(requiredMessage(message));
-        } else {
+        } else
+        {
             classname = prompt(message, defaultValue);
         }
 
-        if (StringUtils.isBlank(classname) || !ClassnameUtil.isValidClassName(classname)) {
+        if (StringUtils.isBlank(classname) || !ClassnameUtil.isValidClassName(classname))
+        {
             classname = promptJavaClassname(message, defaultValue);
         }
 
         return classname;
     }
 
-    protected String promptJavaPackagename(String message) throws PrompterException {
+    protected String promptJavaPackagename(String message) throws PrompterException
+    {
         return promptJavaPackagename(message, null);
     }
 
-    protected String promptFullyQualifiedJavaClass(String message, String defaultValue) throws PrompterException {
+    protected String promptFullyQualifiedJavaClass(String message, String defaultValue) throws PrompterException
+    {
         String fqName;
-        if (StringUtils.isBlank(defaultValue)) {
+        if (StringUtils.isBlank(defaultValue))
+        {
 
             fqName = prompter.prompt(requiredMessage(message));
-        } else {
+        } else
+        {
             fqName = prompt(message, defaultValue);
         }
 
         String packageName = "";
         String className = "";
-        if (fqName.contains(".")) {
+        if (fqName.contains("."))
+        {
             packageName = StringUtils.substringBeforeLast(fqName, ".");
             className = StringUtils.substringAfterLast(fqName, ".");
-        } else {
+        } else
+        {
             className = fqName;
         }
 
-        if (StringUtils.isBlank(fqName) || !ClassnameUtil.isValidPackageName(packageName) || !ClassnameUtil.isValidClassName(className)) {
+        if (StringUtils.isBlank(fqName) || !ClassnameUtil.isValidPackageName(packageName) || !ClassnameUtil.isValidClassName(className))
+        {
             fqName = promptFullyQualifiedJavaClass(message, defaultValue);
         }
 
         return fqName;
     }
 
-    protected String promptFullyQualifiedJavaClassBlankOK(String message, String defaultValue) throws PrompterException {
+    protected String promptFullyQualifiedJavaClassBlankOK(String message, String defaultValue) throws PrompterException
+    {
         String fqName;
-        if (StringUtils.isBlank(defaultValue)) {
+        if (StringUtils.isBlank(defaultValue))
+        {
             fqName = prompter.prompt(message);
-        } else {
+        } else
+        {
             fqName = prompt(message, defaultValue);
         }
 
-        if (StringUtils.isNotBlank(fqName)) {
+        if (StringUtils.isNotBlank(fqName))
+        {
             String packageName = "";
             String className = "";
-            if (fqName.contains(".")) {
+            if (fqName.contains("."))
+            {
                 packageName = StringUtils.substringBeforeLast(fqName, ".");
                 className = StringUtils.substringAfterLast(fqName, ".");
-            } else {
+            } else
+            {
                 className = fqName;
             }
 
-            if (!ClassnameUtil.isValidPackageName(packageName) || !ClassnameUtil.isValidClassName(className)) {
+            if (!ClassnameUtil.isValidPackageName(packageName) || !ClassnameUtil.isValidClassName(className))
+            {
                 fqName = promptFullyQualifiedJavaClass(message, defaultValue);
             }
         }
@@ -165,81 +198,104 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         return fqName;
     }
 
-    protected String promptJavaPackagename(String message, String defaultValue) throws PrompterException {
+    protected String promptJavaPackagename(String message, String defaultValue) throws PrompterException
+    {
         String packagename;
 
-        if (StringUtils.isBlank(defaultValue)) {
+        if (StringUtils.isBlank(defaultValue))
+        {
             packagename = prompter.prompt(requiredMessage(message));
-        } else {
+        } else
+        {
             packagename = prompt(message, defaultValue);
         }
 
-        if (StringUtils.isBlank(packagename) || !ClassnameUtil.isValidPackageName(packagename)) {
+        if (StringUtils.isBlank(packagename) || !ClassnameUtil.isValidPackageName(packagename))
+        {
             packagename = promptJavaPackagename(message, defaultValue);
         }
 
         return packagename;
     }
 
-    protected String promptNotBlank(String message) throws PrompterException {
+    protected String promptNotBlank(String message) throws PrompterException
+    {
         return promptNotBlank(message, null);
     }
 
-    protected String promptNotBlank(String message, String defaultValue) throws PrompterException {
+    protected String promptNotBlank(String message, String defaultValue) throws PrompterException
+    {
         String value;
-        if (StringUtils.isBlank(defaultValue)) {
+        if (StringUtils.isBlank(defaultValue))
+        {
             value = prompter.prompt(requiredMessage(message));
-        } else {
+        } else
+        {
             value = prompt(message, defaultValue);
         }
 
-        if (StringUtils.isBlank(value)) {
+        if (StringUtils.isBlank(value))
+        {
             value = promptNotBlank(message, defaultValue);
         }
         return value;
     }
 
-    protected boolean promptForBoolean(String message) throws PrompterException {
+    protected boolean promptForBoolean(String message) throws PrompterException
+    {
         return promptForBoolean(message, null);
     }
 
-    protected boolean promptForBoolean(String message, String defaultValue) throws PrompterException {
+    protected boolean promptForBoolean(String message, String defaultValue) throws PrompterException
+    {
         String answer;
         boolean bool;
-        if (StringUtils.isBlank(defaultValue)) {
+        if (StringUtils.isBlank(defaultValue))
+        {
             answer = prompter.prompt(requiredMessage(message), YN_ANSWERS);
-        } else {
+        } else
+        {
             answer = prompt(message, YN_ANSWERS, defaultValue);
         }
 
-        if ("y".equals(answer.toLowerCase())) {
+        if ("y".equals(answer.toLowerCase()))
+        {
             bool = true;
-        } else {
+        } else
+        {
             bool = false;
         }
 
         return bool;
     }
 
-    protected Map<String, String> promptForParams(String message) throws PrompterException {
+    protected Map<String, String> promptForParams(String message) throws PrompterException
+    {
         Map<String, String> params = new HashMap<String, String>();
         promptForParam(message, params);
 
         return params;
     }
 
-    protected void promptForParam(String message, Map<String, String> params) throws PrompterException {
+    protected void promptForParam(String message, Map<String, String> params) throws PrompterException
+    {
         StringBuffer addBuffer = new StringBuffer();
-        if (params.size() > 0) {
+        if (params.size() > 0)
+        {
             addBuffer.append("params:\n");
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                addBuffer.append(entry.getKey()).append("->").append(entry.getValue()).append("\n");
+            for (Map.Entry<String, String> entry : params.entrySet())
+            {
+                addBuffer.append(entry.getKey())
+                        .append("->")
+                        .append(entry.getValue())
+                        .append("\n");
             }
         }
         addBuffer.append(message);
         boolean addParam = promptForBoolean(addBuffer.toString(), "N");
 
-        if (addParam) {
+        if (addParam)
+        {
             String key = promptNotBlank("param name");
             String value = promptNotBlank("param value");
             params.put(key, value);
@@ -247,71 +303,94 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
         }
     }
 
-    protected List<String> promptForList(String addMessage, String enterMessage) throws PrompterException {
+    protected List<String> promptForList(String addMessage, String enterMessage) throws PrompterException
+    {
         List<String> vals = new ArrayList<String>();
         promptForListValue(addMessage, enterMessage, vals);
 
         return vals;
     }
 
-    protected void promptForListValue(String addMessage, String enterMessage, List<String> vals) throws PrompterException {
+    protected void promptForListValue(String addMessage, String enterMessage, List<String> vals) throws PrompterException
+    {
         StringBuffer addBuffer = new StringBuffer();
-        if (vals.size() > 0) {
+        if (vals.size() > 0)
+        {
             addBuffer.append("values:\n");
-            for (String val : vals) {
-                addBuffer.append(val).append("\n");
+            for (String val : vals)
+            {
+                addBuffer.append(val)
+                        .append("\n");
             }
         }
         addBuffer.append(addMessage);
         boolean addValue = promptForBoolean(addBuffer.toString(), "N");
 
-        if (addValue) {
+        if (addValue)
+        {
             String value = promptNotBlank(enterMessage);
             vals.add(value);
             promptForListValue(addMessage, enterMessage, vals);
         }
     }
 
-    protected int promptForInt(String message, int defaultInt) throws PrompterException {
+    protected int promptForInt(String message, int defaultInt) throws PrompterException
+    {
         String userVal = promptNotBlank(message, Integer.toString(defaultInt));
         int userInt;
-        if (!StringUtils.isNumeric(userVal)) {
+        if (!StringUtils.isNumeric(userVal))
+        {
             userInt = promptForInt(message, defaultInt);
-        } else {
+        } else
+        {
             userInt = Integer.parseInt(userVal);
         }
         return userInt;
     }
 
-    protected String prompt(String message, String defaultValue) throws PrompterException {
+    protected String prompt(String message, String defaultValue) throws PrompterException
+    {
         return prompter.prompt(message, defaultValue);
     }
 
-    protected String prompt(String message) throws PrompterException {
+    protected String prompt(String message) throws PrompterException
+    {
         return prompter.prompt(message);
     }
 
-    protected String prompt(String message, List possibleValues, String defaultValue) throws PrompterException {
+    protected String prompt(String message, List possibleValues, String defaultValue) throws PrompterException
+    {
         return prompter.prompt(message, possibleValues, defaultValue);
     }
 
-    protected void suppressExamplesPrompt() {
+    protected void suppressExamplesPrompt()
+    {
         this.showExamplesPrompt = false;
     }
 
-    protected void suppressAdvancedPrompt() {
+    protected void suppressAdvancedPrompt()
+    {
         this.showAdvancedPrompt = false;
     }
 
-    protected void suppressAdvancedNamePrompt() {
+    protected void suppressAdvancedNamePrompt()
+    {
         this.showAdvancedNamePrompt = false;
     }
 
-    protected String requiredMessage(String message) {
+    protected String requiredMessage(String message)
+    {
         String formattedMessage = message;
-        if (useAnsiColor) {
+        if (useAnsiColor)
+        {
             ANSIBuffer ansiBuffer = new ANSIBuffer();
-            ansiBuffer.append(ANSIBuffer.ANSICodes.attrib(PrettyPrompter.BOLD)).append(ANSIBuffer.ANSICodes.attrib(PrettyPrompter.FG_RED)).append(message).append(ANSIBuffer.ANSICodes.attrib(PrettyPrompter.OFF));
+            ansiBuffer.append(ANSIBuffer.ANSICodes
+                    .attrib(PrettyPrompter.BOLD))
+                    .append(ANSIBuffer.ANSICodes
+                            .attrib(PrettyPrompter.FG_RED))
+                    .append(message)
+                    .append(ANSIBuffer.ANSICodes
+                            .attrib(PrettyPrompter.OFF));
             formattedMessage = ansiBuffer.toString();
         }
 
@@ -319,17 +398,22 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     }
 
     @Override
-    public void setDefaultBasePackage(String basePackage) {
-        if (StringUtils.isNotBlank(basePackage)) {
+    public void setDefaultBasePackage(String basePackage)
+    {
+        if (StringUtils.isNotBlank(basePackage))
+        {
             this.defaultBasePackage = basePackage;
         }
     }
 
     @Override
-    public String getDefaultBasePackage() {
-        if (StringUtils.isNotBlank(defaultBasePackage)) {
+    public String getDefaultBasePackage()
+    {
+        if (StringUtils.isNotBlank(defaultBasePackage))
+        {
             return defaultBasePackage;
-        } else {
+        } else
+        {
             return DEFAULT_BASE_PACKAGE;
         }
     }

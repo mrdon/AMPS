@@ -9,6 +9,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface ModuleCreatorClass {
+public @interface ModuleCreatorClass
+{
     public Class value();
 }
