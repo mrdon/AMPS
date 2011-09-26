@@ -1,0 +1,16 @@
+package ${PACKAGE};
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.atlassian.jira.web.action.JiraWebActionSupport;
+
+public class ${CLASSNAME} extends JiraWebActionSupport
+{
+    private static final Logger log = LoggerFactory.getLogger(${CLASSNAME}.class);
+
+    @Override
+    public String execute() throws Exception {
+
+        return super.execute(); //returns SUCCESS
+    }
+}

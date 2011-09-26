@@ -1,0 +1,209 @@
+#macro(conditions $condition)
+#if($condition.class.simpleName.equals("Condition"))
+    <condition class="${condition.fullyQualifiedClassName}"#if($condition.invert) invert="true"#end
+    #if(!$condition.paramsEmpty)
+        >
+        #params($condition.params)
+    </condition>
+    #else
+        />
+    #end
+
+    #elseif($condition.class.simpleName.equals("Conditions") && !$condition.isEmpty())
+    <conditions type="${condition.type}">
+        #foreach($conditional in $condition.conditions)
+            #conditions($conditional)
+        #end
+    </conditions>
+    #end
+#end
+
+#macro(params $map)
+    #if($map && !$map.isEmpty())
+        #foreach($entry in $map.entrySet())
+            <param name="$entry.key" value="$entry.value" />
+        #end
+    #end
+#end
+
+#macro(contextprovider $classname)
+    #if($classname && !$classname.equals(""))
+        <context-provider class="$classname" />
+    #end
+#end
+
+#macro(resource $resource)
+    #if($resource)
+        <resource
+        #if($resource.name && !$resource.name.equals(""))
+            name="$resource.name"
+        #elseif($resource.namePattern && !$resource.namePattern.equals(""))
+            namePattern="$resource.namePattern"
+        #end
+        type="$resource.type"
+        location="$resource.location"
+
+        #if(($resource.params && !$resource.params.isEmpty()) || !$resource.batch)
+            >
+            #if(!$resource.batch)
+                <param name="batch" value="false" />
+            #end
+
+            #if($resource.params && !$resource.params.isEmpty())
+                #params($resource.params)
+            #end
+            </resource>
+        #else
+            />
+        #end
+    #end
+#end
+
+#macro(resources $resourceList)
+    #foreach($resource in $resourceList)
+        #resource($resource)
+    #end
+#end
+
+#macro(icon $icon)
+    #if($icon)
+        <icon
+            #if($icon.width)
+                width="$icon.width"
+            #end
+            #if($icon.height)
+                height="$icon.height"
+            #end
+            >
+            #link($icon.link)
+        </icon>
+    #end
+#end
+
+#macro(link $link)
+    #if($link)
+        <link
+            #if($link.linkId)
+                linkId="$link.linkId"
+            #end
+        >$link.value</link>
+    #end
+#end
+
+#macro(label $label)
+    #if($label)
+        <label key="$label.key">
+            #params($label.params)
+        </label>
+    #end
+#end
+
+#macro(tooltip $tooltip)
+    #if($tooltip)
+        <tooltip key="$tooltip.key">
+            #params($tooltip.params)
+        </tooltip>
+    #end
+#end
+
+#macro(dependencies $dependencies)
+    #if($dependencies)
+        #foreach($dependency in $dependencies)
+            #dependency($dependency)
+        #end
+    #end
+#end
+
+#macro(dependency $dependency)
+    <dependency>$dependency</dependency>
+#end
+
+#macro(contexts $contexts)
+    #if($contexts)
+        #foreach($resourceContext in $contexts)
+            #resourcecontext($resourceContext)
+        #end
+    #end
+#end
+
+#macro(resourcecontext $resourceContext)
+    <context>$resourceContext</context>
+#end
+
+#macro(transformations $transformations)
+    #if($transformations)
+        #foreach($transformation in $transformations)
+            #transformation($transformation)
+        #end
+    #end
+#end
+
+#macro(transformation $transformation)
+    #if($transformation)
+        <transformation extension="$transformation.extension">
+            #foreach($transformerKey in $transformation.transformerKeys)
+            <transformer key="$transformerKey" />
+            #end
+        </transformation>
+    #end
+#end
+
+#macro(dispatchers $dispatchers)
+    #if($dispatchers)
+        #foreach($dispatcher in $dispatchers)
+            #dispatcher($dispatcher)
+        #end
+    #end
+#end
+
+#macro(dispatcher $dispatcher)
+    #if($dispatcher)
+        <dispatcher>$dispatcher</dispatcher>
+    #end
+#end
+
+#macro(packages $packages)
+    #if($packages)
+        #foreach($package in $packages)
+            #package($package)
+        #end
+    #end
+#end
+
+#macro(package $package)
+    #if($package)
+        <package>$package</package>
+    #end
+#end
+
+#macro(actions $actions)
+    #if($actions)
+        <actions>
+        #foreach($action in $actions)
+            #action($action)
+        #end
+        </actions>
+    #end
+#end
+
+#macro(action $action)
+    #if($action)
+        <action name="$action.fullyQualifiedClassname" alias="$action.classname">
+            #views($action.views)
+        </action>
+    #end
+#end
+
+#macro(views $views)
+    #if($views)
+        #foreach($view in $views)
+            #view($view)
+        #end
+    #end
+#end
+
+#macro(view $view)
+    #if($view)
+        <view name="$view.name">$view.path</view>
+    #end
+#end

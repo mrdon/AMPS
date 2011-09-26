@@ -1,0 +1,18 @@
+<component
+        name="${MODULE_NAME}"
+        i18n-name-key="${NAME_I18N_KEY}"
+        key="${MODULE_KEY}"
+        class="${FQ_CLASSNAME}"
+        public="${PUBLIC}"#if(${ALIAS} != "")
+        alias="${ALIAS}"#end>
+
+    <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
+    <interface>${FQ_INTERFACE}</interface>
+    #if($SERVICE_PROPS.entrySet().size() > 0)
+    <service-properties>
+        #foreach($mapEntry in $INIT_PARAMS.entrySet())
+            <entry key="$mapEntry.key" value="$mapEntry.value" />
+        #end
+    </service-properties>
+    #end
+</component>

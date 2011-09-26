@@ -1,0 +1,21 @@
+<web-panel
+        name="${MODULE_NAME}"
+        i18n-name-key="${NAME_I18N_KEY}"
+        key="${MODULE_KEY}"
+        location="${LOCATION}"
+        weight="${WEIGHT}">
+
+    <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
+    #if($CONDITIONS && !$CONDITIONS.isEmpty)
+        #foreach($condition in $CONDITIONS)
+            #conditions($condition)
+        #end
+    #end
+
+    #if($CONTEXT_PROVIDER && !$CONTEXT_PROVIDER.equals(""))
+        <context-provider class="${CONTEXT_PROVIDER}" />
+    #end
+
+    #resources($RESOURCES)
+
+</web-panel>
