@@ -15,6 +15,10 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.product.CrowdProductHandler;
 
+/**
+ * Handler for Studio-Crowd
+ * @since 3.6
+ */
 public class StudioCrowdProductHandler extends CrowdProductHandler implements StudioComponentProductHandler
 {
     public StudioCrowdProductHandler(final MavenContext context, final MavenGoals goals)
@@ -44,7 +48,7 @@ public class StudioCrowdProductHandler extends CrowdProductHandler implements St
     }
 
     @Override
-    protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
+    protected void customiseInstance(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir);
     }

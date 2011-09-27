@@ -42,8 +42,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
- * This product handler is a 'ghost'. It doesn't start a product, but it prepares the environment
+ * This product handler is a 'ghost'. It doesn't start a real product, but it prepares the environment
  * for all studio-based products.
+ * @since 3.6
  */
 final public class StudioProductHandler extends AmpsProductHandler
 {
@@ -389,7 +390,6 @@ final public class StudioProductHandler extends AmpsProductHandler
         // All homes are exported, including the studioInstanceId/home
         File studioHomeDir = getHomeDirectory(studio);
         File studioCommonsDir = studioHomeDir.getParentFile();
-        String studioProductDataOrigin = studioCommonsDir.getAbsolutePath();
 
         // Extracts the zip / copies the homes to studioInstanceId/
         if (!studioHomeDir.exists())
@@ -397,20 +397,20 @@ final public class StudioProductHandler extends AmpsProductHandler
             extractHome(studioCommonsDir, studio);
             if (!studioHomeDir.exists())
             {
-                throw new MojoExecutionException(studioProductDataOrigin + "studio-test-resources.zip must contain a 'xx/xx/home' folder");
+                throw new MojoExecutionException("The Studio home zip must contain a '*/*/home' folder");
             }
         }
 
         File svnHomeDir = new File(studioCommonsDir, "svn-home");
         if (!svnHomeDir.exists())
         {
-            throw new MojoExecutionException(studioProductDataOrigin + " must contain a 'xx/xx/svn-home' folder");
+            throw new MojoExecutionException("The Studio home zip must contain a '*/*/svn-home' folder");
         }
 
         File webDavDir = new File(studioCommonsDir, "webdav-home");
         if (!webDavDir.exists())
         {
-            throw new MojoExecutionException(studioProductDataOrigin + " must contain a 'xx/xx/webdav-home' folder");
+            throw new MojoExecutionException("The Studio home zip must contain a '*/*/webdav-home' folder");
         }
 
         String svnPublicUrl;
@@ -583,6 +583,15 @@ final public class StudioProductHandler extends AmpsProductHandler
 
     private void createSymlink(String source, File target) throws MojoExecutionException
     {
+
+        if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows"))
+        {
+            log.error("Studio is designed to run on Linux systems. As you can't create a symbolic link for SVN, you " +
+            		"will have problems using SVN, FishEye and Bamboo, and possibly the other products.");
+            return;
+        }
+
+
         String[] systemCommand = {
                 "ln",
                 "-s",

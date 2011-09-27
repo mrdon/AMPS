@@ -23,7 +23,10 @@ public class ProjectUtils
 
     /**
      * Returns the first non null value. Use this to default values.
-     * @return the first non null value of values, or null if all values are null
+     * @return the first non null value of values
+     * @throws NullPointerException if all values are null
+     *
+     * Note: this is a copy of Objects#firstNonNull in Guava release 03.
      */
     public static <T> T firstNotNull(T... values)
     {
@@ -34,7 +37,7 @@ public class ProjectUtils
                 return value;
             }
         }
-        return null;
+        throw new NullPointerException("All values are null");
     }
 
     public final static File createDirectory(File dir)

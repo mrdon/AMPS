@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.google.common.base.Preconditions;
 
 /**
  * The execution context for a product
@@ -17,15 +18,9 @@ public class ProductExecution
      */
     public ProductExecution(Product product, ProductHandler productHandler)
     {
-        if (product == null)
-        {
-            throw new IllegalArgumentException("Can't instanciate a ProductExecution with no product");
-        }
-        if (productHandler == null)
-        {
-            throw new IllegalArgumentException("Can't instanciate a ProductExecution with no handler");
-        }
-        
+        Preconditions.checkArgument(product != null, "Can't instanciate a ProductExecution with no product");
+        Preconditions.checkArgument(productHandler != null, "Can't instanciate a ProductExecution with no handler");
+
         this.product = product;
         this.productHandler = productHandler;
     }
@@ -51,6 +46,6 @@ public class ProductExecution
     {
         return "ProductExecution [product=" + product + ", productHandler=" + productHandler + "]";
     }
-    
-    
+
+
 }

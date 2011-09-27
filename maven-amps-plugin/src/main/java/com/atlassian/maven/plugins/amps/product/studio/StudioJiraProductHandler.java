@@ -18,7 +18,10 @@ import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 import com.google.common.collect.Lists;
 
-
+/**
+ * Handler for Studio-JIRA
+ * @since 3.6
+ */
 public class StudioJiraProductHandler extends JiraProductHandler implements StudioComponentProductHandler
 {
     public StudioJiraProductHandler(final MavenContext context, final MavenGoals goals)
@@ -40,7 +43,7 @@ public class StudioJiraProductHandler extends JiraProductHandler implements Stud
     }
 
     @Override
-    protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
+    protected void customiseInstance(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {
 
         // change database to hsql

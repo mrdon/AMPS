@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import com.google.common.base.Preconditions;
 
 public class ConfigFileUtils
 {
@@ -127,7 +128,7 @@ public class ConfigFileUtils
         String value;
 
         /** Replace the key with the value when unzipping a home. This is the normal meaning of
-         * a replacement, {@literal key -> value} */
+         * a replacement, {@code key -> value} */
         boolean applyWhenUnzipping = true;
 
         /** Detect the value and replace it with the key when zipping a home directory */
@@ -149,14 +150,9 @@ public class ConfigFileUtils
         {
             // Ant-like file pattern matching could be implemented if it proves useful.
             super();
-            if (key == null)
-            {
-                throw new IllegalArgumentException("key must not be null");
-            }
-            if (value == null)
-            {
-                throw new IllegalArgumentException("value must not be null");
-            }
+            Preconditions.checkArgument(key != null, "key must not be null");
+            Preconditions.checkArgument(value != null, "value must not be null");
+
             this.key = key;
             this.value = value;
         }

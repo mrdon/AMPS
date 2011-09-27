@@ -48,13 +48,10 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
      */
     public final int start(final Product ctx) throws MojoExecutionException
     {
-        // Extract the home directory
         final File homeDir = extractAndProcessHomeDirectory(ctx);
 
-        // Extract the application
         final File extractedApp = extractApplication(ctx, homeDir);
 
-        // Modifies the application
         final File finalApp = addArtifactsAndOverrides(ctx, homeDir, extractedApp);
 
         // Ask for the system properties (from the ProductHandler and from the pom.xml)
@@ -152,7 +149,7 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
     /**
      * Takes 'app' (the file of the application - either .war or the exploded directory),
      * adds the artifacts, then returns the 'app'.
-     * @return if {@literal app} was a dir, returns a dir; if {@literal app} was a war, returns a war.
+     * @return if {@code app} was a dir, returns a dir; if {@code app} was a war, returns a war.
      */
     private final File addArtifactsAndOverrides(final Product ctx, final File homeDir, final File app) throws MojoExecutionException
     {
@@ -178,7 +175,7 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
             try
             {
                 addOverrides(appDir, ctx);
-                addProductHandlerOverrides(ctx, homeDir, appDir);
+                customiseInstance(ctx, homeDir, appDir);
             }
             catch (IOException e)
             {
@@ -213,7 +210,7 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
      * @param explodedWarDir the directory containing the exploded WAR of the application
      * @throws MojoExecutionException
      */
-    protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
+    protected void customiseInstance(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {
         // No operation by default
     }

@@ -16,6 +16,10 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.product.ConfluenceProductHandler;
 
+/**
+ * Handler for Studio-Confluence
+ * @since 3.6
+ */
 public class StudioConfluenceProductHandler extends ConfluenceProductHandler implements StudioComponentProductHandler
 {
 
@@ -81,7 +85,7 @@ public class StudioConfluenceProductHandler extends ConfluenceProductHandler imp
     }
 
     @Override
-    protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
+    protected void customiseInstance(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir);
     }

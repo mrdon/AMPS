@@ -8,6 +8,8 @@ import com.google.inject.Inject;
 
 public class StudioLoginPage implements Page
 {
+    private final static String DEFAULT_SYSADMIN_USER = "sysadmin";
+    private final static String DEFAULT_SYSADMIN_PASSWORD = "sysadmin";
 
     @Override
     public String getUrl()
@@ -37,6 +39,11 @@ public class StudioLoginPage implements Page
     @Inject
     private PageBinder binder;
 
+    public HeaderSection loginSysadmin()
+    {
+        return login(DEFAULT_SYSADMIN_USER, DEFAULT_SYSADMIN_PASSWORD);
+    }
+    
     public HeaderSection login(String username, String password)
     {
         if (loginUsername.isPresent())

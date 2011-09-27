@@ -56,7 +56,10 @@ public interface ProductHandler
      * <p/>
      * Files returned by this method are guaranteed to be reversed when creating the home zip.
      *
-     * @param snapshotCopyDir A snapshot equivalent to the home is most cases. It is a copy of the folder: {@link #getSnapshotDirectory(Product)}
+     * @param snapshotCopyDir A snapshot equivalent to the home in most cases. It is a copy of the folder: {@link #getSnapshotDirectory(Product)}
+     * The only exception is for the Studio product itself, as the snapshot dir is the parent of the studio home (so that it
+     * contains the homes of all products).
+     *
      * @return a mutable list of files
      */
     List<File> getConfigFiles(Product product, File snapshotCopyDir);

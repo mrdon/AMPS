@@ -73,14 +73,26 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
                 product.setInstallPlugin(shouldInstallPlugin());
             }
 
+            // Leave a blank line and say what it's doing
+            getLog().info("");
+            if (StringUtils.isNotBlank(product.getOutput()))
+            {
+                getLog().info(String.format("Starting %s... (see log at %s)", product.getInstanceId(), product.getOutput()));
+            }
+            else
+            {
+                getLog().info(String.format("Starting %s...", product.getInstanceId()));
+            }
+
+
+            // Actually start the product
             long startTime = System.nanoTime();
             int actualHttpPort = productHandler.start(product);
             long durationSeconds = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime);
 
+            // Log the success message
             StartupInformation message = new StartupInformation(product, "started successfully", actualHttpPort, durationSeconds);
-
             getLog().info(message.toString());
-
             successMessages.add(message);
 
             if (writePropertiesToFile)
@@ -104,7 +116,17 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         // Repeat the messages at the end, because we're developer-friendly
         if (successMessages.size() > 1)
         {
-            getLog().info("Summary:");
+            getLog().info("");
+            getLog().info("=== Summary:");
+            // First show the log files
+            for (StartupInformation message : successMessages)
+            {
+                if (StringUtils.isNotBlank(message.getOutput()))
+                {
+                    getLog().info("Log available at: " + message.getOutput());
+                }
+            }
+            // Then show the applications
             for (StartupInformation message : successMessages)
             {
                 getLog().info(message.toString());
@@ -113,7 +135,8 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
         if (wait)
         {
-            getLog().info("Type CTRL-D to shutdown gracefully and CTRL-C to exit");
+            getLog().info("Type CTRL-D to shutdown gracefully");
+            getLog().info("Type CTRL-C to exit");
             try
             {
                 while (System.in.read() != -1)
@@ -216,6 +239,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             this.event = event;
             this.durationSeconds = durationSeconds;
         }
+
         @Override
         public String toString()
         {
@@ -224,11 +248,15 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             {
                 message += " at http://localhost:" + actualHttpPort + product.getContextPath();
             }
-            if (!StringUtils.isBlank(product.getOutput()))
-            {
-                message += " \nSee log file: " + product.getOutput();
-            }
             return message;
+        }
+
+        /**
+         * @return the output of the product
+         */
+        public String getOutput()
+        {
+            return product.getOutput();
         }
 
     }

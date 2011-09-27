@@ -627,7 +627,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                 boolean successful = true;
                 try
                 {
-                    task.get(52, TimeUnit.SECONDS);
+                    task.get(product.getShutdownTimeout(), TimeUnit.MILLISECONDS);
                 }
                 catch (TimeoutException e)
                 {

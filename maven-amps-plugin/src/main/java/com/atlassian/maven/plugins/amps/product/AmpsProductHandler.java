@@ -160,22 +160,19 @@ public abstract class AmpsProductHandler implements ProductHandler
     protected File getProductHomeData(final Product ctx) throws MojoExecutionException
     {
         File productHomeZip = null;
-        String dpath = ctx.getDataPath();
+        String dataPath = ctx.getDataPath();
 
         //use custom zip if supplied
-        if (isNotBlank(dpath))
+        if (isNotBlank(dataPath))
         {
-            File customHomeZip = new File(dpath);
+            File customHomeZip = new File(dataPath);
 
             if (customHomeZip.exists())
             {
-                productHomeZip = customHomeZip;
+                return customHomeZip;
             }
-            else
-            {
-                throw new MojoExecutionException("Unable to use custom test resources set by <productDataPath>. File '" +
-                        customHomeZip.getAbsolutePath() + "' does not exist");
-            }
+            throw new MojoExecutionException("Unable to use custom test resources set by <dataPath>. File '" +
+                    customHomeZip.getAbsolutePath() + "' does not exist");
         }
 
         //if we didn't find a custom zip, use the default

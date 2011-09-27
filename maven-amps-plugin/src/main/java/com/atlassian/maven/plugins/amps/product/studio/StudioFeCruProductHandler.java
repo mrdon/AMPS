@@ -20,6 +20,10 @@ import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.product.FeCruProductHandler;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 
+/**
+ * Handler for Studio-FeCru
+ * @since 3.6
+ */
 public class StudioFeCruProductHandler extends FeCruProductHandler implements StudioComponentProductHandler
 {
 
@@ -78,7 +82,7 @@ public class StudioFeCruProductHandler extends FeCruProductHandler implements St
     }
 
     @Override
-    protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
+    protected void customiseInstance(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {
         // Note: this config.xml is in the War.
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir, "config.xml");

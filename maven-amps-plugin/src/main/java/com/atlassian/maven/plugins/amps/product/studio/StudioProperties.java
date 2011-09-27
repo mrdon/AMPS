@@ -12,6 +12,7 @@ import com.google.common.collect.Maps;
 
 /**
  * This bean shares the configuration of Studio across all products
+ * @since 3.6
  */
 public class StudioProperties
 {

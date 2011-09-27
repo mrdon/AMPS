@@ -17,6 +17,10 @@ import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.product.BambooProductHandler;
 
+/**
+ * Handler for Studio-Bamboo
+ * @since 3.6
+ */
 public class StudioBambooProductHandler extends BambooProductHandler
 {
 
@@ -46,7 +50,7 @@ public class StudioBambooProductHandler extends BambooProductHandler
     }
 
     @Override
-    protected void addProductHandlerOverrides(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
+    protected void customiseInstance(Product ctx, File homeDir, File explodedWarDir) throws MojoExecutionException
     {
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir);
     }
