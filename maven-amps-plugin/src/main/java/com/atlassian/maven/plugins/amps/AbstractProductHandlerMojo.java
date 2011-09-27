@@ -150,10 +150,10 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private String productDataPath;
 
     /**
-     * If FastDev should be disabled
+     * If FastDev should be enabled
      */
-    @MojoParameter(expression = "${fastdev.disable}", defaultValue = "false")
-    protected boolean disableFastdev;
+    @MojoParameter(expression = "${fastdev.enable}", defaultValue = "true")
+    protected boolean enableFastdev;
 
     /**
      * The version of FastDev to bundle
@@ -325,7 +325,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setPdkVersion(pdkVersion);
         ctx.setWebConsoleVersion(webConsoleVersion);
 
-        ctx.setDisableFastdev(disableFastdev);
+        ctx.setEnableFastdev(enableFastdev);
         ctx.setFastdevVersion(fastdevVersion);
 
         ctx.setHttpPort(httpPort);
@@ -433,9 +433,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             product.setWebConsoleVersion(DEFAULT_WEB_CONSOLE_VERSION);
         }
 
-        if (product.isDisableFastdev() == null)
+        if (product.isEnableFastdev() == null)
         {
-            product.setDisableFastdev(false);
+            product.setEnableFastdev(true);
         }
 
         if (product.getFastdevVersion() == null)

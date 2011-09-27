@@ -36,7 +36,7 @@ public abstract class AbstractPluginProvider implements PluginProvider
             artifacts.addAll(getWebConsoleArtifacts(product.getWebConsoleVersion()));
         }
 
-        if (!product.isDisableFastdev() && product.getFastdevVersion() != null)
+        if (product.isEnableFastdev() && product.getFastdevVersion() != null)
         {
             artifacts.addAll(getFastdevArtifacts(product.getFastdevVersion()));
         }

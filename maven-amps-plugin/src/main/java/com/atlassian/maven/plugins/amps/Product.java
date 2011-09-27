@@ -91,9 +91,9 @@ public class Product
     private String webConsoleVersion;
 
     /**
-     * Flag to indicate whether or not to disable automatic bundling of Fastdev.
+     * Flag to indicate whether or not to enable automatic bundling of Fastdev.
      */
-    private Boolean disableFastdev;
+    private Boolean enableFastdev;
 
     /**
      * Version of the Fastdev plugin
@@ -206,7 +206,7 @@ public class Product
         prod.setId(id == null ? product.getId() : id);
         prod.setInstanceId(instanceId == null ? product.getInstanceId() : instanceId);
         prod.setWebConsoleVersion(webConsoleVersion == null ? product.getWebConsoleVersion() : webConsoleVersion);
-        prod.setDisableFastdev(disableFastdev == null ? product.isDisableFastdev() : disableFastdev);
+        prod.setEnableFastdev(enableFastdev == null ? product.isEnableFastdev() : enableFastdev);
         prod.setFastdevVersion(fastdevVersion == null ? product.getFastdevVersion() : fastdevVersion);
         prod.setRestVersion(restVersion == null ? product.getRestVersion() : restVersion);
         prod.setPdkVersion(pdkVersion == null ? product.getPdkVersion() : pdkVersion);
@@ -467,14 +467,14 @@ public class Product
         return webConsoleVersion;
     }
 
-    public Boolean isDisableFastdev()
+    public Boolean isEnableFastdev()
     {
-        return disableFastdev;
+        return enableFastdev;
     }
 
-    public void setDisableFastdev(final Boolean disableFastdev)
+    public void setEnableFastdev(final Boolean enableFastdev)
     {
-        this.disableFastdev = disableFastdev;
+        this.enableFastdev = enableFastdev;
     }
 
     public String getFastdevVersion()
