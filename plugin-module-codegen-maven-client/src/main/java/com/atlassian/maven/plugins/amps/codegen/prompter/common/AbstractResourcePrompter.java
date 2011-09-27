@@ -12,7 +12,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public abstract class AbstractResourcePrompter<T extends PluginModuleProperties> extends AbstractModulePrompter<T>
 {

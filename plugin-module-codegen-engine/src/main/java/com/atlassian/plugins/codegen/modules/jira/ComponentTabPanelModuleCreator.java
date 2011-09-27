@@ -9,7 +9,7 @@ import com.atlassian.plugins.codegen.modules.AbstractPluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 @JiraPluginModuleCreator
 @Dependencies({

@@ -8,7 +8,7 @@ import java.util.*;
 import com.atlassian.maven.plugins.amps.codegen.annotations.asm.CustomFieldSearcherLocator;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class CustomFieldSearcherFactory
 {

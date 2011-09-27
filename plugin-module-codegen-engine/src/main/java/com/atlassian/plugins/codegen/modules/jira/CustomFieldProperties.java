@@ -9,7 +9,7 @@ import com.atlassian.plugins.codegen.modules.common.Resource;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class CustomFieldProperties extends BasicClassModuleProperties
 {

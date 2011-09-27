@@ -16,7 +16,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class WebItemTest extends AbstractWebFragmentTest<WebItemProperties>
 {

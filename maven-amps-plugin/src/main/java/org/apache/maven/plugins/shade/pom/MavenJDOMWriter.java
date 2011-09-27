@@ -88,7 +88,7 @@ import org.jdom.output.XMLOutputter;
 /**
  * Class MavenJDOMWriter.
  * 
- * @version $Revision: 944825 $ $Date: 2010-05-16 06:15:38 -0700 (Sun, 16 May 2010) $
+ * @since 3.6
  */
 public class MavenJDOMWriter
 {

@@ -4,7 +4,7 @@ import com.atlassian.plugins.codegen.modules.ClassWithInterfaceProperties;
 import com.atlassian.plugins.codegen.util.ClassnameUtil;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class RPCProperties extends ClassWithInterfaceProperties
 {

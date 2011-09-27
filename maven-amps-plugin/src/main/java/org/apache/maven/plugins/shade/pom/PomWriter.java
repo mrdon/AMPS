@@ -28,7 +28,9 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.output.Format;
 
-/** @author Jason van Zyl */
+/**
+ * @since 3.6
+ */
 public class PomWriter
 {
     public static void write( Writer w,

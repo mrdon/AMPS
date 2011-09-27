@@ -15,7 +15,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 @ModuleCreatorClass(WorkflowPostFunctionModuleCreator.class)
 public class WorkflowPostFunctionPrompter extends AbstractModulePrompter<WorkflowPostFunctionProperties>

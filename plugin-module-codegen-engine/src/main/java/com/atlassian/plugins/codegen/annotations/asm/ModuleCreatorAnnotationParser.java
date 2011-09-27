@@ -20,7 +20,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ModuleCreatorAnnotationParser extends AbstractAnnotationParser
 {

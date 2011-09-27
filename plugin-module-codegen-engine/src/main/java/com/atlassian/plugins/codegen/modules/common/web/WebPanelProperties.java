@@ -1,7 +1,7 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class WebPanelProperties extends AbstractWebFragmentProperties
 {

@@ -11,7 +11,7 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import fake.annotation.parser.creators.ValidFakeCreator;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 @ModuleCreatorClass(ValidFakeCreator.class)
 public class ValidPrompter extends AbstractModulePrompter<BasicClassModuleProperties>

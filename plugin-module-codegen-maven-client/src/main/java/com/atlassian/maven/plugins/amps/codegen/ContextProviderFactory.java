@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import com.atlassian.maven.plugins.amps.codegen.annotations.asm.ProductContextProviderLocator;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ContextProviderFactory
 {

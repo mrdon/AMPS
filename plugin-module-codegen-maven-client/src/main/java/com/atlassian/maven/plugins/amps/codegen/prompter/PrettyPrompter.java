@@ -38,7 +38,7 @@ import org.codehaus.plexus.util.StringUtils;
 import jline.ANSIBuffer;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class PrettyPrompter implements Prompter
 {

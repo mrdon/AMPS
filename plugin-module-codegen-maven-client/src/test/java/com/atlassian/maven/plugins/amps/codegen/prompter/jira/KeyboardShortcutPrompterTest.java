@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class KeyboardShortcutPrompterTest extends AbstractPrompterTest
 {

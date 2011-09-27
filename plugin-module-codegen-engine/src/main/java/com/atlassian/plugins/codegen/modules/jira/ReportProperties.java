@@ -8,7 +8,7 @@ import com.atlassian.plugins.codegen.modules.common.Label;
 import com.atlassian.plugins.codegen.modules.common.Resource;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ReportProperties extends BasicClassModuleProperties
 {

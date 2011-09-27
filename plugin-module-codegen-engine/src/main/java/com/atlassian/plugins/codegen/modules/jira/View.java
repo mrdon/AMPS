@@ -1,7 +1,7 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class View
 {

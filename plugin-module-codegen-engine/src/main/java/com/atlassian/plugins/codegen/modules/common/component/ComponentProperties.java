@@ -6,7 +6,7 @@ import java.util.Map;
 import com.atlassian.plugins.codegen.modules.ClassWithInterfaceProperties;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ComponentProperties extends ClassWithInterfaceProperties
 {

@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.modules.common;
 import com.atlassian.plugins.codegen.modules.AbstractClassBasedModuleProperties;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class TemplateContextItemProperties extends AbstractClassBasedModuleProperties
 {

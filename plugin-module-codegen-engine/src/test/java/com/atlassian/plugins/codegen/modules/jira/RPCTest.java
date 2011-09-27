@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class RPCTest extends AbstractCodegenTestCase<RPCProperties>
 {

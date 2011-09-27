@@ -8,7 +8,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 @JiraPluginModuleCreator
 @Dependencies({

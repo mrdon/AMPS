@@ -5,7 +5,7 @@ import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
 import org.junit.Before;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class SimpleWebPropertiesTest extends AbstractWebFragmentTest<SimpleWebProperties>
 {

@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public abstract class AbstractConditionTest<T extends AbstractConditionsProperties> extends AbstractCodegenTestCase<T>
 {

@@ -16,7 +16,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 @ModuleCreatorClass(ServletFilterModuleCreator.class)
 public class ServletFilterModulePrompter extends AbstractModulePrompter<ServletFilterProperties>

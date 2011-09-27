@@ -12,7 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 @JiraPluginModuleCreator
 @Dependencies({

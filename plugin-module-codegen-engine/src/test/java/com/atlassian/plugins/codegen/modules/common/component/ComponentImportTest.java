@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 //TODO: update test to use Dom4J
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ComponentImportTest extends AbstractCodegenTestCase<ComponentImportProperties>
 {

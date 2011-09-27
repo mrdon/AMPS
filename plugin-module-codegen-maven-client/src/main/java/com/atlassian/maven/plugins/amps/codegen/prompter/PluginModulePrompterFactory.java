@@ -3,7 +3,7 @@ package com.atlassian.maven.plugins.amps.codegen.prompter;
 import org.apache.maven.plugin.logging.Log;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public interface PluginModulePrompterFactory
 {

@@ -5,7 +5,7 @@ import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class WorkflowElementProperties extends BasicClassModuleProperties
 {

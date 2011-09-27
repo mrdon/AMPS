@@ -7,7 +7,7 @@ import com.atlassian.plugins.codegen.modules.BasicNameModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Conditional;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public abstract class AbstractConditionsProperties extends BasicNameModuleProperties
 {

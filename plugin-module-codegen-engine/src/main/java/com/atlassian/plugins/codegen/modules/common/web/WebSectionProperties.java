@@ -7,7 +7,7 @@ import com.atlassian.plugins.codegen.modules.common.Label;
 import com.atlassian.plugins.codegen.modules.common.Tooltip;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class WebSectionProperties extends AbstractWebFragmentProperties
 {

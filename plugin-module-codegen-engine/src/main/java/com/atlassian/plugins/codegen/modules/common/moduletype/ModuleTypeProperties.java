@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.modules.common.moduletype;
 import com.atlassian.plugins.codegen.modules.ClassWithInterfaceProperties;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ModuleTypeProperties extends ClassWithInterfaceProperties
 {

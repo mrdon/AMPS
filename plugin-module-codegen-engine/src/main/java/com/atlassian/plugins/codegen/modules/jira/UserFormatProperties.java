@@ -8,7 +8,7 @@ import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.common.Resource;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class UserFormatProperties extends BasicClassModuleProperties
 {

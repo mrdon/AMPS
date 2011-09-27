@@ -17,7 +17,7 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import jline.ANSIBuffer;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public abstract class AbstractModulePrompter<T extends PluginModuleProperties> implements PluginModulePrompter<T>
 {

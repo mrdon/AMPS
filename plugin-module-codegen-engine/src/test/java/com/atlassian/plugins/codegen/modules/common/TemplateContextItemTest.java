@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class TemplateContextItemTest extends AbstractCodegenTestCase<TemplateContextItemProperties>
 {

@@ -16,7 +16,7 @@ import org.junit.Before;
 import static org.mockito.Mockito.mock;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public abstract class AbstractPrompterTest
 {

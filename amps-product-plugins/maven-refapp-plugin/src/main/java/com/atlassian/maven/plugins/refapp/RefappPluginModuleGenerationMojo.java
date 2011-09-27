@@ -5,7 +5,7 @@ import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class RefappPluginModuleGenerationMojo extends PluginModuleGenerationMojo{
 

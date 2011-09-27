@@ -6,7 +6,7 @@ import java.util.List;
 import com.atlassian.plugins.codegen.modules.common.Resource;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public abstract class AbstractWebFragmentProperties extends AbstractConditionsProperties
 {

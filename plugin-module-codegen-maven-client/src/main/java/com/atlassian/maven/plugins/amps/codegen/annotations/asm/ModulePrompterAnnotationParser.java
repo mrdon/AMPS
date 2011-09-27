@@ -17,7 +17,7 @@ import org.objectweb.asm.*;
 import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ModulePrompterAnnotationParser extends AbstractAnnotationParser
 {

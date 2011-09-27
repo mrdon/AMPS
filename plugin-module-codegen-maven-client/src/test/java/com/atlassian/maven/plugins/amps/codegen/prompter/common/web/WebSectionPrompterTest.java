@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class WebSectionPrompterTest extends AbstractWebFragmentPrompterTest<WebSectionProperties>
 {

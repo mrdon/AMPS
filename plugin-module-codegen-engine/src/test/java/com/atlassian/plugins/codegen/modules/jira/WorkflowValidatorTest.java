@@ -13,7 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class WorkflowValidatorTest extends AbstractCodegenTestCase<WorkflowElementProperties>
 {

@@ -7,7 +7,7 @@ import java.util.List;
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class RESTProperties extends BasicClassModuleProperties
 {

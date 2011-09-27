@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.modules.common.servlet;
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ServletContextListenerProperties extends BasicClassModuleProperties
 {

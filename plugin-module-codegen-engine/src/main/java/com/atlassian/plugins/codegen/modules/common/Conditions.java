@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class Conditions implements Conditional
 {

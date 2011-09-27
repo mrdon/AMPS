@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.modules;
 import java.util.Properties;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public abstract class AbstractPluginModuleProperties extends Properties implements PluginModuleProperties
 {

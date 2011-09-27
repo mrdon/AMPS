@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.annotations;
 import java.lang.annotation.*;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

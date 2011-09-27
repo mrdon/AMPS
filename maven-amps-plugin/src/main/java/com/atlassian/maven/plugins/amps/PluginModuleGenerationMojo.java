@@ -35,6 +35,9 @@ import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 
+/**
+ * @since 3.6
+ */
 @MojoRequiresDependencyResolution("compile")
 @MojoGoal("plugin-module")
 public class PluginModuleGenerationMojo extends AbstractProductAwareMojo

@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class WebResourceTest extends AbstractConditionTest<WebResourceProperties>
 {

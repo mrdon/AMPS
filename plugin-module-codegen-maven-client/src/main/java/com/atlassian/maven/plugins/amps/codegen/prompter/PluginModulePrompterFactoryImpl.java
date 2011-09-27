@@ -7,7 +7,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.components.interactivity.Prompter;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class PluginModulePrompterFactoryImpl implements PluginModulePrompterFactory
 {

@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class ActionTypeFactory
 {

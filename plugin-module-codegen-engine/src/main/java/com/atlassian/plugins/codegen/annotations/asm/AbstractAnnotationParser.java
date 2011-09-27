@@ -17,7 +17,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public abstract class AbstractAnnotationParser
 {

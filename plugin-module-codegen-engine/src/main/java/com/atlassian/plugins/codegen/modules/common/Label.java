@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class Label
 {

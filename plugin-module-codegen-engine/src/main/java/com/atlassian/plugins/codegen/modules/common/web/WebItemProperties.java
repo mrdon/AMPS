@@ -9,7 +9,7 @@ import com.atlassian.plugins.codegen.modules.common.Link;
 import com.atlassian.plugins.codegen.modules.common.Tooltip;
 
 /**
- * @since 3.5
+ * @since 3.6
  */
 public class WebItemProperties extends AbstractWebFragmentProperties
 {
