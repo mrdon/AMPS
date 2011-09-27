@@ -39,7 +39,7 @@ import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
  * @since 3.6
  */
 @MojoRequiresDependencyResolution("compile")
-@MojoGoal("plugin-module")
+@MojoGoal("create-plugin-module")
 public class PluginModuleGenerationMojo extends AbstractProductAwareMojo
 {
 
