@@ -32,6 +32,7 @@ public class TestMavenGoalsHomeZip
     public static final String PLUGINS = "plugins";
     public static final String BUNDLED_PLUGINS = "bundled-plugins";
     public static final String ZIP_PREFIX = "generated-resources/" + PRODUCT_ID + "-home";
+    public static final String SERVER = "server";
 
     private ProductHandler productHandler;
     private MavenContext ctx;
@@ -65,6 +66,7 @@ public class TestMavenGoalsHomeZip
         product = mock(Product.class);
         when(product.getId()).thenReturn(PRODUCT_ID);
         when(product.getInstanceId()).thenReturn(INSTANCE_ID);
+        when(product.getServer()).thenReturn(SERVER);
 
         // Mockito throws NoClassDefFoundError: org/apache/maven/project/ProjectBuilderConfiguration
         // when mocking the session
