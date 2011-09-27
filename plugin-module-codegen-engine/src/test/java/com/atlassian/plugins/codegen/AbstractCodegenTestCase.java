@@ -83,7 +83,7 @@ public abstract class AbstractCodegenTestCase<T extends PluginModuleProperties>
     @After
     public void removeTempDir() throws IOException
     {
-        FileUtils.deleteDirectory(tempDir);
+        FileUtils.deleteQuietly(tempDir);
     }
 
     protected Document getXmlDocument(File xmlFile) throws MalformedURLException, DocumentException

@@ -63,6 +63,6 @@ public abstract class AbstractPrompterTest
     @After
     public void removeTempDir() throws IOException
     {
-        FileUtils.deleteDirectory(tempDir);
+        FileUtils.deleteQuietly(tempDir);
     }
 }
