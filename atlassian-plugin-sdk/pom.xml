@@ -76,12 +76,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.atlassian.maven.plugins</groupId>
-            <artifactId>maven-studio-plugin</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.atlassian.maven.archetypes</groupId>
             <artifactId>confluence-plugin-archetype</artifactId>
             <version>${project.version}</version>
