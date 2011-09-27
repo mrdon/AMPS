@@ -152,7 +152,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * If FastDev should be disabled
      */
-    @MojoParameter(expression = "${disable.fastdev}", defaultValue = "false")
+    @MojoParameter(expression = "${fastdev.disable}", defaultValue = "false")
     protected boolean disableFastdev;
 
     /**
