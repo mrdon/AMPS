@@ -282,6 +282,16 @@
         </plugins>
     </reporting>
 
+
+    <profiles>
+        <profile>
+            <id>shitty</id>
+            <properties>
+                <skipCodegenTests>true</skipCodegenTests>
+            </properties>
+        </profile>
+    </profiles>
+
     <properties>
         <jdkLevel>1.6</jdkLevel>
         <maven.version>2.1.0</maven.version>
@@ -300,5 +310,6 @@
         <clover.version>3.0.2</clover.version>
         <studio.version>108.2</studio.version>
         <studio.data.version>108.2-m0</studio.data.version>
+        <skipCodegenTests>false</skipCodegenTests>
     </properties>
 </project>

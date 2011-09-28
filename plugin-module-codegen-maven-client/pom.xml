@@ -33,4 +33,16 @@
             <version>1.0-alpha-4</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>${skipCodegenTests}</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
