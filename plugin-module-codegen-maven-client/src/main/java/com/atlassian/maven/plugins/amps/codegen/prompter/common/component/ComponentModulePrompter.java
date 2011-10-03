@@ -3,6 +3,7 @@ package com.atlassian.maven.plugins.amps.codegen.prompter.common.component;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import com.atlassian.maven.plugins.amps.codegen.annotations.ModuleCreatorClass;
 import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
@@ -121,7 +122,7 @@ public class ComponentModulePrompter extends AbstractModulePrompter<ComponentPro
 
     private boolean javaFileExists(String fqInterface, PluginModuleLocation moduleLocation)
     {
-        File javaFile = new File(moduleLocation.getSourceDirectory(), fqInterface.replaceAll("\\.", File.separator) + ".java");
+        File javaFile = new File(moduleLocation.getSourceDirectory(), fqInterface.replaceAll("\\.", Matcher.quoteReplacement(File.separator)) + ".java");
         return javaFile.exists();
     }
 }

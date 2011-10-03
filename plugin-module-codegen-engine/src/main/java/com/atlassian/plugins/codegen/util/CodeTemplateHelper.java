@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.ClassBasedModuleProperties;
@@ -72,7 +73,7 @@ public class CodeTemplateHelper
         overrideProps.setProperty("PACKAGE", packageName);
 
         String content = parseTemplate(templatePath, overrideProps);
-        String packagePath = packageName.length() == 0 ? "" : packageName.replaceAll("\\.", File.separator);
+        String packagePath = packageName.length() == 0 ? "" : packageName.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
 
         File packageFile = sourceDirectory;
         if (!packagePath.equals(""))

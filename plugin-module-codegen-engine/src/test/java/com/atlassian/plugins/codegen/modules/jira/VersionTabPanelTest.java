@@ -2,6 +2,7 @@ package com.atlassian.plugins.codegen.modules.jira;
 
 import java.io.File;
 import java.util.Properties;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -45,7 +46,7 @@ public class VersionTabPanelTest extends AbstractCodegenTestCase<TabPanelPropert
         props.setUseCustomClass(true);
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyVersionTabPanel.java").exists());
         assertTrue("test class not generated", new File(testDir, packagePath + File.separator + "MyVersionTabPanelTest.java").exists());
         assertTrue("view template not generated", new File(templatePath, "my-version-tab-panel.vm").exists());
@@ -61,7 +62,7 @@ public class VersionTabPanelTest extends AbstractCodegenTestCase<TabPanelPropert
         props.setModuleNameAndKey("My Version Tab Panel");
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         assertFalse("main class should not be generated", new File(srcDir, packagePath + File.separator + "MyVersionTabPanel.java").exists());
         assertFalse("test class should not be generated", new File(testDir, packagePath + File.separator + "MyVersionTabPanelTest.java").exists());
         assertTrue("view template not generated", new File(templatePath, "my-version-tab-panel.vm").exists());

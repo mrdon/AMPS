@@ -1,6 +1,7 @@
 package com.atlassian.plugins.codegen.modules.common.web;
 
 import java.io.File;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -39,7 +40,7 @@ public class WebPanelRendererTest extends AbstractCodegenTestCase<WebPanelRender
     @Test
     public void allFilesAreGenerated() throws Exception
     {
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyWebPanelRenderer.java").exists());
         assertTrue("test class not generated", new File(testDir, packagePath + File.separator + "MyWebPanelRendererTest.java").exists());
         assertTrue("plugin.xml not generated", new File(resourcesDir, "atlassian-plugin.xml").exists());
