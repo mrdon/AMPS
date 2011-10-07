@@ -1,0 +1,26 @@
+# Determine the location of the script #
+
+# resolve symbolic links
+PRG="${0}"
+
+while [ -h "${PRG}" ] ; do
+  ls=`ls -ld "${PRG}"`
+  link=`expr "${ls}" : '.*-> \(.*\)$'`
+  if expr "${link}" : '/.*' > /dev/null; then
+    PRG="${link}"
+  else
+    PRG=`dirname "${PRG}"`/"${link}"
+  fi
+done
+
+PRGDIR=`dirname "${PRG}"`
+
+echo "A new plugin structure is required for JIRA 5 plugins due to significant changes in the APIs."
+echo "Create a plugin for?"
+
+select yn in "Shiny new JIRA 5" "Regular 'ol JIRA 4 (or earlier)"; do
+    case $yn in
+        "Shiny new JIRA 5" ) exec ${PRGDIR}/atlas-create-jira5-plugin ; break;;
+        "Regular 'ol JIRA 4 (or earlier)" ) exec ${PRGDIR}/atlas-create-jira4-plugin ; break;;
+    esac
+done
