@@ -495,7 +495,11 @@ public class MavenGoals
 
     public static String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
     {
-        return "http://" + server + ":" + actualHttpPort + contextPath;
+        if (server.startsWith("http")) {
+            return server + ":" + actualHttpPort + contextPath;
+        } else {
+            return "http://" + server + ":" + actualHttpPort + contextPath;
+        }
     }
 
     public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Map<String, Object> systemProperties, final File targetDirectory)
