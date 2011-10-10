@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import com.atlassian.maven.plugins.amps.util.GoogleAmpsTracker;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.execution.ReactorManager;
@@ -50,6 +52,8 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
 
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
+        getGoogleTracker().track(GoogleAmpsTracker.RUN_STANDALONE);
+
         try
         {
             MavenGoals goals;

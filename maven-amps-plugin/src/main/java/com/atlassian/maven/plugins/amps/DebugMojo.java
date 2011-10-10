@@ -7,6 +7,7 @@ import org.jfrog.maven.annomojo.annotations.MojoGoal;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 import org.jfrog.maven.annomojo.annotations.MojoRequiresDependencyResolution;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import com.atlassian.maven.plugins.amps.util.GoogleAmpsTracker;
 
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class DebugMojo extends RunMojo
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
+        getGoogleTracker().track(GoogleAmpsTracker.DEBUG);
+
         final List<ProductExecution> productExecutions = getProductExecutions();
 
         if (jvmArgs == null)

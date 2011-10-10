@@ -863,6 +863,35 @@ public class MavenGoals
 
     }
 
+    public void release() throws MojoExecutionException
+    {
+        executeMojo(
+                plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-release-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-release-plugin"))
+                ),
+                goal("prepare"),
+                configuration(
+                        element(name("arguments"), "")
+                ),
+                executionEnvironment()
+        );
+
+        executeMojo(
+                plugin(
+                        groupId("org.apache.maven.plugins"),
+                        artifactId("maven-release-plugin"),
+                        version(defaultArtifactIdToVersionMap.get("maven-release-plugin"))
+                ),
+                goal("perform"),
+                configuration(
+                        element(name("arguments"), "")
+                ),
+                executionEnvironment()
+        );
+    }
+
     private static class Container extends ProductArtifact
     {
         private final String id;

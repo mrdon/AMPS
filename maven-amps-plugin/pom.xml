@@ -101,6 +101,17 @@
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+          <groupId>com.dmurph</groupId>
+          <artifactId>JGoogleAnalyticsTracker</artifactId>
+          <version>1.2.0</version>
+        </dependency>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+          <version>1.6.2</version>
+        </dependency>
     </dependencies>
 
     <build>

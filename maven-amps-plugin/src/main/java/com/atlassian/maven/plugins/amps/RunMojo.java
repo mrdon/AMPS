@@ -1,6 +1,8 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.maven.plugins.amps.util.GoogleAmpsTracker;
+
 import com.google.common.collect.Lists;
 
 import org.apache.commons.io.IOUtils;
@@ -56,6 +58,8 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
+        getGoogleTracker().track(GoogleAmpsTracker.RUN);
+
         final List<ProductExecution> productExecutions = getProductExecutions();
 
         startProducts(productExecutions);
