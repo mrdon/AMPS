@@ -47,6 +47,7 @@ public class SdkHelper
                     command.getAbsolutePath()), Collections.<String, String>emptyMap());
         }
         List<String> cmdlist = new ArrayList<String>(Arrays.asList(args));
+        cmdlist.add("-Dallow.google.tracking=false");
         cmdlist.add(0, command.getAbsolutePath());
         cmdlist.add("-s");
         cmdlist.add(file(sdkHome, "apache-maven", "conf", "settings.xml").getPath());
