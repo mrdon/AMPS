@@ -49,6 +49,7 @@ import com.google.common.collect.Sets;
 final public class StudioProductHandler extends AmpsProductHandler
 {
     private static final String STUDIO_PROPERTIES = "home/studio.properties";
+    private static final String STUDIO_TEST_PROPERTIES = "studiotest.properties";
     private static final String STUDIO_INITIAL_DATA_PROPERTIES = "home/studio-initial-data.properties";
     private static final String DEVMODE_HAL_LICENSES_XML = "home/devmode-hal-licenses.xml";
     private static final String STUDIO_INITIAL_DATA_XML = "home/studio-initial-data.xml";
@@ -242,6 +243,12 @@ final public class StudioProductHandler extends AmpsProductHandler
                 // This value will be replaced with the version given by the studio product.
                 // We can't leave it empty because the value will be defaulted to RELEASE.
                 product.setVersion(STUDIO_VERSION_TOKEN);
+            }
+
+            // StudioFecru only
+            if (product.getShutdownEnabled() == null)
+            {
+                product.setShutdownEnabled(Boolean.TRUE);
             }
         }
     }
@@ -484,6 +491,7 @@ final public class StudioProductHandler extends AmpsProductHandler
         list.add(new File(studioSnapshotDir, STUDIO_INITIAL_DATA_PROPERTIES));
         list.add(new File(studioSnapshotDir, STUDIO_INITIAL_DATA_XML));
         list.add(new File(studioSnapshotDir, DEVMODE_HAL_LICENSES_XML));
+        list.add(new File(project.getBuild().getTestOutputDirectory(), STUDIO_TEST_PROPERTIES));
         return list;
     }
 
@@ -539,7 +547,7 @@ final public class StudioProductHandler extends AmpsProductHandler
                     putIfNotNull("%FISHEYE-HOST-URL%", properties.getFisheyeHostUrl());
                     putIfNotNull("%FISHEYE-CONTROL-PORT%", properties.getFisheyeControlPort());
                     putNonReversibleIfNotNull("%FISHEYE-CONTEXT%", properties.getFisheyeContextPath());
-                    putIfNotNull("%FISHEYE-SHUTDOWN-ENABLED%", properties.getFisheyeShutdownEnabled());
+                    putIfNotNull("%FISHEYE-SHUTDOWN-ENABLED%", String.valueOf(firstNotNull(properties.getFisheyeShutdownEnabled(), Boolean.TRUE)));
                 }
 
                 if (properties.isBambooEnabled())

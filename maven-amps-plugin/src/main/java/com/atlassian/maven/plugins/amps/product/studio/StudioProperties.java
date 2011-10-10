@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.Map;
 
 import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.product.FeCruProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -42,8 +43,6 @@ public class StudioProperties
     private String confluenceContext;
 
     private Product fisheye;
-    private String fisheyeControlPort;
-    private String fisheyeShutdownEnabled;
 
     private Product bamboo;
     private Product crowd;
@@ -135,16 +134,6 @@ public class StudioProperties
     public void setFisheye(Product fisheye)
     {
         this.fisheye = fisheye;
-    }
-
-    public void setFisheyeControlPort(String fisheyeControlPort)
-    {
-        this.fisheyeControlPort = fisheyeControlPort;
-    }
-
-    public void setFisheyeShutdownEnabled(String fisheyeShutdownEnabled)
-    {
-        this.fisheyeShutdownEnabled = fisheyeShutdownEnabled;
     }
 
     public void setBamboo(Product bamboo)
@@ -260,14 +249,14 @@ public class StudioProperties
         return fisheye;
     }
 
-    public String getFisheyeControlPort()
+    public boolean getFisheyeShutdownEnabled()
     {
-        return fisheyeControlPort;
+        return fisheye.getShutdownEnabled();
     }
 
-    public String getFisheyeShutdownEnabled()
+    public String getFisheyeControlPort()
     {
-        return fisheyeShutdownEnabled;
+        return String.valueOf(FeCruProductHandler.controlPort(fisheye.getHttpPort()));
     }
 
     public Product getBamboo()

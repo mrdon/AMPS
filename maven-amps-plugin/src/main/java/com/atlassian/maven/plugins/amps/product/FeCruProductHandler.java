@@ -331,7 +331,7 @@ public class FeCruProductHandler extends AbstractProductHandler
     /**
      * The control port is the httpPort with a "1" appended to it //todo doc this
      */
-    protected int controlPort(int httpPort)
+    public static int controlPort(int httpPort)
     {
         return httpPort * 10 + 1;
     }

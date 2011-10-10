@@ -183,6 +183,12 @@ public class Product
      */
     protected String gappsDomain;
 
+    /**
+     * Only applies to StudioFecru
+     * Tells whether shutdown is enabled for Fisheye. This property is passed on in the properties files.
+     */
+    protected Boolean shutdownEnabled;
+
 
 
     /**
@@ -236,6 +242,7 @@ public class Product
         // Studio-related properties
         prod.setStudioProperties(studioProperties == null ? product.getStudioProperties() : studioProperties);
         prod.setInstanceIds(instanceIds == null ? product.getInstanceIds() : instanceIds);
+        prod.setShutdownEnabled(shutdownEnabled == null ? product.getShutdownEnabled() : shutdownEnabled);
 
         return prod;
     }
@@ -625,6 +632,15 @@ public class Product
         this.systemProperties = systemProperties;
     }
 
+    public Boolean getShutdownEnabled()
+    {
+        return shutdownEnabled;
+    }
+
+    public void setShutdownEnabled(Boolean shutdownEnabled)
+    {
+        this.shutdownEnabled = shutdownEnabled;
+    }
     @Override
     public String toString()
     {

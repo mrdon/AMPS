@@ -1,9 +1,9 @@
-
 package com.atlassian.maven.plugins.amps.product.studio;
 
 import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_JIRA;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +58,21 @@ public class StudioJiraProductHandler extends JiraProductHandler implements Stud
 
         ConfigFileUtils.replace(configFiles, replacements, false, log);
 
+        File importsDir = new File(homeDir, "import");
+        if (importsDir.exists())
+        {
+            configFiles = Lists.newArrayList(importsDir.listFiles(new FilenameFilter()
+            {
+                @Override
+                public boolean accept(File dir, String name)
+                {
+                    return name.endsWith(".xml");
+                }
+            }));
+            replacements = Lists.newArrayList(new Replacement("%JIRA-HOME%", homeDir.getAbsolutePath()));
+            ConfigFileUtils.replace(configFiles, replacements, false, log);
+        }
+
         StudioProductHandler.addProductHandlerOverrides(log, ctx, homeDir, explodedWarDir);
 
         // JIRA needs a bit more PermGen - default is -Xmx512m -XX:MaxPermSize=160m
@@ -81,7 +96,4 @@ public class StudioJiraProductHandler extends JiraProductHandler implements Stud
 
         return properties;
     }
-
-
-
 }
