@@ -14,14 +14,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -39,7 +36,6 @@ import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * This product handler is a 'ghost'. It doesn't start a real product, but it prepares the environment
@@ -56,8 +52,6 @@ final public class StudioProductHandler extends AmpsProductHandler
 
     /** This token is used in product's <version> when they want to reuse the Studio product's version */
     private static final String STUDIO_VERSION_TOKEN = "STUDIO-VERSION";
-
-    private final static String LAUNCH_INSTANCES_SYSTEM_PROPERTY = "studio.instanceIds";
 
     private static final Map<String, String> defaultContextPaths;
 
@@ -115,24 +109,6 @@ final public class StudioProductHandler extends AmpsProductHandler
             instanceIds.add(STUDIO_BAMBOO);
         }
         return instanceIds;
-    }
-
-    /**
-     * System property 'studio.instanceIds': If defined, only runs those applications.
-     *
-     * They must be comma-separated, eg: {@code -Dstudio.instanceids=studio-crowd,studio-jira}.
-     * The studio configuration will be built using the pom.xml configuration.
-     */
-    public Set<String> getExcludedInstances(Product studioContext)
-    {
-        String restriction = System.getProperty(LAUNCH_INSTANCES_SYSTEM_PROPERTY);
-        if (restriction == null)
-        {
-            return null;
-        }
-        String[] restrictionList = restriction.split(",");
-        log.info(String.format("Excluding %s from the %s instance.", Arrays.toString(restrictionList), studioContext.getInstanceId()));
-        return Sets.newHashSet(restrictionList);
     }
 
     /**
@@ -375,6 +351,8 @@ final public class StudioProductHandler extends AmpsProductHandler
      * <li>studioInstance1
      * <ul>
      * <li>home</li>
+     * <li>studio-confluence</li>
+     * <li>...</li>
      * <li>svn-home</li>
      * <li>webdav-home</li>
      * </ul>

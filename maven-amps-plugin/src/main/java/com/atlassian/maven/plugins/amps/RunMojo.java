@@ -1,8 +1,9 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -48,6 +50,17 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
      */
     @MojoParameter(expression = "${testGroup}")
     protected String testGroup;
+
+    /**
+     * Excluded instances from the execution. Useful when Studio brings in all instances and you want to run only one.
+     * List of comma separated instanceIds, or *{@literal}/instanceId to exclude all but one product.
+     * <p>Examples:
+     * <ul><li>mvn amps:run -Dexclude=studio-crowd</li>
+     * <li>mvn amps:run -Dexclude=*{@literal}/studio-crowd to run only StudioCrowd</li>
+     * </ul>
+     */
+    @MojoParameter(expression = "${exclude}")
+    protected String exclude;
 
     /**
      * The properties actually used by the mojo when running
@@ -155,8 +168,6 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         }
     }
 
-
-
     protected List<ProductExecution> getProductExecutions() throws MojoExecutionException
     {
         final List<ProductExecution> productExecutions;
@@ -181,7 +192,49 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             ProductHandler product = createProductHandler(ctx.getId());
             productExecutions = Collections.singletonList(new ProductExecution(ctx, product));
         }
-        return includeStudioDependentProducts(productExecutions, goals);
+        return filterExcludedInstances(includeStudioDependentProducts(productExecutions, goals));
+    }
+
+    private List<ProductExecution> filterExcludedInstances(List<ProductExecution> executions) throws MojoExecutionException
+    {
+        if (StringUtils.isBlank(exclude))
+        {
+            return executions;
+        }
+        boolean inverted = exclude.startsWith("*/");
+        String instanceIdList = inverted ? exclude.substring(2) : exclude;
+
+        // Parse the list given by the user and find ProductExecutions
+        List<String> excludedInstanceIds = Lists.newArrayList(instanceIdList.split(","));
+        List<ProductExecution> excludedExecutions = Lists.newArrayList();
+        for (final String instanceId : excludedInstanceIds)
+        {
+            try
+            {
+                excludedExecutions.add(Iterables.find(executions, new Predicate<ProductExecution>()
+                {
+                    @Override
+                    public boolean apply(ProductExecution input)
+                    {
+                        return input.getProduct().getInstanceId().equals(instanceId);
+                    }
+                }));
+            }
+            catch (NoSuchElementException nsee)
+            {
+                throw new MojoExecutionException("You specified -Dexclude=" + exclude + " but " + instanceId + " is not an existing instance id.");
+            }
+        }
+
+        if (inverted)
+        {
+            return excludedExecutions;
+        }
+        else
+        {
+            executions.removeAll(excludedExecutions);
+            return executions;
+        }
     }
 
     /**

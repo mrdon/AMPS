@@ -8,7 +8,6 @@ import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -26,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -602,6 +600,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ExecutorService executor = Executors.newFixedThreadPool(productExecutions.size());
         try
         {
+            long before = System.nanoTime();
             for (final ProductExecution execution : productExecutions)
             {
                 final Product product = execution.getProduct();
@@ -640,6 +639,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                     getLog().info(product.getInstanceId() + ": Stopped");
                 }
             }
+            long after = System.nanoTime();
+            getLog().info("amps:stop in " + TimeUnit.NANOSECONDS.toSeconds(after - before) + "s");
         }
         catch (InterruptedException e1)
         {
@@ -719,22 +720,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
             // Submit those products to StudioProductHanlder for configuration
             studioProductHandler.configure(studioProduct, dependantProducts);
-
-            // If the user passes some system properties, we don't run some products
-            // We'll keep them configured and available in StudioProperties
-            Set<String> exclusions = studioProductHandler.getExcludedInstances(studioProduct);
-            if (exclusions != null)
-            {
-                Iterator<ProductExecution> iterator = dependantProducts.iterator();
-                while (iterator.hasNext())
-                {
-                    String executedInstance = iterator.next().getProduct().getInstanceId();
-                    if (exclusions.contains(executedInstance))
-                    {
-                        iterator.remove();
-                    }
-                }
-            }
 
             // Add everyone at the end of the list of products to execute. We don't check for duplicates, users shouldn't add studio products
             // to test groups, especially if they already have a Studio.
