@@ -104,7 +104,7 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo
         {
             creator = pluginModuleSelectionQueryer.selectModule(pluginModuleCreatorFactory.getModuleCreatorsForProduct(productId));
 
-            String trackingLabel = getPluginInformation().getId() + ":" + getPluginInformation().getVersion() + ":" + creator.getModuleName();
+            String trackingLabel = getPluginInformation().getId() + ":" + creator.getModuleName();
             getGoogleTracker().track(GoogleAmpsTracker.CREATE_PLUGIN_MODULE,trackingLabel);
 
             PluginModulePrompter modulePrompter = pluginModulePrompterFactory.getPrompterForCreatorClass(creator.getClass());
