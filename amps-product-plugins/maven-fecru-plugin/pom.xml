@@ -52,7 +52,7 @@
                 filterPluginDescriptorWithPluginDescriptor, generateManifestWithInstructions,
                 generateManifestWithNoInstructions, generateObr, 
                 <!-- Commenting out tests that start fecru until AMPS-312 is fixed -->
-                <!-- cli, integrationTest, integrationTestWithTestGroup, run-->
+                <!-- cli, integrationTest, integrationTestWithTestGroup, run, stop-->
                 jarWithExistingManifest,  
                 unitTest, validateManifestSkipValidation, validateManifestWithInvalidManifest,
                 validateManifestWithValidManifest
