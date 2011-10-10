@@ -9,7 +9,8 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
 {
     public void testJIRA() throws IOException, InterruptedException
     {
-        createAndVerify("jira");
+        //we need to bypass the prompt for jira 5 vs. 4
+        createAndVerify("jira5");
     }
 
     public void testRefapp() throws IOException, InterruptedException
