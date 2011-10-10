@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.Manifest;
 
 import com.atlassian.core.util.FileUtils;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
@@ -19,6 +21,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 import org.twdata.maven.mojoexecutor.MojoExecutor.ExecutionEnvironment;
 
+import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
@@ -740,10 +743,14 @@ public class MavenGoals
         return artifactZip;
     }
 
-    public void generateManifest(final Map<String, String> instructions) throws MojoExecutionException
+    public void generateBundleManifest(final Map<String, String> instructions, final Map<String, String> basicAttributes) throws MojoExecutionException
     {
         final List<Element> instlist = new ArrayList<Element>();
         for (final Map.Entry<String, String> entry : instructions.entrySet())
+        {
+            instlist.add(element(entry.getKey(), entry.getValue()));
+        }
+        for (final Map.Entry<String, String> entry : basicAttributes.entrySet())
         {
             instlist.add(element(entry.getKey(), entry.getValue()));
         }
@@ -764,6 +771,45 @@ public class MavenGoals
                 ),
                 executionEnvironment()
         );
+    }
+
+    public void generateMinimalManifest(final Map<String, String> basicAttributes) throws MojoExecutionException
+    {
+        File metaInf = file(ctx.getProject().getBuild().getOutputDirectory(), "META-INF");
+        if (!metaInf.exists())
+        {
+            metaInf.mkdirs();
+        }
+        File mf = file(ctx.getProject().getBuild().getOutputDirectory(), "META-INF", "MANIFEST.MF");
+        Manifest m = new Manifest();
+        m.getMainAttributes().putValue("Manifest-Version", "1.0");
+        for (Map.Entry<String, String> entry : basicAttributes.entrySet())
+        {
+            m.getMainAttributes().putValue(entry.getKey(), entry.getValue());
+        }
+        FileOutputStream fos = null;
+        try
+        {
+            fos = new FileOutputStream(mf);
+            m.write(fos);
+        }
+        catch (IOException e)
+        {
+            throw new MojoExecutionException("Unable to create manifest", e);
+        }
+        finally
+        {
+            if (fos != null)
+            {
+                try
+                {
+                    fos.close();
+                }
+                catch (IOException e)
+                {
+                }
+            }
+        }
     }
 
     public void jarWithOptionalManifest(final boolean manifestExists) throws MojoExecutionException

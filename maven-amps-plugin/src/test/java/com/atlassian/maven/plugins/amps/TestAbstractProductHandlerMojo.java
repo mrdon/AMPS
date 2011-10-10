@@ -1,11 +1,11 @@
 package com.atlassian.maven.plugins.amps;
 
-import junit.framework.TestCase;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.Collections;
@@ -13,11 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestAbstractProductHandlerMojo extends TestCase
+public class TestAbstractProductHandlerMojo
 {
+    @Test
     public void testMakeProductsInheritDefaultConfiguration() throws Exception
     {
         SomeMojo mojo = new SomeMojo("foo");
@@ -39,6 +41,7 @@ public class TestAbstractProductHandlerMojo extends TestCase
         assertEquals("/foo", prodMap.get("bar").getContextPath());
     }
 
+    @Test
     public void testMakeProductsInheritDefaultConfigurationDifferentInstanceIds() throws Exception
     {
         SomeMojo mojo = new SomeMojo("baz");
@@ -62,6 +65,7 @@ public class TestAbstractProductHandlerMojo extends TestCase
         assertEquals("/foo", prodMap.get("baz").getContextPath());
     }
 
+    @Test
     public void testMakeProductsInheritDefaultConfigurationNoProducts() throws Exception
     {
         SomeMojo mojo = new SomeMojo("foo");
@@ -102,8 +106,7 @@ public class TestAbstractProductHandlerMojo extends TestCase
             when(build.getTestOutputDirectory()).thenReturn(".");
             when(project.getBuild()).thenReturn(build);
             when(project.getBasedir()).thenReturn(new File("."));
-            MavenContext ctx = new MavenContext(project, null, null, (PluginManager) null, null);
-            return ctx;
+            return new MavenContext(project, null, null, (PluginManager) null, null);
         }
     }
 }
