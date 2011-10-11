@@ -9,7 +9,7 @@ public class TestCreateAndVerifyPlugin extends SdkTestBase
 {
     public void testJIRA() throws IOException, InterruptedException
     {
-        createAndVerify("jira");
+        createAndVerify("jira5");
     }
 
     public void testRefapp() throws IOException, InterruptedException

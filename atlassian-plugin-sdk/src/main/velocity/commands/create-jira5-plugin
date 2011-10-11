@@ -1,6 +1,6 @@
 #set( $mvnCommand = "com.atlassian.maven.plugins:maven-jira-plugin:$version:create" )
 
-#set( $goalhelp = "Creates a JIRA 4.x plugin." )
+#set( $goalhelp = "Creates a JIRA 5.x plugin." )
 
 #set( $opts = [
 {
