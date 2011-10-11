@@ -14,6 +14,7 @@ import java.util.jar.Manifest;
 import com.atlassian.core.util.FileUtils;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
@@ -799,16 +800,7 @@ public class MavenGoals
         }
         finally
         {
-            if (fos != null)
-            {
-                try
-                {
-                    fos.close();
-                }
-                catch (IOException e)
-                {
-                }
-            }
+            IOUtils.closeQuietly(fos);
         }
     }
 
