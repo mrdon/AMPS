@@ -9,6 +9,7 @@ import com.atlassian.maven.plugins.amps.AbstractAmpsMojo;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -22,6 +23,9 @@ import static com.atlassian.maven.plugins.amps.util.FileUtils.file;
 @MojoGoal("generate-manifest")
 public class GenerateManifestMojo extends AbstractAmpsMojo
 {
+    private static final String BUILD_DATE_ATTRIBUTE = "Atlassian-Build-Date";
+    private static final String BUILD_SIGNATURE_ATTRIBUTE = "Atlassian-Build-Signature";
+    
     /**
      * The BND instructions for the bundle.
      */
@@ -35,7 +39,9 @@ public class GenerateManifestMojo extends AbstractAmpsMojo
         // The Build-Date manifest attribute is used by the Atlassian licensing framework to determine
         // chronological order of bundle versions.  Its value is in milliseconds since the epoch.
         final String buildDateStr = String.valueOf(new Date().getTime());
-        final Map<String, String> basicAttributes = ImmutableMap.of("Build-Date", buildDateStr);
+        final String buildHash = getBuildHash(buildDateStr);
+        final Map<String, String> basicAttributes = ImmutableMap.of(BUILD_DATE_ATTRIBUTE, buildDateStr,
+                                                                    BUILD_SIGNATURE_ATTRIBUTE, buildHash);
         
         if (!instructions.isEmpty())
         {
@@ -84,5 +90,14 @@ public class GenerateManifestMojo extends AbstractAmpsMojo
             }
             getMavenGoals().generateMinimalManifest(basicAttributes);
         }
+    }
+    
+    private String getBuildHash(String buildDateStr)
+    {
+        // The following logic must be kept in sync with PluginLicenseBuilder in the UPM licensing-lib
+        String hashInput = buildDateStr + ":" +
+                getMavenContext().getProject().getGroupId() + ":" +
+                getMavenContext().getProject().getArtifactId();
+        return DigestUtils.sha256Hex(hashInput);
     }
 }
