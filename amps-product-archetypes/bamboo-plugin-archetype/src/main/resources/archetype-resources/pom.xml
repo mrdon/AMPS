@@ -53,33 +53,6 @@
                     <productDataVersion>\${dollar}{bamboo.data.version}</productDataVersion>
                 </configuration>
             </plugin>
-	          <!--
-              If you have dependencies that ship with your plugin you should use the shade plugin to include them in the final jar
-              Uncomment the section below and add any jars you want to include by adding <include>groupId:artifactId</include> between the artifactSet elements.
-              See http://atlss.in/mhgZm6 for more information
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-		            <version>1.4</version>
-                <executions>
-                   <execution>
-                     <phase>package</phase>
-                     <goals>
-                       <goal>shade</goal>
-                     </goals>
-                     <!--
-                     <configuration>
-                       <artifactSet>
-                          <includes>
-                            <include>com.mygroupid:my-artifact-id</include>
-                          </includes>
-                        </artifactSet>
-                      </configuration>
-                      -->
-                   </execution>
-                </executions>
-            </plugin>
           
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

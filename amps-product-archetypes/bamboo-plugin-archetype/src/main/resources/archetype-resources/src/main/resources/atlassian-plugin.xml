@@ -1,10 +1,5 @@
 #set( $dollar = '$' )
-<atlassian-plugin key="${dollar}{project.groupId}.${dollar}{project.artifactId}" name="${dollar}{project.name}" plugins-version="1">
-    <!--
-    note that this plugin has to be a plugins-version '1' plugin as build module types (repositories, tasks, pre/post processors)
-    are plugins v1 only. Module types such as REST, Gadgets, Servlets and Filters are plugins v2 and cannot be mixed in the same
-    plugin as plugins v1 module types for the time being
-    -->
+<atlassian-plugin key="${dollar}{project.groupId}.${dollar}{project.artifactId}" name="${dollar}{project.name}" plugins-version="2">
     <plugin-info>
         <description>${dollar}{project.description}</description>
         <version>${dollar}{project.version}</version>
