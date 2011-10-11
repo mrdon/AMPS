@@ -23,11 +23,7 @@ assert projectPluginDescriptor.exists(), "The project's plugin descriptor should
 def pluginXml = new XmlParser().parse(projectPluginDescriptor)
 assert pluginXml.'@key' == '${project.groupId}.${project.artifactId}', "Unexpected ${pluginXml.'@key'}"
 assert pluginXml.'@name' == '${project.name}'
-if (thisProduct != 'bamboo') {
-  assert pluginXml.'@plugins-version' == '2'
-} else {
-  assert pluginXml.'@plugins-version' == '1'
-}
+assert pluginXml.'@plugins-version' == '2'
 assert pluginXml.'plugin-info'.description.text() == '${project.description}'
 assert pluginXml.'plugin-info'.version.text() == '${project.version}'
 
