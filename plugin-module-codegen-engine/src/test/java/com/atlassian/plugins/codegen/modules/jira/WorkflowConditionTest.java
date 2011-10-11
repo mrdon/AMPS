@@ -1,6 +1,7 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
 import java.io.File;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -47,7 +48,7 @@ public class WorkflowConditionTest extends AbstractCodegenTestCase<WorkflowEleme
 
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
 
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyWorkflowCondition.java").exists());
         assertTrue("factory class not generated", new File(srcDir, packagePath + File.separator + "MyWorkflowConditionFactory.java").exists());

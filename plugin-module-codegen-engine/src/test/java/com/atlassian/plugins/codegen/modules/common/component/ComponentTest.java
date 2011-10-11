@@ -1,6 +1,7 @@
 package com.atlassian.plugins.codegen.modules.common.component;
 
 import java.io.File;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -44,7 +45,7 @@ public class ComponentTest extends AbstractCodegenTestCase<ComponentProperties>
         props.setGenerateInterface(true);
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         String itPackagePath = "it" + File.separator + packagePath;
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "CustomComponent.java").exists());
         assertTrue("interface not generated", new File(srcDir, packagePath + File.separator + "CustomInterface.java").exists());

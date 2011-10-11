@@ -2,6 +2,7 @@ package com.atlassian.plugins.codegen.modules.common;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -41,7 +42,7 @@ public class RESTTest extends AbstractCodegenTestCase<RESTProperties>
     {
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         String itPackagePath = "it" + File.separator + packagePath;
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyRestResource.java").exists());
         assertTrue("model class not generated", new File(srcDir, packagePath + File.separator + "MyRestResourceModel.java").exists());

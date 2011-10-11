@@ -1,6 +1,7 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
 import java.io.File;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -46,7 +47,7 @@ public class WorkflowPostFunctionTest extends AbstractCodegenTestCase<WorkflowPo
 
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
 
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyPostFunction.java").exists());
         assertTrue("factory class not generated", new File(srcDir, packagePath + File.separator + "MyPostFunctionFactory.java").exists());

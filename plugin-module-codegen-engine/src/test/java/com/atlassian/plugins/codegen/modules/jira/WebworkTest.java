@@ -2,6 +2,7 @@ package com.atlassian.plugins.codegen.modules.jira;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -43,7 +44,7 @@ public class WebworkTest extends AbstractCodegenTestCase<WebworkProperties>
         props.addAction(action);
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         assertTrue("action class not generated", new File(srcDir, packagePath + File.separator + "ActionOne.java").exists());
         assertTrue("action test class not generated", new File(testDir, packagePath + File.separator + "ActionOneTest.java").exists());
         assertTrue("plugin.xml not generated", new File(resourcesDir, "atlassian-plugin.xml").exists());
@@ -59,7 +60,7 @@ public class WebworkTest extends AbstractCodegenTestCase<WebworkProperties>
         props.addAction(action2);
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         assertTrue("action one class not generated", new File(srcDir, packagePath + File.separator + "ActionOne.java").exists());
         assertTrue("action one test class not generated", new File(testDir, packagePath + File.separator + "ActionOneTest.java").exists());
         assertTrue("action two class not generated", new File(srcDir, packagePath + File.separator + "ActionTwo.java").exists());

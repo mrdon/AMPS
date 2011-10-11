@@ -1,6 +1,7 @@
 package com.atlassian.plugins.codegen.modules.jira;
 
 import java.io.File;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -40,7 +41,7 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties>
 
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MySoapEndpointImpl.java").exists());
         assertTrue("interface not generated", new File(srcDir, packagePath + File.separator + "MySoapEndpoint.java").exists());
         assertTrue("test class not generated", new File(testDir, packagePath + File.separator + "MySoapEndpointTest.java").exists());
@@ -57,7 +58,7 @@ public class RPCTest extends AbstractCodegenTestCase<RPCProperties>
 
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyXmlEndpointImpl.java").exists());
         assertTrue("interface not generated", new File(srcDir, packagePath + File.separator + "MyXmlEndpoint.java").exists());
         assertTrue("test class not generated", new File(testDir, packagePath + File.separator + "MyXmlEndpointTest.java").exists());

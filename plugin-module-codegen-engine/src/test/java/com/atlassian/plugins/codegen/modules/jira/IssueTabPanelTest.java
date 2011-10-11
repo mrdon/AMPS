@@ -2,6 +2,7 @@ package com.atlassian.plugins.codegen.modules.jira;
 
 import java.io.File;
 import java.util.Properties;
+import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.AbstractCodegenTestCase;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
@@ -46,7 +47,7 @@ public class IssueTabPanelTest extends AbstractCodegenTestCase<TabPanelPropertie
     {
         creator.createModule(moduleLocation, props);
 
-        String packagePath = PACKAGE_NAME.replaceAll("\\.", File.separator);
+        String packagePath = PACKAGE_NAME.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
         assertTrue("main class not generated", new File(srcDir, packagePath + File.separator + "MyIssueTabPanel.java").exists());
         assertTrue("test class not generated", new File(testDir, packagePath + File.separator + "MyIssueTabPanelTest.java").exists());
         assertTrue("view template not generated", new File(templatePath, "my-issue-tab-panel.vm").exists());
