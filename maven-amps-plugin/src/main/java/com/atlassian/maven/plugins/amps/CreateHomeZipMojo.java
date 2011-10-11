@@ -34,7 +34,7 @@ public class CreateHomeZipMojo extends AbstractProductHandlerMojo {
     {
         getGoogleTracker().track(GoogleAmpsTracker.CREATE_HOME_ZIP);
 
-        Product product = getProduct(instanceId);
+        Product product = getProduct(instanceId, getProductId());
         ProductHandler productHandler = createProductHandler(product.getId());
 
         if (ProductHandlerFactory.STUDIO.equals(product.getId()))
@@ -72,15 +72,45 @@ public class CreateHomeZipMojo extends AbstractProductHandlerMojo {
         includeStudioDependentProducts(executions, getMavenGoals());
     }
 
-    private Product getProduct(final String instanceId) throws MojoExecutionException
+    /**
+     * Returns the product to snapshot.
+     * @param instanceId the instance to snapshot (preferred solution to reference the product)
+     * @param productId the product to snapshot if instanceId is null. It is not advisable to use this parameter,
+     * as it doesn't reference the instance in a unique manner.
+     *
+     * @return a Product object
+     * @throws MojoExecutionException
+     */
+    private Product getProduct(final String instanceId, final String productId) throws MojoExecutionException
     {
         Map<String, Product> contexts = getProductContexts(getMavenGoals());
 
-        Product product = contexts.get(instanceId);
-        if (product == null)
+        Product product = null;
+        if (instanceId != null)
         {
-            throw new MojoExecutionException("There is no instance with name " + instanceId + " defined in the pom.xml");
+            product = contexts.get(instanceId);
+            if (product == null)
+            {
+                throw new MojoExecutionException("There is no instance with name " + instanceId + " defined in the pom.xml");
+            }
         }
+        else
+        {
+            for (Product candidate : contexts.values())
+            {
+                if (candidate.getId().equals(productId))
+                {
+                    product = candidate;
+                    break;
+                }
+            }
+            if (product == null)
+            {
+                throw new MojoExecutionException("There is no product with name " + productId + " defined in the pom.xml. Please use -DinstanceId=..." +
+                		" to set the instance to snapshot.");
+            }
+        }
+
         return product;
     }
 }
