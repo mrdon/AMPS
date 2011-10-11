@@ -13,6 +13,7 @@ import com.atlassian.maven.plugins.amps.codegen.jira.CustomFieldTypeFactory;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompterFactory;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import com.atlassian.maven.plugins.amps.util.GoogleAmpsTracker;
 import com.atlassian.plugins.codegen.annotations.DependencyDescriptor;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreator;
 import com.atlassian.plugins.codegen.modules.PluginModuleCreatorFactory;
@@ -102,6 +103,9 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo
         try
         {
             creator = pluginModuleSelectionQueryer.selectModule(pluginModuleCreatorFactory.getModuleCreatorsForProduct(productId));
+
+            String trackingLabel = getPluginInformation().getId() + ":" + creator.getModuleName();
+            getGoogleTracker().track(GoogleAmpsTracker.CREATE_PLUGIN_MODULE,trackingLabel);
 
             PluginModulePrompter modulePrompter = pluginModulePrompterFactory.getPrompterForCreatorClass(creator.getClass());
             if (modulePrompter == null)
