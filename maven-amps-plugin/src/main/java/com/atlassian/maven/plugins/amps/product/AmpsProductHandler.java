@@ -216,7 +216,16 @@ public abstract class AmpsProductHandler implements ProductHandler
             throw new RuntimeException("UTF-8 should be supported on any JVM", badJvm);
         }
 
-        replacements.add(new Replacement("localhost", product.getServer(), true, false));
+        try
+        {
+            String localHostName = InetAddress.getLocalHost().getHostName();
+            replacements.add(new Replacement("%LOCAL_HOST_NAME%", localHostName));
+        }
+        catch (UnknownHostException e)
+        {
+            // If we can't get the local computer's hostname, it's probable no product could,
+            // se we don't need to search-replace the value.
+        }
 
         return replacements;
     }

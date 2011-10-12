@@ -5,6 +5,8 @@ import static com.atlassian.maven.plugins.amps.util.ProjectUtils.firstNotNull;
 import java.io.File;
 import java.util.Map;
 
+import org.apache.maven.surefire.shade.org.apache.commons.lang.StringUtils;
+
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.product.FeCruProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
@@ -40,7 +42,6 @@ public class StudioProperties
     private String greenHopperLicense;
 
     private Product confluence;
-    private String confluenceContext;
 
     private Product fisheye;
 
@@ -124,11 +125,6 @@ public class StudioProperties
     public void setConfluence(Product confluence)
     {
         this.confluence = confluence;
-    }
-
-    public void setConfluenceContext(String confluenceContext)
-    {
-        this.confluenceContext = confluenceContext;
     }
 
     public void setFisheye(Product fisheye)
@@ -239,11 +235,6 @@ public class StudioProperties
         return jira;
     }
 
-    public String getConfluenceContext()
-    {
-        return confluenceContext;
-    }
-
     public Product getFisheye()
     {
         return fisheye;
@@ -292,7 +283,11 @@ public class StudioProperties
 
     public String getJiraContextPath()
     {
-        return jira != null ? jira.getContextPath() : "";
+        if (jira == null || StringUtils.isBlank(jira.getContextPath()))
+        {
+            return "";
+        }
+        return jira.getContextPath().replaceAll("/", "");
     }
 
     public String getJiraUrl()
@@ -326,7 +321,11 @@ public class StudioProperties
 
     public String getConfluenceContextPath()
     {
-        return confluence != null ? confluence.getContextPath() : "";
+        if (confluence == null || StringUtils.isBlank(confluence.getContextPath()))
+        {
+            return "";
+        }
+        return confluence.getContextPath().replaceAll("/", "");
     }
 
     public String getConfluenceUrl()
@@ -359,7 +358,11 @@ public class StudioProperties
     }
     public String getFisheyeContextPath()
     {
-        return fisheye != null && fisheye.getContextPath() != null ? fisheye.getContextPath() : "";
+        if (fisheye == null || StringUtils.isBlank(fisheye.getContextPath()))
+        {
+            return "";
+        }
+        return fisheye.getContextPath().replaceAll("/", "");
     }
 
     public String getFisheyeUrl()
@@ -368,7 +371,7 @@ public class StudioProperties
         {
             return "";
         }
-        if (fisheye.getContextPath() != null)
+        if (StringUtils.isNotBlank(fisheye.getContextPath()) && !"/".equals(fisheye.getContextPath()))
         {
             return String.format("http://localhost:%d%s", fisheye.getHttpPort(), fisheye.getContextPath());
         }
@@ -391,7 +394,11 @@ public class StudioProperties
     // Bamboo getters
     public String getBambooContextPath()
     {
-        return bamboo != null ? bamboo.getContextPath() : "";
+        if (bamboo == null || StringUtils.isBlank(bamboo.getContextPath()))
+        {
+            return "";
+        }
+        return bamboo.getContextPath().replaceAll("/", "");
     }
 
     public int getBambooPort()
@@ -443,7 +450,11 @@ public class StudioProperties
 
     public String getCrowdContextPath()
     {
-        return crowd != null ? crowd.getContextPath() : "";
+        if (crowd == null || StringUtils.isBlank(crowd.getContextPath()))
+        {
+            return "";
+        }
+        return crowd.getContextPath().replaceAll("/", "");
     }
 
     public int getCrowdPort()

@@ -53,17 +53,27 @@ final public class StudioProductHandler extends AmpsProductHandler
     /** This token is used in product's <version> when they want to reuse the Studio product's version */
     private static final String STUDIO_VERSION_TOKEN = "STUDIO-VERSION";
 
-    private static final Map<String, String> defaultContextPaths;
-
-    static
+    private static final Map<String, String> defaultContextPaths = new HashMap<String, String>()
     {
-        defaultContextPaths = new HashMap<String, String>();
-        defaultContextPaths.put(STUDIO_BAMBOO, "/builds");
-        defaultContextPaths.put(STUDIO_CONFLUENCE, "/wiki");
-        defaultContextPaths.put(STUDIO_CROWD, "/crowd");
-        defaultContextPaths.put(STUDIO_FECRU, "/");
-        defaultContextPaths.put(STUDIO_JIRA, "/jira");
-    }
+        {
+            put(STUDIO_BAMBOO, "/builds");
+            put(STUDIO_CONFLUENCE, "/wiki");
+            put(STUDIO_CROWD, "/crowd");
+            put(STUDIO_FECRU, "/");
+            put(STUDIO_JIRA, "/jira");
+        }
+    };
+
+    private static final Map<String, Integer> defaultDebugPorts = new HashMap<String, Integer>()
+    {
+        {
+            put(STUDIO_BAMBOO, 5011);
+            put(STUDIO_CONFLUENCE, 5007);
+            put(STUDIO_CROWD, 5003);
+            put(STUDIO_FECRU, 5005);
+            put(STUDIO_JIRA, 5009);
+        }
+    };
 
     public StudioProductHandler(MavenContext context, MavenGoals goals)
     {
@@ -202,6 +212,8 @@ final public class StudioProductHandler extends AmpsProductHandler
      */
     public static void setDefaultValues(MavenContext context, Product product)
     {
+        // Set the default context path
+        // Amps requires '/' before and not after
         String defaultContextPath = defaultContextPaths.get(product.getId());
         if (defaultContextPath != null)
         {
@@ -219,6 +231,12 @@ final public class StudioProductHandler extends AmpsProductHandler
                 // This value will be replaced with the version given by the studio product.
                 // We can't leave it empty because the value will be defaulted to RELEASE.
                 product.setVersion(STUDIO_VERSION_TOKEN);
+            }
+
+            // Set the default debug port
+            if (product.getJvmDebugPort() == 0)
+            {
+                product.setJvmDebugPort(defaultDebugPorts.get(product.getId()));
             }
 
             // StudioFecru only

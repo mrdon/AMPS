@@ -601,7 +601,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         try
         {
             long before = System.nanoTime();
-            for (final ProductExecution execution : productExecutions)
+            for (final ProductExecution execution : Iterables.reverse(productExecutions))
             {
                 final Product product = execution.getProduct();
                 final ProductHandler productHandler = execution.getProductHandler();
@@ -618,7 +618,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                         }
                         catch (MojoExecutionException e)
                         {
-                            throw new RuntimeException(e);
+                            getLog().error("Exception while trying to stop " + product.getInstanceId(), e);
                         }
                     }
                 });

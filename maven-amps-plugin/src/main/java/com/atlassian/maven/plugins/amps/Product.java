@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.maven.surefire.shade.org.apache.commons.lang.StringUtils;
+
 public class Product
 {
     /**
@@ -24,7 +26,7 @@ public class Product
     private int httpPort = 0;
 
     /**
-     * Application context path
+     * Application context path, in the format: /context-path
      */
     protected String contextPath;
 
@@ -222,7 +224,7 @@ public class Product
         prod.setPluginArtifacts(pluginArtifacts.isEmpty() ? product.getPluginArtifacts() : pluginArtifacts);
         prod.setLibArtifacts(libArtifacts.isEmpty() ? product.getLibArtifacts() : libArtifacts);
 
-        prod.setDataPath(productDataPath.length() == 0 ? product.getDataPath() : productDataPath);
+        prod.setDataPath(StringUtils.isBlank(productDataPath) ? product.getDataPath() : productDataPath);
         prod.setDataVersion(productDataVersion == null ? product.getDataVersion() : productDataVersion);
         prod.setLog4jProperties(log4jProperties == null ? product.getLog4jProperties() : log4jProperties);
         prod.setJvmArgs(jvmArgs == null ? product.getJvmArgs() : jvmArgs);

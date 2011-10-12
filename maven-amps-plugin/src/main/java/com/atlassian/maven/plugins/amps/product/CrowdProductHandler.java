@@ -152,4 +152,15 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
         FileUtils.deleteQuietly(new File(homeDirectory, "caches/felix/felix-cache"));
         FileUtils.deleteQuietly(new File(homeDirectory, "logs"));
     }
+
+    @Override
+    public List<File> getConfigFiles(Product product, File snapshotDir)
+    {
+        List<File> configFiles = super.getConfigFiles(product, snapshotDir);
+        configFiles.add(new File(snapshotDir, "database.log"));
+        configFiles.add(new File(snapshotDir, "crowd.cfg.xml"));
+        configFiles.add(new File(snapshotDir, "crowd.properties"));
+        return configFiles;
+    }
+
 }
