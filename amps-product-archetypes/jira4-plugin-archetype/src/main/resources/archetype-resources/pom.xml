@@ -63,8 +63,8 @@
     </build>
 
     <properties>
-        <jira.version>${jira.version}</jira.version>
-        <jira.data.version>${jira.data.version}</jira.data.version>
+        <jira.version>4.4.1</jira.version>
+        <jira.data.version>4.4</jira.data.version>
         <amps.version>${project.version}</amps.version>
     </properties>
 
