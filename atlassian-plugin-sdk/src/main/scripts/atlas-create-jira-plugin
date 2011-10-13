@@ -20,7 +20,7 @@ echo "Create a plugin for?"
 
 select yn in "Shiny new JIRA 5" "Regular 'ol JIRA 4 (or earlier)"; do
     case $yn in
-        "Shiny new JIRA 5" ) exec ${PRGDIR}/atlas-create-jira5-plugin ; break;;
-        "Regular 'ol JIRA 4 (or earlier)" ) exec ${PRGDIR}/atlas-create-jira4-plugin ; break;;
+        "Shiny new JIRA 5" ) exec "${PRGDIR}/atlas-create-jira5-plugin" ; break;;
+        "Regular 'ol JIRA 4 (or earlier)" ) exec "${PRGDIR}/atlas-create-jira4-plugin" ; break;;
     esac
 done
