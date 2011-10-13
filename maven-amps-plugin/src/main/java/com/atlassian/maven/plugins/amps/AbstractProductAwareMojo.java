@@ -22,7 +22,12 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
     protected String instanceId;
 
     /**
-     * Flag to turn on/off google tracking
+     * Flag to turn on/off Google tracking
+     *
+     * AMPS sends basic usage events to google analytics by default. To disable tracking, you can either pass in
+     * -Dallow.google.tacking=false on the command line, or include <allowGoogleTracking>false</allowGoogleTracking> in
+     * the amps plugin configuration in your pom.xml or settings.xml
+     * 
      */
     @MojoParameter(expression = "${allow.google.tracking}", defaultValue = "true")
     protected boolean allowGoogleTracking;
@@ -56,7 +61,7 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
     {
         if(null == googleTracker)
         {
-            googleTracker = new GoogleAmpsTracker(getProductId());
+            googleTracker = new GoogleAmpsTracker(getProductId(),getLog());
 
             if(googleTrackingAllowed()) {
                 getLog().info("Google Analytics Tracking is enabled to collect AMPS usage statistics.");

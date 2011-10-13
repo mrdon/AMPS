@@ -4,6 +4,7 @@ import com.dmurph.tracking.AnalyticsConfigData;
 import com.dmurph.tracking.JGoogleAnalyticsTracker;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.plugin.logging.Log;
 
 /**
  * @since version
@@ -24,16 +25,18 @@ public class GoogleAmpsTracker
 
     private final AnalyticsConfigData config;
     private final JGoogleAnalyticsTracker tracker;
+    private final Log mavenLogger;
     private String productId;
 
-    public GoogleAmpsTracker(String productId)
+    public GoogleAmpsTracker(String productId, Log mavenLogger)
     {
-        this();
+        this(mavenLogger);
         this.productId = productId;
     }
 
-    public GoogleAmpsTracker()
+    public GoogleAmpsTracker(Log mavenLogger)
     {
+        this.mavenLogger = mavenLogger;
         this.config = new AnalyticsConfigData(TRACKING_CODE);
         this.tracker = new JGoogleAnalyticsTracker(config, JGoogleAnalyticsTracker.GoogleAnalyticsVersion.V_4_7_2);
 
@@ -41,10 +44,12 @@ public class GoogleAmpsTracker
     }
 
     public void track(String eventName) {
+        mavenLogger.info("Sending event to Google Analytics: "  + getCategoryName() + " - " + eventName);
         tracker.trackEvent(getCategoryName(),eventName);
     }
 
     public void track(String eventName, String label) {
+        mavenLogger.info("Sending event to Google Analytics: "  + getCategoryName() + " - " + eventName + " - " + label);
         tracker.trackEvent(getCategoryName(),eventName,label);
     }
 
