@@ -48,7 +48,7 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
     }
 
     @Override
-    public <P extends PluginModuleProperties> P getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException
+    public T getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException
     {
         //!!! REMOVE THIS WHEN WE SUPPORT EXAMPLE CODE
         suppressExamplesPrompt();
@@ -94,11 +94,11 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
             props.setIncludeExamples(promptForBoolean("Include Example Code?", "N"));
         }
 
-        return (P) props;
+        return props;
     }
 
     @Override
-    public abstract <T extends PluginModuleProperties> T promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException;
+    public abstract T promptForBasicProperties(PluginModuleLocation moduleLocation) throws PrompterException;
 
     @Override
     public void promptForAdvancedProperties(T props, PluginModuleLocation moduleLocation) throws PrompterException

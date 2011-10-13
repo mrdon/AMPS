@@ -5,7 +5,6 @@ import com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter;
 import com.atlassian.maven.plugins.amps.codegen.prompter.PluginModulePrompter;
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
 import com.atlassian.plugins.codegen.modules.PluginModuleLocation;
-import com.atlassian.plugins.codegen.modules.PluginModuleProperties;
 
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
@@ -19,7 +18,7 @@ public class NoSuperPrompter implements PluginModulePrompter<BasicClassModulePro
 {
 
     @Override
-    public PluginModuleProperties getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException
+    public BasicClassModuleProperties getModulePropertiesFromInput(PluginModuleLocation moduleLocation) throws PrompterException
     {
         return null;
     }

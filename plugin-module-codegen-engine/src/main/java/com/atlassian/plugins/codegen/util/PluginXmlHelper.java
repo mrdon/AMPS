@@ -54,6 +54,16 @@ public class PluginXmlHelper
         }
     }
 
+    public void addPluginInfoParam(String name, String value) throws Exception
+    {
+        Element pluginInfo = (Element) document.selectSingleNode("//plugin-info");
+        if (pluginInfo == null)
+        {
+            pluginInfo = document.addElement("plugin-info");
+        }
+        pluginInfo.addElement("param").addAttribute("name", name).setText(value);
+    }
+    
     public String getPluginXmlAsString()
     {
         return document.asXML();

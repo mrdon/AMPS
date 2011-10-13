@@ -6,8 +6,12 @@
         public="${PUBLIC}"#if(${ALIAS} != "")
         alias="${ALIAS}"#end>
 
+    #if($DESCRIPTION_I18N_KEY)
     <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
+    #end
+    #if($FQ_INTERFACE)
     <interface>${FQ_INTERFACE}</interface>
+    #end
     #if($SERVICE_PROPS.entrySet().size() > 0)
     <service-properties>
         #foreach($mapEntry in $INIT_PARAMS.entrySet())

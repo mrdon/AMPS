@@ -50,6 +50,13 @@ public abstract class AbstractPluginModuleCreator<T extends PluginModuleProperti
         createI18nProperties(location, props);
     }
 
+    protected void addPluginInfoParamToPluginXml(PluginModuleLocation location, String name, String value) throws Exception
+    {
+        PluginXmlHelper pluginXmlHelper = new PluginXmlHelper(location.getPluginXml());
+        pluginXmlHelper.addPluginInfoParam(name, value);
+        pluginXmlHelper.savePluginXml();
+    }
+    
     private void createI18nProperties(PluginModuleLocation location, PluginModuleProperties props) throws Exception
     {
         if (location.getResourcesDir() != null && !props.getI18nProperties()

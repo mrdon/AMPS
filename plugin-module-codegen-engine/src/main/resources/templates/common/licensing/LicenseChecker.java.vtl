@@ -1,0 +1,85 @@
+package ${PACKAGE};
+
+import com.atlassian.event.api.EventListener;
+import com.atlassian.plugin.PluginController;
+import com.atlassian.upm.api.license.PluginLicenseEventRegistry;
+import com.atlassian.upm.api.license.PluginLicenseManager;
+import com.atlassian.upm.api.license.entity.PluginLicense;
+import com.atlassian.upm.api.license.event.PluginLicenseChangeEvent;
+import com.atlassian.upm.api.license.event.PluginLicenseCheckEvent;
+import com.atlassian.upm.api.license.event.PluginLicenseRemovedEvent;
+import com.atlassian.upm.api.util.Option;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.atlassian.upm.api.util.Option.none;
+import static com.atlassian.upm.api.util.Option.some;
+
+/**
+ * Listens for Atlassian licensing events, and disables this plugin whenever it does not
+ * have a valid license.
+ */
+public class ${CLASSNAME} {
+
+    private static final Logger log = LoggerFactory.getLogger(${CLASSNAME}.class);
+
+    private final PluginController pluginController;
+    private final String pluginKey;
+    
+    public ${CLASSNAME}(PluginController pluginController,
+                              PluginLicenseManager pluginLicenseManager,
+                              PluginLicenseEventRegistry pluginLicenseEventRegistry) {
+        this.pluginController = pluginController;
+        this.pluginKey = pluginLicenseManager.getPluginKey();
+        
+        pluginLicenseEventRegistry.register(this);
+    }
+
+    /**
+     * This event is generated when the plugin becomes enabled - either at application
+     * startup time, or when the plugin is installed into an already-running application.
+     * The plugin may or may not have a license at this point.
+     */
+    @EventListener
+    public void handleEvent(PluginLicenseCheckEvent event) {
+        checkLicense(event.getLicense());
+    }
+    
+    /**
+     * This event base class includes all changes to the plugin license other than its
+     * complete removal.
+     */
+    @EventListener
+    public void handleEvent(PluginLicenseChangeEvent event) {
+        checkLicense(some(event.getLicense()));
+    }
+
+    /**
+     * This event is generated if an existing license for the plugin is removed.
+     */
+    @EventListener
+    public void handleEvent(PluginLicenseRemovedEvent event) {
+        checkLicense(none(PluginLicense.class));
+    }
+    
+    private final void checkLicense(Option<PluginLicense> maybeLicense) {
+        if (!isValidLicense(maybeLicense)) {
+            log.warn("Disabling plugin '" + pluginKey + "'");
+            pluginController.disablePlugin(pluginKey);            
+        }
+    }
+    
+    private final boolean isValidLicense(Option<PluginLicense> maybeLicense) {
+        for (PluginLicense license: maybeLicense) {
+            if (license.getLicenseStatus().isExpired()) {
+                log.warn("Invalid license for plugin '" + pluginKey + "' (" + license.getLicenseStatus() + ")");
+                return false;
+            }
+            log.info("Validated license for plugin '" + pluginKey + "'");
+            return true;
+        }
+        log.warn("No license available for plugin '" + pluginKey + "'");
+        return false;
+    }
+}

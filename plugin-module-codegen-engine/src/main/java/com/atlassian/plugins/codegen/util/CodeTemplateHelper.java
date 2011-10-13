@@ -3,7 +3,7 @@ package com.atlassian.plugins.codegen.util;
 import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 import com.atlassian.plugins.codegen.modules.BasicClassModuleProperties;
@@ -43,16 +43,14 @@ public class CodeTemplateHelper
         }
     }
 
-    public String parseTemplate(String templatePath, PluginModuleProperties props) throws Exception
+    public String parseTemplate(String templatePath, Map<Object, Object> props) throws Exception
     {
         VelocityContext ctx = new VelocityContext();
         ctx.put("parseCheck", new TemplateChecker());
 
-        Enumeration<?> names = props.propertyNames();
-        while (names.hasMoreElements())
+        for (Map.Entry<Object, Object> entry: props.entrySet())
         {
-            String name = (String) names.nextElement();
-            ctx.put(name, props.get(name));
+            ctx.put(entry.getKey().toString(), entry.getValue());
         }
 
         final StringWriter stringWriter = new StringWriter();
