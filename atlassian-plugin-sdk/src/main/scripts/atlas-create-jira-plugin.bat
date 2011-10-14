@@ -22,7 +22,7 @@ SET /P useJira5="#?"
 if not "%useJira5%" == "1" if not "%useJira5%" == "2" goto prompt
 
 if "%useJira5%" == "1" (
-	atlas-create-jira5-plugin.bat
+	"%ATLAS_HOME%\bin\atlas-create-jira5-plugin.bat"
 ) else (
-	atlas-create-jira4-plugin.bat
+	"%ATLAS_HOME%\bin\atlas-create-jira4-plugin.bat"
 )
