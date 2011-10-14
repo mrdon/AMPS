@@ -69,8 +69,8 @@
     </build>
 
     <properties>
-        <!-- Use 5.0-beta2, 5.0-rc1 etc for early access before 5.0 is released -->
-        <jira.version>5.0</jira.version>
+        <!-- TODO: Update to 5.0 after release of 5.0 final -->
+        <jira.version>5.0-beta1</jira.version>
         <amps.version>${project.version}</amps.version>
     </properties>
 
