@@ -299,6 +299,7 @@
         <refapp.version>2.12.0</refapp.version>
         <confluence.version>4.0</confluence.version>
         <confluence.data.version>3.5</confluence.data.version>
+        <!-- TODO: Move jira to 5.0 and use ${jira.version} in jira-plugin-archetype once 5.0 final is released -->
         <jira.version>4.4.1</jira.version>
         <jira.data.version>4.4</jira.data.version>
         <bamboo.version>3.3</bamboo.version>

@@ -69,7 +69,8 @@
     </build>
 
     <properties>
-        <jira.version>${jira.version}</jira.version>
+        <!-- TODO: Update to 5.0 after release of 5.0 final -->
+        <jira.version>5.0-beta1</jira.version>
         <amps.version>${project.version}</amps.version>
     </properties>
 
