@@ -635,7 +635,6 @@ public class MavenGoals
         // Note: homeDirectory can't be null.
         // Cargo throws "You must set the mandatory [home] property" if it's launched with wait=true
         // and you send a 'stop' in parallel.
-        String homeDirectory = container.getConfigDirectory(getBuildDirectory(), productId);
 
         executeMojo(
                 plugin(
