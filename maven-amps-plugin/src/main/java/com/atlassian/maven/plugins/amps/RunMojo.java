@@ -53,15 +53,15 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
     protected String testGroup;
 
     /**
-     * Excluded instances from the execution. Useful when Studio brings in all instances and you want to run only one.
+     * Excluded instances from the execution. Only useful when Studio brings in all instances and you want to run only one.
      * List of comma separated instanceIds, or *{@literal}/instanceId to exclude all but one product.
      * <p>Examples:
-     * <ul><li>mvn amps:run -Dexclude=studio-crowd</li>
-     * <li>mvn amps:run -Dexclude=*{@literal}/studio-crowd to run only StudioCrowd</li>
+     * <ul><li>mvn amps:run -DexcludeInstances=studio-crowd</li>
+     * <li>mvn amps:run -DexcludeInstances=*{@literal}/studio-crowd to run only StudioCrowd</li>
      * </ul>
      */
-    @MojoParameter(expression = "${exclude}")
-    protected String exclude;
+    @MojoParameter(expression = "${excludeInstances}")
+    protected String excludeInstances;
 
     /**
      * The properties actually used by the mojo when running
@@ -200,12 +200,12 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
     private List<ProductExecution> filterExcludedInstances(List<ProductExecution> executions) throws MojoExecutionException
     {
-        if (StringUtils.isBlank(exclude))
+        if (StringUtils.isBlank(excludeInstances))
         {
             return executions;
         }
-        boolean inverted = exclude.startsWith("*/");
-        String instanceIdList = inverted ? exclude.substring(2) : exclude;
+        boolean inverted = excludeInstances.startsWith("*/");
+        String instanceIdList = inverted ? excludeInstances.substring(2) : excludeInstances;
 
         // Parse the list given by the user and find ProductExecutions
         List<String> excludedInstanceIds = Lists.newArrayList(instanceIdList.split(","));
@@ -225,7 +225,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             }
             catch (NoSuchElementException nsee)
             {
-                throw new MojoExecutionException("You specified -Dexclude=" + exclude + " but " + instanceId + " is not an existing instance id.");
+                throw new MojoExecutionException("You specified -Dexclude=" + excludeInstances + " but " + instanceId + " is not an existing instance id.");
             }
         }
 
