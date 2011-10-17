@@ -10,11 +10,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.Manifest;
+import java.util.regex.Matcher;
 
 import com.atlassian.core.util.FileUtils;
+import com.atlassian.maven.plugins.amps.util.PluginXmlUtils;
 import com.atlassian.maven.plugins.amps.util.VersionUtils;
 
+import com.sun.jersey.wadl.resourcedoc.ResourceDocletJSON;
+
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
@@ -933,6 +939,112 @@ public class MavenGoals
                 ),
                 executionEnvironment()
         );
+    }
+
+    public void generateRestDocs() throws MojoExecutionException
+    {
+        MavenProject prj = ctx.getProject();
+        List<String> docletPaths = new ArrayList<String>();
+        StringBuffer docletPath = new StringBuffer(":" + prj.getBuild().getOutputDirectory());
+        String resourcedocPath = prj.getBuild().getOutputDirectory() + File.separator + "resourcedoc.xml";
+        StringBuffer packagesPath = new StringBuffer();
+        PluginXmlUtils.PluginInfo pluginInfo = PluginXmlUtils.getPluginInfo(ctx);
+
+        try
+        {
+            docletPaths.addAll(prj.getCompileClasspathElements());
+            docletPaths.addAll(prj.getRuntimeClasspathElements());
+            docletPaths.addAll(prj.getSystemClasspathElements());
+
+            for(String path : docletPaths) {
+                docletPath.append(File.pathSeparator);
+                docletPath.append(path);
+            }
+
+        } catch (DependencyResolutionRequiredException e)
+        {
+            throw new MojoExecutionException("Dependencies must be resolved", e);
+        }
+
+        List<PluginXmlUtils.RESTModuleInfo> restModules = PluginXmlUtils.getRestModules(ctx);
+        for(PluginXmlUtils.RESTModuleInfo moduleInfo : restModules)
+        {
+            List<String> packageList = moduleInfo.getPackagesToScan();
+
+            for(String packageToScan : packageList)
+            {
+                if(packagesPath.length() > 0)
+                {
+                    packagesPath.append(File.pathSeparator);
+                }
+
+                String filePath = prj.getBuild().getSourceDirectory() + File.separator + packageToScan.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
+                packagesPath.append(filePath);
+            }
+        }
+
+        if(!restModules.isEmpty() && packagesPath.length() > 0)
+        {
+            executeMojo(
+                    plugin(
+                            groupId("org.apache.maven.plugins"),
+                            artifactId("maven-javadoc-plugin"),
+                            version("2.4")
+                    ),
+                    goal("javadoc"),
+                    configuration(
+                            element(name("maxmemory"),"1024m"),
+                            element(name("sourcepath"),packagesPath.toString()),
+                            element(name("doclet"), ResourceDocletJSON.class.getName()),
+                            element(name("docletPath"), docletPath.toString()),
+                            element(name("docletArtifacts"),
+                                element(name("docletArtifact"),
+                                        element(name("groupId"),"xerces"),
+                                        element(name("artifactId"),"xercesImpl"),
+                                        element(name("version"),"2.9.1")
+                                ),
+                                element(name("docletArtifact"),
+                                        element(name("groupId"),"commons-lang"),
+                                        element(name("artifactId"),"commons-lang"),
+                                        element(name("version"),"2.6")
+                                )
+                            ),
+                            element(name("additionalparam"),"-output \"" + resourcedocPath + "\""),
+                            element(name("useStandarDocletOptions"),"false")
+                    ),
+                    executionEnvironment()
+            );
+
+            try {
+
+                File userAppDocs = new File(prj.getBuild().getOutputDirectory(),"application-doc.xml");
+                if(!userAppDocs.exists())
+                {
+                    String appDocText = FileUtils.getResourceContent("application-doc.xml");
+                    appDocText = StringUtils.replace(appDocText, "${rest.doc.title}", pluginInfo.getName());
+                    appDocText = StringUtils.replace(appDocText,"${rest.doc.description}",pluginInfo.getDescription());
+                    File appDocFile = new File(prj.getBuild().getOutputDirectory(), "application-doc.xml");
+
+                    FileUtils.saveTextFile(appDocText, appDocFile);
+                    log.info("Wrote " + appDocFile.getAbsolutePath());
+                }
+
+                File userGrammars = new File(prj.getBuild().getOutputDirectory(),"application-grammars.xml");
+                if(!userGrammars.exists())
+                {
+                    String grammarText = FileUtils.getResourceContent("application-grammars.xml");
+                    File grammarFile = new File(prj.getBuild().getOutputDirectory(), "application-grammars.xml");
+
+                    FileUtils.saveTextFile(grammarText, grammarFile);
+
+                    log.info("Wrote " + grammarFile.getAbsolutePath());
+                }
+
+            } catch (Exception e)
+            {
+                throw new MojoExecutionException("Error writing REST application xml files",e);
+            }
+        }
     }
 
     private static class Container extends ProductArtifact
