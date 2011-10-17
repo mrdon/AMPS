@@ -869,8 +869,14 @@ public class MavenGoals
 
     }
 
-    public void release() throws MojoExecutionException
+    public void release(String mavenArgs) throws MojoExecutionException
     {
+        String args = "";
+
+        if(StringUtils.isNotBlank(mavenArgs)) {
+            args = mavenArgs;
+        }
+
         executeMojo(
                 plugin(
                         groupId("org.apache.maven.plugins"),
@@ -879,7 +885,7 @@ public class MavenGoals
                 ),
                 goal("prepare"),
                 configuration(
-                        element(name("arguments"), "")
+                        element(name("arguments"), args)
                 ),
                 executionEnvironment()
         );
@@ -892,7 +898,7 @@ public class MavenGoals
                 ),
                 goal("perform"),
                 configuration(
-                        element(name("arguments"), "")
+                        element(name("arguments"), args)
                 ),
                 executionEnvironment()
         );
