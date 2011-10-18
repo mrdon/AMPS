@@ -9,7 +9,7 @@ import com.atlassian.plugins.codegen.modules.common.component.ComponentModuleCre
 import com.atlassian.plugins.codegen.modules.common.component.ComponentProperties;
 
 /**
- * @since 3.6
+ * @since 3.7
  */
 @RefAppPluginModuleCreator
 @JiraPluginModuleCreator

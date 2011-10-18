@@ -10,7 +10,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
 /**
- * @since 3.6
+ * @since 3.7
  */
 @ModuleCreatorClass(LicensingModuleCreator.class)
 public class LicensingPrompter extends AbstractModulePrompter<LicensingProperties>
