@@ -79,6 +79,8 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
     protected void startProducts(List<ProductExecution> productExecutions) throws MojoExecutionException
     {
+        long globalStartTime = System.nanoTime();
+        setParallelMode(productExecutions);
         List<StartupInformation> successMessages = Lists.newArrayList();
         for (ProductExecution productExecution : productExecutions)
         {
@@ -108,7 +110,10 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
             // Log the success message
             StartupInformation message = new StartupInformation(product, "started successfully", actualHttpPort, durationSeconds);
-            getLog().info(message.toString());
+            if (!parallel)
+            {
+                getLog().info(message.toString());
+            }
             successMessages.add(message);
 
             if (writePropertiesToFile)
@@ -129,11 +134,17 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             writePropertiesFile();
         }
 
-        // Repeat the messages at the end, because we're developer-friendly
-        if (successMessages.size() > 1)
+        if (parallel)
+        {
+            waitForProducts(productExecutions, true);
+        }
+        long globalDurationSeconds = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - globalStartTime);
+
+        // Give the messages once all applications are started
+        if (successMessages.size() > 1 || parallel)
         {
             getLog().info("");
-            getLog().info("=== Summary:");
+            getLog().info("=== Summary (total time " + globalDurationSeconds + "s):");
             // First show the log files
             for (StartupInformation message : successMessages)
             {
@@ -299,7 +310,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         @Override
         public String toString()
         {
-            String message = String.format("%s %s in %ds", product.getInstanceId(), event, durationSeconds);
+            String message = String.format("%s %s in %ds", product.getInstanceId(), event + (Boolean.FALSE.equals(product.getSynchronousStartup()) ? " (asynchronously)" : ""), durationSeconds);
             if (actualHttpPort != 0)
             {
                 message += " at http://localhost:" + actualHttpPort + product.getContextPath();

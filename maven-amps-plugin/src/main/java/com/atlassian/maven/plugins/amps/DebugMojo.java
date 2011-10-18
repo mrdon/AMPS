@@ -40,6 +40,7 @@ public class DebugMojo extends RunMojo
         getGoogleTracker().track(GoogleAmpsTracker.DEBUG);
 
         final List<ProductExecution> productExecutions = getProductExecutions();
+        setParallelMode(productExecutions);
 
         if (jvmArgs == null)
         {

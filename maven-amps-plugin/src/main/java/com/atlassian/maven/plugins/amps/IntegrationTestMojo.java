@@ -157,6 +157,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
 
         List<ProductExecution> executionsDeclaredInPom = getTestGroupProductExecutions(testGroupId);
         List<ProductExecution> productExecutions = includeStudioDependentProducts(executionsDeclaredInPom, goals);
+        setParallelMode(productExecutions);
 
         // Install the plugin in each product and start it
         for (ProductExecution productExecution : productExecutions)
@@ -205,6 +206,11 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         }
         systemProperties.put("testGroup", testGroupId);
         systemProperties.putAll(getTestGroupSystemProperties(testGroupId));
+
+        if (parallel)
+        {
+            waitForProducts(productExecutions, true);
+        }
 
         // Actually run the tests
         goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);

@@ -16,6 +16,7 @@ public class StopMojo extends RunMojo
     protected void doExecute() throws MojoExecutionException, MojoFailureException
     {
         final List<ProductExecution> productExecutions = getProductExecutions();
+        setParallelMode(productExecutions);
         stopProducts(productExecutions);
     }
 

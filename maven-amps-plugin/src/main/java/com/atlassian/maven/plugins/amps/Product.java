@@ -145,6 +145,15 @@ public class Product
     private int shutdownTimeout = 0;
 
     /**
+     * Waits until the application is up before launching the next application.
+     * Null means it wasn't set explicitly: Default is true.
+     *
+     * There is no reason for the user to modify this property,
+     * as <parallel>true</parallel> will set the right values (see AbstractProductHandlerMojo).
+     */
+    private Boolean synchronousStartup;
+
+    /**
      * An optional override of the webapp's groupId
      */
     private String groupId;
@@ -240,6 +249,7 @@ public class Product
 
         prod.setStartupTimeout(startupTimeout == 0 ? product.getStartupTimeout() : startupTimeout);
         prod.setShutdownTimeout(shutdownTimeout == 0 ? product.getShutdownTimeout() : shutdownTimeout);
+        prod.setSynchronousStartup(synchronousStartup == null ? product.getSynchronousStartup() : synchronousStartup);
 
         // Studio-related properties
         prod.setStudioProperties(studioProperties == null ? product.getStudioProperties() : studioProperties);
@@ -643,6 +653,17 @@ public class Product
     {
         this.shutdownEnabled = shutdownEnabled;
     }
+
+    public Boolean getSynchronousStartup()
+    {
+        return synchronousStartup;
+    }
+
+    public void setSynchronousStartup(Boolean synchronousStartup)
+    {
+        this.synchronousStartup = synchronousStartup;
+    }
+
     @Override
     public String toString()
     {

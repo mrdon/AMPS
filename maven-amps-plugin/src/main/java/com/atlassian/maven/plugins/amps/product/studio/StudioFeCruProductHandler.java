@@ -91,6 +91,8 @@ public class StudioFeCruProductHandler extends FeCruProductHandler implements St
     @Override
     protected void addOverridesToJavaTask(final Product ctx, Java java)
     {
+        // Note: FeCru doesn't support asynchronous startup, because setSpawn(true) returns an error
+        // (output and timeout are forbidden).
         java.setFork(true);
         java.setDir(getAppDirectory(ctx));
     }

@@ -19,6 +19,7 @@ import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import com.sun.jersey.wadl.resourcedoc.ResourceDocletJSON;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.maven.model.Plugin;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -62,6 +63,8 @@ public class MavenGoals
     {{
             put("maven-cli-plugin", "0.7");
             put("cargo-maven2-plugin", "1.0-beta-2-db2");
+            // Below is a second definition of 'cargo-maven2-plugin', using CodeHaus instead of TwData.
+            put("org.codehaus.cargo:cargo-maven2-plugin", "1.1.3");
             put("atlassian-pdk", "2.1.8");
             put("maven-archetype-plugin", "2.0-alpha-4");
             put("maven-bundle-plugin", "2.0.0");
@@ -79,18 +82,11 @@ public class MavenGoals
 
     public MavenGoals(final MavenContext ctx)
     {
-        this(ctx, Collections.<String, String>emptyMap());
-    }
-
-    public MavenGoals(final MavenContext ctx, final Map<String, String> pluginToVersionMap)
-    {
         this.ctx = ctx;
 
         this.log = ctx.getLog();
 
-        final Map<String, String> map = new HashMap<String, String>(defaultArtifactIdToVersionMap);
-        map.putAll(pluginToVersionMap);
-        this.pluginArtifactIdToVersionMap = Collections.unmodifiableMap(map);
+        this.pluginArtifactIdToVersionMap = Collections.unmodifiableMap(defaultArtifactIdToVersionMap);
     }
 
     private ExecutionEnvironment executionEnvironment()
@@ -463,12 +459,14 @@ public class MavenGoals
         props.add(element(name("cargo.rmi.port"), String.valueOf(rmiPort)));
         props.add(element(name("cargo.jvmargs"), webappContext.getJvmArgs()));
 
+        int startupTimeout = webappContext.getStartupTimeout();
+        if (Boolean.FALSE.equals(webappContext.getSynchronousStartup()))
+        {
+            startupTimeout = 0;
+        }
+
         executeMojo(
-                plugin(
-                        groupId("org.twdata.maven"),
-                        artifactId("cargo-maven2-plugin"),
-                        version(pluginArtifactIdToVersionMap.get("cargo-maven2-plugin"))
-                ),
+                cargo(webappContext.getSynchronousStartup()),
                 goal("start"),
                 configuration(
                         element(name("wait"), "false"),
@@ -479,7 +477,7 @@ public class MavenGoals
                                 element(name("output"), webappContext.getOutput()),
                                 element(name("systemProperties"), sysProps.toArray(new Element[sysProps.size()])),
                                 element(name("dependencies"), deps.toArray(new Element[deps.size()])),
-                                element(name("timeout"), String.valueOf(webappContext.getStartupTimeout()))
+                                element(name("timeout"), String.valueOf(startupTimeout))
                         ),
                         element(name("configuration"),
                                 element(name("home"), container.getConfigDirectory(getBuildDirectory(), productInstanceId)),
@@ -501,6 +499,34 @@ public class MavenGoals
                 executionEnvironment()
         );
         return actualHttpPort;
+    }
+
+    /**
+     * Provides the cargo maven plugin definition:<ul>
+     * <li>TWData Cargo has always been used in Amps. It's a fork of CodeHaus Cargo.</li>
+     * <li>The CodeHaus has an advantage from version 1.0.2: with a timeout of 0s, it doesn't check whether the application is
+     * up and running (Twdata's version fails in this case), thus allowing applications to start in parallel.</li>
+     *
+     * @param synchronous if explicitly false, will start with the CodeHaus implementation. If true or null,
+     * will start with the traditional TWData implementation. Default is true.
+     */
+    private Plugin cargo(Boolean synchronous)
+    {
+        // Use TWData Cargo by default, except if it's required to start asynchronously
+        if (Boolean.FALSE.equals(synchronous))
+        {
+            return plugin(
+                    groupId("org.codehaus.cargo"),
+                    artifactId("cargo-maven2-plugin"),
+                    version(pluginArtifactIdToVersionMap.get("org.codehaus.cargo:cargo-maven2-plugin")));
+        }
+        else
+        {
+            return plugin(
+                    groupId("org.twdata.maven"),
+                    artifactId("cargo-maven2-plugin"),
+                    version(pluginArtifactIdToVersionMap.get("cargo-maven2-plugin")));
+        }
     }
 
     public static String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
@@ -638,16 +664,14 @@ public class MavenGoals
     {
         final Container container = findContainer(containerId);
 
-        // Note: homeDirectory can't be null.
-        // Cargo throws "You must set the mandatory [home] property" if it's launched with wait=true
-        // and you send a 'stop' in parallel.
+        // Note: homeDirectory is never null when you debug the executorMojo.
+        // TWData Cargo throws "You must set the mandatory [home] property" when stopping in a few situations:
+        // -when amps:run is still running
+        // -when using CodeHaus Cargo to start and TWData to stop.
 
         executeMojo(
-                plugin(
-                        groupId("org.twdata.maven"),
-                        artifactId("cargo-maven2-plugin"),
-                        version(pluginArtifactIdToVersionMap.get("cargo-maven2-plugin"))
-                ),
+                // We use the same plugin to stop and start. This doesn't mean it's asynchronous.
+                cargo(webappContext.getSynchronousStartup()),
                 goal("stop"),
                 configuration(
                         element(name("container"),

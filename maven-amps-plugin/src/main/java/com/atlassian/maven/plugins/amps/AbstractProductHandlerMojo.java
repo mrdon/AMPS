@@ -8,6 +8,8 @@ import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
@@ -19,6 +21,9 @@ import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -286,6 +291,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoParameter
     private String output;
+
+    /**
+     * Start the products in parallel (TestGroups and Studio).
+     */
+    @MojoParameter (expression = "${parallel}", defaultValue = "false")
+    protected boolean parallel;
 
 
     protected Product createDefaultProductContext() throws MojoExecutionException
@@ -630,13 +641,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                 }
                 catch (TimeoutException e)
                 {
-                    getLog().info(product.getInstanceId() + ": Didn't shut down in time");
+                    getLog().info(product.getInstanceId() + " shutdown: Didn't return in time");
                     successful = false;
                     task.cancel(true);
-                }
-                if (successful)
-                {
-                    getLog().info(product.getInstanceId() + ": Stopped");
                 }
             }
             long after = System.nanoTime();
@@ -649,6 +656,111 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         catch (ExecutionException e)
         {
             throw new MojoExecutionException("Exception while stopping the products", e);
+        }
+
+        // If products were launched in parallel, check they are stopped: CodeHaus Cargo returns before
+        // products are down.
+        if (parallel)
+        {
+            waitForProducts(productExecutions, false);
+        }
+    }
+
+
+    /**
+     * Waits until all products are running or stopped
+     * @param startingUp true if starting up the products, false if shutting down.
+     */
+    protected void waitForProducts(List<ProductExecution> productExecutions, boolean startingUp) throws MojoExecutionException
+    {
+        for (ProductExecution productExecution : productExecutions)
+        {
+            pingRepeatedly(productExecution.getProduct(), startingUp);
+        }
+    }
+
+    /**
+     * Ping the product until it's up or stopped
+     * @param startingUp true if applications are expected to be up; false if applications are expected to be brought down
+     * @throws MojoExecutionException if the product didn't have the expected behaviour beofre the timeout
+     */
+    private void pingRepeatedly(Product product, boolean startingUp) throws MojoExecutionException
+    {
+        if (product.getHttpPort() != 0)
+        {
+            String url = "http://" + product.getServer() + ":" + product.getHttpPort();
+            if (StringUtils.isNotBlank(product.getContextPath()))
+            {
+                url = url + product.getContextPath();
+            }
+
+            int timeout = startingUp ? product.getStartupTimeout() : product.getShutdownTimeout();
+            final long end = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeout);
+            boolean interrupted = false;
+            boolean success = false;
+            String lastMessage = "";
+
+            // keep retrieving from the url until a good response is returned, under a time limit.
+            while (!success && !interrupted && System.nanoTime() < end)
+            {
+                HttpURLConnection connection = null;
+                try
+                {
+                    URL urlToPing = new URL(url);
+                    connection = (HttpURLConnection) urlToPing.openConnection();
+                    int response = connection.getResponseCode();
+                    // Tomcat returns 404 until the webapp is up
+                    lastMessage = "Last response code is " + response;
+                    if (startingUp)
+                    {
+                        success = response < 400;
+                    }
+                    else
+                    {
+                        success = response >= 400;
+                    }
+                }
+                catch (IOException e)
+                {
+                    lastMessage = e.getMessage();
+                    success = !startingUp;
+                }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        try
+                        {
+                            connection.getInputStream().close();
+                        }
+                        catch (IOException e)
+                        {
+                            // Don't do anything
+                        }
+                    }
+                }
+
+                if (!success)
+                {
+                    getLog().info("Waiting for " + url + (startingUp ? "" : " to stop"));
+                    try
+                    {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        Thread.currentThread().interrupt();
+                        interrupted = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!success)
+            {
+                throw new MojoExecutionException(String.format("The product %s didn't %s after %ds at %s. %s",
+                        product.getInstanceId(), startingUp ? "start" : "stop", TimeUnit.MILLISECONDS.toSeconds(timeout), url, lastMessage));
+            }
         }
     }
 
@@ -730,4 +842,24 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     }
 
     protected abstract void doExecute() throws MojoExecutionException, MojoFailureException;
+
+    protected void setParallelMode(List<ProductExecution> executions)
+    {
+        // Apply the configuration of the mojo to the products
+        for (ProductExecution execution : executions)
+        {
+            Product product = execution.getProduct();
+            if (parallel)
+            {
+                if (product.getSynchronousStartup() == null)
+                {
+                    product.setSynchronousStartup(Boolean.FALSE);
+                }
+            }
+            else
+            {
+                product.setSynchronousStartup(Boolean.TRUE);
+            }
+        }
+    }
 }

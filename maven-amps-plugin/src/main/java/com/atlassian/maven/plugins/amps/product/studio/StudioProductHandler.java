@@ -115,8 +115,8 @@ final public class StudioProductHandler extends AmpsProductHandler
             instanceIds.add(STUDIO_CROWD);
             instanceIds.add(STUDIO_JIRA);
             instanceIds.add(STUDIO_CONFLUENCE);
-            instanceIds.add(STUDIO_FECRU);
             instanceIds.add(STUDIO_BAMBOO);
+            instanceIds.add(STUDIO_FECRU);
         }
         return instanceIds;
     }
@@ -272,19 +272,36 @@ final public class StudioProductHandler extends AmpsProductHandler
         for (ProductExecution execution : dependantProducts)
         {
             // Each product provides some configuration info
+
+            // JIRA, Confluence and Bamboo support the parallel startup;
+            // Crowd must be started synchronously because there's a race condition
+            // and Fisheye doesn't support parallel startup.
+
             Product product = execution.getProduct();
             if (STUDIO_CROWD.equals(product.getId()))
             {
                 studioProperties.setCrowd(product);
+                if (product.getSynchronousStartup() == null)
+                {
+                    product.setSynchronousStartup(Boolean.TRUE);
+                }
             }
             else if (STUDIO_CONFLUENCE.equals(product.getId()))
             {
                 studioProperties.setConfluence(product);
+                if (product.getSynchronousStartup() == null)
+                {
+                    product.setSynchronousStartup(studioContext.getSynchronousStartup());
+                }
             }
             else if (STUDIO_JIRA.equals(product.getId()))
             {
                 studioProperties.setJira(product);
                 confluenceStandalone = false;
+                if (product.getSynchronousStartup() == null)
+                {
+                    product.setSynchronousStartup(studioContext.getSynchronousStartup());
+                }
             }
             else if (STUDIO_FECRU.equals(product.getId()))
             {
@@ -295,6 +312,10 @@ final public class StudioProductHandler extends AmpsProductHandler
             {
                 studioProperties.setBamboo(product);
                 confluenceStandalone = false;
+                if (product.getSynchronousStartup() == null)
+                {
+                    product.setSynchronousStartup(studioContext.getSynchronousStartup());
+                }
             }
             else
             {
