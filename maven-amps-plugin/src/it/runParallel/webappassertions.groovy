@@ -39,5 +39,5 @@ else if ("stop".equals(System.getProperty("step")))
 }
 else
 {
-    assert false, "A wrong value was passed to it/run/webappassertions.groovy: -Dstep=" + System.getProperty("step");
+    assert false, "A wrong value was passed to it/runParallel/webappassertions.groovy: -Dstep=" + System.getProperty("step");
 }

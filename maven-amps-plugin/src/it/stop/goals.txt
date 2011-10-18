@@ -1,2 +1,0 @@
-${shitty.product}:run ${shitty.product}:stop org.codehaus.groovy.maven:gmaven-plugin::execute
-clean

@@ -51,7 +51,7 @@
                 generateManifestWithNoInstructions, generateObr, integrationTest,
                 <!-- Commented out until Bamboo doesn't hang when multiple instances are used-->
                 <!-- integrationTestWithTestGroup, -->
-                jarWithExistingManifest, run, stop
+                jarWithExistingManifest, run, runParallel, stop
                 unitTest, validateManifestSkipValidation, validateManifestWithInvalidManifest,
                 validateManifestWithValidManifest
                 </tests>

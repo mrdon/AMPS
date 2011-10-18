@@ -2,10 +2,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps-plugin-stop</artifactId>
+    <artifactId>maven-amps-plugin-run</artifactId>
     <packaging>atlassian-plugin</packaging>
     <version>testing</version>
-    <name>TestStop</name>
+    <name>TestRun</name>
 
     <build>
         <plugins>
@@ -26,7 +26,7 @@
                 <artifactId>gmaven-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
-                    <source>${project.build.directory}/it/stop/webappassertions.groovy</source>
+                    <source>${project.build.directory}/it/runParallel/webappassertions.groovy</source>
                     <classpath>
                         <element>
                             <groupId>org.codehaus.groovy</groupId>
