@@ -1,0 +1,12 @@
+<atlassian-plugin key="test" plugins-version="2">
+
+    <plugin-info>
+        <description>Test CLI Plugin</description>
+        <version>1</version>
+    </plugin-info>
+
+    <servlet name="CliServlet" class="com.atlassian.amps.test.cli.CliServlet" key="cli">
+        <url-pattern>/testcli</url-pattern>
+    </servlet>
+
+</atlassian-plugin>

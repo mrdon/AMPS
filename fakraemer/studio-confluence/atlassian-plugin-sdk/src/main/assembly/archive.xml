@@ -1,0 +1,80 @@
+<assembly>
+    <formats>
+        <format>zip</format>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <fileSets>
+        <!-- Maven -->
+        <!-- want to chmod (u+x) the .sh files.  to do this we collect the files in seperate
+             filesets so we can chmod just the .sh files. -->
+        <fileSet>
+            <directory>target/apache-maven-${maven.version}/</directory>
+            <outputDirectory>apache-maven</outputDirectory>
+            <includes>
+                <include>bin/mvn*</include>
+            </includes>
+
+            <fileMode>0744</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>target/apache-maven-${maven.version}/</directory>
+            <outputDirectory>apache-maven</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>bin/mvn*</exclude>
+                <exclude>LICENSE.txt</exclude>
+                <exclude>NOTICE.txt</exclude>
+                <exclude>README.txt</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>target/apache-maven-${maven.version}/</directory>
+            <outputDirectory>apache-maven/maven-docs</outputDirectory>
+            <includes>
+                <include>LICENSE.txt</include>
+                <include>NOTICE.txt</include>
+                <include>README.txt</include>
+            </includes>
+        </fileSet>
+
+        <!-- the repository -->
+        <fileSet>
+            <directory>target/repository</directory>
+            <outputDirectory>repository</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- SH files are chmod +x to be executable on unix environments -->
+        <fileSet>
+            <directory>target/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.bat</exclude>
+            </excludes>
+            <fileMode>0744</fileMode>
+            <filtered>true</filtered>
+        </fileSet>
+
+        <!-- BAT files are not chmod +x to prevent autocomplete expansion on shell -->
+        <fileSet>
+            <directory>target/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>**/*.bat</include>
+            </includes>
+            <filtered>true</filtered>
+        </fileSet>
+
+    </fileSets>
+
+
+</assembly>

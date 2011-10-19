@@ -1,0 +1,5 @@
+#set( $mvnCommand = "package" )
+
+#set( $goalhelp = "Packages the plugin artifacts (runs mvn $mvnCommand)." )
+
+#set( $opts = [] )

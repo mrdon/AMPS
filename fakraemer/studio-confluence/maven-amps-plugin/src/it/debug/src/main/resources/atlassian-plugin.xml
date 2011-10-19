@@ -1,0 +1,8 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+
+    <plugin-info>
+        <description>Test Run Plugin</description>
+        <version>1</version>
+    </plugin-info>
+
+</atlassian-plugin>

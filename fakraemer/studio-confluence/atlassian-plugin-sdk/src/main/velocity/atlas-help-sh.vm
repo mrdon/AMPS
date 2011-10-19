@@ -1,0 +1,51 @@
+#!/bin/sh
+
+VERBOSE=false
+if [ $# -ge 1 ]; then
+  case "$1" in
+    "-v" | "--verbose")
+        VERBOSE=true;;
+  esac
+fi
+
+echo
+echo "Atlassian Plugin SDK Help"
+echo "========================="
+echo
+echo "The following scripts are available to assist with plugin development"
+echo
+#foreach( $command in $commandNames )
+
+    #parse( "commands/${command}" )
+    echo "atlas-${command}"
+    echo "    ${goalhelp}"
+    echo
+
+    #if ($opts.size() > 0)
+        if [ ${dollar}{VERBOSE} = "true" ]; then
+            echo "    The following options are available:"
+            #foreach($o in $opts)
+                    #if ($o.short)
+                        #if($o.flag)
+                            echo "    -$o.short, --$o.name"
+                        #else
+                            echo "    -$o.short [value], --$o.name [value]"
+                        #end
+                    #else
+                        #if($o.flag)
+                            echo "    --$o.name"
+                        #else
+                            echo "    --$o.name [value]"
+                        #end
+                    #end
+                    echo "        $o.description"
+                    echo
+            #end
+        fi
+    #end
+
+#end
+
+echo "For detailed information on a particular script, use the '--help' option, eg. 'atlas-run --help'."
+echo "For an entire list of all scripts and their parameters, run 'atlas-help --verbose'."
+echo

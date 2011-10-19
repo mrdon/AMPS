@@ -1,0 +1,5 @@
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-confluence-plugin:$version:create-plugin-module" )
+
+#set( $goalhelp = "Creates a Confluence Plugin Module" )
+
+#set( $opts = [] )

@@ -1,0 +1,5 @@
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-dispatcher-plugin:$version:create-home-zip" )
+
+#set( $goalhelp = "Creates a test-resources zip of the home directory (runs mvn $mvnCommand)." )
+
+#set( $opts = [] )
