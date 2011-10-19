@@ -145,11 +145,12 @@ public class Product
     private int shutdownTimeout = 0;
 
     /**
-     * Waits until the application is up before launching the next application.
-     * Null means it wasn't set explicitly: Default is true.
-     *
-     * There is no reason for the user to modify this property,
-     * as <parallel>true</parallel> will set the right values (see AbstractProductHandlerMojo).
+     * Waits until the application is up before proceeding to the next one (blocking call).<ul>
+     * <li>If -Dparallel is not specified, default is TRUE for all products.</li>
+     * <li>If -Dparallel is specified, default is FALSE except for Studio-Crowd and FeCru.</li>
+     * <li>The pom.xml overrides the default values.</li>
+     * <li>Use -Dparallel to start products in parallel. {@link AbstractProductHandlerMojo#setParallelMode(List)} sets the default values according to this parameter.</li>
+     * </ul>
      */
     private Boolean synchronousStartup;
 
@@ -237,8 +238,8 @@ public class Product
         prod.setDataVersion(productDataVersion == null ? product.getDataVersion() : productDataVersion);
         prod.setLog4jProperties(log4jProperties == null ? product.getLog4jProperties() : log4jProperties);
         prod.setJvmArgs(jvmArgs == null ? product.getJvmArgs() : jvmArgs);
-        prod.setVersion(groupId == null ? product.getGroupId() : groupId);
-        prod.setVersion(artifactId == null ? product.getArtifactId() : artifactId);
+        prod.setGroupId(groupId == null ? product.getGroupId() : groupId);
+        prod.setArtifactId(artifactId == null ? product.getArtifactId() : artifactId);
         prod.setVersion(version == null ? product.getVersion() : version);
 
         prod.setServer(server == null ? product.getServer() : server);
