@@ -220,8 +220,8 @@ public class Product
         prod.setDataVersion(productDataVersion == null ? product.getDataVersion() : productDataVersion);
         prod.setLog4jProperties(log4jProperties == null ? product.getLog4jProperties() : log4jProperties);
         prod.setJvmArgs(jvmArgs == null ? product.getJvmArgs() : jvmArgs);
-        prod.setVersion(groupId == null ? product.getGroupId() : groupId);
-        prod.setVersion(artifactId == null ? product.getArtifactId() : artifactId);
+        prod.setGroupId(groupId == null ? product.getGroupId() : groupId);
+        prod.setArtifactId(artifactId == null ? product.getArtifactId() : artifactId);
         prod.setVersion(version == null ? product.getVersion() : version);
 
         prod.setServer(server == null ? product.getServer() : server);
