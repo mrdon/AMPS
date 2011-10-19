@@ -1,20 +1,21 @@
 package com.atlassian.maven.plugins.amps.product.studio;
 
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_CONFLUENCE;
-import static java.lang.String.format;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.product.ConfluenceProductHandler;
+
+import org.apache.maven.plugin.MojoExecutionException;
+
+import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_CONFLUENCE;
+import static java.lang.String.format;
 
 /**
  * Handler for Studio-Confluence
@@ -73,7 +74,7 @@ public class StudioConfluenceProductHandler extends ConfluenceProductHandler imp
     public List<ProductArtifact> getExtraContainerDependencies()
     {
         return Arrays.asList(
-                new ProductArtifact("hsqldb", "hsqldb", "1.8.0.5"),
+                new ProductArtifact("org.hsqldb", "hsqldb", "2.2.4"),
                 new ProductArtifact("jta", "jta", "1.0.1"));
     }
 
