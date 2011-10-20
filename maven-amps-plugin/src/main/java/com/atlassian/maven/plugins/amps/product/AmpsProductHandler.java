@@ -1,6 +1,7 @@
 package com.atlassian.maven.plugins.amps.product;
 
 
+import static org.apache.commons.io.FileUtils.copyDirectory;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import java.io.File;
@@ -187,6 +188,22 @@ public abstract class AmpsProductHandler implements ProductHandler
         return productHomeZip;
     }
 
+    protected void overrideAndPatchHomeDir(File homeDir, final Product ctx) throws MojoExecutionException
+    {
+        try
+        {
+            final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getInstanceId() + "-home");
+            if (srcDir.exists() && homeDir.exists())
+            {
+                copyDirectory(srcDir, homeDir);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new MojoExecutionException("Unable to override files using src/test/resources", e);
+        }
+    }
+
 
     /**
      * Lists parameters which must be replaced in the configuration files of the home directory.
@@ -235,8 +252,12 @@ public abstract class AmpsProductHandler implements ProductHandler
     /**
      * Encodes a String for a Properties file. Escapes : and =.
      */
-    private String propertiesEncode(String decoded)
+    protected String propertiesEncode(String decoded)
     {
+        if (decoded == null)
+        {
+            return null;
+        }
         String replacement1 = decoded.replaceAll(":", "\\:");
         String replacement2 = replacement1.replaceAll("=", "\\=");
         return replacement2;

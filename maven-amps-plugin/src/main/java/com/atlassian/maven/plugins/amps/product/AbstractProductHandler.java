@@ -78,14 +78,7 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
             }
 
             // Always override files regardless of home directory existing or not
-            try
-            {
-                overrideAndPatchHomeDir(homeDir, ctx);
-            }
-            catch (IOException e)
-            {
-                throw new MojoExecutionException("Unable to override files using src/test/resources", e);
-            }
+            overrideAndPatchHomeDir(homeDir, ctx);
 
             return homeDir;
         }
@@ -134,15 +127,6 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
         catch (final IOException ex)
         {
             throw new MojoExecutionException("Unable to copy home directory", ex);
-        }
-    }
-
-    private void overrideAndPatchHomeDir(File homeDir, final Product ctx) throws IOException
-    {
-        final File srcDir = new File(project.getBasedir(), "src/test/resources/" + ctx.getInstanceId() + "-home");
-        if (srcDir.exists() && homeDir.exists())
-        {
-            copyDirectory(srcDir, homeDir);
         }
     }
 

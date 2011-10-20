@@ -73,7 +73,7 @@ public class StudioConfluenceProductHandler extends ConfluenceProductHandler imp
     public List<ProductArtifact> getExtraContainerDependencies()
     {
         return Arrays.asList(
-                new ProductArtifact("hsqldb", "hsqldb", "1.8.0.5"),
+                new ProductArtifact("org.hsqldb", "hsqldb", "2.2.4"),
                 new ProductArtifact("jta", "jta", "1.0.1"));
     }
 

@@ -99,8 +99,6 @@ public class FeCruProductHandler extends AbstractProductHandler
         replacements.add(new Replacement("@HTTP_CONTEXT@", String.valueOf(ctx.getContextPath()), false));
         replacements.add(new Replacement("@HOME_DIR@", String.valueOf(homeDirectory.getAbsolutePath())));
         replacements.add(new Replacement("@SITE_URL@", String.valueOf(siteUrl(ctx))));
-
-        // Note: Unfortunately, in config.xml, FeCru sometimes uses url encoding.
         return replacements;
     }
 

@@ -13,15 +13,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.surefire.shade.org.apache.commons.lang.StringUtils;
 
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
@@ -333,6 +335,27 @@ final public class StudioProductHandler extends AmpsProductHandler
                 product.setVersion(studioProperties.getVersion());
             }
         }
+
+        // Sets the paths for non-products
+        File studioHomeDir = getHomeDirectory(studioContext);
+        File studioCommonsDir = studioHomeDir.getParentFile();
+        File svnHomeDir = new File(studioCommonsDir, "svn-home");
+        File webDavDir = new File(studioCommonsDir, "webdav-home");
+        String svnPublicUrl;
+        if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows"))
+        {
+            svnPublicUrl = "file:///" + svnHomeDir.getAbsolutePath();
+            log.warn("Studio is only designed to run on Linux systems.");
+        }
+        else
+        {
+            svnPublicUrl = "file://" + svnHomeDir.getAbsolutePath();
+        }
+
+        studioProperties.setStudioHome(studioHomeDir.getAbsolutePath());
+        studioProperties.setSvnRoot(svnHomeDir.getAbsolutePath());
+        studioProperties.setSvnPublicUrl(svnPublicUrl);
+        studioProperties.setWebDavHome(webDavDir.getAbsolutePath());
     }
 
     /**
@@ -412,7 +435,7 @@ final public class StudioProductHandler extends AmpsProductHandler
         StudioProperties properties = getStudioProperties(studio);
 
         // All homes are exported, including the studioInstanceId/home
-        File studioHomeDir = getHomeDirectory(studio);
+        File studioHomeDir = new File(properties.getStudioHome());
         File studioCommonsDir = studioHomeDir.getParentFile();
 
         // Extracts the zip / copies the homes to studioInstanceId/
@@ -425,33 +448,17 @@ final public class StudioProductHandler extends AmpsProductHandler
             }
         }
 
-        File svnHomeDir = new File(studioCommonsDir, "svn-home");
+        File svnHomeDir = new File(properties.getSvnRoot());
         if (!svnHomeDir.exists())
         {
             throw new MojoExecutionException("The Studio home zip must contain a '*/*/svn-home' folder");
         }
 
-        File webDavDir = new File(studioCommonsDir, "webdav-home");
+        File webDavDir = new File(properties.getWebDavHome());
         if (!webDavDir.exists())
         {
             throw new MojoExecutionException("The Studio home zip must contain a '*/*/webdav-home' folder");
         }
-
-        String svnPublicUrl;
-        if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows"))
-        {
-            svnPublicUrl = "file:///" + svnHomeDir.getAbsolutePath();
-            log.warn("Studio is only designed to run on Linux systems.");
-        }
-        else
-        {
-            svnPublicUrl = "file://" + svnHomeDir.getAbsolutePath();
-        }
-
-        properties.setStudioHome(studioHomeDir.getAbsolutePath());
-        properties.setSvnRoot(svnHomeDir.getAbsolutePath());
-        properties.setSvnPublicUrl(svnPublicUrl);
-        properties.setWebDavHome(webDavDir.getAbsolutePath());
 
         // Parametrise the files
         parameteriseFiles(studioCommonsDir, studio);
@@ -493,6 +500,9 @@ final public class StudioProductHandler extends AmpsProductHandler
         {
             fecru.setDataPath(new File(studioCommonsDir, "fecru-home").getAbsolutePath());
         }
+
+        // Always override files regardless of home directory existing or not
+        overrideAndPatchHomeDir(studioCommonsDir, studio);
     }
 
     private void parameteriseFiles(File studioSnapshotCopyDir, Product studio) throws MojoExecutionException
@@ -509,6 +519,14 @@ final public class StudioProductHandler extends AmpsProductHandler
         list.add(new File(studioSnapshotDir, STUDIO_INITIAL_DATA_XML));
         list.add(new File(studioSnapshotDir, DEVMODE_HAL_LICENSES_XML));
         list.add(new File(project.getBuild().getTestOutputDirectory(), STUDIO_TEST_PROPERTIES));
+
+        list.add(new File(studioSnapshotDir, "fecru-home/config.xml"));
+        list.add(new File(studioSnapshotDir, "confluence-home/database/confluencedb.log"));
+        list.add(new File(studioSnapshotDir, "confluence-home/database/confluencedb.script"));
+        list.add(new File(studioSnapshotDir, "jira-home/database.log"));
+        list.add(new File(studioSnapshotDir, "jira-home/database.script"));
+        list.add(new File(studioSnapshotDir, "bamboo-home/database.log"));
+        list.add(new File(studioSnapshotDir, "bamboo-home/database.script"));
         return list;
     }
 
@@ -521,19 +539,20 @@ final public class StudioProductHandler extends AmpsProductHandler
         List<Replacement> replacements = super.getReplacements(studio);
         replacements.addAll(new ArrayList<Replacement>()
         {
-            private void putNonReversibleIfNotNull(String key, String value)
-            {
-                if (value != null)
-                {
-                    add(new Replacement(key, value, false));
-                }
-            }
-
             private void putIfNotNull(String key, String value)
             {
-                if (value != null)
+                putIfNotNull(key, value, true);
+            }
+
+            private void putIfNotNull(String key, String value, boolean reversible)
+            {
+                if (reversible && StringUtils.isNotBlank(value))
                 {
                     add(new Replacement(key, value));
+                }
+                else if (value != null)
+                {
+                    add(new Replacement(key, value, false));
                 }
             }
 
@@ -548,14 +567,14 @@ final public class StudioProductHandler extends AmpsProductHandler
                     putIfNotNull("%JIRA-ATTACHMENTS%", attachmentsFolder.getAbsolutePath());
                     putIfNotNull("%JIRA-BASE-URL%", properties.getJiraUrl());
                     putIfNotNull("%JIRA-HOST-URL%", properties.getJiraHostUrl());
-                    putIfNotNull("%JIRA-CONTEXT%", properties.getJiraContextPath());
+                    putIfNotNull("%JIRA-CONTEXT%", properties.getJiraContextPath(), false);
                 }
 
                 if (properties.isConfluenceEnabled())
                 {
                     putIfNotNull("%CONFLUENCE-BASE-URL%", properties.getConfluenceUrl());
                     putIfNotNull("%CONFLUENCE-HOST-URL%", properties.getConfluenceHostUrl());
-                    putIfNotNull("%CONFLUENCE-CONTEXT%", properties.getConfluenceContextPath());
+                    putIfNotNull("%CONFLUENCE-CONTEXT%", properties.getConfluenceContextPath(), false);
                 }
 
                 if (properties.isFisheyeEnabled())
@@ -563,7 +582,7 @@ final public class StudioProductHandler extends AmpsProductHandler
                     putIfNotNull("%FISHEYE-BASE-URL%", properties.getFisheyeUrl());
                     putIfNotNull("%FISHEYE-HOST-URL%", properties.getFisheyeHostUrl());
                     putIfNotNull("%FISHEYE-CONTROL-PORT%", properties.getFisheyeControlPort());
-                    putNonReversibleIfNotNull("%FISHEYE-CONTEXT%", properties.getFisheyeContextPath());
+                    putIfNotNull("%FISHEYE-CONTEXT%", properties.getFisheyeContextPath(), false);
                     putIfNotNull("%FISHEYE-SHUTDOWN-ENABLED%", String.valueOf(firstNotNull(properties.getFisheyeShutdownEnabled(), Boolean.TRUE)));
                 }
 
@@ -571,36 +590,46 @@ final public class StudioProductHandler extends AmpsProductHandler
                 {
                     putIfNotNull("%BAMBOO-BASE-URL%", properties.getBambooUrl());
                     putIfNotNull("%BAMBOO-HOST-URL%", properties.getBambooHostUrl());
-                    putIfNotNull("%BAMBOO-CONTEXT%", properties.getBambooContextPath());
-                    putNonReversibleIfNotNull("%BAMBOO-ENABLED%", "true");
+                    putIfNotNull("%BAMBOO-CONTEXT%", properties.getBambooContextPath(), false);
+                    putIfNotNull("%BAMBOO-ENABLED%", "true", false);
                 }
                 else
                 {
-                    putNonReversibleIfNotNull("%BAMBOO-ENABLED%", "false");
+                    putIfNotNull("%BAMBOO-ENABLED%", "false", false);
                 }
 
                 putIfNotNull("%CROWD-BASE-URL%", properties.getCrowdUrl());
                 putIfNotNull("%CROWD-HOST-URL%", properties.getCrowdHostUrl());
-                putIfNotNull("%CROWD-CONTEXT%", properties.getCrowdContextPath());
+                putIfNotNull("%CROWD-CONTEXT%", properties.getCrowdContextPath(), false);
 
                 putIfNotNull("%SVN-BASE-URL%", properties.getSvnRoot());
                 putIfNotNull("%SVN-PUBLIC-URL%", properties.getSvnPublicUrl());
                 putIfNotNull("%SVN-HOOKS%", properties.getSvnHooks());
 
-                putNonReversibleIfNotNull("%STUDIO-DATA-LOCATION%", "");
+                putIfNotNull("%STUDIO-DATA-LOCATION%", "", false);
                 putIfNotNull("%STUDIO-HOME%", properties.getStudioHome());
-                putNonReversibleIfNotNull("%GAPPS-ENABLED%", Boolean.toString(properties.isGappsEnabled()));
+                putIfNotNull("%GAPPS-ENABLED%", Boolean.toString(properties.isGappsEnabled()), false);
                 if (properties.isGappsEnabled())
                 {
-                    putNonReversibleIfNotNull("%GAPPS-ENABLED%", Boolean.toString(true));
+                    putIfNotNull("%GAPPS-ENABLED%", Boolean.toString(true), false);
                     putIfNotNull("%STUDIO-GAPPS-DOMAIN%", properties.getGappsDomain());
                 }
                 else
                 {
-                    putNonReversibleIfNotNull("%GAPPS-ENABLED%", Boolean.toString(false));
+                    putIfNotNull("%GAPPS-ENABLED%", Boolean.toString(false), false);
                 }
                 putIfNotNull("%STUDIO-WEBDAV-DIRECTORY%", properties.getWebDavHome());
                 putIfNotNull("%STUDIO-SVN-IMPORT-STAGING-DIRECTORY%", properties.getSvnImportStagingDirectory());
+
+                try
+                {
+                    putIfNotNull("%SVN_HOME_URL_ENCODED%", URLEncoder.encode(propertiesEncode(properties.getSvnRoot()), "UTF-8"));
+                }
+                catch (UnsupportedEncodingException badJvm)
+                {
+                    throw new RuntimeException("UTF-8 should be supported on any JVM", badJvm);
+                }
+
             }
         });
         return replacements;
@@ -612,7 +641,7 @@ final public class StudioProductHandler extends AmpsProductHandler
         if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows"))
         {
             log.error("Studio is designed to run on Linux systems. As you can't create a symbolic link for SVN, you " +
-            		"will have problems using SVN, FishEye and Bamboo, and possibly the other products.");
+                    "will have problems using SVN, FishEye and Bamboo, and possibly the other products.");
             return;
         }
 
@@ -772,44 +801,46 @@ final public class StudioProductHandler extends AmpsProductHandler
             products.put("bamboo-home", studioProperties.getBamboo());
 
             // Make each product's home
-            Iterator<String> productKeys = products.keySet().iterator();
-            while (productKeys.hasNext())
+            for (String productHomeName : products.keySet())
             {
-                String productHomeName = productKeys.next();
                 Product product = products.get(productHomeName);
                 if (product != null)
                 {
                     File productDestinationDirectory = new File(studioHome, productHomeName);
-                    copyAndCleanProductHome(product, productDestinationDirectory);
+                    File productHomeDirectory = getHomeDirectory(product);
+
+                    // Delete studio1/{product}-home and replace it with the current product's home
+                    if (productDestinationDirectory.exists())
+                    {
+                        FileUtils.deleteDirectory(productDestinationDirectory);
+                    }
+                    ProjectUtils.createDirectory(productDestinationDirectory);
+                    copyDirectory(productHomeDirectory, productDestinationDirectory);
+
                 }
             }
 
-
             // Un-parametrise the files
             super.cleanupProductHomeForZip(studioProduct, studioHome);
+
+            // Request the products to clean their own files
+            // Do it after Studio cleanup, because Studio will handle "svn-home" in Fecru, which Fecru can't do
+            // (Fecru is not aware of Studio).
+            for (String productHomeName : products.keySet())
+            {
+                Product product = products.get(productHomeName);
+                if (product != null)
+                {
+                    File productDestinationDirectory = new File(studioHome, productHomeName);
+                    ProductHandler handler = ProductHandlerFactory.create(product.getId(), context, goals);
+                    handler.cleanupProductHomeForZip(product, productDestinationDirectory);
+                }
+            }
         }
         catch (IOException ioe)
         {
             throw new MojoExecutionException("Could not copy a product home directory.", ioe);
         }
-
-    }
-
-    private void copyAndCleanProductHome(Product product, File productDestinationDirectory) throws IOException, MojoExecutionException
-    {
-        ProductHandler handler = ProductHandlerFactory.create(product.getId(), context, goals);
-        File productHomeDirectory = getHomeDirectory(product);
-
-        // Delete studio1/{product}-home and replace it with the current product's home
-        if (productDestinationDirectory.exists())
-        {
-            FileUtils.deleteDirectory(productDestinationDirectory);
-        }
-        ProjectUtils.createDirectory(productDestinationDirectory);
-        copyDirectory(productHomeDirectory, productDestinationDirectory);
-
-        // Request the product to clean up
-        handler.cleanupProductHomeForZip(product, productDestinationDirectory);
     }
 
     static String fixWindowsSlashes(final String path)

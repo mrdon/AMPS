@@ -91,13 +91,8 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
     public List<File> getConfigFiles(Product product, File homeDirectory)
     {
         List<File> configFiles = super.getConfigFiles(product, homeDirectory);
-        File script = new File(new File(homeDirectory, "database"), "confluencedb.script");
-        if (!script.exists())
-        {
-            script = new File(new File(homeDirectory, "database"), "confluencedb.log");
-        }
-
-        configFiles.add(script);
+        configFiles.add(new File(new File(homeDirectory, "database"), "confluencedb.script"));
+        configFiles.add(new File(new File(homeDirectory, "database"), "confluencedb.log"));
         configFiles.add(new File(homeDirectory, "confluence.cfg.xml"));
         return configFiles;
     }
