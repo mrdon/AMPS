@@ -37,19 +37,6 @@
         <url>https://studio.atlassian.com/source/browse/AMPS/branches/private/fakraemer/studio-confluence</url>
     </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>atlassian-private</id>
-            <name>Atlassian Private Repository</name>
-            <url>davs://maven.atlassian.com/private</url>
-        </repository>
-        <snapshotRepository>
-            <id>atlassian-private-snapshot</id>
-            <name>Atlassian Private Snapshot Repository</name>
-            <url>davs://maven.atlassian.com/private-snapshot</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <issueManagement>
         <system>JIRA</system>
         <url>https://studio.atlassian.com/browse/AMPS</url>
@@ -280,6 +267,16 @@
             <id>atlassian-documentation</id>
             <url>dav:https://docs.atlassian.com/${project.artifactId}/${project.version}</url>
         </site>
+        <repository>
+            <id>atlassian-private</id>
+            <name>Atlassian Private Repository</name>
+            <url>davs://maven.atlassian.com/private</url>
+        </repository>
+        <snapshotRepository>
+            <id>atlassian-private-snapshot</id>
+            <name>Atlassian Private Snapshot Repository</name>
+            <url>davs://maven.atlassian.com/private-snapshot</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <reporting>
