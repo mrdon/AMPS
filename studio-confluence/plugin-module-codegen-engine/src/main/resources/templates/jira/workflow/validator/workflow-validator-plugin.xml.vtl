@@ -1,0 +1,14 @@
+<workflow-validator key="${MODULE_KEY}"
+                   name="${MODULE_NAME}"
+                   i18n-name-key="${NAME_I18N_KEY}"
+                   class="${FQ_FACTORY_NAME}">
+
+    <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
+
+    <validator-class>${FQ_CLASSNAME}</validator-class>
+
+    <resource type="velocity" name="view" location="templates/validators/${MODULE_KEY}.vm"/>
+    <resource type="velocity" name="input-parameters" location="templates/validators/${MODULE_KEY}-input.vm"/>
+    <resource type="velocity" name="edit-parameters" location="templates/validators/${MODULE_KEY}-input.vm"/>
+
+</workflow-validator>

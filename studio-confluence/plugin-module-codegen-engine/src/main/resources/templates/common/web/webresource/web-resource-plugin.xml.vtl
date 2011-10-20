@@ -1,0 +1,19 @@
+<web-resource
+        name="${MODULE_NAME}"
+        i18n-name-key="${NAME_I18N_KEY}"
+        key="${MODULE_KEY}">
+
+    <description key="${DESCRIPTION_I18N_KEY}">${DESCRIPTION}</description>
+    #resources($RESOURCES)
+    #dependencies($DEPENDENCIES)
+    #contexts($CONTEXTS)
+    #transformations($TRANSFORMATIONS)
+    #if($CONDITIONS && !$CONDITIONS.isEmpty)
+        #foreach($condition in $CONDITIONS)
+            #conditions($condition)
+        #end
+    #end
+
+
+
+</web-resource>

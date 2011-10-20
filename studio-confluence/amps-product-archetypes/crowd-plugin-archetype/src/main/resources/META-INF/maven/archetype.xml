@@ -1,0 +1,17 @@
+<archetype>
+    <id>crowd-plugin-archetype</id>
+    <sources>
+        <source>src/main/java/ExampleServlet.java</source>
+    </sources>
+    <testSources>
+        <source>src/test/java/ExampleServletTest.java</source>
+    </testSources>
+
+    <resources>
+        <resource filtered="true">src/main/resources/atlassian-plugin.xml</resource>
+        <resource filtered="false">src/test/java/it/IntegrationTestMyPlugin.java</resource>
+        <resource filtered="false">src/test/resources/TEST_RESOURCES_README.TXT</resource>
+        <resource filtered="false">README.TXT</resource>
+        <resource filtered="false">LICENSE.TXT</resource>
+    </resources>
+</archetype>

@@ -1,0 +1,24 @@
+##-----------------------------------------------------------------------------
+#set( $dollar = '$' )
+##-----------------------------------------------------------------------------
+#set( $commands = $files.file( "${basedir}/src/main/velocity/commands" ).listFiles() )
+##-----------------------------------------------------------------------------
+##
+## GENERATE SHELL AND BAT MAVEN WRAPPER SCRIPTS
+##
+#set( $commandNames = [] )
+#foreach( $cmd in $commands )
+  #if( $cmd.isFile() )
+    #set( $mojo = $cmd.name )
+    $commandNames.add($cmd.name)
+    $generator.parse( "atlas-command-sh.vm", "atlas-${mojo}", "mojo", $mojo )
+    $generator.parse( "atlas-command-bat.vm", "atlas-${mojo}.bat", "mojo", $mojo )
+  #end
+#end
+##-----------------------------------------------------------------------------
+##
+## GENERATE HELP SCRIPTS
+##
+$generator.parse( "atlas-help-sh.vm", "atlas-help", "commandNames", $commandNames )
+$generator.parse( "atlas-help-bat.vm", "atlas-help.bat", "commandNames", $commandNames )
+##-----------------------------------------------------------------------------

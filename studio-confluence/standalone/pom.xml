@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.atlassian.amps</groupId>
+        <artifactId>atlassian-amps-parent</artifactId>
+        <version>3.7-studio-confluence-alpha-1</version>
+    </parent>
+
+    <artifactId>standalone</artifactId>
+    <packaging>pom</packaging>
+
+    <name>AMPS Standalone</name>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.atlassian.maven.plugins</groupId>
+                    <artifactId>maven-amps-plugin</artifactId>
+                    <version>3.7-studio-confluence-alpha-1</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <products>
+                            <product>
+                                <id>studio</id>
+                                <version>${studio.version}</version>
+                                <dataVersion>${studio.data.version}</dataVersion>
+                                <output>${project.build.directory}/studio-${studio.version}.log</output>
+                            </product>
+                            <product>
+                                <id>refapp</id>
+                                <version>${refapp.version}</version>
+                                <output>${project.build.directory}/refapp-${refapp.version}.log</output>
+                            </product>
+                            <product>
+                                <id>confluence</id>
+                                <version>${confluence.version}</version>
+                                <dataVersion>${confluence.data.version}</dataVersion>
+                                <output>${project.build.directory}/confluence-${confluence.version}.log</output>
+                            </product>
+                            <product>
+                                <id>jira</id>
+                                <version>${jira.version}</version>
+                                <dataVersion>${jira.data.version}</dataVersion>
+                                <output>${project.build.directory}/jira-${jira.version}.log</output>
+                            </product>
+                            <product>
+                                <id>bamboo</id>
+                                <version>${bamboo.version}</version>
+                                <dataVersion>${bamboo.data.version}</dataVersion>
+                                <output>${project.build.directory}/bamboo-${bamboo.version}.log</output>
+                            </product>
+                            <product>
+                                <id>fecru</id>
+                                <version>${fecru.version}</version>
+                                <dataVersion>${fecru.data.version}</dataVersion>
+                                <output>${project.build.directory}/fecru-${fecru.version}.log</output>
+                            </product>
+                            <product>
+                                <id>crowd</id>
+                                <version>${crowd.version}</version>
+                                <dataVersion>${crowd.data.version}</dataVersion>
+                                <output>${project.build.directory}/crowd-${crowd.version}.log</output>
+                            </product>
+                        </products>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

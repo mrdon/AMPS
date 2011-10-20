@@ -1,0 +1,22 @@
+#set( $dollar = '$' )
+<atlassian-plugin key="${dollar}{project.groupId}.${dollar}{project.artifactId}" name="${dollar}{project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${dollar}{project.description}</description>
+        <version>${dollar}{project.version}</version>
+        <vendor name="${dollar}{project.organization.name}" url="${dollar}{project.organization.url}" />
+    </plugin-info>
+
+    <!-- internationalize your plugin -->
+    <resource type="i18n" name="${groupId} language" location="english"/>
+
+    <!-- defines an example task -->
+    <taskType name="${artifactId}" class="${package}.ExampleTask" key="test">
+      <description>A simple Hello World Task</description>
+      <!-- Categories available in 3.1: "builder", "test" and "deployment"
+      <category name=""/>
+      -->
+      <configuration class="${package}.ExampleTaskConfigurator"/>
+      <resource type="freemarker" name="edit" location="editExampleTask.ftl"/>
+      <resource type="freemarker" name="view" location="viewExampleTask.ftl"/>
+    </taskType>
+</atlassian-plugin>

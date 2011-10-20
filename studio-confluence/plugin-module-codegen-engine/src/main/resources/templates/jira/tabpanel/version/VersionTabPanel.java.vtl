@@ -1,0 +1,32 @@
+package ${PACKAGE};
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.atlassian.jira.plugin.versionpanel.VersionTabPanel;
+import com.atlassian.jira.plugin.versionpanel.VersionTabPanelModuleDescriptor;
+import com.atlassian.jira.plugin.versionpanel.BrowseVersionContext;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ${CLASSNAME} implements VersionTabPanel
+{
+    private static final Logger log = LoggerFactory.getLogger(${CLASSNAME}.class);
+    protected VersionTabPanelModuleDescriptor descriptor;
+
+    public void init(VersionTabPanelModuleDescriptor descriptor)
+    {
+        this.descriptor = descriptor;
+    }
+
+    public String getHtml(BrowseVersionContext context)
+    {
+        final Map<String, Object> velocityParams = new HashMap<String,Object>();
+
+        return descriptor.getHtml("view", velocityParams);
+    }
+
+    public boolean showPanel(BrowseVersionContext context)
+    {
+        return true;
+    }
+}
