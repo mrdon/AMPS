@@ -101,6 +101,16 @@ public class Product
     private String fastdevVersion;
 
     /**
+     * Flag to indicate whether or not to enable automatic bundling of DevToolbox.
+     */
+    private Boolean enableDevToolbox;
+
+    /**
+     * Version of the Developer Toolbox plugin
+     */
+    private String devToolboxVersion;
+
+    /**
      * Product id - nickname of the product to run
      */
     private String id;
@@ -208,6 +218,8 @@ public class Product
         prod.setWebConsoleVersion(webConsoleVersion == null ? product.getWebConsoleVersion() : webConsoleVersion);
         prod.setEnableFastdev(enableFastdev == null ? product.isEnableFastdev() : enableFastdev);
         prod.setFastdevVersion(fastdevVersion == null ? product.getFastdevVersion() : fastdevVersion);
+        prod.setEnableDevToolbox(enableDevToolbox == null ? product.isEnableDevToolbox() : enableDevToolbox);
+        prod.setDevToolboxVersion(devToolboxVersion == null ? product.getDevToolboxVersion() : devToolboxVersion);
         prod.setRestVersion(restVersion == null ? product.getRestVersion() : restVersion);
         prod.setPdkVersion(pdkVersion == null ? product.getPdkVersion() : pdkVersion);
         prod.setSalVersion(salVersion == null ? product.getSalVersion() : salVersion);
@@ -485,6 +497,26 @@ public class Product
     public void setFastdevVersion(String fastdevVersion)
     {
         this.fastdevVersion = fastdevVersion;
+    }
+
+    public Boolean isEnableDevToolbox()
+    {
+        return enableDevToolbox;
+    }
+
+    public void setEnableDevToolbox(final Boolean enableDevToolbox)
+    {
+        this.enableDevToolbox = enableDevToolbox;
+    }
+
+    public String getDevToolboxVersion()
+    {
+        return devToolboxVersion;
+    }
+
+    public void setDevToolboxVersion(String devToolboxVersion)
+    {
+        this.devToolboxVersion = devToolboxVersion;
     }
 
     public void setWebConsoleVersion(String webConsoleVersion)

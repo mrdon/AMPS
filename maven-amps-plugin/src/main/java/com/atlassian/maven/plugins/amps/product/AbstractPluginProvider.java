@@ -41,6 +41,11 @@ public abstract class AbstractPluginProvider implements PluginProvider
             artifacts.addAll(getFastdevArtifacts(product.getFastdevVersion()));
         }
 
+        if (product.isEnableDevToolbox() && product.getDevToolboxVersion() != null)
+        {
+            artifacts.addAll(getDevToolboxArtifacts(product.getDevToolboxVersion()));
+        }
+
         return artifacts;
     }
 
@@ -63,6 +68,11 @@ public abstract class AbstractPluginProvider implements PluginProvider
     protected Collection<ProductArtifact> getFastdevArtifacts(String fastdevVersion)
     {
         return Collections.singletonList(new ProductArtifact("com.atlassian.labs", "fastdev-plugin", fastdevVersion));
+    }
+
+    protected Collection<ProductArtifact> getDevToolboxArtifacts(String devToolboxVersion)
+    {
+        return Collections.singletonList(new ProductArtifact("com.atlassian.devrel", "developer-toolbox-plugin", devToolboxVersion));
     }
 
     protected Collection<ProductArtifact> getRestArtifacts(String restVersion)

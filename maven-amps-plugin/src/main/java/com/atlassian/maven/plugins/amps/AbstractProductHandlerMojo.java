@@ -47,6 +47,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private static final String DEFAULT_PDK_VERSION = "0.4";
     private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
     private static final String DEFAULT_FASTDEV_VERSION = "1.8";
+    private static final String DEFAULT_DEV_TOOLBOX_VERSION = "1.0.1";
 
     /**
       * Default product startup timeout: three minutes
@@ -160,6 +161,18 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoParameter(expression = "${fastdev.version}", defaultValue = DEFAULT_FASTDEV_VERSION)
     protected String fastdevVersion;
+
+    /**
+     * If DevToolbox should be enabled
+     */
+    @MojoParameter(expression = "${devtoolbox.enable}", defaultValue = "true")
+    protected boolean enableDevToolbox;
+
+    /**
+     * The version of DevToolbox to bundle
+     */
+    @MojoParameter(expression = "${devtoolbox.version}", defaultValue = DEFAULT_DEV_TOOLBOX_VERSION)
+    protected String devToolboxVersion;
 
     @MojoParameter
     private List<ProductArtifact> pluginArtifacts = new ArrayList<ProductArtifact>();
@@ -328,6 +341,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         ctx.setEnableFastdev(enableFastdev);
         ctx.setFastdevVersion(fastdevVersion);
 
+        ctx.setEnableDevToolbox(enableDevToolbox);
+        ctx.setDevToolboxVersion(devToolboxVersion);
+
         ctx.setHttpPort(httpPort);
         return ctx;
     }
@@ -441,6 +457,16 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         if (product.getFastdevVersion() == null)
         {
             product.setFastdevVersion(DEFAULT_FASTDEV_VERSION);
+        }
+
+        if (product.isEnableDevToolbox() == null)
+        {
+            product.setEnableDevToolbox(true);
+        }
+
+        if (product.getDevToolboxVersion() == null)
+        {
+            product.setDevToolboxVersion(DEFAULT_DEV_TOOLBOX_VERSION);
         }
 
         if (product.getOutput() == null)
