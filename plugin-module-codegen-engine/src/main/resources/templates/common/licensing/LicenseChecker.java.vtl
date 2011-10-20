@@ -4,6 +4,7 @@ import com.atlassian.event.api.EventListener;
 import com.atlassian.plugin.PluginController;
 import com.atlassian.upm.api.license.PluginLicenseEventRegistry;
 import com.atlassian.upm.api.license.PluginLicenseManager;
+import com.atlassian.upm.api.license.entity.LicenseError;
 import com.atlassian.upm.api.license.entity.PluginLicense;
 import com.atlassian.upm.api.license.event.PluginLicenseChangeEvent;
 import com.atlassian.upm.api.license.event.PluginLicenseCheckEvent;
@@ -72,8 +73,9 @@ public class ${CLASSNAME} {
     
     private final boolean isValidLicense(Option<PluginLicense> maybeLicense) {
         for (PluginLicense license: maybeLicense) {
-            if (license.getLicenseStatus().isExpired()) {
-                log.warn("Invalid license for plugin '" + pluginKey + "' (" + license.getLicenseStatus() + ")");
+            if (!license.isValid())
+            {
+                log.warn("Invalid license for plugin \"" + pluginKey + "\" (" + license.getError().getOrElse((LicenseError) null) + ")");
                 return false;
             }
             log.info("Validated license for plugin '" + pluginKey + "'");
