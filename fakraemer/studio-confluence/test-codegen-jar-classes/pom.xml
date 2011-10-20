@@ -3,7 +3,7 @@
     <parent>
         <artifactId>atlassian-amps-parent</artifactId>
         <groupId>com.atlassian.amps</groupId>
-        <version>3.7-studio-confluence-SNAPSHOT</version>
+        <version>3.7-studio-confluence-alpha-1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

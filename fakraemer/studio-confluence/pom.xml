@@ -8,7 +8,7 @@
 
     <groupId>com.atlassian.amps</groupId>
     <artifactId>atlassian-amps-parent</artifactId>
-    <version>3.7-studio-confluence-SNAPSHOT</version>
+    <version>3.7-studio-confluence-alpha-1</version>
     <packaging>pom</packaging>
 
     <name>Atlassian Maven Plugin Suite (parent pom)</name>
@@ -32,9 +32,9 @@
     </contributors>
 
     <scm>
-        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/private/fakraemer/studio-confluence</connection>
-        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/private/fakraemer/studio-confluence</developerConnection>
-        <url>https://studio.atlassian.com/source/browse/AMPS/branches/private/fakraemer/studio-confluence</url>
+        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.7-studio-confluence-alpha-1</connection>
+        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.7-studio-confluence-alpha-1</developerConnection>
+        <url>https://studio.atlassian.com/source/browse/AMPS/tags/atlassian-amps-parent-3.7-studio-confluence-alpha-1</url>
     </scm>
 
     <issueManagement>
