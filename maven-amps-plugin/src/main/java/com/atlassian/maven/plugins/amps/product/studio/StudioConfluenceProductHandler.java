@@ -47,7 +47,7 @@ public class StudioConfluenceProductHandler extends ConfluenceProductHandler imp
 
         // This datasource is only used by the Studio version of Confluence:
         final String dburl = System.getProperty("amps.datasource.url",
-                format("jdbc:hsqldb:%s/database/confluencedb", StudioProductHandler.fixWindowsSlashes(getHomeDirectory(product).getAbsolutePath())));
+                format("jdbc:hsqldb:%s/database/confluencedb;hsqldb.tx=MVCC", StudioProductHandler.fixWindowsSlashes(getHomeDirectory(product).getAbsolutePath())));
         final String driverClass = System.getProperty("amps.datasource.driver", "org.hsqldb.jdbcDriver");
         final String username = System.getProperty("amps.datasource.username", "sa");
         final String password = System.getProperty("amps.datasource.password", "");
