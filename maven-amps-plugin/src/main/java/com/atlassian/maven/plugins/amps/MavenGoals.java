@@ -19,9 +19,9 @@ import com.atlassian.maven.plugins.amps.util.VersionUtils;
 import com.sun.jersey.wadl.resourcedoc.ResourceDocletJSON;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.model.Plugin;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
@@ -500,6 +500,55 @@ public class MavenGoals
         );
         return actualHttpPort;
     }
+    
+    public void stopWebapp(final String productId, final String containerId,
+        final Product webappContext) throws MojoExecutionException
+    {
+        final Container container = findContainer(containerId);
+        
+        /*
+         * org.codehaus.cargo.container.tomcat.internal.AbstractCatalinaInstalledLocalContainer#waitForCompletion(boolean waitForStarting) waits for all three ports.
+         * 
+         * Since we're not configuring the AJP port it defaults to 8009. All the Studio applications are currently using 8009 (by default, since not configured in startWebapp)
+         * which means that this port might have been taken by a different application (the container will still come up though, see 
+         * "INFO: Port busy 8009 java.net.BindException: Address already in use" in the log). Thus we don't want to wait for it because it might be still open also the container 
+         * is shut down. 
+         * 
+         * The RMI port is randomly chosen (see startWebapp), thus we don't have any information close at hand. As a future optimisation, e.g. when we move away from cargo to let's say
+         * Apache's Tomcat Maven Plugin we could retrieve the actualy configuration from the server.xml on shutdown and thus know exactly for what which port to wait until it gets closed.
+         * We could do that already in cargo (e.g. container/tomcat6x/<productHome>/conf/server.xml) but that means that we have to support all the containers we are supporting with cargo.
+         * 
+         * Since the HTTP port is the only one that interests us, we set all three ports to this one when calling stop. But since that may be randomly chosen as well we might be waiting
+         * for the wrong port to get closed. Since this is the minor use case, one has to either accept the timeout if the default port is open, or configure product.stop.timeout to 0 in
+         * order to skip the wait.
+         */
+        final List<Element> props = new ArrayList<Element>();
+        String portUsedToDetermineIfShutdownSucceeded = String.valueOf(webappContext.getHttpPort());
+        props.add(element(name("cargo.servlet.port"), portUsedToDetermineIfShutdownSucceeded));
+        props.add(element(name("cargo.rmi.port"), portUsedToDetermineIfShutdownSucceeded));
+        props.add(element(name("cargo.tomcat.ajp.port"), portUsedToDetermineIfShutdownSucceeded));
+        
+        executeMojo(
+        // We use the same plugin to stop and start. This doesn't mean it's asynchronous.
+        cargo(webappContext.getSynchronousStartup()),
+        goal("stop"),
+        configuration(
+             element(name("container"),
+                     element(name("containerId"), container.getId()),
+                     element(name("type"), container.getType()),
+                     element(name("timeout"), String.valueOf(webappContext.getShutdownTimeout())),
+                     // org.codehaus.cargo
+                     element(name("home"), container.getInstallDirectory(getBuildDirectory()))
+             ),
+             element(name("configuration"),
+                     // org.twdata.maven
+                     element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId)),
+                     element(name("properties"), props.toArray(new Element[props.size()]))
+             )
+        ),
+        executionEnvironment()
+        );
+    }
 
     /**
      * Provides the cargo maven plugin definition:<ul>
@@ -657,34 +706,6 @@ public class MavenGoals
                 throw new RuntimeException("Error closing socket", e);
             }
         }
-    }
-
-    public void stopWebapp(final String productId, final String containerId,
-                           final Product webappContext) throws MojoExecutionException
-    {
-        final Container container = findContainer(containerId);
-
-        // Note: homeDirectory is never null when you debug the executorMojo.
-        // TWData Cargo throws "You must set the mandatory [home] property" when stopping in a few situations:
-        // -when amps:run is still running
-        // -when using CodeHaus Cargo to start and TWData to stop.
-
-        executeMojo(
-                // We use the same plugin to stop and start. This doesn't mean it's asynchronous.
-                cargo(webappContext.getSynchronousStartup()),
-                goal("stop"),
-                configuration(
-                        element(name("container"),
-                                element(name("containerId"), container.getId()),
-                                element(name("type"), container.getType()),
-                                element(name("timeout"), String.valueOf(webappContext.getShutdownTimeout()))
-                        ),
-                        element(name("configuration"),
-                                element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId))
-                        )
-                ),
-                executionEnvironment()
-        );
     }
 
     public void installPlugin(PdkParams pdkParams)
