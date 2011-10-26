@@ -65,7 +65,7 @@ public class MavenGoals
             put("cargo-maven2-plugin", "1.0-beta-2-db2");
             // Below is a second definition of 'cargo-maven2-plugin', using CodeHaus instead of TwData.
             put("org.codehaus.cargo:cargo-maven2-plugin", "1.1.3");
-            put("atlassian-pdk", "2.1.8");
+            put("atlassian-pdk", "2.2.0");
             put("maven-archetype-plugin", "2.0-alpha-4");
             put("maven-bundle-plugin", "2.0.0");
             put("yuicompressor-maven-plugin", "0.7.1");
