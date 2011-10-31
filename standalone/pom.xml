@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.atlassian.amps</groupId>
         <artifactId>atlassian-amps-parent</artifactId>
-        <version>3.7-m5</version>
+        <version>3.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>standalone</artifactId>
@@ -18,7 +18,7 @@
                 <plugin>
                     <groupId>com.atlassian.maven.plugins</groupId>
                     <artifactId>maven-amps-plugin</artifactId>
-                    <version>3.7-m5</version>
+                    <version>3.7-SNAPSHOT</version>
                     <extensions>true</extensions>
                     <configuration>
                         <products>
