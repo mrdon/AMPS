@@ -1,25 +1,5 @@
 package com.atlassian.maven.plugins.amps;
 
-import com.atlassian.maven.plugins.amps.product.ProductHandler;
-import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
-import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
-import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
-import com.atlassian.maven.plugins.amps.util.ProjectUtils;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactResolver;
-import org.apache.maven.model.Resource;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
-import org.jfrog.maven.annomojo.annotations.MojoComponent;
-import org.jfrog.maven.annomojo.annotations.MojoParameter;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -36,6 +16,27 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import com.atlassian.maven.plugins.amps.product.ProductHandler;
+import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
+import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
+import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
+import com.atlassian.maven.plugins.amps.util.ProjectUtils;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.model.Resource;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
+import org.jfrog.maven.annomojo.annotations.MojoComponent;
+import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
 /**
  * Base class for webapp mojos
@@ -138,6 +139,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * The test resources version
      * @deprecated Since 3.0-beta2
      */
+    @Deprecated
     @MojoParameter(expression = "${test.resources.version}")
     private String testResourcesVersion;
 
@@ -194,6 +196,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * SAL version
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
+    @Deprecated
     @MojoParameter
     private String salVersion;
 
@@ -201,6 +204,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * Atlassian Plugin Development Kit (PDK) version
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
+    @Deprecated
     @MojoParameter(defaultValue = DEFAULT_PDK_VERSION)
     private String pdkVersion;
 
@@ -208,6 +212,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * Atlassian REST module version
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
+    @Deprecated
     @MojoParameter
     private String restVersion;
 
@@ -216,6 +221,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * Felix OSGi web console version
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
+    @Deprecated
     @MojoParameter(defaultValue =  DEFAULT_WEB_CONSOLE_VERSION)
     private String webConsoleVersion;
 
@@ -325,12 +331,13 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         // If they aren't defined, define those system properties. They will override the product
         // handler's properties.
-        setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
-        setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
-        setDefaultSystemProperty(systemPropertyVariables, "plugin.resource.directories", buildResourcesList());
-        setDefaultSystemProperty(systemPropertyVariables, "plugin.root.directories", buildRootProperty());
+        Map<String, Object> properties = new HashMap<String, Object>(systemPropertyVariables);
+        setDefaultSystemProperty(properties, "atlassian.dev.mode", "true");
+        setDefaultSystemProperty(properties, "java.awt.headless", "true");
+        setDefaultSystemProperty(properties, "plugin.resource.directories", buildResourcesList());
+        setDefaultSystemProperty(properties, "plugin.root.directories", buildRootProperty());
 
-        ctx.setSystemPropertyVariables(systemPropertyVariables);
+        ctx.setSystemPropertyVariables(properties);
         ctx.setBundledArtifacts(bundledArtifacts);
         ctx.setLibArtifacts(libArtifacts);
         ctx.setPluginArtifacts(pluginArtifacts);
@@ -531,6 +538,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         return artifacts;
     }
 
+    @Override
     public final void execute() throws MojoExecutionException, MojoFailureException
     {
         stringToArtifactList(pluginArtifactsString, pluginArtifacts);
