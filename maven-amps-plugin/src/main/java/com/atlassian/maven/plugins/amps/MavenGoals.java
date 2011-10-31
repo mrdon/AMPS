@@ -466,7 +466,7 @@ public class MavenGoals
         }
 
         executeMojo(
-                cargo(webappContext.getSynchronousStartup()),
+                cargo(webappContext),
                 goal("start"),
                 configuration(
                         element(name("wait"), "false"),
@@ -501,80 +501,86 @@ public class MavenGoals
         return actualHttpPort;
     }
     
-    public void stopWebapp(final String productId, final String containerId,
-        final Product webappContext) throws MojoExecutionException
+    public void stopWebapp(final String productId, final String containerId, final Product webappContext) throws MojoExecutionException
     {
         final Container container = findContainer(containerId);
-        
-        /*
-         * org.codehaus.cargo.container.tomcat.internal.AbstractCatalinaInstalledLocalContainer#waitForCompletion(boolean waitForStarting) waits for all three ports.
-         * 
-         * Since we're not configuring the AJP port it defaults to 8009. All the Studio applications are currently using 8009 (by default, since not configured in startWebapp)
-         * which means that this port might have been taken by a different application (the container will still come up though, see 
-         * "INFO: Port busy 8009 java.net.BindException: Address already in use" in the log). Thus we don't want to wait for it because it might be still open also the container 
-         * is shut down. 
-         * 
-         * The RMI port is randomly chosen (see startWebapp), thus we don't have any information close at hand. As a future optimisation, e.g. when we move away from cargo to let's say
-         * Apache's Tomcat Maven Plugin we could retrieve the actualy configuration from the server.xml on shutdown and thus know exactly for what which port to wait until it gets closed.
-         * We could do that already in cargo (e.g. container/tomcat6x/<productHome>/conf/server.xml) but that means that we have to support all the containers we are supporting with cargo.
-         * 
-         * Since the HTTP port is the only one that interests us, we set all three ports to this one when calling stop. But since that may be randomly chosen as well we might be waiting
-         * for the wrong port to get closed. Since this is the minor use case, one has to either accept the timeout if the default port is open, or configure product.stop.timeout to 0 in
-         * order to skip the wait.
-         */
-        final List<Element> props = new ArrayList<Element>();
-        String portUsedToDetermineIfShutdownSucceeded = String.valueOf(webappContext.getHttpPort());
-        props.add(element(name("cargo.servlet.port"), portUsedToDetermineIfShutdownSucceeded));
-        props.add(element(name("cargo.rmi.port"), portUsedToDetermineIfShutdownSucceeded));
-        props.add(element(name("cargo.tomcat.ajp.port"), portUsedToDetermineIfShutdownSucceeded));
+
+        String actualShutdownTimeout = webappContext.getSynchronousStartup() ? "0" : String.valueOf(webappContext.getShutdownTimeout());
         
         executeMojo(
-        // We use the same plugin to stop and start. This doesn't mean it's asynchronous.
-        cargo(webappContext.getSynchronousStartup()),
+        cargo(webappContext),
         goal("stop"),
         configuration(
              element(name("container"),
                      element(name("containerId"), container.getId()),
                      element(name("type"), container.getType()),
-                     element(name("timeout"), String.valueOf(webappContext.getShutdownTimeout())),
+                     element(name("timeout"), actualShutdownTimeout),
                      // org.codehaus.cargo
                      element(name("home"), container.getInstallDirectory(getBuildDirectory()))
              ),
              element(name("configuration"),
                      // org.twdata.maven
-                     element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId)),
-                     element(name("properties"), props.toArray(new Element[props.size()]))
+                     element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId))/*,
+                     // we don't need that atm. since timeout is 0 for org.codehaus.cargo
+                     element(name("properties"), getShutdownPorts(webappContext)) */
              )
         ),
         executionEnvironment()
         );
     }
+    
+    /**
+     * Cargo waits (org.codehaus.cargo.container.tomcat.internal.AbstractCatalinaInstalledLocalContainer#waitForCompletion(boolean waitForStarting)) for 3 ports, but the AJP and RMI ports may 
+     * not be correct (see below), so we configure it to wait on the HTTP port only.
+     * 
+     * Since we're not configuring the AJP port it defaults to 8009. All the Studio applications are currently using 8009 (by default, since not configured in startWebapp)
+     * which means that this port might have been taken by a different application (the container will still come up though, see 
+     * "INFO: Port busy 8009 java.net.BindException: Address already in use" in the log). Thus we don't want to wait for it because it might be still open also the container 
+     * is shut down. 
+     * 
+     * The RMI port is randomly chosen (see startWebapp), thus we don't have any information close at hand. As a future optimisation, e.g. when we move away from cargo to let's say
+     * Apache's Tomcat Maven Plugin we could retrieve the actualy configuration from the server.xml on shutdown and thus know exactly for what which port to wait until it gets closed.
+     * We could do that already in cargo (e.g. container/tomcat6x/<productHome>/conf/server.xml) but that means that we have to support all the containers we are supporting with cargo.
+     * 
+     * Since the HTTP port is the only one that interests us, we set all three ports to this one when calling stop. But since that may be randomly chosen as well we might be waiting
+     * for the wrong port to get closed. Since this is the minor use case, one has to either accept the timeout if the default port is open, or configure product.stop.timeout to 0 in
+     * order to skip the wait.
+     */
+    private Element[] getShutdownPorts(final Product webappContext)
+    {
+        final List<Element> properties = new ArrayList<Element>();
+        String portUsedToDetermineIfShutdownSucceeded = String.valueOf(webappContext.getHttpPort());
+        properties.add(element(name("cargo.servlet.port"), portUsedToDetermineIfShutdownSucceeded));
+        properties.add(element(name("cargo.rmi.port"), portUsedToDetermineIfShutdownSucceeded));
+        properties.add(element(name("cargo.tomcat.ajp.port"), portUsedToDetermineIfShutdownSucceeded));
+        return properties.toArray(new Element[properties.size()]);
+    }
 
     /**
-     * Provides the cargo maven plugin definition:<ul>
-     * <li>TWData Cargo has always been used in Amps. It's a fork of CodeHaus Cargo.</li>
-     * <li>The CodeHaus has an advantage from version 1.0.2: with a timeout of 0s, it doesn't check whether the application is
-     * up and running (Twdata's version fails in this case), thus allowing applications to start in parallel.</li>
-     *
-     * @param synchronous if explicitly false, will start with the CodeHaus implementation. If true or null,
-     * will start with the traditional TWData implementation. Default is true.
+     * Decides whether to use the org.twdata.maven.cargo-maven2-plugin or the org.codehaus.cargo.cargo-maven2-plugin.
+     * <p/>
+     * The org.twdata.maven plugin is a fork of the org.codehaus.cargo plugin that has been used in AMPS so far. The
+     * org.codehaus.cargo plugin in the more recent version has the advantage of setting the timeout to 0. This skips
+     * waiting for start/stop of the container in order to perform these operations in parallel.
+     * 
+     * @param if {@link Product#getSynchronousStartup()} is true, org.twdata.maven.cargo-maven2-plugin is chosen, if it
+     *        is false, org.codehaus.cargo.cargo-maven2-plugin is chosen
      */
-    private Plugin cargo(Boolean synchronous)
+    private Plugin cargo(Product webappContext)
     {
-        // Use TWData Cargo by default, except if it's required to start asynchronously
-        if (Boolean.FALSE.equals(synchronous))
+        if (Boolean.TRUE.equals(webappContext.getSynchronousStartup()))
         {
             return plugin(
-                    groupId("org.codehaus.cargo"),
-                    artifactId("cargo-maven2-plugin"),
-                    version(pluginArtifactIdToVersionMap.get("org.codehaus.cargo:cargo-maven2-plugin")));
+                groupId("org.twdata.maven"),
+                artifactId("cargo-maven2-plugin"),
+                version(pluginArtifactIdToVersionMap.get("cargo-maven2-plugin")));
         }
         else
         {
             return plugin(
-                    groupId("org.twdata.maven"),
-                    artifactId("cargo-maven2-plugin"),
-                    version(pluginArtifactIdToVersionMap.get("cargo-maven2-plugin")));
+                groupId("org.codehaus.cargo"),
+                artifactId("cargo-maven2-plugin"),
+                version(pluginArtifactIdToVersionMap.get("org.codehaus.cargo:cargo-maven2-plugin")));
         }
     }
 
