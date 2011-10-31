@@ -522,7 +522,7 @@ public class MavenGoals
                      // org.twdata.maven
                      element(name("home"), container.getConfigDirectory(getBuildDirectory(), productId))/*,
                      // we don't need that atm. since timeout is 0 for org.codehaus.cargo
-                     element(name("properties"), getShutdownPorts(webappContext)) */
+                     element(name("properties"), createShutdownPortsPropertiesConfiguration(webappContext)) */
              )
         ),
         executionEnvironment()
@@ -546,7 +546,7 @@ public class MavenGoals
      * for the wrong port to get closed. Since this is the minor use case, one has to either accept the timeout if the default port is open, or configure product.stop.timeout to 0 in
      * order to skip the wait.
      */
-    private Element[] getShutdownPorts(final Product webappContext)
+    private Element[] createShutdownPortsPropertiesConfiguration(final Product webappContext)
     {
         final List<Element> properties = new ArrayList<Element>();
         String portUsedToDetermineIfShutdownSucceeded = String.valueOf(webappContext.getHttpPort());
