@@ -3,7 +3,9 @@ package com.atlassian.maven.plugins.amps;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +24,6 @@ import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 import com.atlassian.maven.plugins.amps.util.ProjectUtils;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -46,7 +47,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     // ------ start inline product context
 
     private static final String DEFAULT_CONTAINER = "tomcat6x";
-    private static final String DEFAULT_SERVER = "localhost";
+    private static final String DEFAULT_SERVER;
     private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";
     private static final String DEFAULT_PDK_VERSION = "0.4";
     private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
@@ -62,6 +63,20 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
       * Default product shutdown timeout: three minutes
       */
     private static final int DEFAULT_PRODUCT_SHUTDOWN_TIMEOUT = 1000 * 60 * 3;
+
+    static
+    {
+        String localHostName = null;
+        try
+        {
+            localHostName = InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e)
+        {
+            localHostName = "localhost";
+        }
+        DEFAULT_SERVER = localHostName;
+    }
 
     /**
      * Container to run in
@@ -84,7 +99,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Application server
      */
-    @MojoParameter(expression = "${server}", defaultValue = DEFAULT_SERVER)
+    @MojoParameter(expression = "${server}")
     protected String server;
 
     /**
