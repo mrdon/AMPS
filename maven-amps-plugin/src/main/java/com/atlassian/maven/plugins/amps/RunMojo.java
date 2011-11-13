@@ -32,32 +32,34 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 /**
  * Run the webapp
  */
-@MojoGoal ("run")
-@MojoExecute (phase = "package")
+@MojoGoal("run")
+@MojoExecute(phase = "package")
 @MojoRequiresDependencyResolution
 public class RunMojo extends AbstractTestGroupsHandlerMojo
 {
-    @MojoParameter (expression = "${wait}", defaultValue = "true")
+    @MojoParameter(expression = "${wait}", defaultValue = "true")
     private boolean wait;
 
     /**
      * Whether or not to write properties used by the plugin to amps.properties.
      */
-    @MojoParameter (expression = "${amps.properties}", required = true, defaultValue = "false")
+    @MojoParameter(expression = "${amps.properties}", required = true, defaultValue = "false")
     protected boolean writePropertiesToFile;
 
     /**
-     * Test group to run.  If provided, used to determine the products to run.
+     * Test group to run. If provided, used to determine the products to run.
      */
     @MojoParameter(expression = "${testGroup}")
     protected String testGroup;
 
     /**
      * Excluded instances from the execution. Only useful when Studio brings in all instances and you want to run only one.
-     * List of comma separated instanceIds, or *{@literal}/instanceId to exclude all but one product.
-     * <p>Examples:
-     * <ul><li>mvn amps:run -DexcludeInstances=studio-crowd</li>
-     * <li>mvn amps:run -DexcludeInstances=*{@literal}/studio-crowd to run only StudioCrowd</li>
+     * List of comma separated instanceIds, or {@literal}/instanceId to exclude all but one product.
+     * <p>
+     * Examples:
+     * <ul>
+     * <li>mvn amps:run -DexcludeInstances=studio-crowd</li>
+     * <li>mvn amps:run -DexcludeInstances= {@literal}/studio-crowd to run only StudioCrowd</li>
      * </ul>
      */
     @MojoParameter(expression = "${excludeInstances}")
@@ -101,7 +103,6 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
             {
                 getLog().info(String.format("Starting %s...", product.getInstanceId()));
             }
-
 
             // Actually start the product
             long startTime = System.nanoTime();
@@ -252,7 +253,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
     }
 
     /**
-     * Only install a plugin if the installPlugin flag is true and the project is a jar.  If the test plugin was built,
+     * Only install a plugin if the installPlugin flag is true and the project is a jar. If the test plugin was built,
      * it will be installed as well.
      */
     private boolean shouldInstallPlugin()
@@ -310,10 +311,11 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         @Override
         public String toString()
         {
-            String message = String.format("%s %s in %ds", product.getInstanceId(), event + (Boolean.FALSE.equals(product.getSynchronousStartup()) ? " (asynchronously)" : ""), durationSeconds);
+            String message = String.format("%s %s in %ds", product.getInstanceId(), event
+                    + (Boolean.FALSE.equals(product.getSynchronousStartup()) ? " (asynchronously)" : ""), durationSeconds);
             if (actualHttpPort != 0)
             {
-                message += " at http://localhost:" + actualHttpPort + product.getContextPath();
+                message += " at http://" + product.getServer() + ":" + actualHttpPort + product.getContextPath();
             }
             return message;
         }
