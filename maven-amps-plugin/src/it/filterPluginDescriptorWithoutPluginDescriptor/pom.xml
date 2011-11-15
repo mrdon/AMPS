@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps-unicorn-plugin-filter-plugin-descriptor-with-plugin-descriptor</artifactId>
+    <artifactId>maven-amps2-plugin-filter-plugin-descriptor-with-plugin-descriptor</artifactId>
     <version>testing</version>
     <name>TestFilterPluginDescriptor</name>
 

@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps-unicorn-plugin-copy-bundled-dependencies-test</artifactId>
+    <artifactId>maven-amps2-plugin-copy-bundled-dependencies-test</artifactId>
     <version>testing</version>
     <name>TestCopyBundledDependencies</name>
 

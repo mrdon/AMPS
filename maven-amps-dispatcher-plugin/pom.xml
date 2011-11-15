@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.atlassian.maven.plugins</groupId>
-            <artifactId>maven-amps-unicorn-plugin</artifactId>
+            <artifactId>maven-amps2-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

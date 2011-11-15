@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps-unicorn-plugin-validate-manifest-skip</artifactId>
+    <artifactId>maven-amps2-plugin-validate-manifest-skip</artifactId>
     <version>testing</version>
     <name>TestValidateManifestSkip</name>
 

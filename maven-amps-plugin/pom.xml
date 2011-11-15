@@ -7,7 +7,7 @@
     </parent>
 
     <groupId>com.atlassian.maven.plugins</groupId>
-    <artifactId>maven-amps-unicorn-plugin</artifactId>
+    <artifactId>maven-amps2-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
     <name>Maven AMPS Plugin</name>

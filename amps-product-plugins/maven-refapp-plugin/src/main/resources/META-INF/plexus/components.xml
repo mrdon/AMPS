@@ -23,7 +23,7 @@
                             <compile>org.apache.maven.plugins:maven-compiler-plugin:compile</compile>
                             <process-classes>
                                 com.atlassian.maven.plugins:maven-refapp-plugin:generate-manifest,
-                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:generate-rest-docs
+                                com.atlassian.maven.plugins:maven-amps2-plugin:generate-rest-docs
                             </process-classes>
                             <process-test-resources>
                                 org.apache.maven.plugins:maven-resources-plugin:testResources
