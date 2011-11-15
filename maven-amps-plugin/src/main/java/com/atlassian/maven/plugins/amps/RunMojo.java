@@ -54,12 +54,12 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
     /**
      * Excluded instances from the execution. Only useful when Studio brings in all instances and you want to run only one.
-     * List of comma separated instanceIds, or {@literal}/instanceId to exclude all but one product.
+     * List of comma separated instanceIds, or {@literal *}/instanceId to exclude all but one product.
      * <p>
      * Examples:
      * <ul>
      * <li>mvn amps:run -DexcludeInstances=studio-crowd</li>
-     * <li>mvn amps:run -DexcludeInstances= {@literal}/studio-crowd to run only StudioCrowd</li>
+     * <li>mvn amps:run -DexcludeInstances={@literal *}/studio-crowd to run only StudioCrowd</li>
      * </ul>
      */
     @MojoParameter(expression = "${excludeInstances}")
