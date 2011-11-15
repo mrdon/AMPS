@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps-plugin-generate-manifest-no-instructions-nor-is-atlassian-plugin-test</artifactId>
+    <artifactId>maven-amps-unicorn-plugin-generate-manifest-no-instructions-nor-is-atlassian-plugin-test</artifactId>
     <version>testing</version>
     <name>TestGenerateManifestWithNoInstructionsNorIsAtlassianPlugin</name>
 

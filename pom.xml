@@ -147,7 +147,7 @@
                     <configuration>
                         <artifacts>
                             <!-- the plugins  -->
-                            <artifact>com.atlassian.maven.plugins:maven-amps-plugin:${project.version}</artifact>
+                            <artifact>com.atlassian.maven.plugins:maven-amps-unicorn-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-amps-dispatcher-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-refapp-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-confluence-plugin:${project.version}</artifact>

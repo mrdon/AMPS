@@ -10,29 +10,29 @@
                         <id>default</id>
                         <phases>
                             <generate-resources>
-                                com.atlassian.maven.plugins:maven-amps-plugin:copy-bundled-dependencies
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:copy-bundled-dependencies
                             </generate-resources>
                             <process-resources>
-                                com.atlassian.maven.plugins:maven-amps-plugin:compress-resources,
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:compress-resources,
                                 org.apache.maven.plugins:maven-resources-plugin:resources,
-                                com.atlassian.maven.plugins:maven-amps-plugin:filter-plugin-descriptor
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:filter-plugin-descriptor
                             </process-resources>
                             <compile>org.apache.maven.plugins:maven-compiler-plugin:compile</compile>
                             <process-classes>
-                                com.atlassian.maven.plugins:maven-amps-plugin:generate-manifest,
-                                com.atlassian.maven.plugins:maven-amps-plugin:generate-rest-docs
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:generate-manifest,
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:generate-rest-docs
                             </process-classes>
                             <process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources</process-test-resources>
                             <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
-                            <test>com.atlassian.maven.plugins:maven-amps-plugin:unit-test</test>
+                            <test>com.atlassian.maven.plugins:maven-amps-unicorn-plugin:unit-test</test>
                             <package>
-                                com.atlassian.maven.plugins:maven-amps-plugin:validate-manifest,
-                                com.atlassian.maven.plugins:maven-amps-plugin:jar,
-                                com.atlassian.maven.plugins:maven-amps-plugin:generate-obr-artifact,
-                                com.atlassian.maven.plugins:maven-amps-plugin:test-jar
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:validate-manifest,
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:jar,
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:generate-obr-artifact,
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:test-jar
                             </package>
                             <integration-test>
-                                com.atlassian.maven.plugins:maven-amps-plugin:integration-test
+                                com.atlassian.maven.plugins:maven-amps-unicorn-plugin:integration-test
                             </integration-test>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                             <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>

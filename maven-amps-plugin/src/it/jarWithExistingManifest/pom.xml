@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps-plugin-jar-with-existing-manifest</artifactId>
+    <artifactId>maven-amps-unicorn-plugin-jar-with-existing-manifest</artifactId>
     <version>testing</version>
     <name>TestJar</name>
 

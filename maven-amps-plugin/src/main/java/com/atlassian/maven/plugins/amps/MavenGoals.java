@@ -104,7 +104,7 @@ public class MavenGoals
         executeMojo(
             plugin(
                 groupId("com.atlassian.maven.plugins"),
-                artifactId("maven-amps-plugin"),
+                artifactId("maven-amps-unicorn-plugin"),
                 version(ampsVersion)
             ),
             goal(ampsGoal),

@@ -557,7 +557,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     }
 
     /**
-     * Returns the Product objects that are defined in our maven-amps-plugins object:
+     * Returns the Product objects that are defined in our maven-amps-unicorn-plugins object:
      * <ul>
      * <li>Reads the {@literal <products>} tag</li>
      * <li>Defaults the values</li>
@@ -582,8 +582,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Puts the list of {@literal <products>} in productMap:
      * <ul>
-     * <li>The {@literal <product>} from the maven-amps-plugin configuration (if missing, RefApp is used)</li>
-     * <li>The {@literal <products>} from the maven-amps-plugin configuration</li>
+     * <li>The {@literal <product>} from the maven-amps-unicorn-plugin configuration (if missing, RefApp is used)</li>
+     * <li>The {@literal <products>} from the maven-amps-unicorn-plugin configuration</li>
      * </ul>
      */
     void makeProductsInheritDefaultConfiguration(List<Product> products, Map<String, Product> productMap) throws MojoExecutionException
