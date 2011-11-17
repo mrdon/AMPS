@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps2-plugin-genenerate-obr-artifact-test</artifactId>
+    <artifactId>maven-amps-plugin-genenerate-obr-artifact-test</artifactId>
     <version>testing</version>
     <name>TestGenerateObrArtifact</name>
 
@@ -20,7 +20,7 @@
                         </pluginDependency>
                     </pluginDependencies>
                     <instructions>
-                        <Bundle-SymbolicName>com.atlassian.amps.it.maven-amps2-plugin-genenerate-obr-artifact-test</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>com.atlassian.amps.it.maven-amps-plugin-genenerate-obr-artifact-test</Bundle-SymbolicName>
                     </instructions>
                 </configuration>
             </plugin>

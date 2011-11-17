@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps2-plugin-integration-test</artifactId>
+    <artifactId>maven-amps-plugin-integration-test</artifactId>
     <version>testing</version>
     <name>TestIntegrationTest</name>
 

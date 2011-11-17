@@ -69,7 +69,7 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
                  * by the mojo executor. Grab it manually from pluginManagement.
                  */
                 PluginManagement mgmt = goals.getContextProject().getBuild().getPluginManagement();
-                Plugin plugin = (Plugin) mgmt.getPluginsAsMap().get("com.atlassian.maven.plugins:maven-amps2-plugin");
+                Plugin plugin = (Plugin) mgmt.getPluginsAsMap().get("com.atlassian.maven.plugins:maven-amps-plugin");
 
                 configuration = (Xpp3Dom) plugin.getConfiguration();
             }

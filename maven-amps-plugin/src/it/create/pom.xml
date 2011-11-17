@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.atlassian.amps.it</groupId>
-    <artifactId>maven-amps2-plugin-create-test</artifactId>
+    <artifactId>maven-amps-plugin-create-test</artifactId>
     <version>testing</version>
     <packaging>pom</packaging>
     <name>TestCreate</name>
