@@ -31,7 +31,7 @@ public abstract class AbstractPdkMojo extends AbstractProductHandlerAwareMojo
      * HTTP port for the servlet containers
      */
     @MojoParameter(expression = "${http.port}")
-    private int httpPort;
+    protected int httpPort;
 
     /**
      * Application context path
