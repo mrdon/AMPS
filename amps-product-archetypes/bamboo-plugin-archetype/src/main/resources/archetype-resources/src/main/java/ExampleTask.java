@@ -16,7 +16,8 @@ public class ExampleTask implements TaskType
     {
         final BuildLogger buildLogger = taskContext.getBuildLogger();
 
-        buildLogger.addBuildLogEntry("Hello, world!");
+        final String toSay = taskContext.getConfigurationMap().get("say");
+        buildLogger.addBuildLogEntry(toSay);
 
         return TaskResultBuilder.create(taskContext).success().build();
     }

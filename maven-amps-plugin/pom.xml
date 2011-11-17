@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.atlassian.amps</groupId>
         <artifactId>atlassian-amps-parent</artifactId>
-        <version>3.7-m5-SNAPSHOT</version>
+        <version>3.8-SNAPSHOT</version>
     </parent>
 
     <groupId>com.atlassian.maven.plugins</groupId>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>biz.aQute</groupId>
             <artifactId>bndlib</artifactId>
-            <version>0.0.311</version>
+            <version>1.43.0-atlassian-1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ant</groupId>

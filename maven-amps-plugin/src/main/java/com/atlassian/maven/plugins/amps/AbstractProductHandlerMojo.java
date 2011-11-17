@@ -1,5 +1,24 @@
 package com.atlassian.maven.plugins.amps;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
@@ -20,23 +39,6 @@ import org.apache.maven.project.MavenProject;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 /**
  * Base class for webapp mojos
  */
@@ -45,12 +47,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     // ------ start inline product context
 
     private static final String DEFAULT_CONTAINER = "tomcat6x";
-    private static final String DEFAULT_SERVER = "localhost";
+    private static final String DEFAULT_SERVER;
     private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";
     private static final String DEFAULT_PDK_VERSION = "0.4";
     private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
-    private static final String DEFAULT_FASTDEV_VERSION = "1.8";
-    private static final String DEFAULT_DEV_TOOLBOX_VERSION = "1.0.2";
+    private static final String DEFAULT_FASTDEV_VERSION = "1.9";
+    private static final String DEFAULT_DEV_TOOLBOX_VERSION = "1.0.3";
 
     /**
       * Default product startup timeout: three minutes
@@ -61,6 +63,20 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
       * Default product shutdown timeout: three minutes
       */
     private static final int DEFAULT_PRODUCT_SHUTDOWN_TIMEOUT = 1000 * 60 * 3;
+
+    static
+    {
+        String localHostName = null;
+        try
+        {
+            localHostName = InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e)
+        {
+            localHostName = "localhost";
+        }
+        DEFAULT_SERVER = localHostName;
+    }
 
     /**
      * Container to run in
@@ -83,7 +99,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Application server
      */
-    @MojoParameter(expression = "${server}", defaultValue = DEFAULT_SERVER)
+    @MojoParameter(expression = "${server}")
     protected String server;
 
     /**
@@ -138,6 +154,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * The test resources version
      * @deprecated Since 3.0-beta2
      */
+    @Deprecated
     @MojoParameter(expression = "${test.resources.version}")
     private String testResourcesVersion;
 
@@ -194,6 +211,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * SAL version
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
+    @Deprecated
     @MojoParameter
     private String salVersion;
 
@@ -201,6 +219,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * Atlassian Plugin Development Kit (PDK) version
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
+    @Deprecated
     @MojoParameter(defaultValue = DEFAULT_PDK_VERSION)
     private String pdkVersion;
 
@@ -208,6 +227,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * Atlassian REST module version
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
+    @Deprecated
     @MojoParameter
     private String restVersion;
 
@@ -216,6 +236,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * Felix OSGi web console version
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
+    @Deprecated
     @MojoParameter(defaultValue =  DEFAULT_WEB_CONSOLE_VERSION)
     private String webConsoleVersion;
 
@@ -325,12 +346,13 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         // If they aren't defined, define those system properties. They will override the product
         // handler's properties.
-        setDefaultSystemProperty(systemPropertyVariables, "atlassian.dev.mode", "true");
-        setDefaultSystemProperty(systemPropertyVariables, "java.awt.headless", "true");
-        setDefaultSystemProperty(systemPropertyVariables, "plugin.resource.directories", buildResourcesList());
-        setDefaultSystemProperty(systemPropertyVariables, "plugin.root.directories", buildRootProperty());
+        Map<String, Object> properties = new HashMap<String, Object>(systemPropertyVariables);
+        setDefaultSystemProperty(properties, "atlassian.dev.mode", "true");
+        setDefaultSystemProperty(properties, "java.awt.headless", "true");
+        setDefaultSystemProperty(properties, "plugin.resource.directories", buildResourcesList());
+        setDefaultSystemProperty(properties, "plugin.root.directories", buildRootProperty());
 
-        ctx.setSystemPropertyVariables(systemPropertyVariables);
+        ctx.setSystemPropertyVariables(properties);
         ctx.setBundledArtifacts(bundledArtifacts);
         ctx.setLibArtifacts(libArtifacts);
         ctx.setPluginArtifacts(pluginArtifacts);
@@ -531,6 +553,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         return artifacts;
     }
 
+    @Override
     public final void execute() throws MojoExecutionException, MojoFailureException
     {
         stringToArtifactList(pluginArtifactsString, pluginArtifacts);
