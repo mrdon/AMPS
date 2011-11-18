@@ -10,4 +10,4 @@ Here are the SDK commands you'll use immediately:
 
 Full documentation is always available at:
 
-http://confluence.atlassian.com/display/DEVNET/Developing+your+Plugin+using+the+Atlassian+Plugin+SDK
+https://developer.atlassian.com/display/DOCS/Developing+with+the+Atlassian+Plugin+SDK
