@@ -53,6 +53,12 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-caviar-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
             <artifactId>maven-jira-plugin</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>

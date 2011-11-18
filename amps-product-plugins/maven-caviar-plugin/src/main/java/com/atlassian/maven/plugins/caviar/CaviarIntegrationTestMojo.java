@@ -9,6 +9,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @since 3.8
+ */
 public class CaviarIntegrationTestMojo extends IntegrationTestMojo
 {
     @Override

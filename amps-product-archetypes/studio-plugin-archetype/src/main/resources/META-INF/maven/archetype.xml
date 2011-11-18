@@ -1,5 +1,5 @@
 <archetype>
-    <id>refapp-plugin-archetype</id>
+    <id>studio-plugin-archetype</id>
     <sources>
         <source>src/main/java/ExampleClass.java</source>
     </sources>

@@ -10,7 +10,6 @@
                 <lifecycles>
                     <lifecycle>
                         <id>default</id>
-
                         <phases>
                             <generate-resources>
                                 com.atlassian.maven.plugins:maven-caviar-plugin:copy-bundled-dependencies
