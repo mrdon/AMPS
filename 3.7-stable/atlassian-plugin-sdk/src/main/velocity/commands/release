@@ -1,0 +1,5 @@
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-amps-dispatcher-plugin:$version:release" )
+
+#set( $goalhelp = "Performs a release of the plugin (runs mvn $mvnCommand)." )
+
+#set( $opts = [] )

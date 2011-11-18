@@ -1,0 +1,5 @@
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-crowd-plugin:$version:create-plugin-module" )
+
+#set( $goalhelp = "Creates a Crowd Plugin Module" )
+
+#set( $opts = [] )

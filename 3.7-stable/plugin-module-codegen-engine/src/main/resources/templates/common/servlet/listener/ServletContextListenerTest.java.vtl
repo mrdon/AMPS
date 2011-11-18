@@ -1,0 +1,43 @@
+package ${PACKAGE};
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import ${FQ_CLASS_UNDER_TEST};
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+
+import static org.mockito.Mockito.*;
+
+/**
+ * @since 3.5
+ */
+public class ${CLASSNAME} {
+
+    ServletContextEvent contextEvent;
+    ServletContext mockContext;
+
+    @Before
+    public void setup() {
+        mockContext = mock(ServletContext.class);
+        contextEvent = new ServletContextEvent(mockContext);
+    }
+
+    @After
+    public void tearDown() {
+
+    }
+
+    @Test
+    public void testSomething() {
+
+        ${CLASS_UNDER_TEST} contextListener = new ${CLASS_UNDER_TEST}();
+        contextListener.contextInitialized(contextEvent);
+        contextListener.contextDestroyed(contextEvent);
+
+        verify(mockContext).setAttribute("myservletcontextlistener","original");
+        verify(mockContext).setAttribute("myservletcontextlistener","destroyed");
+
+    }
+
+}

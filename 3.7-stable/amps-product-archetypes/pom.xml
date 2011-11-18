@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.atlassian.amps</groupId>
+        <artifactId>atlassian-amps-parent</artifactId>
+        <version>3.7.1</version>
+    </parent>
+
+    <artifactId>atlassian-amps-product-archetypes</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Atlassian Maven Plugin Suite (product archetypes parent pom)</name>
+
+    <modules>
+        <module>refapp-plugin-archetype</module>
+        <module>confluence-plugin-archetype</module>
+        <module>jira4-plugin-archetype</module>
+        <module>jira-plugin-archetype</module>
+        <module>bamboo-plugin-archetype</module>
+        <module>fecru-plugin-archetype</module>
+        <module>crowd-plugin-archetype</module>
+        <module>studio-plugin-archetype</module>
+    </modules>
+
+    <dependencies>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <escapeString>\</escapeString>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>archetype-resources/pom.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>archetype-resources/pom.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+
+</project>

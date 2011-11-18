@@ -1,0 +1,5 @@
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-bamboo-plugin:$version:create-plugin-module" )
+
+#set( $goalhelp = "Creates a Bamboo Plugin Module" )
+
+#set( $opts = [] )
