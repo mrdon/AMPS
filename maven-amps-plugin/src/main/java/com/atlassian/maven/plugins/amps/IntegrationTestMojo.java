@@ -181,11 +181,11 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
                 systemProperties.put("context.path", product.getContextPath());
             }
 
-            String baseUrl = MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath());
+            String baseUrl = MavenGoals.getBaseUrl(product, actualHttpPort);
             // hard coded system properties...
             systemProperties.put("http." + product.getInstanceId() + ".port", String.valueOf(actualHttpPort));
             systemProperties.put("context." + product.getInstanceId() + ".path", product.getContextPath());
-            systemProperties.put("http." + product.getInstanceId() + ".url", MavenGoals.getBaseUrl(product.getServer(), actualHttpPort, product.getContextPath()));
+            systemProperties.put("http." + product.getInstanceId() + ".url", MavenGoals.getBaseUrl(product, actualHttpPort));
 
             systemProperties.put("baseurl." + product.getInstanceId(), baseUrl);
             systemProperties.put("plugin.jar", pluginJar);

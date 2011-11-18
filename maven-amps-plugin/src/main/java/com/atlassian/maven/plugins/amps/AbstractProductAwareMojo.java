@@ -1,5 +1,8 @@
 package com.atlassian.maven.plugins.amps;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.util.GoogleAmpsTracker;
 
@@ -20,6 +23,12 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
      */
     @MojoParameter(expression = "${instanceId}")
     protected String instanceId;
+
+    /**
+     * A list of product-specific configurations
+     */
+    @MojoParameter
+    protected List<Product> products = new ArrayList<Product>();
 
     /**
      * <p>Flag to enable Google tracking.</p>
@@ -49,13 +58,22 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
         if (product == null)
         {
             product = getDefaultProductId();
-            if (product == null && ProductHandlerFactory.getIds().contains(getPluginInformation().getId()))
+            String nameOfTheCurrentMavenPlugin = getPluginInformation().getId();
+            if (product == null && ProductHandlerFactory.getIds().contains(nameOfTheCurrentMavenPlugin))
             {
-                product = getPluginInformation().getId();
+                product = nameOfTheCurrentMavenPlugin;
             }
             else if (product == null)
             {
-                product = ProductHandlerFactory.REFAPP;
+                // If <products> are defined, take the first one
+                if (products != null && !products.isEmpty())
+                {
+                    product = products.get(0).getId();
+                }
+                else
+                {
+                    product = ProductHandlerFactory.REFAPP;
+                }
             }
         }
         return product;

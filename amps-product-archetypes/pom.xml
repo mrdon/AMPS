@@ -20,6 +20,7 @@
         <module>fecru-plugin-archetype</module>
         <module>crowd-plugin-archetype</module>
         <module>studio-plugin-archetype</module>
+        <module>caviar-plugin-archetype</module>
     </modules>
 
     <dependencies>

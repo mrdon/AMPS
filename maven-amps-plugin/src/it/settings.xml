@@ -110,6 +110,8 @@ under the License.
                 <fecru.data.version>${fecru.data.version}</fecru.data.version>
                 <crowd.version>${crowd.version}</crowd.version>
                 <crowd.data.version>${crowd.data.version}</crowd.data.version>
+                <caviar.version>${caviar.version}</caviar.version>
+                <caviar.data.version>${caviar.data.version}</caviar.data.version>
             </properties>
         </profile>
 

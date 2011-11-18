@@ -128,10 +128,10 @@ public class ConfluenceProductHandler extends AbstractWebappProductHandler
     }
 
     @Override
-    public void cleanupProductHomeForZip(Product product, File homeDirectory) throws MojoExecutionException, IOException
+    public void cleanupProductHomeForZip(Product product, File snapshotDir) throws MojoExecutionException, IOException
     {
-        super.cleanupProductHomeForZip(product, homeDirectory);
-        FileUtils.deleteDirectory(new File(homeDirectory, "plugins-osgi-cache"));
-        FileUtils.deleteDirectory(new File(homeDirectory, "plugins-temp"));
+        super.cleanupProductHomeForZip(product, snapshotDir);
+        FileUtils.deleteDirectory(new File(snapshotDir, "plugins-osgi-cache"));
+        FileUtils.deleteDirectory(new File(snapshotDir, "plugins-temp"));
     }
 }

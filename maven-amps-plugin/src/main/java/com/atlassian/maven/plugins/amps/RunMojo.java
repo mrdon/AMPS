@@ -127,6 +127,8 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
 
                 properties.put("http." + product.getInstanceId() + ".port", String.valueOf(actualHttpPort));
                 properties.put("context." + product.getInstanceId() + ".path", product.getContextPath());
+                String baseUrl = MavenGoals.getBaseUrl(product, actualHttpPort);
+                properties.put("baseurl." + product.getInstanceId(), baseUrl);
             }
         }
 

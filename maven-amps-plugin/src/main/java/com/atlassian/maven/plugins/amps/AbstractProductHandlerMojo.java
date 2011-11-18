@@ -47,6 +47,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     // ------ start inline product context
 
     private static final String DEFAULT_CONTAINER = "tomcat6x";
+    private static final String TOMCAT5_CONTAINER = "tomcat5x";
     private static final String DEFAULT_SERVER;
     private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";
     private static final String DEFAULT_PDK_VERSION = "0.4";
@@ -81,7 +82,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Container to run in
      */
-    @MojoParameter(expression = "${container}", defaultValue = DEFAULT_CONTAINER)
+    @MojoParameter(expression = "${container}")
     protected String containerId;
 
     /**
@@ -315,12 +316,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     protected ArtifactFactory artifactFactory;
 
     /**
-     * A list of product-specific configurations
-     */
-    @MojoParameter
-    protected List<Product> products = new ArrayList<Product>();
-
-    /**
      * File the container logging output will be sent to.
      */
     @MojoParameter
@@ -457,7 +452,14 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         if (product.getContainerId() == null)
         {
-            product.setContainerId(DEFAULT_CONTAINER);
+            if (ProductHandlerFactory.CAVIAR.equals(product.getId()))
+            {
+                product.setContainerId(TOMCAT5_CONTAINER);
+            }
+            else
+            {
+                product.setContainerId(DEFAULT_CONTAINER);
+            }
         }
 
         if (product.getServer() == null)

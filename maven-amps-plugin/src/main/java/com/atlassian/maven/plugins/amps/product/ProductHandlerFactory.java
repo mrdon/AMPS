@@ -9,9 +9,6 @@ import com.atlassian.maven.plugins.amps.product.studio.StudioFeCruProductHandler
 import com.atlassian.maven.plugins.amps.product.studio.StudioJiraProductHandler;
 import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
 
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.plugin.logging.Log;
-
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -23,6 +20,7 @@ public class ProductHandlerFactory
     public static final String BAMBOO = "bamboo";
     public static final String FECRU = "fecru";
     public static final String CROWD = "crowd";
+    public static final String CAVIAR = "caviar";
 
     public static final String STUDIO = "studio";
     public static final String STUDIO_CONFLUENCE = "studio-confluence";
@@ -60,6 +58,11 @@ public class ProductHandlerFactory
             return new CrowdProductHandler(context, goals);
         }
 
+        else if (CAVIAR.equals(id))
+        {
+            return new CaviarProductHandler(context, goals);
+        }
+
         // The Studio product itself
         else if (STUDIO.equals(id))
         {
@@ -95,7 +98,7 @@ public class ProductHandlerFactory
 
     public static Collection<String> getIds()
     {
-        return Arrays.asList(REFAPP, CONFLUENCE, JIRA, BAMBOO, FECRU, CROWD,
+        return Arrays.asList(REFAPP, CONFLUENCE, JIRA, BAMBOO, FECRU, CROWD, CAVIAR,
                 STUDIO, STUDIO_CONFLUENCE, STUDIO_JIRA, STUDIO_BAMBOO, STUDIO_FECRU, STUDIO_CROWD);
     }
 }

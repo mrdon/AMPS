@@ -438,7 +438,7 @@ public class MavenGoals
         log.info("Starting " + productInstanceId + " on the " + container.getId() + " container on ports "
                 + actualHttpPort + " (http) and " + rmiPort + " (rmi)");
 
-        final String baseUrl = getBaseUrl(webappContext.getServer(), actualHttpPort, webappContext.getContextPath());
+        final String baseUrl = getBaseUrl(webappContext, actualHttpPort);
         sysProps.add(element(name("baseurl"), baseUrl));
 
         final List<Element> deps = new ArrayList<Element>();
@@ -584,14 +584,20 @@ public class MavenGoals
         }
     }
 
-    public static String getBaseUrl(final String server, final int actualHttpPort, final String contextPath)
+    public static String getBaseUrl(Product product, int actualHttpPort)
+    {
+        return getBaseUrl(product.getServer(), product.getHttpPort(), product.getContextPath());
+    }
+
+    private static String getBaseUrl(String server, int actualHttpPort, String contextPath)
     {
         String port = actualHttpPort != 80 ? ":" + actualHttpPort : "";
-        if (server.startsWith("http")) {
-            return server + port + contextPath;
-        } else {
-            return "http://" + server + port + contextPath;
+        server = server.startsWith("http") ? server : "http://" + server;
+        if (!contextPath.startsWith("/") && StringUtils.isNotBlank(contextPath))
+        {
+            contextPath = "/" + contextPath;
         }
+        return server + port + contextPath;
     }
 
     public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Map<String, Object> systemProperties, final File targetDirectory)

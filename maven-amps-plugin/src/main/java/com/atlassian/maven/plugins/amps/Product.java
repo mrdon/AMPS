@@ -14,7 +14,7 @@ import java.util.Properties;
 import org.apache.maven.surefire.shade.org.apache.commons.lang.StringUtils;
 
 public class Product
-{
+{ public Product(){}
     /**
      * Container to run in
      */
@@ -23,7 +23,7 @@ public class Product
     /**
      * HTTP port for the servlet containers
      */
-    private int httpPort = 0;
+    protected int httpPort = 0;
 
     /**
      * Application context path, in the format: /context-path
@@ -115,12 +115,12 @@ public class Product
     /**
      * Product id - nickname of the product to run
      */
-    private String id;
+    protected String id;
 
     /**
      * The name of the instance of the product
      */
-    private String instanceId;
+    protected String instanceId;
 
     private ArtifactRetriever artifactRetriever;
 

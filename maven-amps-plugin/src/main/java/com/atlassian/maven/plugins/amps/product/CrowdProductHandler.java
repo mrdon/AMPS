@@ -55,16 +55,6 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
         return ImmutableMap.of("crowd.home", getHomeDirectory(ctx).getPath());
     }
 
-    private static String slashPrefixed(String contextPath)
-    {
-        if (!contextPath.startsWith("/"))
-        {
-            contextPath = "/" + contextPath;
-        }
-
-        return contextPath;
-    }
-
     @Override
     public File getUserInstalledPluginsDirectory(final File webappDir, final File homeDir)
     {
@@ -91,7 +81,7 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
     @Override
     public void processHomeDirectory(final Product ctx, final File homeDir) throws MojoExecutionException
     {
-        String baseUrl = MavenGoals.getBaseUrl(ctx.getServer(), ctx.getHttpPort(), slashPrefixed(ctx.getContextPath()));
+        String baseUrl = MavenGoals.getBaseUrl(ctx, ctx.getHttpPort());
 
         try
         {
