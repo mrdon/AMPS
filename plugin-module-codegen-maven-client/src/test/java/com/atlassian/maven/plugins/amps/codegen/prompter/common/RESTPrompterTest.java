@@ -12,6 +12,9 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter.MODULE_DESCRIP_PROMPT;
+import static com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter.MODULE_KEY_PROMPT;
+import static com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter.MODULE_NAME_PROMPT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -82,9 +85,9 @@ public class RESTPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Enter Version", "1.0")).thenReturn(VERSION);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
 
-        when(prompter.prompt("Plugin Name", MODULE_NAME)).thenReturn(ADV_MODULE_NAME);
-        when(prompter.prompt("Plugin Key", MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
-        when(prompter.prompt("Plugin Description", DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
+        when(prompter.prompt(MODULE_NAME_PROMPT, MODULE_NAME)).thenReturn(ADV_MODULE_NAME);
+        when(prompter.prompt(MODULE_KEY_PROMPT, MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
+        when(prompter.prompt(MODULE_DESCRIP_PROMPT, DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
         when(prompter.prompt("i18n Name Key", I18N_NAME_KEY)).thenReturn(ADV_I18N_NAME_KEY);
         when(prompter.prompt("i18n Description Key", I18N_DESCRIPTION_KEY)).thenReturn(ADV_I18N_DESCRIPTION_KEY);
         when(prompter.prompt("Add Package To Scan?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("y");

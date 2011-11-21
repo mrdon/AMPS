@@ -18,6 +18,9 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter.MODULE_DESCRIP_PROMPT;
+import static com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter.MODULE_KEY_PROMPT;
+import static com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter.MODULE_NAME_PROMPT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -89,9 +92,9 @@ public class CustomFieldSearcherPrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Enter Valid CustomField Key")).thenReturn("cf-key");
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
 
-        when(prompter.prompt("Plugin Name", "Text Searcher")).thenReturn(ADV_MODULE_NAME);
-        when(prompter.prompt("Plugin Key", "text-searcher")).thenReturn(ADV_MODULE_KEY);
-        when(prompter.prompt("Plugin Description", "The Text Searcher Plugin")).thenReturn(ADV_DESCRIPTION);
+        when(prompter.prompt(MODULE_NAME_PROMPT, "Text Searcher")).thenReturn(ADV_MODULE_NAME);
+        when(prompter.prompt(MODULE_KEY_PROMPT, "text-searcher")).thenReturn(ADV_MODULE_KEY);
+        when(prompter.prompt(MODULE_DESCRIP_PROMPT, "The Text Searcher Plugin")).thenReturn(ADV_DESCRIPTION);
         when(prompter.prompt("i18n Name Key", "text-searcher.name")).thenReturn(ADV_I18N_NAME_KEY);
         when(prompter.prompt("i18n Description Key", "text-searcher.description")).thenReturn(ADV_I18N_DESCRIPTION_KEY);
 

@@ -65,9 +65,9 @@ public class ModuleTypePrompterTest extends AbstractPrompterTest
         when(prompter.prompt("Enter Package Name", PACKAGE)).thenReturn(PACKAGE);
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
 
-        when(prompter.prompt("Plugin Name", MODULE_NAME)).thenReturn(ADV_MODULE_NAME);
-        when(prompter.prompt("Plugin Key", MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
-        when(prompter.prompt("Plugin Description", DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
+        when(prompter.prompt("Module Name", MODULE_NAME)).thenReturn(ADV_MODULE_NAME);
+        when(prompter.prompt("Module Key", MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
+        when(prompter.prompt("Module Description", DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
         when(prompter.prompt("i18n Name Key", I18N_NAME_KEY)).thenReturn(ADV_I18N_NAME_KEY);
         when(prompter.prompt("i18n Description Key", I18N_DESCRIPTION_KEY)).thenReturn(ADV_I18N_DESCRIPTION_KEY);
 

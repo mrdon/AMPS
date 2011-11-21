@@ -12,6 +12,8 @@ import com.atlassian.plugins.codegen.modules.common.web.WebItemProperties;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.junit.Test;
 
+import static com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter.MODULE_DESCRIP_PROMPT;
+import static com.atlassian.maven.plugins.amps.codegen.prompter.AbstractModulePrompter.MODULE_KEY_PROMPT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -75,8 +77,8 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Enter Link URL (e.g. /secure/CreateIssue!default.jspa)")).thenReturn(LINK_URL);
 
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
-        when(prompter.prompt("Plugin Key", MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
-        when(prompter.prompt("Plugin Description", DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
+        when(prompter.prompt(MODULE_KEY_PROMPT, MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
+        when(prompter.prompt(MODULE_DESCRIP_PROMPT, DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
         when(prompter.prompt("i18n Name Key", I18N_NAME_KEY)).thenReturn(ADV_I18N_NAME_KEY);
         when(prompter.prompt("i18n Description Key", I18N_DESCRIPTION_KEY)).thenReturn(ADV_I18N_DESCRIPTION_KEY);
         when(prompter.prompt("Weight", "1000")).thenReturn(WEIGHT);
@@ -144,8 +146,8 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Enter Link URL (e.g. /secure/CreateIssue!default.jspa)")).thenReturn(LINK_URL);
 
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
-        when(prompter.prompt("Plugin Key", MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
-        when(prompter.prompt("Plugin Description", DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
+        when(prompter.prompt(MODULE_KEY_PROMPT, MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
+        when(prompter.prompt(MODULE_DESCRIP_PROMPT, DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
         when(prompter.prompt("i18n Name Key", I18N_NAME_KEY)).thenReturn(ADV_I18N_NAME_KEY);
         when(prompter.prompt("i18n Description Key", I18N_DESCRIPTION_KEY)).thenReturn(ADV_I18N_DESCRIPTION_KEY);
         when(prompter.prompt("Weight", "1000")).thenReturn(WEIGHT);
@@ -195,8 +197,8 @@ public class WebItemPrompterTest extends AbstractWebFragmentPrompterTest<WebItem
         when(prompter.prompt("Enter Link URL (e.g. /secure/CreateIssue!default.jspa)")).thenReturn(LINK_URL);
 
         when(prompter.prompt("Show Advanced Setup?", PluginModulePrompter.YN_ANSWERS, "N")).thenReturn("Y");
-        when(prompter.prompt("Plugin Key", MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
-        when(prompter.prompt("Plugin Description", DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
+        when(prompter.prompt(MODULE_KEY_PROMPT, MODULE_KEY)).thenReturn(ADV_MODULE_KEY);
+        when(prompter.prompt(MODULE_DESCRIP_PROMPT, DESCRIPTION)).thenReturn(ADV_DESCRIPTION);
         when(prompter.prompt("i18n Name Key", I18N_NAME_KEY)).thenReturn(ADV_I18N_NAME_KEY);
         when(prompter.prompt("i18n Description Key", I18N_DESCRIPTION_KEY)).thenReturn(ADV_I18N_DESCRIPTION_KEY);
         when(prompter.prompt("Weight", "1000")).thenReturn(WEIGHT);

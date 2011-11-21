@@ -22,6 +22,9 @@ import jline.ANSIBuffer;
 public abstract class AbstractModulePrompter<T extends PluginModuleProperties> implements PluginModulePrompter<T>
 {
     public static final String DEFAULT_BASE_PACKAGE = "com.example";
+    public static final String MODULE_NAME_PROMPT = "Module Name";
+    public static final String MODULE_KEY_PROMPT = "Module Key";
+    public static final String MODULE_DESCRIP_PROMPT = "Module Description";
 
     protected final Prompter prompter;
     protected boolean showExamplesPrompt;
@@ -68,13 +71,13 @@ public abstract class AbstractModulePrompter<T extends PluginModuleProperties> i
 
                     if (showAdvancedNamePrompt)
                     {
-                        moduleName = promptNotBlank("Plugin Name", namedProps.getModuleName());
+                        moduleName = promptNotBlank(MODULE_NAME_PROMPT, namedProps.getModuleName());
                     } else
                     {
                         moduleName = namedProps.getModuleName();
                     }
-                    String moduleKey = promptNotBlank("Plugin Key", namedProps.getModuleKey());
-                    String moduleDescription = promptNotBlank("Plugin Description", namedProps.getDescription());
+                    String moduleKey = promptNotBlank(MODULE_KEY_PROMPT, namedProps.getModuleKey());
+                    String moduleDescription = promptNotBlank(MODULE_DESCRIP_PROMPT, namedProps.getDescription());
                     String moduleI18nNameKey = promptNotBlank("i18n Name Key", namedProps.getNameI18nKey());
                     String moduleI18nDescriptionKey = promptNotBlank("i18n Description Key", namedProps.getDescriptionI18nKey());
 
