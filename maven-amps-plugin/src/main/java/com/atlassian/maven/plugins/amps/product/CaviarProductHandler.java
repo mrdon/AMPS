@@ -34,7 +34,7 @@ public class CaviarProductHandler extends AbstractWebappProductHandler
     @Override
     public ProductArtifact getArtifact()
     {
-        return new ProductArtifact("com.atlassian.caviar", "caviar-webapp", "LATEST");
+        return new ProductArtifact("com.atlassian.caviar", "caviar-webapp");
     }
 
     @Override

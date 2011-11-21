@@ -47,7 +47,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     // ------ start inline product context
 
     protected static final String DEFAULT_CONTAINER = "tomcat6x";
-    private static final String TOMCAT5_CONTAINER = "tomcat5x";
     private static final String DEFAULT_SERVER;
     private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";
     private static final String DEFAULT_PDK_VERSION = "0.4";
@@ -162,7 +161,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * The test resources version
      */
-    @MojoParameter(expression = "${product.data.version}", defaultValue = DEFAULT_PRODUCT_DATA_VERSION)
+    @MojoParameter(expression = "${product.data.version}")
     private String productDataVersion;
 
     /**
@@ -452,14 +451,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         if (product.getContainerId() == null)
         {
-            if (ProductHandlerFactory.CAVIAR.equals(product.getId()))
-            {
-                product.setContainerId(TOMCAT5_CONTAINER);
-            }
-            else
-            {
-                product.setContainerId(DEFAULT_CONTAINER);
-            }
+            product.setContainerId(DEFAULT_CONTAINER);
         }
 
         if (product.getServer() == null)
@@ -469,7 +461,14 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         if (product.getDataVersion() == null)
         {
-            product.setDataVersion(DEFAULT_PRODUCT_DATA_VERSION);
+            if (ProductHandlerFactory.CAVIAR.equals(product.getId()))
+            {
+                product.setDataVersion("1.0-SNAPSHOT");
+            }
+            else
+            {
+                product.setDataVersion(DEFAULT_PRODUCT_DATA_VERSION);
+            }
         }
 
         if (product.getPdkVersion() == null)
@@ -524,7 +523,14 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         if (product.getVersion() == null)
         {
-            product.setVersion("RELEASE");
+            if (ProductHandlerFactory.CAVIAR.equals(product.getId()))
+            {
+                product.setVersion("1.0-SNAPSHOT");
+            }
+            else
+            {
+                product.setVersion("RELEASE");
+            }
         }
 
         if (product.getContextPath() == null)

@@ -44,6 +44,20 @@
                 <shitty.product>caviar</shitty.product>
                 <product.version>${caviar.version}</product.version>
                 <product.data.version>${caviar.data.version}</product.data.version>
+                <tests>
+                <!-- the following test doesn't succeed, because we test a url which should return a 404, and Caviar returns
+                the login page: cli -->          
+                compressResources, copyBundledDependencies, create, debug,
+                debugWithTestGroup, 
+                filterPluginDescriptorWithoutPluginDescriptor,
+                filterPluginDescriptorWithPluginDescriptor, generateManifestWithInstructions,
+                generateManifestWithNoInstructions, generateManifestWithNoInstructionsButIsAtlassianPlugin,
+                generateManifestWithNoInstructionsNorIsAtlassianPlugin, generateObr, integrationTest,
+                integrationTestWithTestGroup,
+                jarWithExistingManifest, run, runParallel, runWithTestGroup, 
+                unitTest, validateManifestSkipValidation, validateManifestWithInvalidManifest,
+                validateManifestWithValidManifest
+                </tests>
             </properties>
         </profile>
     </profiles>

@@ -29,8 +29,10 @@ assert pluginXml.'plugin-info'.version.text() == '${project.version}'
 
 final File packageDir = new File("$projectDir/src/main/java/${'com.atlassian.it.package'.replace('.', '/')}")
 assert packageDir.exists(), "Package should exist at $packageDir"
-if (thisProduct != 'bamboo') {
-    assert packageDir.list().length == 1, "Package should contain one example file"
-} else {
+if (thisProduct == 'bamboo') {
     assert packageDir.list().length == 2, "Package should contain two example files for Task and Task Configurator"
+} else if (thisProduct == 'caviar') {
+    assert packageDir.list().length == 2, "Package should contain one example file and the pageobjects subpackage"
+} else {
+    assert packageDir.list().length == 1, "Package should contain one example file"
 }

@@ -5,7 +5,9 @@ import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 public class Caviar extends Product
 {
-    { id = ProductHandlerFactory.CAVIAR; }
+    {
+        id = ProductHandlerFactory.CAVIAR;
+    }
 
     @Override
     public String toString()
