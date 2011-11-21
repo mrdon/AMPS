@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.atlassian.amps</groupId>
         <artifactId>atlassian-amps-parent</artifactId>
-        <version>3.8-CAVIAR-SNAPSHOT</version>
+        <version>3.8-caviar-m2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
