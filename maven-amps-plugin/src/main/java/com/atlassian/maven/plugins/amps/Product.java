@@ -14,7 +14,7 @@ import java.util.Properties;
 import org.apache.maven.surefire.shade.org.apache.commons.lang.StringUtils;
 
 public class Product
-{ public Product(){}
+{
     /**
      * Container to run in
      */
