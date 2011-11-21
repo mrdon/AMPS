@@ -594,7 +594,7 @@ public class MavenGoals
         }
     }
 
-    public void runTests(String productId, String containerId, List<String> includes, List<String> excludes, Map<String, Object> systemProperties, final File targetDirectory)
+    public void runTests(String testGroupId, String containerId, List<String> includes, List<String> excludes, Map<String, Object> systemProperties, final File targetDirectory)
     		throws MojoExecutionException
 	{
     	List<Element> includeElements = new ArrayList<Element>(includes.size());
@@ -611,7 +611,7 @@ public class MavenGoals
         	excludeElements.add(element(name("exclude"), exclude));
         }
 
-        final String testOutputDir = targetDirectory.getAbsolutePath() + "/" + productId + "/" + containerId + "/surefire-reports";
+        final String testOutputDir = targetDirectory.getAbsolutePath() + "/" + testGroupId + "/" + containerId + "/surefire-reports";
         final String reportsDirectory = "reportsDirectory";
         systemProperties.put(reportsDirectory, testOutputDir);
 
