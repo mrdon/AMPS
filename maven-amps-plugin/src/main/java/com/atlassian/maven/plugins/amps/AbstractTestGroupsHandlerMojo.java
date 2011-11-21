@@ -34,24 +34,24 @@ public abstract class AbstractTestGroupsHandlerMojo extends AbstractProductHandl
         int dupCounter = 0;
         Set<String> uniqueProductIds = new HashSet<String>();
         Map<String, Product> productContexts = getProductContexts(getMavenGoals());
-        for (String productId : getTestGroupProductIds(testGroupId))
+        for (String instanceId : getTestGroupInstanceIds(testGroupId))
         {
-            Product ctx = productContexts.get(productId);
+            Product ctx = productContexts.get(instanceId);
             if (ctx == null)
             {
-                throw new MojoExecutionException("The test group '" + testGroupId + "' refers to a product '" + productId
+                throw new MojoExecutionException("The test group '" + testGroupId + "' refers to a product '" + instanceId
                     + "' that doesn't have an associated <product> configuration.");
             }
             ProductHandler productHandler = createProductHandler(ctx.getId());
 
             // Give unique ids to duplicate product instances
-            if (uniqueProductIds.contains(productId))
+            if (uniqueProductIds.contains(instanceId))
             {
-                ctx.setInstanceId(productId + "-" + dupCounter++);
+                ctx.setInstanceId(instanceId + "-" + dupCounter++);
             }
             else
             {
-                uniqueProductIds.add(productId);
+                uniqueProductIds.add(instanceId);
             }
             products.add(new ProductExecution(ctx, productHandler));
         }
@@ -67,27 +67,27 @@ public abstract class AbstractTestGroupsHandlerMojo extends AbstractProductHandl
      * <li>If testGroupId is a product instanceId, adds it</li>
      * </ul>
      */
-    private List<String> getTestGroupProductIds(String testGroupId) throws MojoExecutionException
+    private List<String> getTestGroupInstanceIds(String testGroupId) throws MojoExecutionException
     {
-        List<String> productIds = new ArrayList<String>();
+        List<String> instanceIds = new ArrayList<String>();
         if (NO_TEST_GROUP.equals(testGroupId))
         {
-            productIds.add(getProductId());
+            instanceIds.add(getProductId());
         }
 
         for (TestGroup group : testGroups)
         {
             if (group.getId().equals(testGroupId))
             {
-                productIds.addAll(group.getProductIds());
+                instanceIds.addAll(group.getInstanceIds());
             }
         }
-        if (ProductHandlerFactory.getIds().contains(testGroupId) && !productIds.contains(testGroupId))
+        if (ProductHandlerFactory.getIds().contains(testGroupId) && !instanceIds.contains(testGroupId))
         {
-            productIds.add(testGroupId);
+            instanceIds.add(testGroupId);
         }
 
-        if (productIds.isEmpty())
+        if (instanceIds.isEmpty())
         {
             List<String> validTestGroups = new ArrayList<String>();
             for (TestGroup group: testGroups)
@@ -98,7 +98,7 @@ public abstract class AbstractTestGroupsHandlerMojo extends AbstractProductHandl
                 + " Detected IDs: " + Arrays.toString(validTestGroups.toArray()));
         }
 
-        return productIds;
+        return instanceIds;
     }
 
 }

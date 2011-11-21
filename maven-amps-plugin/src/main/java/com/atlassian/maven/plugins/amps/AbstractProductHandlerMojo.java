@@ -46,7 +46,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     // ------ start inline product context
 
-    private static final String DEFAULT_CONTAINER = "tomcat6x";
+    protected static final String DEFAULT_CONTAINER = "tomcat6x";
     private static final String TOMCAT5_CONTAINER = "tomcat5x";
     private static final String DEFAULT_SERVER;
     private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";

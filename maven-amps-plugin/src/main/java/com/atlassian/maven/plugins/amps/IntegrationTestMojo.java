@@ -213,7 +213,7 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
         }
 
         // Actually run the tests
-        goals.runTests("group-" + testGroupId, containerId, includes, excludes, systemProperties, targetDirectory);
+        goals.runTests("group-" + testGroupId, getClassifier(testGroupId), includes, excludes, systemProperties, targetDirectory);
 
         // Shut all products down
         if (!noWebapp)
@@ -221,6 +221,29 @@ public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
             stopProducts(productExecutions);
         }
     }
+
+    /**
+     * Returns the classifier of the test group. Unless specified, this is "tomcat6x", the default container.
+     */
+    private String getClassifier(String testGroupId)
+    {
+        for (TestGroup group : getTestGroups())
+        {
+            if (group.getId().equals(testGroupId))
+            {
+                if (group.getClassifier() != null)
+                {
+                    return group.getClassifier();
+                }
+                else
+                {
+                    return DEFAULT_CONTAINER;
+                }
+            }
+        }
+        return DEFAULT_CONTAINER;
+    }
+
 
     private Map<String, String> getTestGroupSystemProperties(String testGroupId)
     {
