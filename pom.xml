@@ -24,18 +24,10 @@
         </license>
     </licenses>
 
-    <contributors>
-        <contributor>
-            <name>Jonathan Doklovic</name>
-            <organization>Sysbliss</organization>
-            <organizationUrl>http://www.sysbliss.com/</organizationUrl>
-        </contributor>
-    </contributors>
-
     <scm>
-        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/trunk</connection>
-        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/trunk</developerConnection>
-        <url>https://studio.atlassian.com/source/browse/AMPS/trunk</url>
+        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/caviar-support</connection>
+        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/caviar-support</developerConnection>
+        <url>https://studio.atlassian.com/source/browse/AMPS/branches/caviar-support</url>
     </scm>
 
     <issueManagement>
