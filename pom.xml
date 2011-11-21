@@ -2,8 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.atlassian.pom</groupId>
-        <artifactId>atlassian-public-pom</artifactId>
-        <version>27</version>
+        <!-- TODO: When we merge back to trunk, we must come back to atlassian-public-pon -->
+        <artifactId>atlassian-private-pom</artifactId>
+        <version>25</version>
     </parent>
 
     <groupId>com.atlassian.amps</groupId>
