@@ -50,6 +50,13 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
 
     protected String getDefaultProductId() throws MojoExecutionException
     {
+        // If maven-[product]-plugin didn't override this method, we fetch the
+        // name of the plugin
+        String nameOfTheCurrentMavenPlugin = getPluginInformation().getId();
+        if (ProductHandlerFactory.getIds().contains(nameOfTheCurrentMavenPlugin))
+        {
+            return nameOfTheCurrentMavenPlugin;
+        }
         return null;
     }
 
@@ -58,12 +65,7 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
         if (product == null)
         {
             product = getDefaultProductId();
-            String nameOfTheCurrentMavenPlugin = getPluginInformation().getId();
-            if (product == null && ProductHandlerFactory.getIds().contains(nameOfTheCurrentMavenPlugin))
-            {
-                product = nameOfTheCurrentMavenPlugin;
-            }
-            else if (product == null)
+            if (product == null)
             {
                 // If <products> are defined, take the first one
                 if (products != null && !products.isEmpty())
