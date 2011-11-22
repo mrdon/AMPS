@@ -573,7 +573,7 @@ public class MavenGoals
     {
         if (Boolean.TRUE.equals(context.getSynchronousStartup())
                 // TWData's Cargo doesn't support Tomcat 7
-                || "tomcat7x".equals(context.getContainerId()))
+                && !"tomcat7x".equals(context.getContainerId()))
         {
             return plugin(
                 groupId("org.twdata.maven"),
