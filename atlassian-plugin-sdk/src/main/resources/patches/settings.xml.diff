@@ -6,7 +6,7 @@
 ---
 >      <!-- The Atlassian maven plugins group used for all Atlassian Maven plugins -->
 >      <pluginGroup>com.atlassian.maven.plugins</pluginGroup>
-246a245,296
+246a245,320
 >      <!-- Default profile containing Atlassian servers -->
 >      <profile>
 >        <id>defaultProfile</id>
