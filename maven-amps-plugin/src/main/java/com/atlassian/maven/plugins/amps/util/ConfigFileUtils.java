@@ -124,15 +124,15 @@ public class ConfigFileUtils
      */
     public static class Replacement
     {
-        String key;
-        String value;
+        private final String key;
+        private final String value;
 
         /** Replace the key with the value when unzipping a home. This is the normal meaning of
          * a replacement, {@code key -> value} */
-        boolean applyWhenUnzipping = true;
+        private final boolean applyWhenUnzipping;
 
         /** Detect the value and replace it with the key when zipping a home directory */
-        boolean reversible = true;
+        private final boolean reversible;
 
         /**
          * Represents a key to be replaced in the configuration files.
@@ -148,13 +148,7 @@ public class ConfigFileUtils
          */
         public Replacement(String key, String value)
         {
-            // Ant-like file pattern matching could be implemented if it proves useful.
-            super();
-            Preconditions.checkArgument(key != null, "key must not be null");
-            Preconditions.checkArgument(value != null, "value must not be null");
-
-            this.key = key;
-            this.value = value;
+            this(key, value, true);
         }
 
         /**
@@ -169,8 +163,7 @@ public class ConfigFileUtils
          */
         public Replacement(String key, String value, boolean reversible)
         {
-            this(key, value);
-            this.reversible = reversible;
+            this(key, value, true, reversible);
         }
 
         /**
@@ -179,11 +172,19 @@ public class ConfigFileUtils
          * @param applyWhenUnzipping apply when unzipping a home. Defaults to true.
          * @param applyWhenZipping apply when zipping a home. Defaults to true.
          */
-        public Replacement(String key, String value, boolean applyWhenUnzipping, boolean applyWhenZipping)
+        Replacement(String key, String value, boolean applyWhenUnzipping, boolean applyWhenZipping)
         {
-            this(key, value);
+            Preconditions.checkArgument(key != null, "key must not be null");
+            Preconditions.checkArgument(value != null, "value must not be null");
+            this.key = key;
+            this.value = value;
             this.applyWhenUnzipping = applyWhenUnzipping;
             this.reversible = applyWhenZipping;
+        }
+
+        public static Replacement onlyWhenCreatingSnapshot(String key, String value)
+        {
+            return new Replacement(key, value, true, false);
         }
 
         /**
@@ -215,14 +216,26 @@ public class ConfigFileUtils
         @Override
         public String toString()
         {
-            if (reversible)
+            String operation;
+
+            if (applyWhenUnzipping && reversible)
             {
-                return key + " <-> " + value;
+                operation = " <-> ";
             }
-            return key + " -> " + value;
+            else if (applyWhenUnzipping && !reversible)
+            {
+                operation = " -> ";
+            }
+            else if (!applyWhenUnzipping && reversible)
+            {
+                operation = " <- ";
+            }
+            else // !applyWhenUnzipping && !reversible
+            {
+                operation = " (nop) ";
+            }
+
+            return key + operation + value;
         }
-
-
-
     }
 }
