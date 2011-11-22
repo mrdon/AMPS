@@ -16,16 +16,16 @@
 >  
 >        <repositories>
 >          <repository>
->            <id>atlassian-public</id>
->            <url>https://m2proxy.atlassian.com/repository/public</url>
+>            <id>central</id>
+>            <url>https://m2proxy.atlassian.com/repository/internal</url>
 >            <snapshots>
 >              <enabled>true</enabled>
->              <updatePolicy>daily</updatePolicy>
->              <checksumPolicy>warn</checksumPolicy>
+>              <updatePolicy>always</updatePolicy>
+>              <checksumPolicy>fail</checksumPolicy>
 >            </snapshots>
 >            <releases>
 >              <enabled>true</enabled>
->              <checksumPolicy>warn</checksumPolicy>
+>              <checksumPolicy>fail</checksumPolicy>
 >            </releases>
 >          </repository>
 >  	      <repository>
@@ -43,14 +43,14 @@
 >  
 >        <pluginRepositories>
 >          <pluginRepository>
->            <id>atlassian-public</id>
->            <url>https://m2proxy.atlassian.com/repository/public</url>
+>            <id>central</id>
+>            <url>https://m2proxy.atlassian.com/repository/internal</url>
 >            <releases>
 >              <enabled>true</enabled>
->              <checksumPolicy>warn</checksumPolicy>
+>              <checksumPolicy>fail</checksumPolicy>
 >            </releases>
 >            <snapshots>
->              <checksumPolicy>warn</checksumPolicy>
+>              <checksumPolicy>fail</checksumPolicy>
 >            </snapshots>
 >          </pluginRepository>
 >        </pluginRepositories>

@@ -304,8 +304,8 @@
         <clover.version>3.0.2</clover.version>
         <studio.version>108.2</studio.version>
         <studio.data.version>108.2-m0</studio.data.version>
-        <caviar.version>1.0-SNAPSHOT</caviar.version>
-        <caviar.data.version>1.0-SNAPSHOT</caviar.data.version>
+        <caviar.version>0.1-ADRIEN-SNAPSHOT</caviar.version>
+        <caviar.data.version>0.1-ADRIEN-SNAPSHOT</caviar.data.version>
         <skipCodegenTests>false</skipCodegenTests>
     </properties>
 </project>

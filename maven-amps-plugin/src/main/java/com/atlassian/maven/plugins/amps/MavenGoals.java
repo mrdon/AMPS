@@ -54,6 +54,7 @@ public class MavenGoals
     {{
             put("tomcat5x", new Container("tomcat5x", "org.apache.tomcat", "apache-tomcat", "5.5.26"));
             put("tomcat6x", new Container("tomcat6x", "org.apache.tomcat", "apache-tomcat", "6.0.20"));
+            put("tomcat7x", new Container("tomcat6x", "org.apache.tomcat", "apache-tomcat", "6.0.20", "windows-x64"));
             put("resin3x", new Container("resin3x", "com.caucho", "resin", "3.0.26"));
             put("jboss42x", new Container("jboss42x", "org.jboss.jbossas", "jbossas", "4.2.3.GA"));
             put("jetty6x", new Container("jetty6x"));
@@ -391,6 +392,7 @@ public class MavenGoals
                                         element(name("groupId"), container.getGroupId()),
                                         element(name("artifactId"), container.getArtifactId()),
                                         element(name("version"), container.getVersion()),
+                                        element(name("classifier"), container.getClassifier()),
                                         element(name("type"), "zip"))),
                         element(name("outputDirectory"), container.getRootDirectory(getBuildDirectory()))
                 ),
@@ -1115,6 +1117,7 @@ public class MavenGoals
     {
         private final String id;
         private final String type;
+        private final String classifier;
 
         /**
          * Installable container that can be downloaded by Maven.
@@ -1129,6 +1132,24 @@ public class MavenGoals
             super(groupId, artifactId, version);
             this.id = id;
             this.type = "installed";
+            this.classifier = "";
+        }
+        
+        /**
+         * Installable container that can be downloaded by Maven.
+         *
+         * @param id         identifier of container, eg. "tomcat5x".
+         * @param groupId    groupId of container.
+         * @param artifactId artifactId of container.
+         * @param version    version number of container.
+         * @param classifier classifier of the container.
+         */
+        public Container(final String id, final String groupId, final String artifactId, final String version, final String classifier)
+        {
+            super(groupId, artifactId, version);
+            this.id = id;
+            this.type = "installed";
+            this.classifier = classifier;
         }
 
         /**
@@ -1140,6 +1161,7 @@ public class MavenGoals
         {
             this.id = id;
             this.type = "embedded";
+            this.classifier = "";
         }
 
         /**
@@ -1156,6 +1178,14 @@ public class MavenGoals
         public String getType()
         {
             return type;
+        }
+
+        /**
+         * @return classifier the classifier of the ProductArtifact
+         */
+        public String getClassifier()
+        {
+            return classifier;
         }
 
         /**
