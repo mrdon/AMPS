@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
@@ -276,6 +277,10 @@ public abstract class AmpsProductHandler implements ProductHandler
 
     public File getHomeDirectory(Product ctx)
     {
+        if (StringUtils.isNotBlank(ctx.getDataHome()))
+        {
+            return new File(ctx.getDataHome());
+        }
         return new File(getBaseDirectory(ctx), "home");
     }
 
