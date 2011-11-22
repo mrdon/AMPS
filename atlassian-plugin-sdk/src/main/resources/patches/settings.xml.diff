@@ -16,6 +16,19 @@
 >  
 >        <repositories>
 >          <repository>
+>            <id>atlassian-public</id>
+>            <url>https://maven.atlassian.com/repository/public</url>
+>            <snapshots>
+>              <enabled>true</enabled>
+>              <updatePolicy>daily</updatePolicy>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </snapshots>
+>            <releases>
+>              <enabled>true</enabled>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </releases>
+>          </repository>
+>          <repository>
 >            <id>central</id>
 >            <url>https://m2proxy.atlassian.com/repository/internal</url>
 >            <snapshots>
@@ -42,6 +55,17 @@
 >        </repositories>
 >  
 >        <pluginRepositories>
+>          <pluginRepository>
+>            <id>central</id>
+>            <url>https://maven.atlassian.com/repository/public</url>
+>            <releases>
+>              <enabled>true</enabled>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </releases>
+>            <snapshots>
+>              <checksumPolicy>warn</checksumPolicy>
+>            </snapshots>
+>          </pluginRepository>
 >          <pluginRepository>
 >            <id>central</id>
 >            <url>https://m2proxy.atlassian.com/repository/internal</url>
