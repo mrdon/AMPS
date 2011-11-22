@@ -56,9 +56,16 @@ public class Product
     protected String productDataVersion;
 
     /**
-     * The path to a custom test resources zip
+     * The path to a custom test resources zip or a directory. Takes precedence over dataVersion.
+     * The data from this path will be copied into the home directory.
      */
     protected String productDataPath = "";
+
+    /**
+     * The path to the product's home directory. Takes precedence over dataPath.
+     * The data from this path will be used directly (read/write) by the product.
+     */
+    protected String dataHome = "";
 
     /**
      */
@@ -248,6 +255,7 @@ public class Product
 
         prod.setDataPath(StringUtils.isBlank(productDataPath) ? product.getDataPath() : productDataPath);
         prod.setDataVersion(productDataVersion == null ? product.getDataVersion() : productDataVersion);
+        prod.setDataHome(dataHome == null ? product.getDataHome() : dataHome);
         prod.setLog4jProperties(log4jProperties == null ? product.getLog4jProperties() : log4jProperties);
         prod.setJvmArgs(jvmArgs == null ? product.getJvmArgs() : jvmArgs);
         prod.setGroupId(groupId == null ? product.getGroupId() : groupId);
@@ -368,11 +376,19 @@ public class Product
         this.productDataVersion = productDataVersion;
     }
 
+    /**
+     * The path to a custom test resources zip or a directory. Takes precedence over dataVersion.
+     * The data from this path will be copied into the home directory.
+     */
     public String getDataPath()
     {
         return productDataPath;
     }
 
+    /**
+     * The path to a custom test resources zip or a directory. Takes precedence over dataVersion.
+     * The data from this path will be copied into the home directory.
+     */
     public void setDataPath(String productDataPath)
     {
         this.productDataPath = productDataPath;
@@ -695,6 +711,21 @@ public class Product
     public void setSynchronousStartup(Boolean synchronousStartup)
     {
         this.synchronousStartup = synchronousStartup;
+    }
+
+
+    public String getDataHome()
+    {
+        return dataHome;
+    }
+
+    /**
+     * The path to the product's home directory. Takes precedence over dataPath.
+     * The data from this path will be used directly (read/write) by the product.
+     */
+    public void setDataHome(String dataHome)
+    {
+        this.dataHome = dataHome;
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.StringUtils;
 
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
@@ -276,6 +277,10 @@ public abstract class AmpsProductHandler implements ProductHandler
 
     public File getHomeDirectory(Product ctx)
     {
+        if (StringUtils.isNotBlank(ctx.getDataHome()))
+        {
+            return new File(ctx.getDataHome());
+        }
         return new File(getBaseDirectory(ctx), "home");
     }
 

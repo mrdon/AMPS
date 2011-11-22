@@ -23,6 +23,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.plexus.util.StringUtils;
+
 import static com.atlassian.maven.plugins.amps.util.FileUtils.doesFileNameMatchArtifact;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import static org.apache.commons.io.FileUtils.copyDirectory;
@@ -62,10 +64,19 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
 
     protected final File extractAndProcessHomeDirectory(final Product ctx) throws MojoExecutionException
     {
+        final File homeDir = getHomeDirectory(ctx);
+
+        // Check if home directory was provided by the user
+        if (StringUtils.isNotBlank(ctx.getDataHome()))
+        {
+            // Don't modify the home. Just use it.
+            return homeDir;
+        }
+
+        // Create a home dir for the product in target
         final File productHomeData = getProductHomeData(ctx);
         if (productHomeData != null)
         {
-            final File homeDir = getHomeDirectory(ctx);
 
             // Only create the home dir if it doesn't exist
             if (!homeDir.exists())
@@ -79,13 +90,8 @@ public abstract class AbstractProductHandler extends AmpsProductHandler
 
             // Always override files regardless of home directory existing or not
             overrideAndPatchHomeDir(homeDir, ctx);
-
-            return homeDir;
         }
-        else
-        {
-            return getHomeDirectory(ctx);
-        }
+        return homeDir;
     }
 
     protected void extractProductHomeData(File productHomeData, File homeDir, Product ctx)
