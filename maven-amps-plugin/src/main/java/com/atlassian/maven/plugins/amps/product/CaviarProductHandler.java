@@ -117,7 +117,7 @@ public class CaviarProductHandler extends AbstractWebappProductHandler
     @Override
     public String getBundledPluginPath(Product ctx)
     {
-        String bundledPluginPluginsPath = "WEB-INF/classes/atlassian-bundled-plugins.zip";
+        String bundledPluginPluginsPath = "WEB-INF/classes/caviar-bundled-plugins.zip";
         return bundledPluginPluginsPath;
     }
 
