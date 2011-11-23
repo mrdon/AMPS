@@ -45,7 +45,7 @@ public class CaviarProductHandler extends AbstractWebappProductHandler
 
     public int getDefaultHttpPort()
     {
-        return 7070;
+        return 7990;
     }
 /*
     protected static File getHsqlDatabaseFile(final File homeDirectory)
