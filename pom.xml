@@ -9,7 +9,7 @@
 
     <groupId>com.atlassian.amps</groupId>
     <artifactId>atlassian-amps-parent</artifactId>
-    <version>3.8-caviar-SNAPSHOT</version>
+    <version>3.8-caviar-m8</version>
     <packaging>pom</packaging>
 
     <name>Atlassian Maven Plugin Suite (parent pom)</name>
@@ -25,9 +25,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/caviar-support</connection>
-        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/branches/caviar-support</developerConnection>
-        <url>https://studio.atlassian.com/source/browse/AMPS/branches/caviar-support</url>
+        <connection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.8-caviar-m8</connection>
+        <developerConnection>scm:svn:https://studio.atlassian.com/svn/AMPS/tags/atlassian-amps-parent-3.8-caviar-m8</developerConnection>
+        <url>https://studio.atlassian.com/source/browse/AMPS/tags/atlassian-amps-parent-3.8-caviar-m8</url>
     </scm>
 
     <issueManagement>
