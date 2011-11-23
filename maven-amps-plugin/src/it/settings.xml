@@ -58,19 +58,6 @@ under the License.
             </activation>
             <repositories>
                 <repository>
-                    <id>atlassian-public</id>
-                    <url>http://maven.atlassian.com/repository/public</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>daily</updatePolicy>
-                        <checksumPolicy>warn</checksumPolicy>
-                    </snapshots>
-                    <releases>
-                        <enabled>true</enabled>
-                        <checksumPolicy>warn</checksumPolicy>
-                    </releases>
-                </repository>
-                <repository>
                     <id>central</id>
                     <url>https://m2proxy.atlassian.com/repository/internal</url>
                     <snapshots>
@@ -81,6 +68,19 @@ under the License.
                     <releases>
                         <enabled>true</enabled>
                         <checksumPolicy>fail</checksumPolicy>
+                    </releases>
+                </repository>
+                <repository>
+                    <id>atlassian-public</id>
+                    <url>http://maven.atlassian.com/repository/public</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <checksumPolicy>warn</checksumPolicy>
                     </releases>
                 </repository>
                 <repository>
@@ -98,17 +98,6 @@ under the License.
 
             <pluginRepositories>
                 <pluginRepository>
-                    <id>atlassian-public</id>
-                    <url>http://maven.atlassian.com/repository/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <checksumPolicy>warn</checksumPolicy>
-                    </releases>
-                    <snapshots>
-                        <checksumPolicy>warn</checksumPolicy>
-                    </snapshots>
-                </pluginRepository>
-                <pluginRepository>
                     <id>central</id>
                     <url>https://m2proxy.atlassian.com/repository/internal</url>
                     <releases>
@@ -117,6 +106,17 @@ under the License.
                     </releases>
                     <snapshots>
                         <checksumPolicy>fail</checksumPolicy>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>atlassian-public</id>
+                    <url>http://maven.atlassian.com/repository/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </releases>
+                    <snapshots>
+                        <checksumPolicy>warn</checksumPolicy>
                     </snapshots>
                 </pluginRepository>
             </pluginRepositories>
