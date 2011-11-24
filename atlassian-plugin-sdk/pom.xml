@@ -123,6 +123,26 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.atlassian.maven.archetypes</groupId>
+            <artifactId>caviar-plugin-archetype</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.caviar</groupId>
+            <artifactId>caviar-plugin-test-resources</artifactId>
+            <version>${caviar.data.version}</version>
+            <type>zip</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.caviar</groupId>
+            <artifactId>caviar-webapp</artifactId>
+            <version>${caviar.version}</version>
+            <type>war</type>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 
