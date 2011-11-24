@@ -148,6 +148,7 @@
                             <artifact>com.atlassian.maven.plugins:maven-bamboo-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-fecru-plugin:${project.version}</artifact>
                             <artifact>com.atlassian.maven.plugins:maven-crowd-plugin:${project.version}</artifact>
+                            <artifact>com.atlassian.maven.plugins:maven-caviar-plugin:${project.version}</artifact>
 
                             <!-- the archetypes -->
                             <artifact>com.atlassian.maven.archetypes:refapp-plugin-archetype:${project.version}</artifact>
@@ -156,6 +157,7 @@
                             <artifact>com.atlassian.maven.archetypes:bamboo-plugin-archetype:${project.version}</artifact>
                             <artifact>com.atlassian.maven.archetypes:fecru-plugin-archetype:${project.version}</artifact>
                             <artifact>com.atlassian.maven.archetypes:crowd-plugin-archetype:${project.version}</artifact>
+                            <artifact>com.atlassian.maven.archetypes:caviar-plugin-archetype:${project.version}</artifact>
 
                             <!-- restricted artifacts -->
                             <artifact>javax.servlet:servlet-api:2.3</artifact>
@@ -167,6 +169,8 @@
                             <artifact>jta:jta:1.0.1B</artifact>
                             <artifact>jta:jta:1.0.1</artifact>
                             <artifact>javax.jms:jms:1.1</artifact>
+                            <artifact>com.atlassian.caviar:caviar-webapp:${caviar.version}:war</artifact>
+                            <artifact>com.atlassian.caviar:caviar-plugin-test-resources:${caviar.data.version}:zip</artifact>
                         </artifacts>
                     </configuration>
                 </plugin>
