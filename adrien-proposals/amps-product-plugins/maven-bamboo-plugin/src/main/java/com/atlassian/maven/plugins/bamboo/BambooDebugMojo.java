@@ -6,9 +6,4 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class BambooDebugMojo extends DebugMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.BAMBOO;
-    }
 }

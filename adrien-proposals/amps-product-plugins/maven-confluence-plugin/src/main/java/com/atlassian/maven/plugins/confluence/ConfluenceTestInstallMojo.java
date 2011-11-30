@@ -6,9 +6,4 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class ConfluenceTestInstallMojo extends TestInstallMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.CONFLUENCE;
-    }
 }

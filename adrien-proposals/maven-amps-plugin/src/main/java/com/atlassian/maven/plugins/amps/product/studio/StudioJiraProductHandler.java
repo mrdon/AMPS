@@ -1,7 +1,5 @@
 package com.atlassian.maven.plugins.amps.product.studio;
 
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_JIRA;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.HashMap;
@@ -13,6 +11,7 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.StudioJira;
 import com.atlassian.maven.plugins.amps.product.JiraProductHandler;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
@@ -33,7 +32,7 @@ public class StudioJiraProductHandler extends JiraProductHandler implements Stud
     @Override
     public String getId()
     {
-        return STUDIO_JIRA;
+        return StudioJira.ID;
     }
 
     @Override

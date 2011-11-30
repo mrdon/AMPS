@@ -7,9 +7,4 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class RefappTestInstallMojo extends TestInstallMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.REFAPP;
-    }
 }

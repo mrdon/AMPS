@@ -467,7 +467,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                 product.setDefaultValues();
 
                 // Product processedProduct = product.merge(defaultProduct);
-                if (ProductHandlerFactory.STUDIO_CROWD.equals(product.getId()))
+                if (StudioCrowd.ID.equals(product.getId()))
                 {
                     // This is a temporary fix for StudioCrowd - it requires atlassian.dev.mode=false - see AMPS-556
                     product.getSystemPropertyVariables().put("atlassian.dev.mode", "false");
@@ -567,7 +567,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         StudioProductHandler.setDefaultValues(getMavenContext(), product);
         product.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
         
-        if (ProductHandlerFactory.STUDIO_CROWD.equals(product.getId()))
+        if (StudioCrowd.ID.equals(product.getId()))
         {
             // This is a temporary fix for StudioCrowd - it requires atlassian.dev.mode=false - see AMPS-556
             product.getSystemPropertyVariables().put("atlassian.dev.mode", "false");

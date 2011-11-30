@@ -9,9 +9,4 @@ import org.apache.maven.plugin.MojoExecutionException;
  */
 public class RefappRunMojo extends RunMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.REFAPP;
-    }
 }

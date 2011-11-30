@@ -781,7 +781,7 @@ public class Product
     @Override
     public String toString()
     {
-        return "Product " + id + " [instanceId=" + instanceId + ", localhost:" + httpPort + contextPath + "]";
+        return getClass().getSimpleName() + " " + id + " [instanceId=" + instanceId + ", localhost:" + httpPort + contextPath + "]";
     }
 
 }

@@ -8,9 +8,4 @@ import org.jfrog.maven.annomojo.annotations.MojoGoal;
 @MojoGoal("cli")
 public class CrowdCliMojo extends CliMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.CROWD;
-    }
 }

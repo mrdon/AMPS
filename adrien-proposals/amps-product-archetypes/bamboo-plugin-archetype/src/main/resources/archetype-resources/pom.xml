@@ -45,12 +45,14 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-bamboo-plugin</artifactId>
+                <artifactId>maven-amps-plugin</artifactId>
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <productVersion>\${dollar}{bamboo.version}</productVersion>
-                    <productDataVersion>\${dollar}{bamboo.data.version}</productDataVersion>
+                    <bamboo>
+                        <version>\${dollar}{bamboo.version}</version>
+                        <dataVersion>\${dollar}{bamboo.data.version}</dataVersion>
+                    </bamboo>
                 </configuration>
             </plugin>
           

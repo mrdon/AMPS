@@ -189,23 +189,23 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo
     private String getGadgetCompatibleProductId(String pid)
     {
         String productId = pid;
-        if (ProductHandlerFactory.JIRA
+        if (Jira.ID
                 .equals(pid))
         {
             productId = "JIRA";
-        } else if (ProductHandlerFactory.CONFLUENCE
+        } else if (Confluence.ID
                 .equals(pid))
         {
             productId = "Confluence";
-        } else if (ProductHandlerFactory.BAMBOO
+        } else if (Bamboo.ID
                 .equals(pid))
         {
             productId = "Bamboo";
-        } else if (ProductHandlerFactory.CROWD
+        } else if (Crowd.ID
                 .equals(pid))
         {
             productId = "Crowd";
-        } else if (ProductHandlerFactory.FECRU
+        } else if (Fecru.ID
                 .equals(pid))
         {
             productId = "FishEye";
@@ -299,7 +299,7 @@ public class PluginModuleGenerationMojo extends AbstractProductAwareMojo
             //keep going, doesn't matter
         }
 
-        if (ProductHandlerFactory.JIRA
+        if (Jira.ID
                 .equals(productId))
         {
             try

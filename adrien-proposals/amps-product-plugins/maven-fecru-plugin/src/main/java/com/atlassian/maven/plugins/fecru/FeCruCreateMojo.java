@@ -6,8 +6,4 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class FeCruCreateMojo extends CreateMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException {
-        return ProductHandlerFactory.FECRU;
-    }
 }

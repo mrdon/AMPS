@@ -38,12 +38,16 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-crowd-plugin</artifactId>
+                <artifactId>maven-amps-plugin</artifactId>
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <productVersion>\${dollar}{crowd.version}</productVersion>
-                    <productDataVersion>\${dollar}{crowd.data.version}</productDataVersion>
+                    <products>
+                        <product>
+                            <version>\${dollar}{crowd.version}</version>
+                            <dataVersion>\${dollar}{crowd.data.version}</dataVersion>
+                        </product>
+                    </products>
                 </configuration>
             </plugin>
             <plugin>

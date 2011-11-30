@@ -60,12 +60,16 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-jira-plugin</artifactId>
+                <artifactId>maven-amps-plugin</artifactId>
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <productVersion>\${dollar}{jira.version}</productVersion>
-                    <productDataVersion>\${dollar}{jira.version}</productDataVersion>
+                    <products>
+                        <product>
+                            <version>\${dollar}{jira.version}</version>
+                            <dataVersion>\${dollar}{jira.version}</dataVersion>
+                        </product>
+                    </products>
                 </configuration>
             </plugin>
             <plugin>

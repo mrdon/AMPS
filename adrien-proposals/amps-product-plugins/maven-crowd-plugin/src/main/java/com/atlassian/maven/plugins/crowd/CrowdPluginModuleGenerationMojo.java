@@ -9,9 +9,4 @@ import org.apache.maven.plugin.MojoExecutionException;
  */
 public class CrowdPluginModuleGenerationMojo extends PluginModuleGenerationMojo{
 
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.CROWD;
-    }
 }

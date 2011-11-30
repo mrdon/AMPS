@@ -1,5 +1,6 @@
 package com.atlassian.maven.plugins.jira;
 
+import com.atlassian.maven.plugins.amps.Jira;
 import com.atlassian.maven.plugins.amps.ReleaseMojo;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
@@ -10,6 +11,6 @@ public class JiraReleaseMojo extends ReleaseMojo
     @Override
     protected String getDefaultProductId() throws MojoExecutionException
     {
-        return ProductHandlerFactory.JIRA;
+        return Jira.ID;
     }
 }

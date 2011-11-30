@@ -56,12 +56,14 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-confluence-plugin</artifactId>
+                <artifactId>maven-amps-plugin</artifactId>
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <productVersion>\${dollar}{confluence.version}</productVersion>
-                    <productDataVersion>\${dollar}{confluence.data.version}</productDataVersion>
+                    <confluence>
+                        <version>\${dollar}{confluence.version}</version>
+                        <dataVersion>\${dollar}{confluence.data.version}</dataVersion>
+                    </confluence>
                 </configuration>
             </plugin>
             <plugin>

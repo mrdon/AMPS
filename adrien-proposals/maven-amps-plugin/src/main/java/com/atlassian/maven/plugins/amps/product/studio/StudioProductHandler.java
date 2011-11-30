@@ -1,11 +1,5 @@
 package com.atlassian.maven.plugins.amps.product.studio;
 
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO;
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_BAMBOO;
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_CONFLUENCE;
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_CROWD;
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_FECRU;
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_JIRA;
 import static com.atlassian.maven.plugins.amps.util.ZipUtils.unzip;
 import static org.apache.commons.io.FileUtils.copyDirectory;
 
@@ -30,6 +24,12 @@ import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
 import com.atlassian.maven.plugins.amps.ProductExecution;
+import com.atlassian.maven.plugins.amps.Studio;
+import com.atlassian.maven.plugins.amps.StudioBamboo;
+import com.atlassian.maven.plugins.amps.StudioConfluence;
+import com.atlassian.maven.plugins.amps.StudioCrowd;
+import com.atlassian.maven.plugins.amps.StudioFecru;
+import com.atlassian.maven.plugins.amps.StudioJira;
 import com.atlassian.maven.plugins.amps.product.AmpsProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
@@ -58,22 +58,22 @@ final public class StudioProductHandler extends AmpsProductHandler
     private static final Map<String, String> defaultContextPaths = new HashMap<String, String>()
     {
         {
-            put(STUDIO_BAMBOO, "/builds");
-            put(STUDIO_CONFLUENCE, "/wiki");
-            put(STUDIO_CROWD, "/crowd");
-            put(STUDIO_FECRU, "/");
-            put(STUDIO_JIRA, "/jira");
+            put(StudioBamboo.ID, "/builds");
+            put(StudioConfluence.ID, "/wiki");
+            put(StudioCrowd.ID, "/crowd");
+            put(StudioFecru.ID, "/");
+            put(StudioJira.ID, "/jira");
         }
     };
 
     private static final Map<String, Integer> defaultDebugPorts = new HashMap<String, Integer>()
     {
         {
-            put(STUDIO_BAMBOO, 5011);
-            put(STUDIO_CONFLUENCE, 5007);
-            put(STUDIO_CROWD, 5003);
-            put(STUDIO_FECRU, 5005);
-            put(STUDIO_JIRA, 5009);
+            put(StudioBamboo.ID, 5011);
+            put(StudioConfluence.ID, 5007);
+            put(StudioCrowd.ID, 5003);
+            put(StudioFecru.ID, 5005);
+            put(StudioJira.ID, 5009);
         }
     };
 
@@ -95,7 +95,7 @@ final public class StudioProductHandler extends AmpsProductHandler
     @Override
     public String getId()
     {
-        return STUDIO;
+        return Studio.ID;
     }
 
     /**
@@ -114,11 +114,11 @@ final public class StudioProductHandler extends AmpsProductHandler
         List<String> instanceIds = studioContext.getInstanceIds();
         if (instanceIds.isEmpty())
         {
-            instanceIds.add(STUDIO_CROWD);
-            instanceIds.add(STUDIO_JIRA);
-            instanceIds.add(STUDIO_CONFLUENCE);
-            instanceIds.add(STUDIO_BAMBOO);
-            instanceIds.add(STUDIO_FECRU);
+            instanceIds.add(StudioCrowd.ID);
+            instanceIds.add(StudioJira.ID);
+            instanceIds.add(StudioConfluence.ID);
+            instanceIds.add(StudioBamboo.ID);
+            instanceIds.add(StudioFecru.ID);
         }
         return instanceIds;
     }
@@ -280,7 +280,7 @@ final public class StudioProductHandler extends AmpsProductHandler
             // and Fisheye doesn't support parallel startup.
 
             Product product = execution.getProduct();
-            if (STUDIO_CROWD.equals(product.getId()))
+            if (StudioCrowd.ID.equals(product.getId()))
             {
                 studioProperties.setCrowd(product);
                 if (product.getSynchronousStartup() == null)
@@ -288,7 +288,7 @@ final public class StudioProductHandler extends AmpsProductHandler
                     product.setSynchronousStartup(Boolean.TRUE);
                 }
             }
-            else if (STUDIO_CONFLUENCE.equals(product.getId()))
+            else if (StudioConfluence.ID.equals(product.getId()))
             {
                 studioProperties.setConfluence(product);
                 if (product.getSynchronousStartup() == null)
@@ -296,7 +296,7 @@ final public class StudioProductHandler extends AmpsProductHandler
                     product.setSynchronousStartup(studioContext.getSynchronousStartup());
                 }
             }
-            else if (STUDIO_JIRA.equals(product.getId()))
+            else if (StudioJira.ID.equals(product.getId()))
             {
                 studioProperties.setJira(product);
                 confluenceStandalone = false;
@@ -305,12 +305,12 @@ final public class StudioProductHandler extends AmpsProductHandler
                     product.setSynchronousStartup(studioContext.getSynchronousStartup());
                 }
             }
-            else if (STUDIO_FECRU.equals(product.getId()))
+            else if (StudioFecru.ID.equals(product.getId()))
             {
                 studioProperties.setFisheye(product);
                 confluenceStandalone = false;
             }
-            else if (STUDIO_BAMBOO.equals(product.getId()))
+            else if (StudioBamboo.ID.equals(product.getId()))
             {
                 studioProperties.setBamboo(product);
                 confluenceStandalone = false;

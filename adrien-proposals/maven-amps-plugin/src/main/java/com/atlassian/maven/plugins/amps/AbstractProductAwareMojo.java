@@ -66,7 +66,7 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
             product = getDefaultProductId();
             if (product == null)
             {
-                return ProductHandlerFactory.REFAPP;
+                return Refapp.ID;
             }
         }
         return product;

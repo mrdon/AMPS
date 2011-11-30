@@ -20,15 +20,20 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-${shitty.product}-plugin</artifactId>
+                <artifactId>maven-amps-plugin</artifactId>
                 <version>testing</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <installPlugin>false</installPlugin>
-                    <wait>false</wait>
-                    <writePropertiesToFile>true</writePropertiesToFile>
-                    <cliPort>0</cliPort>
-                    <!-- don't open connection on port -->
+                    <products>
+                        <product>
+                            <id>${shitty.product}</id>
+                            <installPlugin>false</installPlugin>
+                            <wait>false</wait>
+                            <writePropertiesToFile>true</writePropertiesToFile>
+                            <cliPort>0</cliPort>
+                            <!-- don't open connection on port -->
+                        </product>
+                    </products>
                 </configuration>
             </plugin>
             <plugin>

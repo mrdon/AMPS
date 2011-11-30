@@ -54,7 +54,7 @@
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <productVersion>\${dollar}{refapp.version}</productVersion>
+                    <version>\${dollar}{refapp.version}</version>
                 </configuration>
             </plugin>
             <plugin>

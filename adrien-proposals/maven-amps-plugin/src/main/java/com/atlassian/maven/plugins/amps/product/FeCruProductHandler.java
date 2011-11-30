@@ -20,6 +20,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 
+import com.atlassian.maven.plugins.amps.Fecru;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
@@ -46,7 +47,7 @@ public class FeCruProductHandler extends AbstractProductHandler
 
     public String getId()
     {
-        return ProductHandlerFactory.FECRU;
+        return Fecru.ID;
     }
 
     protected ProductArtifact getArtifact()

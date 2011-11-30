@@ -48,12 +48,12 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-fecru-plugin</artifactId>
+                <artifactId>maven-amps-plugin</artifactId>
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <productVersion>\${dollar}{fecru.version}</productVersion>
-                    <productDataVersion>\${dollar}{fecru.data.version}</productDataVersion>
+                    <version>\${dollar}{fecru.version}</version>
+                    <dataVersion>\${dollar}{fecru.data.version}</dataVersion>
                 </configuration>
             </plugin>
             <plugin>

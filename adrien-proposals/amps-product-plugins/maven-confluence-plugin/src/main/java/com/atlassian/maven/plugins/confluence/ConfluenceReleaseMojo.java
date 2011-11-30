@@ -8,9 +8,4 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class ConfluenceReleaseMojo extends ReleaseMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.CONFLUENCE;
-    }
 }

@@ -1,7 +1,6 @@
 
 package com.atlassian.maven.plugins.amps.product.studio;
 
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_BAMBOO;
 import static java.lang.String.format;
 
 import java.io.File;
@@ -15,6 +14,7 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.StudioBamboo;
 import com.atlassian.maven.plugins.amps.product.BambooProductHandler;
 
 /**
@@ -32,7 +32,7 @@ public class StudioBambooProductHandler extends BambooProductHandler
     @Override
     public String getId()
     {
-        return STUDIO_BAMBOO;
+        return StudioBamboo.ID;
     }
 
     @Override

@@ -6,10 +6,5 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class ConfluenceCreateMojo extends CreateMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.CONFLUENCE;
-    }
 }
 

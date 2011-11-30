@@ -1,6 +1,5 @@
 package com.atlassian.maven.plugins.amps.product.studio;
 
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_CONFLUENCE;
 import static java.lang.String.format;
 
 import java.io.File;
@@ -14,6 +13,7 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.StudioConfluence;
 import com.atlassian.maven.plugins.amps.product.ConfluenceProductHandler;
 
 /**
@@ -31,7 +31,7 @@ public class StudioConfluenceProductHandler extends ConfluenceProductHandler imp
     @Override
     public String getId()
     {
-        return STUDIO_CONFLUENCE;
+        return StudioConfluence.ID;
     }
 
     @Override

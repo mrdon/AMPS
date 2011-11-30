@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.atlassian.maven.plugins.amps.Crowd;
 import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
@@ -29,7 +30,7 @@ public class CrowdProductHandler extends AbstractWebappProductHandler
 
     public String getId()
     {
-        return ProductHandlerFactory.CROWD;
+        return Crowd.ID;
     }
 
     @Override

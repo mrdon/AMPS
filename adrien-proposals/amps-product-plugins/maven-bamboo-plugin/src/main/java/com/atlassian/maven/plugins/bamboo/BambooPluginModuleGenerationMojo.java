@@ -9,9 +9,4 @@ import org.apache.maven.plugin.MojoExecutionException;
  */
 public class BambooPluginModuleGenerationMojo extends PluginModuleGenerationMojo{
 
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.BAMBOO;
-    }
 }

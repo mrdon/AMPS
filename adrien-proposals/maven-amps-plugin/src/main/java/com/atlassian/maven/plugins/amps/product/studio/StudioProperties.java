@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.maven.surefire.shade.org.apache.commons.lang.StringUtils;
 
 import com.atlassian.maven.plugins.amps.Product;
+import com.atlassian.maven.plugins.amps.Studio;
 import com.atlassian.maven.plugins.amps.product.FeCruProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.google.common.collect.ImmutableMap;
@@ -61,7 +62,7 @@ public class StudioProperties
      */
     public StudioProperties(Product studioContext)
     {
-        if (!ProductHandlerFactory.STUDIO.equals(studioContext.getId()))
+        if (!Studio.ID.equals(studioContext.getId()))
         {
             throw new IllegalArgumentException("The Studio Properties should be based on the Studio product");
         }

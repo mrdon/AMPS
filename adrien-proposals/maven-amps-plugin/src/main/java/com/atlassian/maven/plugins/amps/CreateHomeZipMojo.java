@@ -35,7 +35,7 @@ public class CreateHomeZipMojo extends AbstractProductHandlerMojo {
         Product product = getProductToRun();
         ProductHandler productHandler = createProductHandler(product.getId());
 
-        if (ProductHandlerFactory.STUDIO.equals(product.getId()))
+        if (Studio.ID.equals(product.getId()))
         {
             configureStudio(product, (StudioProductHandler) productHandler);
         }

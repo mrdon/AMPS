@@ -1,7 +1,6 @@
 
 package com.atlassian.maven.plugins.amps.product.studio;
 
-import static com.atlassian.maven.plugins.amps.product.ProductHandlerFactory.STUDIO_FECRU;
 import static org.apache.commons.io.FileUtils.copyDirectory;
 
 import java.io.File;
@@ -17,6 +16,7 @@ import com.atlassian.maven.plugins.amps.MavenContext;
 import com.atlassian.maven.plugins.amps.MavenGoals;
 import com.atlassian.maven.plugins.amps.Product;
 import com.atlassian.maven.plugins.amps.ProductArtifact;
+import com.atlassian.maven.plugins.amps.StudioFecru;
 import com.atlassian.maven.plugins.amps.product.FeCruProductHandler;
 import com.atlassian.maven.plugins.amps.util.ConfigFileUtils.Replacement;
 
@@ -35,7 +35,7 @@ public class StudioFeCruProductHandler extends FeCruProductHandler implements St
     @Override
     public String getId()
     {
-        return STUDIO_FECRU;
+        return StudioFecru.ID;
     }
 
     @Override

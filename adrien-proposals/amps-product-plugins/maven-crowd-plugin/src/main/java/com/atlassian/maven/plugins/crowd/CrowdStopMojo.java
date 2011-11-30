@@ -7,9 +7,4 @@ import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 
 public class CrowdStopMojo extends StopMojo
 {
-    @Override
-    protected String getDefaultProductId() throws MojoExecutionException
-    {
-        return ProductHandlerFactory.CROWD;
-    }
 }
