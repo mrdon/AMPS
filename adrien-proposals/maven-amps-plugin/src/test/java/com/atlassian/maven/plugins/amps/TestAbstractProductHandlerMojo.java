@@ -7,6 +7,7 @@ import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
 import org.junit.Test;
 
+
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class TestAbstractProductHandlerMojo
         barProd.setVersion("2.0");
 
         Map<String,Product> prodMap = new HashMap<String, Product>();
-        mojo.makeProductsInheritDefaultConfiguration(asList(fooProd, barProd), prodMap);
+        //mojo.makeProductsInheritDefaultConfiguration(asList(fooProd, barProd), prodMap);
         assertEquals(2, prodMap.size());
         assertEquals("1.0", prodMap.get("foo").getVersion());
         assertEquals("/foo", prodMap.get("foo").getContextPath());
@@ -55,7 +56,7 @@ public class TestAbstractProductHandlerMojo
         barProd.setVersion("2.0");
 
         Map<String,Product> prodMap = new HashMap<String, Product>();
-        mojo.makeProductsInheritDefaultConfiguration(asList(fooProd, barProd), prodMap);
+        //mojo.makeProductsInheritDefaultConfiguration(asList(fooProd, barProd), prodMap);
         assertEquals(3, prodMap.size());
         assertEquals("1.0", prodMap.get("foo").getVersion());
         assertEquals("/foo", prodMap.get("foo").getContextPath());
@@ -71,7 +72,7 @@ public class TestAbstractProductHandlerMojo
         SomeMojo mojo = new SomeMojo("foo");
 
         Map<String,Product> prodMap = new HashMap<String, Product>();
-        mojo.makeProductsInheritDefaultConfiguration(Collections.<Product>emptyList(), prodMap);
+        //mojo.makeProductsInheritDefaultConfiguration(Collections.<Product>emptyList(), prodMap);
         assertEquals(1, prodMap.size());
         assertEquals("/foo", prodMap.get("foo").getContextPath());
     }
@@ -83,7 +84,7 @@ public class TestAbstractProductHandlerMojo
         public SomeMojo(String defaultProductId)
         {
             this.defaultProductId = defaultProductId;
-            contextPath = "/foo";
+            //contextPath = "/foo";
         }
 
         @Override

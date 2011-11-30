@@ -42,27 +42,10 @@ import org.jfrog.maven.annomojo.annotations.MojoParameter;
 /**
  * Base class for webapp mojos
  */
-public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerAwareMojo {
+public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerAwareMojo
+{
 
-    // ------ start inline product context
-
-    protected static final String DEFAULT_CONTAINER = "tomcat6x";
     private static final String DEFAULT_SERVER;
-    private static final String DEFAULT_PRODUCT_DATA_VERSION = "LATEST";
-    private static final String DEFAULT_PDK_VERSION = "0.4";
-    private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
-    private static final String DEFAULT_FASTDEV_VERSION = "1.9";
-    private static final String DEFAULT_DEV_TOOLBOX_VERSION = "1.0.3";
-
-    /**
-      * Default product startup timeout: three minutes
-     */
-    private static final int DEFAULT_PRODUCT_STARTUP_TIMEOUT = 1000 * 60 * 3;
-
-    /**
-      * Default product shutdown timeout: three minutes
-      */
-    private static final int DEFAULT_PRODUCT_SHUTDOWN_TIMEOUT = 1000 * 60 * 3;
 
     static
     {
@@ -77,36 +60,38 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         }
         DEFAULT_SERVER = localHostName;
     }
-
-    /**
+    /*
+    *//**
      * Container to run in
      */
-    @MojoParameter(expression = "${container}", defaultValue = DEFAULT_CONTAINER)
-    protected String containerId;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${container}")
+     * protected String containerId;
+     *//**
      * HTTP port for the servlet containers
      */
-    @MojoParameter(expression = "${http.port}", defaultValue = "0")
-    private int httpPort;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${http.port}", defaultValue = "0")
+     * private int httpPort;
+     *//**
      * Application context path
      */
-    @MojoParameter(expression = "${context.path}")
-    protected String contextPath;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${context.path}")
+     * protected String contextPath;
+     *//**
      * Application server
      */
-    @MojoParameter(expression = "${server}")
-    protected String server;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${server}")
+     * protected String server;
+     *//**
      * Webapp version
      */
-    @MojoParameter(expression = "${product.version}")
-    private String productVersion;
+    /*
+     * @MojoParameter(expression = "${product.version}")
+     * private String productVersion;
+     */
 
     /**
      * JVM arguments to pass to cargo
@@ -117,83 +102,80 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * Product startup timeout in milliseconds
      */
-    @MojoParameter(expression = "${product.start.timeout}")
-    private int startupTimeout;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${product.start.timeout}")
+     * private int startupTimeout;
+     *//**
      * Product shutdown timeout in milliseconds
      */
-    @MojoParameter(expression = "${product.stop.timeout}")
-    private int shutdownTimeout;
-
-    /**
-     * System systemProperties to pass to cargo
-     *
-     * @deprecated Since 3.2, use systemPropertyVariables instead
+    /*
+     * @MojoParameter(expression = "${product.stop.timeout}")
+     * private int shutdownTimeout;
      */
-    @MojoParameter
-    @Deprecated
-    protected Properties systemProperties = new Properties();
 
     /**
-     * System Properties to pass to cargo using a more familiar syntax.
-     *
+     * System Properties to pass to cargo, using {@literal <name>value</name>}
+     * 
      * @since 3.2
      */
     @MojoParameter
     protected Map<String, Object> systemPropertyVariables = new HashMap<String, Object>();
+    /*
 
-
-    /**
+    *//**
      * A log4j systemProperties file
      */
-    @MojoParameter
-    protected File log4jProperties;
-
-    /**
+    /*
+     * @MojoParameter
+     * protected File log4jProperties;
+     *//**
      * The test resources version
+     * 
      * @deprecated Since 3.0-beta2
      */
-    @Deprecated
-    @MojoParameter(expression = "${test.resources.version}")
-    private String testResourcesVersion;
-
-    /**
+    /*
+     * @Deprecated
+     * 
+     * @MojoParameter(expression = "${test.resources.version}")
+     * private String testResourcesVersion;
+     *//**
      * The test resources version
      */
-    @MojoParameter(expression = "${product.data.version}", defaultValue = DEFAULT_PRODUCT_DATA_VERSION)
-    private String productDataVersion;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${product.data.version}", defaultValue = DEFAULT_PRODUCT_DATA_VERSION)
+     * private String productDataVersion;
+     *//**
      * The path to a custom test resources zip
      */
-    @MojoParameter(expression = "${product.data.path}")
-    private String productDataPath;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${product.data.path}")
+     * private String productDataPath;
+     *//*
+    *//**
      * If FastDev should be enabled
      */
-    @MojoParameter(expression = "${fastdev.enable}", defaultValue = "true")
-    protected boolean enableFastdev;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${fastdev.enable}", defaultValue = "true")
+     * protected boolean enableFastdev;
+     *//**
      * The version of FastDev to bundle
      */
-    @MojoParameter(expression = "${fastdev.version}", defaultValue = DEFAULT_FASTDEV_VERSION)
-    protected String fastdevVersion;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${fastdev.version}", defaultValue = DEFAULT_FASTDEV_VERSION)
+     * protected String fastdevVersion;
+     *//**
      * If DevToolbox should be enabled
      */
-    @MojoParameter(expression = "${devtoolbox.enable}", defaultValue = "true")
-    protected boolean enableDevToolbox;
-
-    /**
+    /*
+     * @MojoParameter(expression = "${devtoolbox.enable}", defaultValue = "true")
+     * protected boolean enableDevToolbox;
+     *//**
      * The version of DevToolbox to bundle
      */
-    @MojoParameter(expression = "${devtoolbox.version}", defaultValue = DEFAULT_DEV_TOOLBOX_VERSION)
-    protected String devToolboxVersion;
-
+    /*
+     * @MojoParameter(expression = "${devtoolbox.version}", defaultValue = DEFAULT_DEV_TOOLBOX_VERSION)
+     * protected String devToolboxVersion;
+     */
     @MojoParameter
     private List<ProductArtifact> pluginArtifacts = new ArrayList<ProductArtifact>();
 
@@ -206,40 +188,48 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoParameter
     private List<ProductArtifact> bundledArtifacts = new ArrayList<ProductArtifact>();
-
-    /**
+    /*
+    *//**
      * SAL version
+     * 
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
-    @Deprecated
-    @MojoParameter
-    private String salVersion;
-
-    /**
+    /*
+     * @Deprecated
+     * 
+     * @MojoParameter
+     * private String salVersion;
+     *//**
      * Atlassian Plugin Development Kit (PDK) version
+     * 
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
-    @Deprecated
-    @MojoParameter(defaultValue = DEFAULT_PDK_VERSION)
-    private String pdkVersion;
-
-    /**
+    /*
+     * @Deprecated
+     * 
+     * @MojoParameter(defaultValue = DEFAULT_PDK_VERSION)
+     * private String pdkVersion;
+     *//**
      * Atlassian REST module version
+     * 
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
-    @Deprecated
-    @MojoParameter
-    private String restVersion;
-
-
-    /**
+    /*
+     * @Deprecated
+     * 
+     * @MojoParameter
+     * private String restVersion;
+     *//**
      * Felix OSGi web console version
+     * 
      * @deprecated Since 3.2, use {@link #pluginArtifacts} instead
      */
-    @Deprecated
-    @MojoParameter(defaultValue =  DEFAULT_WEB_CONSOLE_VERSION)
-    private String webConsoleVersion;
-
+    /*
+     * @Deprecated
+     * 
+     * @MojoParameter(defaultValue = DEFAULT_WEB_CONSOLE_VERSION)
+     * private String webConsoleVersion;
+     */
     // ---------------- end product context
 
     /**
@@ -278,7 +268,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     /**
      * If the plugin and optionally its test plugin should be installed
      */
-    @MojoParameter (expression = "${install.plugin}", defaultValue = "true")
+    @MojoParameter(expression = "${install.plugin}", defaultValue = "true")
     protected boolean installPlugin;
 
     /**
@@ -298,7 +288,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     @MojoParameter(expression = "${localRepository}")
     protected ArtifactRepository localRepository;
 
-
     /**
      * The remote Maven repositories used by the artifact resolver to look for JARs.
      */
@@ -306,8 +295,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     protected List repositories;
 
     /**
-     * The artifact factory is used to create valid Maven
-     * {@link org.apache.maven.artifact.Artifact} objects. This is used to pass Maven artifacts to
+     * The artifact factory is used to create valid Maven {@link org.apache.maven.artifact.Artifact} objects. This is used to pass Maven artifacts to
      * the artifact resolver so that it can download the required JARs to put in the embedded
      * container's classpaths.
      */
@@ -319,69 +307,23 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     @MojoParameter
     protected List<Product> products = new ArrayList<Product>();
-
-    /**
+    /*
+    *//**
      * File the container logging output will be sent to.
      */
-    @MojoParameter
-    private String output;
-
+    /*
+     * @MojoParameter
+     * private String output;
+     */
     /**
      * Start the products in parallel (TestGroups and Studio).
      */
-    @MojoParameter (expression = "${parallel}", defaultValue = "false")
+    @MojoParameter(expression = "${parallel}", defaultValue = "false")
     protected boolean parallel;
 
-
-    protected Product createDefaultProductContext() throws MojoExecutionException
-    {
-        Product ctx = new Product();
-        ctx.setId(getProductId());
-        ctx.setContainerId(containerId);
-        ctx.setServer(server);
-        ctx.setContextPath(contextPath);
-        ctx.setJvmArgs(jvmArgs);
-        ctx.setStartupTimeout(startupTimeout);
-        ctx.setShutdownTimeout(shutdownTimeout);
-
-        // If they aren't defined, define those system properties. They will override the product
-        // handler's properties.
-        Map<String, Object> properties = new HashMap<String, Object>(systemPropertyVariables);
-        setDefaultSystemProperty(properties, "atlassian.dev.mode", "true");
-        setDefaultSystemProperty(properties, "java.awt.headless", "true");
-        setDefaultSystemProperty(properties, "plugin.resource.directories", buildResourcesList());
-        setDefaultSystemProperty(properties, "plugin.root.directories", buildRootProperty());
-
-        ctx.setSystemPropertyVariables(properties);
-        ctx.setBundledArtifacts(bundledArtifacts);
-        ctx.setLibArtifacts(libArtifacts);
-        ctx.setPluginArtifacts(pluginArtifacts);
-        ctx.setLog4jProperties(log4jProperties);
-        ctx.setHttpPort(httpPort);
-
-        ctx.setVersion(productVersion);
-        ctx.setDataVersion(productDataVersion);
-        ctx.setDataPath(productDataPath);
-
-        // continue to have these work for now
-        ctx.setRestVersion(restVersion);
-        ctx.setSalVersion(salVersion);
-        ctx.setPdkVersion(pdkVersion);
-        ctx.setWebConsoleVersion(webConsoleVersion);
-
-        ctx.setEnableFastdev(enableFastdev);
-        ctx.setFastdevVersion(fastdevVersion);
-
-        ctx.setEnableDevToolbox(enableDevToolbox);
-        ctx.setDevToolboxVersion(devToolboxVersion);
-
-        ctx.setHttpPort(httpPort);
-        return ctx;
-    }
-
     /**
-     * @return a comma-separated list of resource directories.  If a test plugin is detected, the
-     * test resources directories are included as well.
+     * @return a comma-separated list of resource directories. If a test plugin is detected, the
+     *         test resources directories are included as well.
      */
     private String buildResourcesList()
     {
@@ -389,24 +331,30 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         // on-the-fly reloading
         StringBuilder resourceProp = new StringBuilder();
         MavenProject mavenProject = getMavenContext().getProject();
-        @SuppressWarnings("unchecked") List<Resource> resList = mavenProject.getResources();
-        for (int i = 0; i < resList.size(); i++) {
+        @SuppressWarnings("unchecked")
+        List<Resource> resList = mavenProject.getResources();
+        for (int i = 0; i < resList.size(); i++)
+        {
             resourceProp.append(resList.get(i).getDirectory());
-            if (i + 1 != resList.size()) {
+            if (i + 1 != resList.size())
+            {
                 resourceProp.append(",");
             }
         }
 
         if (ProjectUtils.shouldDeployTestJar(getMavenContext()))
         {
-            @SuppressWarnings("unchecked") List<Resource> testResList = mavenProject.getTestResources();
-            for (int i = 0; i < testResList.size(); i++) {
+            @SuppressWarnings("unchecked")
+            List<Resource> testResList = mavenProject.getTestResources();
+            for (int i = 0; i < testResList.size(); i++)
+            {
                 if (i == 0 && resourceProp.length() > 0)
                 {
                     resourceProp.append(",");
                 }
                 resourceProp.append(testResList.get(i).getDirectory());
-                if (i + 1 != testResList.size()) {
+                if (i + 1 != testResList.size())
+                {
                     resourceProp.append(",");
                 }
             }
@@ -416,7 +364,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     /**
      * @return the path of the project root, for the <tt>plugin.root.directories</tt> system property.
-     *
+     * 
      * @since 3.6
      */
     private String buildRootProperty()
@@ -425,109 +373,11 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         return mavenProject.getBasedir().getPath();
     }
 
-    private static void setDefaultSystemProperty(final Map<String,Object> props, final String key, final String value)
+    private static void setDefaultSystemProperty(final Map<String, Object> props, final String key, final String value)
     {
         if (!props.containsKey(key))
         {
             props.put(key, System.getProperty(key, value));
-        }
-    }
-
-    /**
-     * Set the default values for the product
-     * @param product the product
-     * @param handler the product handler associated to the product
-     */
-    protected void setDefaultValues(Product product, ProductHandler handler)
-    {
-        product.setInstanceId(getProductInstanceId(product));
-
-        // If it's a Studio product, some defaults are different (ex: context path for Confluence is /wiki)
-        StudioProductHandler.setDefaultValues(getMavenContext(), product);
-
-        //Apply the common default values
-        String dversion = System.getProperty("product.data.version", product.getDataVersion());
-        String pversion = System.getProperty("product.version", product.getVersion());
-        String dpath = System.getProperty("product.data.path", product.getDataPath());
-
-        product.setDataPath(dpath);
-        product.setDataVersion(dversion);
-        product.setVersion(pversion);
-        product.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
-
-        if (product.getContainerId() == null)
-        {
-            product.setContainerId(DEFAULT_CONTAINER);
-        }
-
-        if (product.getServer() == null)
-        {
-            product.setServer(DEFAULT_SERVER);
-        }
-
-        if (product.getDataVersion() == null)
-        {
-            product.setDataVersion(DEFAULT_PRODUCT_DATA_VERSION);
-        }
-
-        if (product.getPdkVersion() == null)
-        {
-            product.setPdkVersion(DEFAULT_PDK_VERSION);
-        }
-
-        if (product.getWebConsoleVersion() == null)
-        {
-            product.setWebConsoleVersion(DEFAULT_WEB_CONSOLE_VERSION);
-        }
-
-        if (product.isEnableFastdev() == null)
-        {
-            product.setEnableFastdev(true);
-        }
-
-        if (product.getFastdevVersion() == null)
-        {
-            product.setFastdevVersion(DEFAULT_FASTDEV_VERSION);
-        }
-
-        if (product.isEnableDevToolbox() == null)
-        {
-            product.setEnableDevToolbox(true);
-        }
-
-        if (product.getDevToolboxVersion() == null)
-        {
-            product.setDevToolboxVersion(DEFAULT_DEV_TOOLBOX_VERSION);
-        }
-
-        if (product.getOutput() == null)
-        {
-            product.setOutput(output);
-        }
-
-        if (product.getStartupTimeout() <= 0)
-        {
-            product.setStartupTimeout(DEFAULT_PRODUCT_STARTUP_TIMEOUT);
-        }
-
-        if (product.getShutdownTimeout() <= 0)
-        {
-            product.setShutdownTimeout(DEFAULT_PRODUCT_SHUTDOWN_TIMEOUT);
-        }
-
-        if (product.getHttpPort() == 0)
-        {
-            product.setHttpPort(handler.getDefaultHttpPort());
-        }
-
-        if (product.getVersion() == null)
-        {
-            product.setVersion("RELEASE");
-        }
-
-        if (product.getContextPath() == null)
-        {
-            product.setContextPath("/" + handler.getId());
         }
     }
 
@@ -559,9 +409,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         stringToArtifactList(pluginArtifactsString, pluginArtifacts);
         stringToArtifactList(libArtifactsString, libArtifacts);
         stringToArtifactList(bundledArtifactsString, bundledArtifacts);
-        systemPropertyVariables.putAll((Map) systemProperties);
+        // systemPropertyVariables.putAll((Map) systemProperties);
 
         detectDeprecatedVersionOverrides();
+
+        // Set the default values for the products
+        setDefaultValues(products);
 
         doExecute();
     }
@@ -569,7 +422,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     private void detectDeprecatedVersionOverrides()
     {
         Properties props = getMavenContext().getProject().getProperties();
-        for (String deprecatedProperty : new String[] {"sal.version", "rest.version", "web.console.version", "pdk.version"})
+        for (String deprecatedProperty : new String[] { "sal.version", "rest.version", "web.console.version", "pdk.version" })
         {
             if (props.containsKey(deprecatedProperty))
             {
@@ -577,6 +430,42 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                         "  Use <pluginArtifacts> or <libArtifacts> to explicitly override bundled plugins and libraries, respectively.");
             }
         }
+    }
+
+    protected void setDefaultValues(List<Product> products2)
+    {
+        if (!products.isEmpty())
+        {
+            for (Product product : products)
+            {
+                product.setDefaultValues();
+
+                // Product processedProduct = product.merge(defaultProduct);
+                if (ProductHandlerFactory.STUDIO_CROWD.equals(product.getId()))
+                {
+                    // This is a temporary fix for StudioCrowd - it requires atlassian.dev.mode=false - see AMPS-556
+                    product.getSystemPropertyVariables().put("atlassian.dev.mode", "false");
+                }
+
+            }
+            for (Product product : products)
+            {
+
+                // If it's a Studio product, some defaults are different (ex: context path for Confluence is /wiki)
+                StudioProductHandler.setDefaultValues(getMavenContext(), product);
+                // Apply the common default values
+                /*
+                 * String dversion = System.getProperty("product.data.version", product.getDataVersion());
+                 * String pversion = System.getProperty("product.version", product.getVersion());
+                 * String dpath = System.getProperty("product.data.path", product.getDataPath());
+                 * 
+                 * product.setDataPath(dpath);
+                 * product.setDataVersion(dversion);
+                 * product.setVersion(pversion);
+                 */product.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
+            }
+        }
+
     }
 
     /**
@@ -590,59 +479,24 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     protected Map<String, Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
     {
         Map<String, Product> productMap = new HashMap<String, Product>();
-
-        // Products in the <products> tag inherit from the upper settings, e.g. when there's a <httpPort> tag for for all products
-        makeProductsInheritDefaultConfiguration(products, productMap);
-
-        for (Product ctx : productMap.values())
+        for (Product product : products)
         {
-            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext(), goals);
-            setDefaultValues(ctx, handler);
+            productMap.put(product.getInstanceId(), product);
         }
         return productMap;
     }
 
-    /**
-     * Puts the list of {@literal <products>} in productMap:
-     * <ul>
-     * <li>The {@literal <product>} from the maven-amps-plugin configuration (if missing, RefApp is used)</li>
-     * <li>The {@literal <products>} from the maven-amps-plugin configuration</li>
-     * </ul>
-     */
-    void makeProductsInheritDefaultConfiguration(List<Product> products, Map<String, Product> productMap) throws MojoExecutionException
+    private Product createProductContext(String productNickname, String instanceId) throws MojoExecutionException
     {
-        Product defaultProduct = createDefaultProductContext();
-        productMap.put(getProductId(), defaultProduct);
-        if (!products.isEmpty())
-        {
-            for (Product product : products)
-            {
-                Product processedProduct = product.merge(defaultProduct);
-                if (ProductHandlerFactory.STUDIO_CROWD.equals(processedProduct.getId()))
-                {
-                    // This is a temporary fix for StudioCrowd - it requires atlassian.dev.mode=false - see AMPS-556
-                    processedProduct.getSystemPropertyVariables().put("atlassian.dev.mode", "false");
-                }
-                String instanceId = getProductInstanceId(processedProduct);
-                productMap.put(instanceId, processedProduct);
-            }
-        }
-    }
-
-    private String getProductInstanceId(Product processedProduct)
-    {
-        return processedProduct.getInstanceId() == null ? processedProduct.getId() : processedProduct.getInstanceId();
-    }
-
-
-    private Product createProductContext(String productNickname, String instanceId, ProductHandler handler) throws MojoExecutionException
-    {
-        getLog().info(String.format("Studio (instanceId=%s): No product with name %s is defined in the pom. Using a default product.", instanceId, productNickname));
-        Product product;
-        product = createDefaultProductContext();
+        getLog().info(
+                String.format("Studio (instanceId=%s): No product with name %s is defined in the pom. Using a default product.", instanceId, productNickname));
+        Product product = new Product();
         product.setId(productNickname);
         product.setInstanceId(instanceId);
-        setDefaultValues(product, handler);
+        product.setDefaultValues();
+        StudioProductHandler.setDefaultValues(getMavenContext(), product);
+        product.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
+        
         if (ProductHandlerFactory.STUDIO_CROWD.equals(product.getId()))
         {
             // This is a temporary fix for StudioCrowd - it requires atlassian.dev.mode=false - see AMPS-556
@@ -715,10 +569,11 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         }
     }
 
-
     /**
      * Waits until all products are running or stopped
-     * @param startingUp true if starting up the products, false if shutting down.
+     * 
+     * @param startingUp
+     *            true if starting up the products, false if shutting down.
      */
     protected void waitForProducts(List<ProductExecution> productExecutions, boolean startingUp) throws MojoExecutionException
     {
@@ -730,8 +585,11 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
     /**
      * Ping the product until it's up or stopped
-     * @param startingUp true if applications are expected to be up; false if applications are expected to be brought down
-     * @throws MojoExecutionException if the product didn't have the expected behaviour beofre the timeout
+     * 
+     * @param startingUp
+     *            true if applications are expected to be up; false if applications are expected to be brought down
+     * @throws MojoExecutionException
+     *             if the product didn't have the expected behaviour beofre the timeout
      */
     private void pingRepeatedly(Product product, boolean startingUp) throws MojoExecutionException
     {
@@ -818,22 +676,24 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     private Iterator<ProductExecution> getStudioExecutions(final List<ProductExecution> productExecutions)
     {
-        return Iterables.filter(productExecutions, new Predicate<ProductExecution>(){
+        return Iterables.filter(productExecutions, new Predicate<ProductExecution>()
+        {
 
             @Override
             public boolean apply(ProductExecution input)
             {
                 return input.getProductHandler() instanceof StudioProductHandler;
-            }}).iterator();
+            }
+        }).iterator();
     }
-
 
     /**
      * If there is any Studio instance, returns a list with all products requested by this instance.
-     *
+     * 
      * Configures both the Studio instance and its dependent products.
-     *
-     * @param productExecutions the current list of products to run
+     * 
+     * @param productExecutions
+     *            the current list of products to run
      * @param goals
      * @return the complete list of products to run
      * @throws MojoExecutionException
@@ -869,7 +729,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                 if (product == null)
                 {
                     handler = createProductHandler(instanceId);
-                    product = createProductContext(instanceId, instanceId, handler);
+                    product = createProductContext(instanceId, instanceId);
                 }
                 else
                 {

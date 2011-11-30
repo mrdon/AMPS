@@ -1,20 +1,71 @@
 package com.atlassian.maven.plugins.amps;
 
 import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
+
 import com.atlassian.maven.plugins.amps.product.studio.StudioProperties;
 import com.atlassian.maven.plugins.amps.util.ArtifactRetriever;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 
+import static com.atlassian.maven.plugins.amps.util.ProjectUtils.firstNotNull;
+
 import org.apache.maven.surefire.shade.org.apache.commons.lang.StringUtils;
 
 public class Product
 {
+    {
+        // Default values
+        containerId = DEFAULT_CONTAINER;
+        pdkVersion = DEFAULT_PDK_VERSION;
+        webConsoleVersion = DEFAULT_WEB_CONSOLE_VERSION;
+        fastdevVersion = DEFAULT_FASTDEV_VERSION;
+        devToolboxVersion = DEFAULT_DEV_TOOLBOX_VERSION;
+        server = DEFAULT_SERVER;
+        enableFastdev = true;
+        enableDevToolbox = true;
+        version = "RELEASE";
+        id = "refapp";
+        // 3 minutes
+        startupTimeout = 1000 * 60 * 3;
+        shutdownTimeout = 1000 * 60 * 3;
+    }
+    
+    public void setDefaultValues()
+    {
+        // Use the same version as for the war
+        dataVersion = firstNotNull(dataVersion, version);
+        contextPath = firstNotNull(contextPath, "/" + id);
+    }
+
+    private static final String DEFAULT_CONTAINER = "tomcat6x";
+    private static final String DEFAULT_PDK_VERSION = "0.4";
+    private static final String DEFAULT_WEB_CONSOLE_VERSION = "1.2.8";
+    private static final String DEFAULT_FASTDEV_VERSION = "1.9";
+    private static final String DEFAULT_DEV_TOOLBOX_VERSION = "1.0.3";
+    private static final String DEFAULT_SERVER;
+
+    static
+    {
+        // Initializing constants
+        String localHostName = null;
+        try
+        {
+            localHostName = InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e)
+        {
+            localHostName = "localhost";
+        }
+        DEFAULT_SERVER = localHostName;
+    }
+
     /**
      * Container to run in
      */
@@ -22,8 +73,10 @@ public class Product
 
     /**
      * HTTP port for the servlet containers
+     * 
+     * @parameter default-value="1339"
      */
-    private int httpPort = 0;
+    protected int httpPort;
 
     /**
      * Application context path, in the format: /context-path
@@ -53,7 +106,7 @@ public class Product
     /**
      * The test resources version
      */
-    protected String productDataVersion;
+    protected String dataVersion;
 
     /**
      * The path to a custom test resources zip or a directory. Takes precedence over dataVersion.
@@ -122,12 +175,12 @@ public class Product
     /**
      * Product id - nickname of the product to run
      */
-    private String id;
+    protected String id;
 
     /**
      * The name of the instance of the product
      */
-    private String instanceId;
+    protected String instanceId;
 
     private ArtifactRetriever artifactRetriever;
 
@@ -139,7 +192,7 @@ public class Product
     /**
      * The system properties to set for the product
      */
-    private Map<String,Object> systemProperties = new HashMap<String,Object>();
+    private Map<String, Object> systemProperties = new HashMap<String, Object>();
 
     /**
      * File the container should log to.
@@ -152,21 +205,23 @@ public class Product
     private int jvmDebugPort;
 
     /**
-     * How long to wait for product startup, in milliseconds; if not specified, default is determined by AbstractProductHandlerMojo
+     * How long to wait for product startup, in milliseconds
      */
-    private int startupTimeout = 0;
+    private int startupTimeout;
 
     /**
-     * How long to wait for product shutdown, in milliseconds; if not specified, default is determined by AbstractProductHandlerMojo
+     * How long to wait for product shutdown, in milliseconds
      */
-    private int shutdownTimeout = 0;
+    private int shutdownTimeout;
 
     /**
-     * Waits until the application is up before proceeding to the next one (blocking call).<ul>
+     * Waits until the application is up before proceeding to the next one (blocking call).
+     * <ul>
      * <li>If -Dparallel is not specified, default is TRUE for all products.</li>
      * <li>If -Dparallel is specified, default is FALSE except for Studio-Crowd and FeCru.</li>
      * <li>The pom.xml overrides the default values.</li>
-     * <li>Use -Dparallel to start products in parallel. {@link AbstractProductHandlerMojo#setParallelMode(List)} sets the default values according to this parameter.</li>
+     * <li>Use -Dparallel to start products in parallel. {@link AbstractProductHandlerMojo#setParallelMode(List)} sets the default values according to this
+     * parameter.</li>
      * </ul>
      */
     private Boolean synchronousStartup;
@@ -181,17 +236,13 @@ public class Product
      */
     private String artifactId;
 
-
-
     /**
      * The studio configuration which is shared for all products in the same
      * studio instance. Null if products are not studio or not yet configured.
      * <p>
-     * {@link StudioProductHandler#configure(Product, List)} will set this value.
-     * It must be called before Studio products are launched.
+     * {@link StudioProductHandler#configure(Product, List)} will set this value. It must be called before Studio products are launched.
      */
     protected StudioProperties studioProperties;
-
 
     /**
      * Only applies to Studio
@@ -218,12 +269,12 @@ public class Product
      */
     protected Boolean shutdownEnabled;
 
-
-
     /**
      * Creates a new product that is merged with this one, where the properties in this one override the passed
      * in product.
-     * @param product The product to merge with
+     * 
+     * @param product
+     *            The product to merge with
      * @return A new product
      */
     public Product merge(Product product)
@@ -231,7 +282,7 @@ public class Product
         Product prod = new Product();
         prod.setOutput(output == null ? product.getOutput() : output);
 
-        Map<String,Object> sysProps = new HashMap<String,Object>();
+        Map<String, Object> sysProps = new HashMap<String, Object>();
         sysProps.putAll(product.getSystemPropertyVariables());
         sysProps.putAll(systemProperties);
         prod.setSystemPropertyVariables(sysProps);
@@ -254,7 +305,7 @@ public class Product
         prod.setLibArtifacts(libArtifacts.isEmpty() ? product.getLibArtifacts() : libArtifacts);
 
         prod.setDataPath(StringUtils.isBlank(productDataPath) ? product.getDataPath() : productDataPath);
-        prod.setDataVersion(productDataVersion == null ? product.getDataVersion() : productDataVersion);
+        prod.setDataVersion(dataVersion == null ? product.getDataVersion() : dataVersion);
         prod.setDataHome(dataHome == null ? product.getDataHome() : dataHome);
         prod.setLog4jProperties(log4jProperties == null ? product.getLog4jProperties() : log4jProperties);
         prod.setJvmArgs(jvmArgs == null ? product.getJvmArgs() : jvmArgs);
@@ -352,12 +403,12 @@ public class Product
 
     public String getDataVersion()
     {
-        return productDataVersion;
+        return dataVersion;
     }
 
     public void setDataVersion(String productDataVersion)
     {
-        this.productDataVersion = productDataVersion;
+        this.dataVersion = productDataVersion;
     }
 
     /**
@@ -365,7 +416,7 @@ public class Product
      */
     public String getProductDataVersion()
     {
-        return productDataVersion;
+        return dataVersion;
     }
 
     /**
@@ -373,7 +424,7 @@ public class Product
      */
     public void setProductDataVersion(String productDataVersion)
     {
-        this.productDataVersion = productDataVersion;
+        this.dataVersion = productDataVersion;
     }
 
     /**
@@ -578,12 +629,12 @@ public class Product
         return props;
     }
 
-    public void setSystemPropertyVariables(Map<String,Object> systemProperties)
+    public void setSystemPropertyVariables(Map<String, Object> systemProperties)
     {
         this.systemProperties = systemProperties;
     }
 
-    public Map<String,Object> getSystemPropertyVariables()
+    public Map<String, Object> getSystemPropertyVariables()
     {
         return systemProperties;
     }
@@ -712,7 +763,6 @@ public class Product
     {
         this.synchronousStartup = synchronousStartup;
     }
-
 
     public String getDataHome()
     {

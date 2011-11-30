@@ -25,6 +25,8 @@ import com.atlassian.maven.plugins.amps.product.ProductHandler;
 @MojoRequiresDependencyResolution("test")
 public class IntegrationTestMojo extends AbstractTestGroupsHandlerMojo
 {
+    private static final String DEFAULT_CONTAINER = "tomcat6x";
+
     /**
      * Pattern for to use to find integration tests.  Only used if no test groups are defined.
      */
