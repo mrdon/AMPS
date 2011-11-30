@@ -1,0 +1,18 @@
+<archetype>
+    <id>jira-plugin-archetype</id>
+    <sources>
+        <source>src/main/java/MyPlugin.java</source>
+    </sources>
+    <testSources>
+        <source>src/test/java/MyPluginTest.java</source>
+    </testSources>
+
+    <resources>
+        <resource filtered="true">src/main/resources/atlassian-plugin.xml</resource>
+        <resource filtered="false">src/test/java/it/MyPluginTest.java</resource>
+        <resource filtered="false">src/test/xml/TEST_XML_RESOURCES_README</resource>
+        <resource filtered="false">src/test/resources/TEST_RESOURCES_README</resource>
+        <resource filtered="false">README</resource>
+        <resource filtered="false">LICENSE</resource>
+    </resources>
+</archetype>

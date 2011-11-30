@@ -1,0 +1,79 @@
+#set( $dollar = '$' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>\${groupId}</groupId>
+    <artifactId>\${artifactId}</artifactId>
+    <version>\${version}</version>
+
+    <organization>
+        <name>Example Company</name>
+        <url>http://www.example.com/</url>
+    </organization>
+
+    <name>\${artifactId}</name>
+    <description>This is the \${artifactId} plugin for Atlassian Studio.</description>
+    <packaging>atlassian-plugin</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-page-objects</artifactId>
+            <version>4.4-rc2</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-amps-plugin</artifactId>
+                <version>${project.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <testGroup>studioTestGroup</testGroup>
+                    <instanceId>studio1</instanceId>
+                    <products>
+                        <product>
+                            <id>studio</id>
+                            <instanceId>studio1</instanceId>
+                            <version>\${dollar}{studio.version}</version>
+                            <dataVersion>\${dollar}{studio.data.version}</dataVersion>
+                        </product>
+                    </products>
+
+                    <testGroups>
+                        <testGroup>
+                            <id>studioTestGroup</id>
+                            <productIds>
+                                <productId>studio1</productId>
+                            </productIds>
+                            <includes>
+                                <include>it/**/*Test.java</include>
+                            </includes>
+                        </testGroup>
+                    </testGroups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${jdkLevel}</source>
+                    <target>${jdkLevel}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <properties>
+        <studio.version>${studio.version}</studio.version>
+        <studio.data.version>${studio.data.version}</studio.data.version>
+        <amps.version>${project.version}</amps.version>
+    </properties>
+
+</project>

@@ -1,0 +1,150 @@
+##-----------------------------------------------------------------------------
+#parse( "commands/${mojo}" )
+##-----------------------------------------------------------------------------
+@echo off
+if "%OS%" == "Windows_NT" setlocal enabledelayedexpansion
+
+
+
+rem ---------------------------------------------------------------
+rem Check for help command
+rem ---------------------------------------------------------------
+
+if /I "%1"=="help" goto showhelp
+if /I "%1"=="-?" goto showhelp
+if /I "%1"=="-h" goto showhelp
+if /I "%1"=="-help" goto showhelp
+if /I "%1"=="--help" goto showhelp
+if /I "%1"=="/?" goto showhelp
+if /I "%1"=="/h" goto showhelp
+if /I "%1"=="/help" goto showhelp
+
+goto continue
+
+:showhelp
+echo.
+echo Usage: atlas-${mojo} [options]
+echo.
+echo ${goalhelp}
+#if ($opts.size() > 0)
+    echo.
+    echo The following options are available:
+    #foreach($o in $opts)
+        #if ($o.short)
+            #if($o.flag)
+                echo -$o.short, --$o.name
+            #else
+                echo -$o.short [value], --$o.name [value]
+            #end
+        #else
+            #if($o.flag)
+                echo --$o.name
+            #else
+                echo --$o.name [value]
+            #end
+        #end
+        echo     $o.description
+        echo.
+    #end
+#end
+goto end
+
+:continue
+
+rem ---------------------------------------------------------------
+rem Find absolute path to the program
+rem ---------------------------------------------------------------
+
+set PRGDIR=%~dp0
+set CURRENTDIR=%cd%
+cd /d %PRGDIR%..
+set ATLAS_HOME=%cd%
+cd /d %CURRENTDIR%
+
+
+rem ---------------------------------------------------------------
+rem Identify Maven location relative to script
+rem ---------------------------------------------------------------
+
+set M2_HOME=%ATLAS_HOME%\apache-maven
+set MAVEN_EXECUTABLE="%M2_HOME%\bin\mvn.bat"
+
+#if( $echoPaths )
+echo.
+echo ATLAS Version:    ${version}
+echo ATLAS Home:       %ATLAS_HOME%
+echo ATLAS Scripts:    %ATLAS_HOME%\bin
+echo ATLAS Maven Home: %M2_HOME%
+echo --------
+#end
+
+rem Check that the target executable exists
+
+if not exist "!MAVEN_EXECUTABLE!" (
+	echo Cannot find %MAVEN_EXECUTABLE%
+	echo This file is needed to run this program
+	goto end
+)
+
+
+
+rem ---------------------------------------------------------------
+rem Transform Parameters into Maven Parameters
+rem
+rem NOTE: in DOS, all the 'else' statements must be on the same
+rem line as the closing bracket for the 'if' statement.
+rem ---------------------------------------------------------------
+
+set MAVEN_OPTS=-Xmx768M -XX:MaxPermSize=256M %ATLAS_OPTS%
+set MVN_PARAMS=
+#set ( $elseCount = 0 )
+:loopstart
+if "%1"=="" goto loopend
+#foreach($o in $opts)
+    if /I "%1"=="--$o.name" (
+        #if( $o.flag )
+            set MVN_PARAMS=%MVN_PARAMS% -D$o.maven
+            shift
+        #else
+            set MVN_PARAMS=%MVN_PARAMS% -D$o.maven=%2
+            shift
+            shift
+        #end
+        goto loopstart
+    ) #if ($o.short) #set ( $elseCount = $elseCount + 1 ) else (
+            if /I "%1"=="-$o.short" (
+                #if( $o.flag )
+                    set MVN_PARAMS=%MVN_PARAMS% -D$o.maven
+                    shift
+                #else
+                    set MVN_PARAMS=%MVN_PARAMS% -D$o.maven=%2
+                    shift
+                    shift
+                #end
+                goto loopstart
+            ) #end #set ( $elseCount = $elseCount + 1 ) else (
+#end
+
+set MVN_PARAMS=%MVN_PARAMS% %1
+shift
+goto loopstart
+
+#if ( $elseCount > 0 )
+    #foreach($endelse in [1..$elseCount])
+    )
+    #end
+#end
+:loopend
+
+
+rem ---------------------------------------------------------------
+rem Executing Maven
+rem ---------------------------------------------------------------
+
+echo Executing: %MAVEN_EXECUTABLE% $mvnCommand %MVN_PARAMS%
+%MAVEN_EXECUTABLE% $mvnCommand %MVN_PARAMS%
+
+:end
+
+
+

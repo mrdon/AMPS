@@ -1,0 +1,21 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.atlassian.amps.it</groupId>
+    <artifactId>maven-amps-plugin-validate-manifest-skip</artifactId>
+    <version>testing</version>
+    <name>TestValidateManifestSkip</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-${shitty.product}-plugin</artifactId>
+                <version>testing</version>
+                <configuration>
+                    <skipManifestValidation>true</skipManifestValidation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

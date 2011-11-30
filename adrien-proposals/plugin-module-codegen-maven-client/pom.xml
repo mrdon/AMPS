@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>atlassian-amps-parent</artifactId>
+        <groupId>com.atlassian.amps</groupId>
+        <version>3.8-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>plugin-module-codegen-maven-client</artifactId>
+    <packaging>jar</packaging>
+    <name>Plugin Module Code Generator Maven Client</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.amps</groupId>
+            <artifactId>plugin-module-codegen-engine</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.core</groupId>
+            <artifactId>atlassian-core</artifactId>
+            <version>4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.twdata.maven</groupId>
+            <artifactId>maven-cli-plugin</artifactId>
+            <version>0.6.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-interactivity-api</artifactId>
+            <version>1.0-alpha-4</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>${skipCodegenTests}</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

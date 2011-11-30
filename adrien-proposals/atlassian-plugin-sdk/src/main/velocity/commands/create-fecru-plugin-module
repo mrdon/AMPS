@@ -1,0 +1,5 @@
+#set( $mvnCommand = "com.atlassian.maven.plugins:maven-fecru-plugin:$version:create-plugin-module" )
+
+#set( $goalhelp = "Creates a FishEye/Crucible Plugin Module" )
+
+#set( $opts = [] )

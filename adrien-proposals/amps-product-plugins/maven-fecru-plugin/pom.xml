@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.atlassian.amps</groupId>
+        <artifactId>atlassian-amps-product-plugins</artifactId>
+        <version>3.8-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.atlassian.maven.plugins</groupId>
+    <artifactId>maven-fecru-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+
+    <name>Maven FishEye/Crucible Plugin</name>
+
+    <profiles>
+        <profile>
+            <id>shitty</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>shitty-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+                <!-- pass environment properties into the SDK debug integration test -->
+                <testResources>
+                    <testResource>
+                        <targetPath>${project.build.directory}/it/debug</targetPath>
+                        <filtering>false</filtering>
+                        <directory>src/test/resources</directory>
+                        <includes>
+                            <include>env.properties</include>
+                        </includes>
+                    </testResource>
+                </testResources>
+            </build>
+            <properties>
+                <shitty.product>fecru</shitty.product>
+                <product.version>${fecru.version}</product.version>
+                <product.data.version>${fecru.data.version}</product.data.version>
+                <tests>
+                copyBundledDependencies, create, debug,
+                filterPluginDescriptorWithoutPluginDescriptor,
+                filterPluginDescriptorWithPluginDescriptor, generateManifestWithInstructions,
+                generateManifestWithNoInstructions, generateObr, 
+                <!-- Commenting out tests that start fecru until AMPS-312 is fixed -->
+                <!-- cli, integrationTest, integrationTestWithTestGroup, run, stop-->
+                jarWithExistingManifest,  
+                unitTest, validateManifestSkipValidation, validateManifestWithInvalidManifest,
+                validateManifestWithValidManifest
+                </tests>
+
+            </properties>
+        </profile>
+    </profiles>
+
+</project>
