@@ -20,7 +20,7 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
      */
     @MojoParameter(expression = "${instanceId}")
     protected String instanceId;
-
+    
     /**
      * <p>Flag to enable Google tracking.</p>
      *
@@ -39,28 +39,39 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
     private GoogleAmpsTracker googleTracker;
 
 
+    /**
+     * @return the default product or null
+     * @throws MojoExecutionException 
+     */
     protected String getDefaultProductId() throws MojoExecutionException
     {
+        if (product != null)
+        {
+            return product;
+        }
+        String pluginId = getPluginInformation().getId();
+        if (ProductHandlerFactory.getIds().contains(pluginId))
+        {
+            return pluginId;
+        }
         return null;
     }
 
+    /** @throws MojoExecutionException 
+     * @deprecated see getDefaultProductId() */
     protected final String getProductId() throws MojoExecutionException
     {
         if (product == null)
         {
             product = getDefaultProductId();
-            if (product == null && ProductHandlerFactory.getIds().contains(getPluginInformation().getId()))
+            if (product == null)
             {
-                product = getPluginInformation().getId();
-            }
-            else if (product == null)
-            {
-                product = ProductHandlerFactory.REFAPP;
+                return ProductHandlerFactory.REFAPP;
             }
         }
         return product;
     }
-
+    
     protected GoogleAmpsTracker getGoogleTracker() throws MojoExecutionException
     {
         if(null == googleTracker)

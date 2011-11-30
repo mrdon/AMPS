@@ -33,7 +33,7 @@ public abstract class AbstractTestGroupsHandlerMojo extends AbstractProductHandl
         List<ProductExecution> products = new ArrayList<ProductExecution>();
         int dupCounter = 0;
         Set<String> uniqueProductIds = new HashSet<String>();
-        Map<String, Product> productContexts = getProductContexts(getMavenGoals());
+        Map<String, Product> productContexts = getProductContexts();
         for (String instanceId : getTestGroupInstanceIds(testGroupId))
         {
             Product ctx = productContexts.get(instanceId);
@@ -72,7 +72,7 @@ public abstract class AbstractTestGroupsHandlerMojo extends AbstractProductHandl
         List<String> instanceIds = new ArrayList<String>();
         if (NO_TEST_GROUP.equals(testGroupId))
         {
-            instanceIds.add(getProductId());
+            instanceIds.add(getProductToRun().getId());
         }
 
         for (TestGroup group : testGroups)

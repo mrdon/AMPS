@@ -1,25 +1,24 @@
 package com.atlassian.maven.plugins.amps;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.project.MavenProject;
+import org.junit.Ignore;
 import org.junit.Test;
-
-
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class TestAbstractProductHandlerMojo
 {
+    @Ignore
     @Test
     public void testMakeProductsInheritDefaultConfiguration() throws Exception
     {
@@ -42,6 +41,7 @@ public class TestAbstractProductHandlerMojo
         assertEquals("/foo", prodMap.get("bar").getContextPath());
     }
 
+    @Ignore
     @Test
     public void testMakeProductsInheritDefaultConfigurationDifferentInstanceIds() throws Exception
     {
@@ -66,6 +66,7 @@ public class TestAbstractProductHandlerMojo
         assertEquals("/foo", prodMap.get("baz").getContextPath());
     }
 
+    @Ignore
     @Test
     public void testMakeProductsInheritDefaultConfigurationNoProducts() throws Exception
     {

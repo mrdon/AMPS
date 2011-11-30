@@ -5,9 +5,13 @@ import java.util.List;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
+import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.PluginManager;
+import org.apache.maven.plugin.descriptor.MojoDescriptor;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
@@ -48,7 +52,7 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
      */
     @MojoParameter (expression = "${plugin.version}", required = true, readonly = true)
     private String pluginVersion;
-
+    
     /**
      * the maven context
      */
@@ -93,4 +97,17 @@ public abstract class AbstractAmpsMojo extends AbstractMojo
         final String productId = pluginArtifactId.replaceAll("maven-(.*)-plugin", "$1");
         return new PluginInformation(productId, pluginVersion);
     }
+
+
+    @MojoParameter(expression="${mojoExecution}", required = true, readonly = true)
+    private MojoExecution mojoExecution;
+    
+    protected Xpp3Dom getCurrentConfiguration()
+    {
+        MojoDescriptor currentMojo = mojoExecution.getMojoDescriptor();
+        PluginDescriptor currentPlugin = currentMojo.getPluginDescriptor();
+        Xpp3Dom configuration = getMavenContext().getProject().getGoalConfiguration(currentPlugin.getGroupId(), currentPlugin.getArtifactId(), mojoExecution.getExecutionId(), currentMojo.getGoal());
+        return configuration;
+    }
+    
 }

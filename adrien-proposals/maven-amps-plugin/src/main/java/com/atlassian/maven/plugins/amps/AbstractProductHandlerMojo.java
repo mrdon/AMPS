@@ -27,15 +27,21 @@ import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.model.Resource;
+import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.descriptor.MojoDescriptor;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.configuration.PlexusConfiguration;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.jfrog.maven.annomojo.annotations.MojoComponent;
 import org.jfrog.maven.annomojo.annotations.MojoParameter;
 
@@ -411,15 +417,15 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         stringToArtifactList(bundledArtifactsString, bundledArtifacts);
         // systemPropertyVariables.putAll((Map) systemProperties);
 
-        detectDeprecatedVersionOverrides();
+        checkDeprecations();
 
         // Set the default values for the products
         setDefaultValues(products);
 
         doExecute();
     }
-
-    private void detectDeprecatedVersionOverrides()
+    
+    private void checkDeprecations()
     {
         Properties props = getMavenContext().getProject().getProperties();
         for (String deprecatedProperty : new String[] { "sal.version", "rest.version", "web.console.version", "pdk.version" })
@@ -428,6 +434,26 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             {
                 getLog().warn("The property '" + deprecatedProperty + "' is no longer usable to override the related bundled plugin." +
                         "  Use <pluginArtifacts> or <libArtifacts> to explicitly override bundled plugins and libraries, respectively.");
+            }
+        }
+        
+        Xpp3Dom configuration = getCurrentConfiguration();
+        tellUnused(configuration, "You should use this property in a <products> tag.",
+                "dataVersion", "version", "containerId", "httpPort", "contextPath", "server", "jvmArgs",
+                "startupTimeout", "shutdownTimeout", "log4jProperties", "enableFastDev", "fastdevVersion", "enableDevToolbox",
+                "devToolboxVersion", "salVersion", "pdkVersion", "restVersion", "webConsoleVersion");
+        tellUnused(configuration, "", "testResourcesVersion");
+        tellUnused(configuration, "You should use this property in a <products> tag and rename it into <productVersion> or <productDataVersion>.", "productDataVersion", "productVersion", "productDataPath");
+        tellUnused(configuration, "You can define the product using <products><jira> ... </jira></products>", "product");
+    }
+    
+    private void tellUnused(Xpp3Dom parent, String message, String... property)
+    {
+        for (String item : property)
+        {
+            if (parent.getChild(item) != null)
+            {
+                getLog().warn("The configuration property <" + item + "> is not available. " + message);
             }
         }
     }
@@ -465,7 +491,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                  */product.setArtifactRetriever(new ArtifactRetriever(artifactResolver, artifactFactory, localRepository, repositories));
             }
         }
-
     }
 
     /**
@@ -476,7 +501,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      * </ul>
      * So the method looks short but it's quite central in the initialisation of products.
      */
-    protected Map<String, Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
+    protected Map<String, Product> getProductContexts()
     {
         Map<String, Product> productMap = new HashMap<String, Product>();
         for (Product product : products)
@@ -484,6 +509,51 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             productMap.put(product.getInstanceId(), product);
         }
         return productMap;
+    }
+    
+    /**
+     * Return the first product with the product ID, or null.
+     * @param productId a product ID (refapp, studio) or null.
+     */
+    protected Product getFirstProduct(String productId)
+    {
+        for (Product product : getProductContexts().values())
+        {
+            if (product.getId().equals(productId))
+            {
+                return product;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the product which should run by default
+     * 
+     * @throws MojoExecutionException
+     */
+    protected Product getProductToRun() throws MojoExecutionException
+    {
+        Product product = null;
+        Map<String, Product> productContexts = getProductContexts();
+        if (instanceId != null)
+        {
+            product = productContexts.get(instanceId);
+            if (product == null)
+            {
+                throw new MojoExecutionException("There is no instance with name " + instanceId + " defined in the pom.xml");
+            }
+        }
+        else if (getDefaultProductId() != null)
+        {
+            product = getFirstProduct(getDefaultProductId());
+        }
+        if (product == null && !productContexts.isEmpty())
+        {
+            product = productContexts.values().iterator().next();
+        }
+
+        return product;
     }
 
     private Product createProductContext(String productNickname, String instanceId) throws MojoExecutionException
@@ -721,7 +791,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
             // Fetch the products
             List<ProductExecution> dependantProducts = Lists.newArrayList();
-            Map<String, Product> allContexts = getProductContexts(goals);
+            Map<String, Product> allContexts = getProductContexts();
             for (String instanceId : dependantProductIds)
             {
                 Product product = allContexts.get(instanceId);
