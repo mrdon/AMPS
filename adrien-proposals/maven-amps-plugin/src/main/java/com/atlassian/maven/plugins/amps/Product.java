@@ -42,6 +42,7 @@ public class Product
         // Use the same version as for the war
         dataVersion = firstNotNull(dataVersion, version);
         contextPath = firstNotNull(contextPath, "/" + id);
+        instanceId = firstNotNull(instanceId, id);
     }
 
     private static final String DEFAULT_CONTAINER = "tomcat6x";

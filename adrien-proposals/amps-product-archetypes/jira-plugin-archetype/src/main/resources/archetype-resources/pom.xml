@@ -65,10 +65,10 @@
                 <extensions>true</extensions>
                 <configuration>
                     <products>
-                        <product>
+                        <jira>
                             <version>\${dollar}{jira.version}</version>
                             <dataVersion>\${dollar}{jira.version}</dataVersion>
-                        </product>
+                        </jira>
                     </products>
                 </configuration>
             </plugin>

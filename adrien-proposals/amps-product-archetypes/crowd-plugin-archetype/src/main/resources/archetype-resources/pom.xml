@@ -43,10 +43,10 @@
                 <extensions>true</extensions>
                 <configuration>
                     <products>
-                        <product>
+                        <crowd>
                             <version>\${dollar}{crowd.version}</version>
                             <dataVersion>\${dollar}{crowd.data.version}</dataVersion>
-                        </product>
+                        </crowd>
                     </products>
                 </configuration>
             </plugin>

@@ -49,10 +49,12 @@
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <bamboo>
-                        <version>\${dollar}{bamboo.version}</version>
-                        <dataVersion>\${dollar}{bamboo.data.version}</dataVersion>
-                    </bamboo>
+                    <products>
+                        <bamboo>
+                            <version>\${dollar}{bamboo.version}</version>
+                            <dataVersion>\${dollar}{bamboo.data.version}</dataVersion>
+                        </bamboo>
+                    </products>
                 </configuration>
             </plugin>
           

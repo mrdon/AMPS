@@ -39,12 +39,11 @@
                     <testGroup>studioTestGroup</testGroup>
                     <instanceId>studio1</instanceId>
                     <products>
-                        <product>
-                            <id>studio</id>
+                        <studio>
                             <instanceId>studio1</instanceId>
                             <version>\${dollar}{studio.version}</version>
                             <dataVersion>\${dollar}{studio.data.version}</dataVersion>
-                        </product>
+                        </studio>
                     </products>
 
                     <testGroups>

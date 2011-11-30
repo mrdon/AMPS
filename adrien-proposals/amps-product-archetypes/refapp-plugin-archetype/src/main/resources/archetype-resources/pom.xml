@@ -50,11 +50,15 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-refapp-plugin</artifactId>
+                <artifactId>maven-amps-plugin</artifactId>
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <version>\${dollar}{refapp.version}</version>
+                    <products>
+                        <refapp>
+                            <version>\${dollar}{refapp.version}</version>
+                        </refapp>
+                    </products>
                 </configuration>
             </plugin>
             <plugin>

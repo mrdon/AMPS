@@ -52,8 +52,12 @@
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <version>\${dollar}{fecru.version}</version>
-                    <dataVersion>\${dollar}{fecru.data.version}</dataVersion>
+                    <products>
+                        <fecru>
+                            <version>\${dollar}{fecru.version}</version>
+                            <dataVersion>\${dollar}{fecru.data.version}</dataVersion>
+                        </fecru>
+                    </products>
                 </configuration>
             </plugin>
             <plugin>
