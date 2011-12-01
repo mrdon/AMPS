@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.atlassian.amps</groupId>
         <artifactId>atlassian-amps-parent</artifactId>
-        <version>3.8-caviar-SNAPSHOT</version>
+        <version>3.8-caviar-m9</version>
     </parent>
 
     <groupId>com.atlassian.maven.plugins</groupId>
