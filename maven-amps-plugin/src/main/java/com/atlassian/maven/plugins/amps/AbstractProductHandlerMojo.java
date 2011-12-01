@@ -315,6 +315,12 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     protected ArtifactFactory artifactFactory;
 
     /**
+     * A list of product-specific configurations
+     */
+    @MojoParameter
+    protected List<Product> products = new ArrayList<Product>();
+    
+    /**
      * File the container logging output will be sent to.
      */
     @MojoParameter

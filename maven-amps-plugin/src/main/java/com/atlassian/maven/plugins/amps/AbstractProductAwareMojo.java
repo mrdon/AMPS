@@ -24,11 +24,6 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
     @MojoParameter(expression = "${instanceId}")
     protected String instanceId;
 
-    /**
-     * A list of product-specific configurations
-     */
-    @MojoParameter
-    protected List<Product> products = new ArrayList<Product>();
 
     /**
      * <p>Flag to enable Google tracking.</p>
@@ -67,15 +62,7 @@ public abstract class AbstractProductAwareMojo extends AbstractAmpsMojo
             product = getDefaultProductId();
             if (product == null)
             {
-                // If <products> are defined, take the first one
-                if (products != null && !products.isEmpty())
-                {
-                    product = products.get(0).getId();
-                }
-                else
-                {
-                    product = ProductHandlerFactory.REFAPP;
-                }
+                product = ProductHandlerFactory.REFAPP;
             }
         }
         return product;
