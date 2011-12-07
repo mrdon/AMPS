@@ -1,0 +1,87 @@
+#set( $dollar = '$' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>\${groupId}</groupId>
+    <artifactId>\${artifactId}</artifactId>
+    <version>\${version}</version>
+
+    <organization>
+        <name>Example Company</name>
+        <url>http://www.example.com/</url>
+    </organization>
+
+    <name>\${artifactId}</name>
+    <description>This is the \${groupId}:\${artifactId} plugin for Atlassian JIRA.</description>
+    <packaging>atlassian-plugin</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-api</artifactId>
+            <version>\${dollar}{jira.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Add dependency on jira-core if you want access to JIRA implementation classes as well as the sanctioned API. -->
+        <!-- This is not normally recommended, but may be required eg when migrating a plugin originally developed against JIRA 4.x -->
+        <!--
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-core</artifactId>
+            <version>\${dollar}{jira.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-tests</artifactId>
+            <version>\${dollar}{jira.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-func-tests</artifactId>
+            <version>\${dollar}{jira.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-jira-plugin</artifactId>
+                <version>${project.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <productVersion>\${dollar}{jira.version}</productVersion>
+                    <productDataVersion>\${dollar}{jira.version}</productDataVersion>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${jdkLevel}</source>
+                    <target>${jdkLevel}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <!-- TODO: Update to 5.0 after release of 5.0 final -->
+        <jira.version>5.0-beta1</jira.version>
+        <amps.version>${project.version}</amps.version>
+    </properties>
+
+</project>

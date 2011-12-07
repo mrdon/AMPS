@@ -1,0 +1,3 @@
+public ${CLASSNAME}(CustomFieldValuePersister customFieldValuePersister, StringConverter stringConverter, GenericConfigManager genericConfigManager, MultiUserConverter multiUserConverter, ApplicationProperties applicationProperties, JiraAuthenticationContext authenticationContext, UserPickerSearchService searchService, FieldVisibilityManager fieldVisibilityManager) {
+    super(customFieldValuePersister, stringConverter, genericConfigManager, multiUserConverter, applicationProperties, authenticationContext, searchService, fieldVisibilityManager);
+}

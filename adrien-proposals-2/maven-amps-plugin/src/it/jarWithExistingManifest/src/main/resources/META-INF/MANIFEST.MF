@@ -1,0 +1,6 @@
+Manifest-Version: Manifest-Version
+Archiver-Version: Archiver-Version
+Created-By: Created-By
+Built-By: Built-By
+Build-Jdk: Build-Jdk
+Some-Property: Some-Value

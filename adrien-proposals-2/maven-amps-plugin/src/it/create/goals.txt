@@ -1,0 +1,2 @@
+${shitty.product}:create -DgroupId=com.atlassian.amps.it.create -DartifactId=amps-it-create -Dversion=1.0 -Dpackage=com.atlassian.it.package -Dallow.google.tracking=false
+clean

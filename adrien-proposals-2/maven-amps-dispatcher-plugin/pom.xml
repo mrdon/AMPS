@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.atlassian.amps</groupId>
+        <artifactId>atlassian-amps-parent</artifactId>
+        <version>3.8-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.atlassian.maven.plugins</groupId>
+    <artifactId>maven-amps-dispatcher-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+
+    <name>Maven AMPS Dispatcher Plugin</name>
+    <description>
+        Detects which version of AMPS is being used and dispatches all goals to it
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-amps-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+</project>
