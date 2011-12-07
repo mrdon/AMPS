@@ -27,6 +27,7 @@ import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -315,10 +316,17 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     protected ArtifactFactory artifactFactory;
 
     /**
-     * A list of product-specific configurations
+     * A list of product-specific configurations (provided in the pom.xml)
      */
     @MojoParameter
     protected List<Product> products = new ArrayList<Product>();
+    
+    /**
+     * A map of {instanceId -> Product}, with all values initialized.
+     * Initialized by {@link #createProductContexts()}.
+     */
+    @MojoParameter(readonly = true)
+    protected Map<String, Product> productMap;
 
     /**
      * File the container logging output will be sent to.
@@ -562,6 +570,8 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         systemPropertyVariables.putAll((Map) systemProperties);
 
         detectDeprecatedVersionOverrides();
+        
+        createProductContexts();
 
         doExecute();
     }
@@ -578,6 +588,27 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
             }
         }
     }
+    
+    /**
+     * Builds the map {instanceId -> Product bean}, based on: <ul>
+     * <li>the {@literal <products>} tag</li>
+     * <li>the configuration values inherited from the {@literal <configuration>} tag
+     * </ul>
+     * @throws MojoExecutionException
+     */
+    private void createProductContexts() throws MojoExecutionException
+    {
+        productMap = Maps.newHashMap();
+
+        // Products in the <products> tag inherit from the upper settings, e.g. when there's a <httpPort> tag for all products
+        makeProductsInheritDefaultConfiguration(products, productMap);
+
+        for (Product ctx : productMap.values())
+        {
+            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext(), getMavenGoals());
+            setDefaultValues(ctx, handler);
+        }
+    }
 
     /**
      * Returns the Product objects that are defined in our maven-amps-plugins object:
@@ -589,16 +620,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
      */
     protected Map<String, Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
     {
-        Map<String, Product> productMap = new HashMap<String, Product>();
-
-        // Products in the <products> tag inherit from the upper settings, e.g. when there's a <httpPort> tag for for all products
-        makeProductsInheritDefaultConfiguration(products, productMap);
-
-        for (Product ctx : productMap.values())
-        {
-            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext(), goals);
-            setDefaultValues(ctx, handler);
-        }
         return productMap;
     }
 
