@@ -193,7 +193,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         }
         else if (!isBlank(instanceId))
         {
-            Product ctx = getProductContexts(goals).get(instanceId);
+            Product ctx = getProductContexts().get(instanceId);
             if (ctx == null)
             {
                 throw new MojoExecutionException("No product with instance ID '" + instanceId + "'");
@@ -203,7 +203,7 @@ public class RunMojo extends AbstractTestGroupsHandlerMojo
         }
         else
         {
-            Product ctx = getProductContexts(goals).get(getProductId());
+            Product ctx = getProductContexts().get(getProductId());
             ProductHandler product = createProductHandler(ctx.getId());
             productExecutions = Collections.singletonList(new ProductExecution(ctx, product));
         }

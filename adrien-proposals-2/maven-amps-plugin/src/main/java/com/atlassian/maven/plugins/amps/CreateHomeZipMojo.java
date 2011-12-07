@@ -81,7 +81,7 @@ public class CreateHomeZipMojo extends AbstractProductHandlerMojo {
      */
     private Product getProduct(final String instanceId, final String productId) throws MojoExecutionException
     {
-        Map<String, Product> contexts = getProductContexts(getMavenGoals());
+        Map<String, Product> contexts = getProductContexts();
 
         Product product = null;
         if (instanceId != null)

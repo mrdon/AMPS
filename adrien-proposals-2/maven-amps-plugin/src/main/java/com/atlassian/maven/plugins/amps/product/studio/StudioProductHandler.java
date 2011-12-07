@@ -264,14 +264,14 @@ final public class StudioProductHandler extends AmpsProductHandler
      *            Studio instance.
      * @throws MojoExecutionException
      */
-    public void configure(Product studioContext, List<ProductExecution> dependantProducts) throws MojoExecutionException
+    public void configure(Product studioContext, List<Product> dependantProducts) throws MojoExecutionException
     {
         StudioProperties studioProperties = getStudioProperties(studioContext);
 
         boolean confluenceStandalone = true;
 
         // Sets properties for each product
-        for (ProductExecution execution : dependantProducts)
+        for (Product product : dependantProducts)
         {
             // Each product provides some configuration info
 
@@ -279,7 +279,6 @@ final public class StudioProductHandler extends AmpsProductHandler
             // Crowd must be started synchronously because there's a race condition
             // and Fisheye doesn't support parallel startup.
 
-            Product product = execution.getProduct();
             if (STUDIO_CROWD.equals(product.getId()))
             {
                 studioProperties.setCrowd(product);
