@@ -351,6 +351,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         setDefaultSystemProperty(properties, "java.awt.headless", "true");
         setDefaultSystemProperty(properties, "plugin.resource.directories", buildResourcesList());
         setDefaultSystemProperty(properties, "plugin.root.directories", buildRootProperty());
+        properties.put("atlassian.sdk.version", getPluginInformation().getVersion());
 
         ctx.setSystemPropertyVariables(properties);
         ctx.setBundledArtifacts(bundledArtifacts);
