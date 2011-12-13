@@ -108,5 +108,10 @@ public class TestAbstractProductHandlerMojo
             when(project.getBasedir()).thenReturn(new File("."));
             return new MavenContext(project, null, null, (PluginManager) null, null);
         }
+
+        @Override
+        protected PluginInformation getPluginInformation() {
+            return new PluginInformation("test-product", "Test SDK Version");
+        }
     }
 }

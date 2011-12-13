@@ -347,6 +347,7 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
         // If they aren't defined, define those system properties. They will override the product
         // handler's properties.
         Map<String, Object> properties = new HashMap<String, Object>(systemPropertyVariables);
+        properties.put("atlassian.sdk.version", getPluginInformation().getVersion());
         setDefaultSystemProperty(properties, "atlassian.dev.mode", "true");
         setDefaultSystemProperty(properties, "java.awt.headless", "true");
         setDefaultSystemProperty(properties, "plugin.resource.directories", buildResourcesList());
