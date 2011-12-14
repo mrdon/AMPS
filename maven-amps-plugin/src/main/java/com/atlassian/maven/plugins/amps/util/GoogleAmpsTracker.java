@@ -43,14 +43,22 @@ public class GoogleAmpsTracker
         tracker.setDispatchMode(JGoogleAnalyticsTracker.DispatchMode.MULTI_THREAD);
     }
 
-    public void track(String eventName) {
-        mavenLogger.info("Sending event to Google Analytics: "  + getCategoryName() + " - " + eventName);
-        tracker.trackEvent(getCategoryName(),eventName);
+    public void track(String eventName)
+    {
+        if (tracker.isEnabled())
+        {
+            mavenLogger.info("Sending event to Google Analytics: "  + getCategoryName() + " - " + eventName);
+            tracker.trackEvent(getCategoryName(),eventName);
+        }
     }
 
-    public void track(String eventName, String label) {
-        mavenLogger.info("Sending event to Google Analytics: "  + getCategoryName() + " - " + eventName + " - " + label);
-        tracker.trackEvent(getCategoryName(),eventName,label);
+    public void track(String eventName, String label)
+    {
+        if (tracker.isEnabled())
+        {
+            mavenLogger.info("Sending event to Google Analytics: "  + getCategoryName() + " - " + eventName + " - " + label);
+            tracker.trackEvent(getCategoryName(),eventName,label);
+        }
     }
 
     private String getCategoryName()
@@ -60,7 +68,6 @@ public class GoogleAmpsTracker
         } else {
             return AMPS;
         }
-
     }
 
     public String getProductId()
