@@ -432,7 +432,6 @@ public class MavenGoals
 
         for (final Map.Entry<String, String> entry : systemProperties.entrySet())
         {
-            webappContext.setJvmArgs(webappContext.getJvmArgs() + " -D" + entry.getKey() + "=\"" + entry.getValue() + "\"");
             sysProps.add(element(name(entry.getKey()), entry.getValue()));
         }
         log.info("Starting " + productInstanceId + " on the " + container.getId() + " container on ports "
@@ -443,7 +442,6 @@ public class MavenGoals
 
         final List<Element> deps = new ArrayList<Element>();
         for (final ProductArtifact dep : extraContainerDependencies)
-
         {
             deps.add(element(name("dependency"),
                     element(name("location"), webappContext.getArtifactRetriever().resolve(dep))
