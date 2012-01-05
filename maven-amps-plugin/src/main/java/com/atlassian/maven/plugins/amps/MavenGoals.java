@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.*;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 
@@ -1000,29 +998,9 @@ public class MavenGoals
     public void generateRestDocs() throws MojoExecutionException
     {
         MavenProject prj = ctx.getProject();
-        List<String> docletPaths = new ArrayList<String>();
-        StringBuffer docletPath = new StringBuffer(":" + prj.getBuild().getOutputDirectory());
-        String resourcedocPath = prj.getBuild().getOutputDirectory() + File.separator + "resourcedoc.xml";
         StringBuffer packagesPath = new StringBuffer();
-        PluginXmlUtils.PluginInfo pluginInfo = PluginXmlUtils.getPluginInfo(ctx);
-
-        try
-        {
-            docletPaths.addAll(prj.getCompileClasspathElements());
-            docletPaths.addAll(prj.getRuntimeClasspathElements());
-            docletPaths.addAll(prj.getSystemClasspathElements());
-
-            for(String path : docletPaths) {
-                docletPath.append(File.pathSeparator);
-                docletPath.append(path);
-            }
-
-        } catch (DependencyResolutionRequiredException e)
-        {
-            throw new MojoExecutionException("Dependencies must be resolved", e);
-        }
-
         List<PluginXmlUtils.RESTModuleInfo> restModules = PluginXmlUtils.getRestModules(ctx);
+
         for(PluginXmlUtils.RESTModuleInfo moduleInfo : restModules)
         {
             List<String> packageList = moduleInfo.getPackagesToScan();
@@ -1041,6 +1019,35 @@ public class MavenGoals
 
         if(!restModules.isEmpty() && packagesPath.length() > 0)
         {
+            Set<String> docletPaths = new HashSet<String>();
+            StringBuffer docletPath = new StringBuffer(":" + prj.getBuild().getOutputDirectory());
+            String resourcedocPath = prj.getBuild().getOutputDirectory() + File.separator + "resourcedoc.xml";
+
+            PluginXmlUtils.PluginInfo pluginInfo = PluginXmlUtils.getPluginInfo(ctx);
+
+            try
+            {
+                docletPaths.addAll(prj.getCompileClasspathElements());
+                docletPaths.addAll(prj.getRuntimeClasspathElements());
+                docletPaths.addAll(prj.getSystemClasspathElements());
+
+                //AMPS-663: add plugin execution classes to doclet path
+                URL[] pluginUrls = ((URLClassLoader)Thread.currentThread().getContextClassLoader()).getURLs();
+                for(URL pluginUrl : pluginUrls)
+                {
+                    docletPaths.add(pluginUrl.getFile());
+                }
+
+                for(String path : docletPaths) {
+                    docletPath.append(File.pathSeparator);
+                    docletPath.append(path);
+                }
+
+            } catch (DependencyResolutionRequiredException e)
+            {
+                throw new MojoExecutionException("Dependencies must be resolved", e);
+            }
+
             executeMojo(
                     plugin(
                             groupId("org.apache.maven.plugins"),
