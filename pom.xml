@@ -169,7 +169,7 @@
                             <artifact>jta:jta:1.0.1B</artifact>
                             <artifact>jta:jta:1.0.1</artifact>
                             <artifact>javax.jms:jms:1.1</artifact>
-                            <artifact>com.atlassian.caviar:caviar-webapp:${caviar.version}:war</artifact>
+                            <artifact>com.atlassian.caviar:caviar-standalone-webapp:${caviar.version}:war</artifact>
                             <artifact>com.atlassian.caviar:caviar-plugin-test-resources:${caviar.data.version}:zip</artifact>
                         </artifacts>
                     </configuration>

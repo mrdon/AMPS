@@ -138,7 +138,7 @@
         </dependency>
         <dependency>
             <groupId>com.atlassian.caviar</groupId>
-            <artifactId>caviar-webapp</artifactId>
+            <artifactId>caviar-standalone-webapp</artifactId>
             <version>${caviar.version}</version>
             <type>war</type>
             <scope>provided</scope>
