@@ -305,7 +305,7 @@
         <fecru.data.version>2.5.2-20110307050326</fecru.data.version>
         <crowd.version>2.2.4</crowd.version>
         <crowd.data.version>2.2.2</crowd.data.version>
-        <clover.version>3.0.2</clover.version>
+        <clover.version>3.1.0</clover.version>
         <studio.version>108.2</studio.version>
         <studio.data.version>108.2-m0</studio.data.version>
         <caviar.version>1.0-SNAPSHOT</caviar.version>
