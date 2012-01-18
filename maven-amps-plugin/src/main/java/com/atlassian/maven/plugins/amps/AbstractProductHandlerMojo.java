@@ -27,6 +27,7 @@ import com.atlassian.maven.plugins.amps.util.ProjectUtils;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -315,10 +316,17 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     protected ArtifactFactory artifactFactory;
 
     /**
-     * A list of product-specific configurations
+     * A list of product-specific configurations (as literally provided in the pom.xml)
      */
     @MojoParameter
     protected List<Product> products = new ArrayList<Product>();
+    
+    /**
+     * A map of {instanceId -> Product}, with all values initialized.
+     * Initialized by {@link #createProductContexts()}.
+     */
+    @MojoParameter(readonly = true)
+    Map<String, Product> productMap;
 
     /**
      * File the container logging output will be sent to.
@@ -564,6 +572,9 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
         detectDeprecatedVersionOverrides();
 
+        // Create the product contexts once for all
+        createProductContexts();
+        
         doExecute();
     }
 
@@ -581,25 +592,60 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
     }
 
     /**
-     * Returns the Product objects that are defined in our maven-amps-plugins object:
-     * <ul>
-     * <li>Reads the {@literal <products>} tag</li>
-     * <li>Defaults the values</li>
+     * Builds the map {instanceId -> Product bean}, based on: <ul>
+     * <li>the {@literal <products>} tag</li>
+     * <li>the configuration values inherited from the {@literal <configuration>} tag
      * </ul>
-     * So the method looks short but it's quite central in the initialisation of products.
+     * @throws MojoExecutionException
      */
-    protected Map<String, Product> getProductContexts(MavenGoals goals) throws MojoExecutionException
+    void createProductContexts() throws MojoExecutionException
     {
-        Map<String, Product> productMap = new HashMap<String, Product>();
+        MavenContext mavenContext = getMavenContext();
+        MavenGoals goals = getMavenGoals();
+        productMap = Maps.newHashMap();
 
-        // Products in the <products> tag inherit from the upper settings, e.g. when there's a <httpPort> tag for for all products
+        // Products in the <products> tag inherit from the upper settings, e.g. when there's a <httpPort> tag for all products
         makeProductsInheritDefaultConfiguration(products, productMap);
 
         for (Product ctx : productMap.values())
         {
-            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), getMavenContext(), goals);
+            ProductHandler handler = ProductHandlerFactory.create(ctx.getId(), mavenContext, goals);
             setDefaultValues(ctx, handler);
         }
+        
+        // Check this Studio product has the dependant products declared in the pom
+        StudioProductHandler studioProductHandler = (StudioProductHandler) ProductHandlerFactory.create(ProductHandlerFactory.STUDIO, mavenContext, goals);
+        Map<String, Product> missingProducts = Maps.newHashMap();
+        for (Product studioProduct : productMap.values())
+        {
+            if (ProductHandlerFactory.STUDIO.equals(studioProduct.getId()))
+            {
+                List<String> dependantProductInstanceIds = studioProductHandler.getDependantInstances(studioProduct);
+                List<Product> dependantProducts = Lists.newArrayList();
+                for (String dependantProductInstanceId : dependantProductInstanceIds)
+                {
+                    Product product = productMap.get(dependantProductInstanceId);
+                    if (product == null)
+                    {
+                        ProductHandler handler = createProductHandler(dependantProductInstanceId);
+                        product = createProductContext(dependantProductInstanceId, dependantProductInstanceId, handler);
+                        missingProducts.put(dependantProductInstanceId, product);
+                    }
+                    dependantProducts.add(product);
+                }
+                
+                // Submit the Studio products for configuration
+                studioProductHandler.configure(studioProduct, dependantProducts);
+            }
+        }
+        productMap.putAll(missingProducts);
+    }
+
+    /**
+     * Returns the map { instanceId -> Product } with initialized values.
+     */
+    protected Map<String, Product> getProductContexts() throws MojoExecutionException
+    {
         return productMap;
     }
 
@@ -684,7 +730,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                     }
                 });
 
-                boolean successful = true;
                 try
                 {
                     task.get(product.getShutdownTimeout(), TimeUnit.MILLISECONDS);
@@ -692,7 +737,6 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
                 catch (TimeoutException e)
                 {
                     getLog().info(product.getInstanceId() + " shutdown: Didn't return in time");
-                    successful = false;
                     task.cancel(true);
                 }
             }
@@ -862,29 +906,16 @@ public abstract class AbstractProductHandlerMojo extends AbstractProductHandlerA
 
             // Fetch the products
             List<ProductExecution> dependantProducts = Lists.newArrayList();
-            Map<String, Product> allContexts = getProductContexts(goals);
+            Map<String, Product> allContexts = getProductContexts();
             for (String instanceId : dependantProductIds)
             {
                 Product product = allContexts.get(instanceId);
-                ProductHandler handler;
-                if (product == null)
-                {
-                    handler = createProductHandler(instanceId);
-                    product = createProductContext(instanceId, instanceId, handler);
-                }
-                else
-                {
-                    handler = createProductHandler(product.getId());
-                }
-
+                ProductHandler handler = createProductHandler(product.getId());
                 dependantProducts.add(new ProductExecution(product, handler));
             }
-
-            // Submit those products to StudioProductHanlder for configuration
-            studioProductHandler.configure(studioProduct, dependantProducts);
-
+            
             // Add everyone at the end of the list of products to execute. We don't check for duplicates, users shouldn't add studio products
-            // to test groups, especially if they already have a Studio.
+            // individually.
             productExecutionsIncludingStudio.addAll(dependantProducts);
         }
 

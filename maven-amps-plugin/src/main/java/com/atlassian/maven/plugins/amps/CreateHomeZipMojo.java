@@ -3,8 +3,6 @@ package com.atlassian.maven.plugins.amps;
 import com.atlassian.maven.plugins.amps.product.ProductHandler;
 import com.atlassian.maven.plugins.amps.product.ProductHandlerFactory;
 import com.atlassian.maven.plugins.amps.product.studio.StudioProductHandler;
-import com.atlassian.maven.plugins.amps.util.GoogleAmpsTracker;
-
 import com.google.common.collect.Lists;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -81,7 +79,7 @@ public class CreateHomeZipMojo extends AbstractProductHandlerMojo {
      */
     private Product getProduct(final String instanceId, final String productId) throws MojoExecutionException
     {
-        Map<String, Product> contexts = getProductContexts(getMavenGoals());
+        Map<String, Product> contexts = getProductContexts();
 
         Product product = null;
         if (instanceId != null)
