@@ -175,6 +175,11 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
         MavenSession oldSession = oldContext.getSession();
 
         ProjectBuildingRequest pbr = oldSession.getProjectBuildingRequest();
+
+        // hack #1 from before
+        pbr.setRemoteRepositories(oldSession.getCurrentProject().getRemoteArtifactRepositories());
+        pbr.setPluginArtifactRepositories(oldSession.getCurrentProject().getPluginArtifactRepositories());
+
         pbr.getSystemProperties().setProperty("project.basedir", "amps-standalone");
 
         ProjectBuildingResult result = projectBuilder.build(getStandaloneArtifact(), false, pbr);
