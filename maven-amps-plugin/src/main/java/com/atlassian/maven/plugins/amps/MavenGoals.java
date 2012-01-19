@@ -425,7 +425,7 @@ public class MavenGoals
         final List<Element> sysProps = new ArrayList<Element>();
         if (webappContext.getJvmArgs() == null)
         {
-            webappContext.setJvmArgs("-Xmx512m -XX:MaxPermSize=160m");
+            webappContext.setJvmArgs("-Xmx512m -XX:MaxPermSize=256m");
         }
 
         for (final Map.Entry<String, String> entry : systemProperties.entrySet())

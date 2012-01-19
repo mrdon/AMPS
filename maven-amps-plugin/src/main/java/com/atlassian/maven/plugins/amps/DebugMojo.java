@@ -19,7 +19,7 @@ import java.util.List;
 @MojoRequiresDependencyResolution
 public class DebugMojo extends RunMojo
 {
-    private static final String DEFAULT_JVM_ARGS = "-Xmx512m -XX:MaxPermSize=160m";
+    private static final String DEFAULT_JVM_ARGS = "-Xmx512m -XX:MaxPermSize=256m";
 
     /**
      * port for debugging
