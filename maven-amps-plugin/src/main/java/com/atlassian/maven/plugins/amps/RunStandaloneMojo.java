@@ -127,6 +127,8 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
             final String baseDir = System.getProperty("user.dir") + "/amps-standalone/";
             newProject.setFile(new File(baseDir, "pom.xml"));
 
+            newProject.getProperties().putAll(oldProject.getProperties());
+
             ProjectBuilderConfiguration projectBuilderConfiguration =
                     getProjectBuilderConfigurationFromMavenSession(newSession);
 
