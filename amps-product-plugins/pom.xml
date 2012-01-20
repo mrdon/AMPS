@@ -129,6 +129,20 @@
                                 </goals>
                             </execution>
                         </executions>
+                    <configuration>
+                        <artifacts>
+                            <!-- restricted artifacts -->
+                            <artifact>javax.servlet:servlet-api:2.3</artifact>
+                            <artifact>javax.mail:mail:1.4</artifact>
+                            <artifact>javax.mail:mail:1.3.3</artifact>
+                            <artifact>javax.transaction:jta:1.0.1b</artifact>
+                            <artifact>javax.transaction:jta:1.0.1B</artifact>
+                            <artifact>jndi:jndi:1.2.1</artifact>
+                            <artifact>jta:jta:1.0.1B</artifact>
+                            <artifact>jta:jta:1.0.1</artifact>
+                            <artifact>javax.jms:jms:1.1</artifact>
+                        </artifacts>
+                    </configuration>
                     </plugin>
                 </plugins>
             </build>

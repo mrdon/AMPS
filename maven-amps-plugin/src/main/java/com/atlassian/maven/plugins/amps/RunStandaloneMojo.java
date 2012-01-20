@@ -13,6 +13,7 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.execution.ReactorManager;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginManagement;
+import org.apache.maven.model.locator.DefaultModelLocator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -127,6 +128,8 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
             final String baseDir = System.getProperty("user.dir") + "/amps-standalone/";
             newProject.setFile(new File(baseDir, "pom.xml"));
 
+            newProject.getProperties().putAll(oldProject.getProperties());
+
             ProjectBuilderConfiguration projectBuilderConfiguration =
                     getProjectBuilderConfigurationFromMavenSession(newSession);
 
@@ -172,8 +175,15 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
 
         MavenSession oldSession = oldContext.getSession();
 
+        File base = new File("amps-standalone").getAbsoluteFile();
+
         ProjectBuildingRequest pbr = oldSession.getProjectBuildingRequest();
-        pbr.getSystemProperties().setProperty("project.basedir", "amps-standalone");
+
+        // hack #1 from before
+        pbr.setRemoteRepositories(oldSession.getCurrentProject().getRemoteArtifactRepositories());
+        pbr.setPluginArtifactRepositories(oldSession.getCurrentProject().getPluginArtifactRepositories());
+
+        pbr.getSystemProperties().setProperty("project.basedir", base.getPath());
 
         ProjectBuildingResult result = projectBuilder.build(getStandaloneArtifact(), false, pbr);
 
@@ -181,6 +191,9 @@ public class RunStandaloneMojo extends AbstractProductHandlerMojo
 
         MavenSession newSession = oldSession.clone();
         newSession.setProjects(newReactor);
+
+        // Horrible hack #3 from before
+        result.getProject().setFile(new DefaultModelLocator().locatePom(base));
 
         final MavenContext newContext = oldContext.with(
             result.getProject(),
